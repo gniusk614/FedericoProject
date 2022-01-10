@@ -11,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j;
 import service.HeadOfficeService;
 import vo.HeadOfficeVO;
+import vo.IteminfoVO;
 import vo.StaffVO;
 
 
@@ -30,6 +32,29 @@ public class HeadOfficeController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
+	
+	
+	
+	
+	// 본사: 자재입력기능 (강현구)
+	@ResponseBody
+	@RequestMapping(value = "/iteminsert")
+	public ModelAndView iteminsert(ModelAndView mv, IteminfoVO vo) {
+		
+		if (service.iteminsert(vo) > 0) {
+			mv.addObject("message", vo.getItemName()+" 입력이 완료되었습니다.");
+			mv.addObject("success","success");
+		}else {
+			mv.addObject("message", vo.getItemName()+" 입력이 실패하였습니다.");
+			mv.addObject("success","fail");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 본사: 자재입력폼 이동 (강현구)
+	@RequestMapping(value = "/iteminsertf")
+	public void iteminsertf(ModelAndView mv) {	}
 	
 	@RequestMapping(value = "/loginf") //로그인폼이동 (강광훈)
 	public ModelAndView loginf(ModelAndView mv) {

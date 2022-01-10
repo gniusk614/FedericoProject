@@ -4,6 +4,14 @@
 <mapper namespace="mapperInterface.HeadOfficeMapper">
 
 
+
+
+	<!-- iteminfo insrt 본사 자재 입력 -->
+	<insert id="iteminsert">
+		INSERT INTO iteminfo(itemindex, itemname, itemflag, itemunit, itemprice)
+		VALUES((select nvl(max(itemindex),0)+1 from iteminfo), #{itemName}, #{itemFlag}, #{itemUnit}, #{itemPrice})
+	</insert>
+	
 	<!-- ** LoginSelectOne -->
 	<select id="loginSelectOne" resultType="vo.HeadOfficeVO">
 		SELECT * FROM HeadOffice WHERE HOID = #{staffVo.staffCode}
