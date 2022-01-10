@@ -13,6 +13,8 @@
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="/federico/resources/css/styles.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+        <script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
+   		<script src="/federico/resources/myLib/headOffice_Script.js"></script>
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -62,7 +64,7 @@
                             </a>
                             <div class="collapse" id="collapseLayouts1"	 aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">직원계정 조회</a>
+                                    <a class="nav-link" href="#" id="memberList">직원계정 조회</a>
                                     <a class="nav-link" href="layout-sidenav-light.html">직원계정 생성</a>
                                 </nav>
                             </div>
@@ -142,7 +144,6 @@
                     </div>
                 </nav>
             </div>
-            <
             <div id="layoutSidenav_content">
                 <main>
                     <div id="resultArea" class="container-fluid px-4">

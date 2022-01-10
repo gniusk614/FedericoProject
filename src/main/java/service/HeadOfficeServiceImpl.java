@@ -16,6 +16,13 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 	@Autowired
 	HeadOfficeMapper dao;
 	
+	// 사원정보리스트
+	@Override
+	public List<StaffVO> selectMList(StaffVO vo) {
+		return dao.selectMList(vo);
+	}
+	
+	
 	// Login 시 사용
 	@Override
 	public HeadOfficeVO loginSelectOne(HeadOfficeVO vo) {
