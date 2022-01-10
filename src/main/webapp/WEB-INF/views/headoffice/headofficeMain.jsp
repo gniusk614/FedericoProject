@@ -54,9 +54,10 @@
                             </a>  
                   	        <hr class="dropdown-divider" />
                               <!-- 직원계정조회 -->
+                            <c:if test="${loginID == 'admin' }">
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts1" aria-expanded="false" aria-controls="collapseLayouts1">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                               직원계정조회
+                               직원계정관리
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
                             <div class="collapse" id="collapseLayouts1"	 aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
@@ -65,6 +66,7 @@
                                     <a class="nav-link" href="layout-sidenav-light.html">직원계정 생성</a>
                                 </nav>
                             </div>
+                            </c:if>
                                <!-- 한덩어리 -->
                             
                             <!-- 안쓰는거

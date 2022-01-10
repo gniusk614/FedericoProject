@@ -63,7 +63,7 @@ public class HeadOfficeController {
 					
 					headOfficeVo.setStaffVo(staffVo);//굳이 이걸왜 한번 더 해야하는지모르겠는데 이거해야 밑에 널포인트 안뜸 ...
 					// 로그인 성공 -> 로그인 정보 session에 보관, home
-					request.getSession().setAttribute("loginID", headOfficeVo.getStaffVo().getStaffCode() );
+					request.getSession().setAttribute("loginID", headOfficeVo.getStaffVo().getStaffCode());
 					request.getSession().setAttribute("loginName", headOfficeVo.getStaffVo().getStaffName());
 					request.getSession().setAttribute("loginPW", password);
 					uri = "redirect:headofficeMain";

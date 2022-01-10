@@ -13,10 +13,10 @@
         <!-- Bootstrap icons-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="resources/css/styles.css" rel="stylesheet" />
+        <link href="/federico/resources/css/styles.css" rel="stylesheet" />
         <script src="resources/myLib/jquery-3.2.1.min.js"></script>
- 	
-    </head>	
+ 
+    </head>
     <body>
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -87,7 +87,7 @@
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
-        <script src="resources/js/scripts.js"></script>
+        <script src="/federico/resources/js/scripts.js"></script>
     </body>
 </html>
 
