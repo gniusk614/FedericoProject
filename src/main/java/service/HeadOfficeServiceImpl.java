@@ -1,5 +1,7 @@
 package service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,13 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 	@Autowired
 	HeadOfficeMapper dao;
 	
-	// 본사: 자재입력기능 (강현구)
+	// 사원정보리스트
+		@Override
+		public List<StaffVO> selectMList(StaffVO vo) {
+			return dao.selectMList(vo);
+		}	
+		
+			// 본사: 자재입력기능 (강현구)
 	@Override
 	public int iteminsert(IteminfoVO vo) {
 		log.info("service"+vo.getItemFlag()+vo.getItemName()+vo.getItemPrice());

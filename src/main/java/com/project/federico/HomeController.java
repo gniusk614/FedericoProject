@@ -39,7 +39,7 @@ public class HomeController {
 	}
 	
 	
-	@RequestMapping(value = {"headoffice/headofficeMain"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"headoffice/headofficeMain","headofficeMain"}, method = RequestMethod.GET)
 	public String headOfficeMain(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
