@@ -7,16 +7,17 @@ $(function() {
 			type: "Get",
 			url : "memberList",
 			success: function(resultPage){
-				$('#layoutSidenav_content').html(resultPage)
+				$('#resultPage').html(resultPage)
 			},
 			error: function(){
 				alert("Ajax 오류")
-		
 			}
-	
 		});// ajax
-
 	});// click
 	
+	$('#modalButton').click(function(){
+		$('#modal').modal('show');
+	});
 	
+
 }); // ready
