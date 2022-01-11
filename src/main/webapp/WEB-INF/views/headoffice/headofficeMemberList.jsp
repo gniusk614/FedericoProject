@@ -36,19 +36,19 @@
 				<div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
 					<div class="dataTable-top">
 						<div class="col-sm-1">
-							<select class="form-select" aria-label="Default select example">
-								<option selected>검색 설정</option>
-								<option value="1">사원번호</option>
-								<option value="2">이름</option>
-								<option value="3">직급</option>
-								<option value="3">핸드폰번호</option>
+							<select name="searchType" id="searchType" class="form-select" aria-label="Default select example">
+								<option value="none" <c:out value="${pageMaker.cri.searchType==null ? 'selected':''}"/>> - - </option>
+								<option value="code" <c:out value="${pageMaker.cri.searchType=='code' ? 'selected':''}"/>>사원번호</option>
+								<option value="name" <c:out value="${pageMaker.cri.searchType=='name' ? 'selected':''}"/>>이름</option>
+								<option value="posi" <c:out value="${pageMaker.cri.searchType=='posi' ? 'selected':''}"/>>직급</option>
+								<option value="phon" <c:out value="${pageMaker.cri.searchType=='phon' ? 'selected':''}"/>>핸드폰번호</option>
 							</select>
 						</div>
 						<div class="col-sm-4">
 							<form class="d-flex">
 								<input class="form-control me-2" type="search"
-									placeholder="Search" aria-label="Search">
-								<button class="btn btn-outline-primary" type="submit">Search</button>
+									placeholder="Search" value="${pageMaker.cri.keyword}" aria-label="Search">
+								<button id="searchBtn" class="btn btn-outline-primary">Search</button>
 							</form>
 						</div>
 						<div class="col-sm-7"></div>
@@ -75,7 +75,13 @@
 								<td>${list.staffPosition}</td>
 								<td>${list.staffPhone}</td>
 								<td>dkajs@mdo.com</td>
-								<td><span id="modalButton" class="btn">자세히</span></td>
+								<td><span id="modalButton" class="btn">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16">
+									  <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+									  <path d="M10.344 11.742c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1 6.538 6.538 0 0 1-1.398 1.4z"/>
+									  <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5z"/>
+									</svg>
+								</span></td>
 							</tr>
 						</c:forEach>
 					</tbody>
