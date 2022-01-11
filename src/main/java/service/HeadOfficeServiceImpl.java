@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j;
 import mapperInterface.HeadOfficeMapper;
 import vo.HeadOfficeVO;
-import vo.IteminfoVO;
+import vo.ItemInfoVO;
 import vo.StaffVO;
 
 @Log4j
@@ -24,11 +24,30 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 			return dao.selectMList(vo);
 		}	
 		
-			// 본사: 자재입력기능 (강현구)
+		
+	// 자재정보 수정
 	@Override
-	public int iteminsert(IteminfoVO vo) {
-		log.info("service"+vo.getItemFlag()+vo.getItemName()+vo.getItemPrice());
-
+	public int itemUpdate(ItemInfoVO vo) {
+		return dao.itemUpdate(vo);
+	}
+		
+		
+	//자재정보 1건 출력
+	@Override
+	public ItemInfoVO selectOneItem(ItemInfoVO vo) {
+		return dao.selectOneItem(vo);
+	}
+		
+		
+	// 자재정보 모두출력	
+	@Override
+	public List<ItemInfoVO> selectAllItem() {
+		return dao.selectAllItem();
+	}
+		
+		// 본사: 자재입력기능 (강현구)
+	@Override
+	public int iteminsert(ItemInfoVO vo) {
 		return dao.iteminsert(vo);
 	}
 	
