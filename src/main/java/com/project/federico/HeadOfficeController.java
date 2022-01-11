@@ -119,7 +119,6 @@ public class HeadOfficeController {
 	@RequestMapping(value = "/memberList")
 	public ModelAndView memberList(ModelAndView mv, HeadOfficeVO headvo, StaffVO staffvo) {
 		
-		
 		List<StaffVO> list = service.selectMList(staffvo);
 		
 		
@@ -132,7 +131,11 @@ public class HeadOfficeController {
 		return mv;
 	}
 	
-	
+	@RequestMapping(value = "/memberJoinf") //비번변경폼이동 (강광훈)
+	public ModelAndView memberJoinf(ModelAndView mv) {
+		mv.setViewName("headoffice/headofficeJoinForm");
+		return mv;
+	}//loginf-> 폼으로 이동시켜줌 
 	
 	
 	

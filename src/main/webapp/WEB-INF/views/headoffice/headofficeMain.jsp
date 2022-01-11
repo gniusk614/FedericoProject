@@ -19,7 +19,7 @@
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <span class="navbar-brand ps-3">FEDERICO COMPANY</span>
+            <a href="/federico/" class="navbar-brand ps-3">FEDERICO COMPANY</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
@@ -65,7 +65,7 @@
                             <div class="collapse" id="collapseLayouts1"	 aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="#" id="memberList">직원계정 조회</a>
-                                    <a class="nav-link" href="memberList">직원계정 생성</a>
+                                    <a class="nav-link" href="#" id="memberJoinf">직원계정 생성</a>
                                 </nav>
                             </div>
                             </c:if>
