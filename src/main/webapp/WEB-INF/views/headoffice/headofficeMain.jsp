@@ -53,9 +53,10 @@
  							 <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
 							</svg> &nbsp;
                                 메인 대쉬보드
-                            </a>  
+                            </a>  <!-- 메인 대쉬보드 -->
+                            
+                            
                   	        <hr class="dropdown-divider" />
-                              <!-- 직원계정조회 -->
                             <c:if test="${loginID == 'admin' }">
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts1" aria-expanded="false" aria-controls="collapseLayouts1">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
@@ -68,13 +69,9 @@
                                     <a class="nav-link" href="memberList">직원계정 생성</a>
                                 </nav>
                             </div>
-                            </c:if>
-                               <!-- 한덩어리 -->
+                            </c:if>    <!-- 직원계정조회 -->
                             
-                            <!-- 안쓰는거
-                            <div class="sb-sidenav-menu-heading">Management</div> -->
-                            
-                                <!-- 가맹점관리 -->
+                            <!-- 가맹점관리 -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts2" aria-expanded="false" aria-controls="collapseLayouts2">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                가맹점관리
@@ -87,11 +84,9 @@
                                     <a class="nav-link" href="layout-sidenav-light.html">미처리 발주내역</a>
                                     <a class="nav-link" href="layout-sidenav-light.html">처리완료 발주내역</a>
                                 </nav>
-                            </div>
-                              <!-- 한덩어리 -->
-                              
-                              
-                               <!-- 자재,발주관리 -->
+                            </div>  <!-- 가맹점관리 -->
+
+                            <!-- 자재,발주관리 -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts3" aria-expanded="false" aria-controls="collapseLayouts3">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                자재 • 발주관리
@@ -101,14 +96,11 @@
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="layout-static.html">미처리 발주내역</a>
                                     <a class="nav-link" href="layout-sidenav-light.html">처리완료 발주내역</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">자재조회</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">자재등록</a>
+                                    <a class="nav-link" href="itemselect">자재조회 및 등록</a>
                                 </nav>
-                            </div>
-                               <!-- 한덩어리 -->
+                            </div>  <!-- 자재,발주관리 -->
                             
-                            
-                              <!-- 소비자 페이지관리 -->
+                            <!-- 소비자 페이지관리 -->
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts4" aria-expanded="false" aria-controls="collapseLayouts4">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                               	소비자 페이지관리
@@ -121,8 +113,9 @@
                                     <a class="nav-link" href="layout-sidenav-light.html">이벤트게시판</a>
                                     <a class="nav-link" href="layout-sidenav-light.html">고객의 소리</a>
                                 </nav>
-                            </div>
-                               <!-- 한덩어리 -->
+                            </div><!-- 소비자 페이지관리 -->
+                               
+                          <!-- 각종 통계 -->
                           <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts5" aria-expanded="false" aria-controls="collapseLayouts5">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                               	통계
@@ -132,18 +125,21 @@
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="layout-static.html">각종 통계</a>
                                 </nav>
-                            </div>
+                            </div><!-- 각종 통계 -->
                         </div>
                     </div>
                     
-                    
-                    
+                    <!-- 사이드네비 하단 -->
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
                         Start Bootstrap
                     </div>
+                    <!-- 사이드네비 하단 -->
                 </nav>
             </div>
+            
+            
+            
             <div id="layoutSidenav_content">
                 <main id="resultPage">
                     <div class="container-fluid px-4">

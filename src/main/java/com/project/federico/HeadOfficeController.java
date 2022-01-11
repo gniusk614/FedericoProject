@@ -34,9 +34,6 @@ public class HeadOfficeController {
 	PasswordEncoder passwordEncoder;
 	
 	
-	
-	
-	
 	// 본사: 자재입력기능 (강현구)
 	@ResponseBody
 	@RequestMapping(value = "/iteminsert")
@@ -53,9 +50,13 @@ public class HeadOfficeController {
 		return mv;
 	}
 	
-	// 본사: 자재입력폼 이동 (강현구)
-	@RequestMapping(value = "/iteminsertf")
-	public void iteminsertf(ModelAndView mv) {	}
+	// 본사: 자재조회폼 이동 (강현구)
+	@RequestMapping(value = "/itemselect")
+	public ModelAndView iteminsertf(ModelAndView mv) {
+		
+		mv.setViewName("headoffice/itemselect");
+		return mv;	
+	}
 	
 	@RequestMapping(value = "/loginf") //로그인폼이동 (강광훈)
 	public ModelAndView loginf(ModelAndView mv) {
