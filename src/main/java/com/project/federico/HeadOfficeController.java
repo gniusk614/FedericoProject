@@ -1,6 +1,7 @@
 package com.project.federico;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -113,6 +114,26 @@ public class HeadOfficeController {
 		mv.setViewName("headoffice/passwordResetForm");
 		return mv;
 	}//loginf-> 폼으로 이동시켜줌 
+	
+	
+	@RequestMapping(value = "/memberList")
+	public ModelAndView memberList(ModelAndView mv, HeadOfficeVO headvo, StaffVO staffvo) {
+		
+		
+		List<StaffVO> list = service.selectMList(staffvo);
+		
+		
+		if (list != null)
+			mv.addObject("memberList", list);
+		else
+			mv.addObject("message", "출력할 자료가 없습니다.");
+		
+		mv.setViewName("headoffice/headofficeMemberList");
+		return mv;
+	}
+	
+	
+	
 	
 	
 

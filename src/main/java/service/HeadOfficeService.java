@@ -7,6 +7,8 @@ import vo.StaffVO;
 
 public interface HeadOfficeService {
 	
+	List<StaffVO> selectMList(StaffVO vo); //사원정보 리스트
+	
 	HeadOfficeVO loginSelectOne(HeadOfficeVO vo); //로그인시 id로 selectOne
 	
 	StaffVO selectOne(StaffVO vo); //staffVO selectOne
