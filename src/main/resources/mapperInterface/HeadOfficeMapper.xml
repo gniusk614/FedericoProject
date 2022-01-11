@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapperInterface.HeadOfficeMapper">
 
-	
+
+
 	<select id="selectMList" resultType="vo.StaffVO">
 		select * from staff
 	</select>
@@ -18,13 +19,15 @@
 	
 	<!-- ** LoginSelectOne -->
 	<select id="loginSelectOne" resultType="vo.HeadOfficeVO">
-		SELECT * FROM HeadOffice WHERE HOID = #{staffVo.staffCode}
+		SELECT * FROM HeadOffice
+		WHERE HOID = #{staffVo.staffCode}
 	</select>
-		<!-- ** SelectOne -->
+	<!-- ** SelectOne -->
 	<select id="selectOne" resultType="vo.StaffVO">
-		SELECT * FROM staff WHERE StaffCode = #{staffCode}
+		SELECT * FROM staff WHERE
+		StaffCode = #{staffCode}
 	</select>
-	
+
 
 
 </mapper>
