@@ -176,8 +176,8 @@ function itemUpdateCheck(){
 			color:'red',
 			fontWeight:'bold'
 		})}
-	
 }//itemUpdateCheck
+
 
 // 자재수정
 function itemUpdate(){
@@ -206,8 +206,35 @@ function itemUpdate(){
 			alert("업데이트 오류입니다.<br>다시 시도해주세요.")
 		}
 	})//ajax 
+}
+
+
+// 자재수정
+function itemDelete(){
+	
+	if (confirm('정말 삭제하시겠습니까?')){
+		$.ajax({
+		type:"get",
+		url:"itemdelete",	
+		data:{
+			itemIndex: $('#upitemindex').val(),
+		},
+		success:function(data){
+			if(data.success == 'success'){
+				location.reload();
+				}
+			if(data.success=='fail'){
+				alert('찾을 수 없는 항목입니다.');
+			}
+		},
+		error:function(){
+			alert("삭제 오류입니다.<br>다시 시도해주세요.")
+		}
+		})//ajax 
+	}
 	
 }
+
 
 
 

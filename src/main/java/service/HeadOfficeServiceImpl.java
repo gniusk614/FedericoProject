@@ -24,6 +24,12 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 			return dao.selectMList(vo);
 		}	
 		
+	// 자재정보 삭제
+	@Override
+	public int itemdelete(ItemInfoVO vo) {
+		return dao.itemdelete(vo);
+	}
+		
 		
 	// 자재정보 수정
 	@Override

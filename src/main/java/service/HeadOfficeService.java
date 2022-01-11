@@ -8,6 +8,8 @@ import vo.StaffVO;
 
 public interface HeadOfficeService {
 	
+	int itemdelete(ItemInfoVO vo); // 자재정보 삭제
+	
 	int itemUpdate(ItemInfoVO vo); // 자재정보 수정
 	
 	ItemInfoVO selectOneItem(ItemInfoVO vo); //자재정보 1건 출력

@@ -10,6 +10,12 @@
 	</select>
 
 
+
+	<delete id="itemdelete">
+		DELETE iteminfo WHERE itemindex = #{itemIndex}
+	</delete>
+	
+
 	<!-- itemupdate 본사자재 정보수정 -->
 	<update id="itemUpdate">
 		UPDATE iteminfo SET itemname = #{itemName}, itemflag = #{itemFlag}, itemunit = #{itemUnit}, itemprice = #{itemPrice}

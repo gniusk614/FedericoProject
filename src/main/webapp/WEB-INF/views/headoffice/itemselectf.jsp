@@ -25,74 +25,68 @@
 		<div class="container-fluid px-4" style="margin-top: 20px;">
 			<div class="card">
 				<div class="card-header">
-				<svg class="svg-inline--fa fa-table fa-w-16 me-1" aria-hidden="true"
-					focusable="false" data-prefix="fas" data-icon="table" role="img"
-					xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-					data-fa-i2svg="">
-					<path fill="currentColor"
-						d="M464 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V80c0-26.51-21.49-48-48-48zM224 416H64v-96h160v96zm0-160H64v-96h160v96zm224 160H288v-96h160v96zm0-160H288v-96h160v96z"></path></svg>
-				자재조회 및 등록
+					<h4><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-collection" viewBox="0 0 16 16">
+					  <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
+					</svg>
+				자재조회 및 등록</h4>
 				</div>
 				<div class="card-body">
-					<div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
-						<div class="dataTable-top">
-							<div class="container-fluid">
-								<div class="row">
-									<div class="col-sm-1">
-										<select id="" class="form-select" aria-label="Default select example">
-											<option value="none" <c:out value="${pageMaker.cri.searchType==null ? 'selected':''}"/>> - - </option>
-											<option value="" <c:out value="${pageMaker.cri.searchType=='code' ? 'selected':''}"/>>품 명</option>
-											<option value="" <c:out value="${pageMaker.cri.searchType=='name' ? 'selected':''}"/>>분 류<option>
-										</select>
-									</div>
-									<div class="col-sm-2">
-											<input class="form-control me-2" type="search"
-												placeholder="Search" value="${pageMaker.cri.keyword}" aria-label="Search">
-									</div>
-									<div class="col-sm-1">
-										<button id="itemsearch" class="btn btn-outline-primary">검색</button>
-									</div>
-									<div class="col-sm-6"></div>
-									<div class="col-sm-2" align="right">
-										<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#itemInsertModal">
-  										자재등록
-										</button>
-									</div>
+					<div class="dataTable-top">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-sm-1">
+									<select id="" class="form-select" aria-label="Default select example">
+										<option value="none" <c:out value="${pageMaker.cri.searchType==null ? 'selected':''}"/>> - - </option>
+										<option value="" <c:out value="${pageMaker.cri.searchType=='code' ? 'selected':''}"/>>품 명</option>
+										<option value="" <c:out value="${pageMaker.cri.searchType=='name' ? 'selected':''}"/>>분 류<option>
+									</select>
+								</div>
+								<div class="col-sm-2">
+										<input class="form-control me-2" type="search"
+											placeholder="Search" value="${pageMaker.cri.keyword}" aria-label="Search">
+								</div>
+								<div class="col-sm-1">
+									<button id="itemsearch" class="btn btn-outline-primary">검색</button>
+								</div>
+								<div class="col-sm-6"></div>
+								<div class="col-sm-2" align="right">
+									<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#itemInsertModal">
+ 										자재등록
+									</button>
 								</div>
 							</div>
 						</div>
-					<div class="dataTable-container">
-						<table class="table table-striped table-hover">
-							<thead>
-								<tr>
-									<th scope="col">품 번</th>
-									<th scope="col">품 명</th>
-									<th scope="col">분 류</th>
-									<th scope="col">단 위</th>
-									<th scope="col">단 가</th>
-									<th scope="col">수 정</th>
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach var="vo" items="${list}" varStatus="status">
-									<tr>
-										<th scope="row">${vo.itemIndex}</th>
-										<td>${vo.itemName}</td>
-										<td>${vo.itemFlag}</td>
-										<td>${vo.itemUnit}</td>
-										<td><fmt:formatNumber value="${vo.itemPrice}"/></td>
-										<!--모달창에 수정폼 띄우기  -->
-										<!-- data-bs-toggle="modal" data-bs-target="#itemUpdateModal" -->
-										<td><span id="itemEditButton" class="btn"  onclick="itemUpdateForm(${vo.itemIndex})">  
-											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">
-											  <path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11l.471.242z"/>
-											</svg>										
-										</span></td>
-									</tr>
-								</c:forEach>
-							</tbody>
-						</table>
 					</div>
+					<table class="table table-striped table-hover">
+						<thead align="center">
+							<tr>
+								<th scope="col" width="5%">품 번</th>
+								<th scope="col" width="25%">품&nbsp; 명</th>
+								<th scope="col" width="25%">분&nbsp; 류</th>
+								<th scope="col" width="15%">단&nbsp; 위</th>
+								<th scope="col" width="20%">단&nbsp; 가</th>
+								<th scope="col" width="10%">수정/삭제</th>
+							</tr>
+						</thead>
+						<tbody align="center">
+							<c:forEach var="vo" items="${list}" varStatus="status">
+								<tr>
+									<th scope="row">${vo.itemIndex}</th>
+									<td>${vo.itemName}</td>
+									<td>${vo.itemFlag}</td>
+									<td>${vo.itemUnit}</td>
+									<td><fmt:formatNumber value="${vo.itemPrice}"/></td>
+									<!--모달창에 수정폼 띄우기  -->
+									<!-- data-bs-toggle="modal" data-bs-target="#itemUpdateModal" -->
+									<td><span id="itemEditButton" class="btn"  onclick="itemUpdateForm(${vo.itemIndex})">  
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">
+										  <path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11l.471.242z"/>
+										</svg>										
+									</span></td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
 			<!-- tabel bottom -->				
 					<div class="dataTable-bottom">
 						<nav class="dataTable-pagination">
@@ -108,7 +102,6 @@
 								</a></li>
 							</ul>
 						</nav>
-					</div>
 					</div>
 				</div>
 			</div> 
@@ -204,12 +197,18 @@
 		</div> <!-- 수정폼 -->	
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-        <button type="button" class="btn btn-primary" onclick="itemUpdateCheck()">수정</button>
+      	<div class="container-fluid">
+      		<div class="row">
+      			<div class="col-3"><button type="button" class="btn btn-danger pull-left" onclick="itemDelete()">삭제</button></div>
+      			<div class="col-5"></div>
+      			<div class="col-4"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+    		    <button type="button" class="btn btn-primary" onclick="itemUpdateCheck()">수정</button></div>
+			</div>
+		</div>
       </div>
     </div>
   </div>
-</div><!-- 자재등록 modal -->
+</div><!-- 자재 수정 modal -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="/federico/resources/js/scripts.js"></script>

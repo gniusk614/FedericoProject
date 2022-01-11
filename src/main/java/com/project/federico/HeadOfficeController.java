@@ -35,6 +35,18 @@ public class HeadOfficeController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
+	// 본사: 자재 삭제 (강현구)
+	@RequestMapping(value = "/itemdelete")
+	public ModelAndView itemdelete(ModelAndView mv, ItemInfoVO vo) {
+	
+		if(service.itemdelete(vo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}	
 	
 	// 본사: 자재 상세수정 (강현구)
 	@RequestMapping(value = "/itemupdate")
@@ -42,7 +54,6 @@ public class HeadOfficeController {
 	
 		if(service.itemUpdate(vo) > 0) {
 			mv.addObject("success", "success");
-			mv.addObject("real", "no");
 		} else {
 			mv.addObject("success", "fail");
 		}
