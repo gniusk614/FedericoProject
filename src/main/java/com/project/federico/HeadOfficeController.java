@@ -116,7 +116,7 @@ public class HeadOfficeController {
 	}//loginf-> 폼으로 이동시켜줌 
 	
 	
-	@RequestMapping(value = "/memberList")
+	@RequestMapping(value = "/staffList")
 	public ModelAndView memberList(ModelAndView mv, HeadOfficeVO headvo, StaffVO staffvo) {
 		
 		List<StaffVO> list = service.selectMList(staffvo);
@@ -127,15 +127,30 @@ public class HeadOfficeController {
 		else
 			mv.addObject("message", "출력할 자료가 없습니다.");
 		
-		mv.setViewName("headoffice/headofficeMemberList");
+		mv.setViewName("headoffice/headofficeStaffList");
 		return mv;
-	}
+	}//staff 목록 리스트
 	
-	@RequestMapping(value = "/memberJoinf") //비번변경폼이동 (강광훈)
+	@RequestMapping(value = "/staffJoinf") //멤버계정생성폼 이동 (강광훈)
 	public ModelAndView memberJoinf(ModelAndView mv) {
 		mv.setViewName("headoffice/headofficeJoinForm");
 		return mv;
 	}//loginf-> 폼으로 이동시켜줌 
+	
+	
+	@RequestMapping(value = "/staffDetail") //staff 디테일 (강광훈)
+	public ModelAndView staffDetail(HttpServletResponse response ,ModelAndView mv, StaffVO vo) {
+		response.setContentType("text/html; charset=UTF-8");
+		
+		vo = service.selectOne(vo);
+		
+		if(vo != null)mv.addObject("staffDetail", vo); //MyBatis 에선 null , size()>0 으로 확인
+		else mv.addObject("message","정보가 없습니다.");
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}//staffDetail 
+	
 	
 	
 	
