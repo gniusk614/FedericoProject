@@ -3,10 +3,10 @@ $(function() {
 //===============< 사원리스트 스크립트(광훈) >============================
 
 	//**페이지이동
-	$('#memberList').click(function(){
+	$('#staffList').click(function(){
 		$.ajax({
 			type: "Get",
-			url : "memberList",
+			url : "staffList",
 			success: function(resultPage){S
 				$('#resultPage').html(resultPage)
 			},
