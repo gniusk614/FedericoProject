@@ -82,6 +82,7 @@ $(function(){
         return str.replace(/[^\d]+/g, '');
     }
 
+
 });//ready
 	
 	

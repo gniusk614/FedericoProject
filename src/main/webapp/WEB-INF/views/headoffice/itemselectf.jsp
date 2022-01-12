@@ -57,7 +57,8 @@
 							</div>
 						</div>
 					</div>
-					<table class="table table-striped table-hover">
+					<!-- table -->
+					<table id="t_itemselect" class="table table-striped table-hover">
 						<thead align="center">
 							<tr>
 								<th scope="col" width="5%">품 번</th>

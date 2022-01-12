@@ -35,6 +35,17 @@ public class HeadOfficeController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
+	
+	
+	// 처리완료발주내역폼 이동(강현구)
+	@RequestMapping(value = "/fcOrderYes")
+	public void fcOrderYes() {};
+	
+	// 미처리발주내역폼 이동(강현구)
+	@RequestMapping(value = "/fcOrderNo")
+	public void fcOrderNo() {};
+	
+	
 	// 본사: 자재 삭제 (강현구)
 	@RequestMapping(value = "/itemdelete")
 	public ModelAndView itemdelete(ModelAndView mv, ItemInfoVO vo) {

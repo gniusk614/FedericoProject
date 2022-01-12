@@ -64,8 +64,7 @@
 						aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
 							<a class="nav-link" href="layout-static.html">가맹점 정보</a> <a
-								class="nav-link" href="layout-sidenav-light.html">미처리 발주내역</a> <a
-								class="nav-link" href="layout-sidenav-light.html">처리완료 발주내역</a>
+								class="nav-link" href="layout-sidenav-light.html">가맹점 조회</a> 
 						</nav>
 					</div>
 					<!-- 가맹점관리 -->
@@ -84,8 +83,8 @@
 					<div class="collapse" id="collapseLayouts3"
 						aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
-							<a class="nav-link" href="layout-static.html">미처리 발주내역</a> <a
-								class="nav-link" href="layout-sidenav-light.html">처리완료 발주내역</a>
+							<a class="nav-link" href="fcOrderNo">미처리 발주내역</a> <a
+								class="nav-link" href="fcOrderYes">처리완료 발주내역</a>
 							<a class="nav-link" href="itemselect">자재조회 및 등록</a>
 						</nav>
 					</div>
