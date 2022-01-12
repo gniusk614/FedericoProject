@@ -1,6 +1,7 @@
 package com.project.federico;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,13 +12,16 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j;
 import service.HeadOfficeService;
 import vo.HeadOfficeVO;
+import vo.ItemInfoVO;
 import vo.StaffVO;
 
 
@@ -31,6 +35,81 @@ public class HeadOfficeController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
+	// 본사: 자재 삭제 (강현구)
+	@RequestMapping(value = "/itemdelete")
+	public ModelAndView itemdelete(ModelAndView mv, ItemInfoVO vo) {
+	
+		if(service.itemdelete(vo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}	
+	
+	// 본사: 자재 상세수정 (강현구)
+	@RequestMapping(value = "/itemupdate")
+	public ModelAndView itemupdate(ModelAndView mv, ItemInfoVO vo) {
+	
+		if(service.itemUpdate(vo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}	
+	
+	
+	// 본사: 자재 상세조회 (강현구)
+	@RequestMapping(value = "/itemdetail")
+	public ModelAndView itemdetail(ModelAndView mv, ItemInfoVO vo) {
+		vo = service.selectOneItem(vo);
+		if(vo != null) {
+			mv.addObject("vo", vo);
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
+	
+	// 본사: 자재입력기능 (강현구)
+	@RequestMapping(value = "/iteminsert")
+	public ModelAndView iteminsert(ModelAndView mv, ItemInfoVO vo) {
+		
+		if (service.iteminsert(vo) > 0) {
+			mv.addObject("message", vo.getItemName()+" 입력이 완료되었습니다.");
+			mv.addObject("success","success");
+		}else {
+			mv.addObject("message", vo.getItemName()+" 입력이 실패하였습니다.");
+			mv.addObject("success","fail");
+		}
+		mv.setViewName("jsonView");
+
+		return mv;	
+	}
+	
+	// 본사: 자재리스트 가져오기 + 자재조회폼 이동 (강현구)
+	@RequestMapping(value = "/itemselect")
+	public ModelAndView iteminsertf(ModelAndView mv) {
+		
+		List<ItemInfoVO> list = new ArrayList<ItemInfoVO>();
+		list = service.selectAllItem();
+		
+		if(list != null && list.size()>0) {
+			mv.addObject("list", list);
+			mv.setViewName("headoffice/itemselectf");
+		}else {
+			mv.setViewName("haedoffice/headofficeMain");
+		}
+		
+		return mv;	
+	}
 	
 	@RequestMapping(value = "/loginf") //로그인폼이동 (강광훈)
 	public ModelAndView loginf(ModelAndView mv) {
