@@ -22,7 +22,7 @@
     
     </head>
 <body bgcolor="">
-<h1 align="center">메뉴등록</h1>
+<h1 align="center">메뉴등록12345</h1>
 <div id ="menuList">
 <div class="container" id="menuListPart">
 	<div class="row row-cols-1 row-cols-md-3 g-4">
