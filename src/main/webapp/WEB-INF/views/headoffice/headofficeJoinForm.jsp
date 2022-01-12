@@ -61,9 +61,10 @@
 </style>
 </head>
 <body>
-	<div class="container-fluid px-4 -8" style="margin-top: 20px;">
+	<div class="container-fluid px-4" style="margin-top: 20px;">
 		<div class="row">
-			<div class="col-sm-8">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
 				<div class="card">
 					<div class="card-header">
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -107,6 +108,7 @@
 					</div>
 				</div>
 			</div>
+			<div class="col-sm-3"></div>
 		</div>
 	</div>
 	<script
