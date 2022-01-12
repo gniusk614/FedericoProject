@@ -230,7 +230,12 @@ public class HeadOfficeController {
 		return mv;
 	}//staffDetail 
 	
-	
+	//============================Menu=======================
+	@RequestMapping(value = "/menuList")
+	public ModelAndView menuRegistration(ModelAndView mv) {
+		mv.setViewName("headoffice/menuList");
+		return mv;
+	}
 	
 	
 
