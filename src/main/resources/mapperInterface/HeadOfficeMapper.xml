@@ -9,6 +9,39 @@
 		select * from staff
 	</select>
 
+
+
+	<delete id="itemdelete">
+		DELETE iteminfo WHERE itemindex = #{itemIndex}
+	</delete>
+	
+
+	<!-- itemupdate 본사자재 정보수정 -->
+	<update id="itemUpdate">
+		UPDATE iteminfo SET itemname = #{itemName}, itemflag = #{itemFlag}, itemunit = #{itemUnit}, itemprice = #{itemPrice}
+		WHERE itemindex = #{itemIndex}
+	</update>
+
+	<!-- selectOneItem 본사자재 1건출력 -->
+	<select id="selectOneItem" resultType="vo.ItemInfoVO">
+		SELECT * FROM iteminfo where itemIndex=#{itemIndex}
+	</select>
+
+
+
+	<!-- selectAllItem 본사자재 모두출력 -->
+	<select id="selectAllItem" resultType="vo.ItemInfoVO">
+		SELECT * FROM iteminfo order by itemindex
+	</select>
+	
+
+
+	<!-- iteminfo insrt 본사 자재 입력 -->
+	<insert id="iteminsert">
+		INSERT INTO iteminfo(itemindex, itemname, itemflag, itemunit, itemprice)
+		VALUES((select nvl(max(itemindex),0)+1 from iteminfo), #{itemName}, #{itemFlag}, #{itemUnit}, #{itemPrice})
+	</insert>
+	
 	<!-- ** LoginSelectOne -->
 	<select id="loginSelectOne" resultType="vo.HeadOfficeVO">
 		SELECT * FROM HeadOffice
