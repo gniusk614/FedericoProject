@@ -2,20 +2,6 @@ $(function() {
 	
 //===============< 사원리스트 스크립트(광훈) >============================
 
-	//**페이지이동
-	$('#memberList').click(function(){
-		$.ajax({
-			type: "Get",
-			url : "memberList",
-			success: function(resultPage){S
-				$('#resultPage').html(resultPage)
-			},
-			error: function(){
-				alert("Ajax 오류")
-			}
-		});// ajax
-	});// click
-	
 	// ** 검색기능
 	// SearchType 이 '---' 면 keyword 클리어
 	$('#searchType').change(function() {
@@ -57,18 +43,8 @@ $(function() {
 
 // ===============< 사원계정생성 스크립트(광훈) >============================
 
-	$('#staffJoinf').click(function() {
-		$.ajax({
-			type : "Get",
-			url : "staffJoinf",
-			success : function(resultPage) {
-				$('#resultPage').html(resultPage)
-			},
-			error : function() {
-				alert("Ajax 오류")
-			}
-		});// ajax
-	});// click
+	
+	
 	
 //====================================================================	
 	

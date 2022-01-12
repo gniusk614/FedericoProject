@@ -42,10 +42,10 @@
 										</div>
 										<div
 											class="d-flex align-items-center justify-content-between mt-4 mb-0">
-											<div class="col-sm-8">
+											<div class="col-xxl-8">
 												<a class="small" href="passwordReset">비밀번호 재설정</a>
 											</div>
-											<div class="col-sm-4">
+											<div class="col-xxl-4">
 												<!-- <a class="btn btn-primary" href="/green/views/company/index.html">Login</a> -->
 												<a class="btn btn-primary" href="/federico/">메인으로</a> 
 												<input class="btn btn-primary" type="submit" value="Login">

@@ -15,11 +15,11 @@
 </head>
 <body>
 <!-- navtop inlcud -->
- 	<%@ include file="navtop.jsp" %> 
+<%-- <%@ include file="navtop.jsp" %> --%>
 
 <!-- layoutSidenav 시작 -->
 <div id="layoutSidenav">
-	<%@ include file="navside.jsp" %> 
+	<%-- <%@ include file="navside.jsp" %> --%>
 	<div id="layoutSidenav_content">
 	<!-- 본문 시작 -->
 		
