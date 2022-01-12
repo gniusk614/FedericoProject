@@ -8,5 +8,6 @@ public class StaffVO {
 	String staffName;
 	String staffPosition;
 	String staffPhone;
+	String staffEmail;
 	
 }

@@ -47,8 +47,8 @@
 											</div>
 											<div class="col-sm-4">
 												<!-- <a class="btn btn-primary" href="/green/views/company/index.html">Login</a> -->
-												<a class="btn btn-primary" href="/federico/">메인으로</a> <input
-													class="btn btn-primary" type="submit" value="Login">
+												<a class="btn btn-primary" href="/federico/">메인으로</a> 
+												<input class="btn btn-primary" type="submit" value="Login">
 											</div>
 										</div>
 									</form>
