@@ -1,7 +1,12 @@
 $(function() {
 	
 //===============< 사원리스트 스크립트(광훈) >============================
+	//테이블 페이징기능
+//	$("#table_id").DataTable();
 
+
+
+	
 	// ** 검색기능
 	// SearchType 이 '---' 면 keyword 클리어
 	$('#searchType').change(function() {
@@ -38,6 +43,50 @@ $(function() {
 			}
 		});// ajax
 	});
+	
+	// ** 계정생성 클릭시 모달창
+	$('#joinBtn').click(function() {
+		$('#joinfmodal').modal('show');
+	});
+	
+	// ** 계정 생성 확인버튼 클릭시
+	$('#submitBtn').click(function(){
+		
+		if (confirm('계정을 생성하시겠습니까?')){
+			$.ajax({
+			type:"post",
+			url:"staffJoin",	
+			data:{
+				staffCode: $('#code').val(),
+				hoPassword: $('#hoPassword').val(),
+				staffName: $('#name').val(),
+				staffPosition: $('#position').val(),
+				staffPhone: $('#phone').val(),
+				staffEmail: $('#email').val()
+			},
+			success:function(data){
+				if(data.success == 'success'){
+					alert('계정생성에 성공했습니다.');
+					location.reload();
+					}
+				if(data.success=='fail'){
+					alert('계정생성에 실패했습니다.');
+				}
+			},
+			error:function(){
+				alert("서버와 접속에 실패했습니다.")
+			}
+			})//ajax 
+		}
+		
+		
+		
+	})
+	
+	
+	
+	
+	
 	
 //====================================================================	
 

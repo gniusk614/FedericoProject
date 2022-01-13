@@ -5,31 +5,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<meta name="description" content="" />
-<meta name="author" content="" />
-<title>사원 정보 리스트</title>
-<!-- <link
-	href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css"
-	rel="stylesheet" />
-<link href="/federico/resources/css/styles.css" rel="stylesheet" />
-<script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
-	crossorigin="anonymous"></script>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<script src="/federico/resources/myLib/headOffice_Script.js"></script> -->
 
+<title>Federico Company</title>
 
-<link href="/federico/resources/css/styles.css" rel="stylesheet" />
-<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
-<script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
-<script src="/federico/resources/myLib/headOffice_Script.js"></script>
 <style>
 <!--
 섹션 크기 -->.bg-light {
@@ -68,72 +46,57 @@
 </style>
 </head>
 <body>
-	<%@ include file="navtop.jsp"%>
-
-	<!-- layoutSidenav 시작 -->
-	<div id="layoutSidenav">
-		<%@ include file="navside.jsp"%>
-		<div id="layoutSidenav_content">
-			<!-- 본문 시작 -->
-			<div class="container-fluid px-4" style="margin-top: 20px;">
-				<div class="row">
-					<div class="col-sm-3"></div>
-					<div class="col-sm-6">
-						<div class="card">
-							<div class="card-header">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-									fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-	  					<path
-										d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-					</svg>
-								&nbsp;사원 계정 생성
-							</div>
-							<div class="card-body">
-								<form>
-									<div class="form-group">
-										<label for="exampleInputEmail1" class="form-label mt-4">아이디</label>
-										<input type="text" class="form-control"
-											id="exampleInputEmail1" aria-describedby="emailHelp">
-									</div>
-									<div class="form-group has-success">
-										<label class="form-label mt-4" for="inputValid">비밀번호</label> <input
-											type="password" class="form-control is-valid" id="inputValid">
-										<div class="valid-feedback"></div>
-									</div>
-
-									<div class="form-group has-danger">
-										<label class="form-label mt-4" for="inputInvalid">비밀번호
-											재확인</label> <input type="password" class="form-control is-invalid"
-											id="inputInvalid">
-										<div class="invalid-feedback">비밀번호가 일치하지 않습니다</div>
-									</div>
-									<div class="form-group">
-										<label for="exampleInputEmail1" class="form-label mt-4">이름</label>
-										<input type="text" class="form-control"
-											id="exampleInputEmail1" aria-describedby="emailHelp">
-									</div>
-									<div>
-										<br>
-									</div>
-									<div>
-										<input class="btn btn-primary" type="submit" value="Login">
-									</div>
-								</form>
+	<div class="container-fluid px-4" style="margin-top: 20px;">
+		<div class="row">
+			<div class="card">
+				<div class="card-body">
+					<form>
+						<div class="form-group">
+							<label class="form-label mt-4">사원번호(ID)</label> 
+								<div class="input-group mb-3">
+  									<input type="text" id="staffCode" name="staffCode" class="form-control">
+  									<button class="btn btn-outline-secondary" type="button" id="button-addon2">중복확인</button>
+								<div class="invalid-feedback">
+								<c:if test="${not empty codeMessage}">${codeMessage}</c:if>
+								</div>
+								</div>
+								
+						</div>
+							<!-- 맞으면 스크립트에서 ${password}.addclass('is-valid')addclass -->
+						<div class="form-group has-success">
+							<label class="form-label mt-4">비밀번호</label> 
+							<input type="password" class="form-control" id="hoPassword">
+							<div class="valid-feedback"></div>
+						</div>
+							<!-- 맞으면 스크립트에서 ${passwordRepeat}.addclass('is-valid')addclass -->
+							<!-- 틀리면 스크립트에서 ${passwordRepeat}.addclass('is-invalid')addclass -->
+						<div class="form-group has-danger">
+							<label class="form-label mt-4">비밀번호 확인</label> 
+							<input type="password" class="form-control" id="passwordRepeat">
+							<div class="invalid-feedback">
+							<c:if test="${not empty pwMessage}">${pwMessage}</c:if>
 							</div>
 						</div>
-					</div>
-					<div class="col-sm-3"></div>
+						<div class="form-group">
+							<label class="form-label mt-4">이름</label> 
+							<input type="text" id="staffName"  class="form-control" >
+						</div>
+						<div class="form-group">
+							<label class="form-label mt-4">E-mail</label> 
+							<input type="text" id="staffEmail" class="form-control" >
+						</div>
+						<div class="form-group">
+							<label class="form-label mt-4">연락처</label> 
+							<input type="text" id="staffPhone"  class="form-control">
+						</div>
+						<div>
+							<br>
+						</div>
+						
+					</form>
 				</div>
 			</div>
-			<!-- footer inlcud -->
-			<div><%@ include file="footer.jsp"%></div>
 		</div>
-		<!-- 본문 끝 -->
 	</div>
-	<!-- layoutSidenav 끝 -->
-	
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="/federico/resources/js/scripts.js"></script>
-	
 </body>
 </html>

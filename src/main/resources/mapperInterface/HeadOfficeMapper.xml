@@ -3,10 +3,24 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapperInterface.HeadOfficeMapper">
 
-
-
+	
+	<!-- staff 인서트 -->
+	
+	<insert id="staffInsert">
+		INSERT INTO staff VALUES(#{staffCode}, #{staffName}, #{staffPosition}, #{staffPhone}, #{staffEmail})
+	</insert>
+	
+	
+	<!-- HeadOffice 인서트 -->
+	<insert id="headOfficeInsert">
+		INSERT INTO headOffice(hoid, hoPassword) VALUES(#{staffVo.staffCode}, #{hoPassword})
+	</insert>
+	
+	
+	
+	<!-- stafflist 전부출력 -->
 	<select id="selectMList" resultType="vo.StaffVO">
-		select * from staff
+		SELECT * FROM staff ORDER BY staffCode desc
 	</select>
 
 

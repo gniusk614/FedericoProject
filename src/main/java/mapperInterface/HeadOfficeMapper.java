@@ -25,5 +25,9 @@ public interface HeadOfficeMapper {
 	
 	StaffVO selectOne(StaffVO vo); //staffVO selectOne
 	
+	int staffInsert(StaffVO vo); //스탭 계정생성
+	
+	int headOfficeInsert(HeadOfficeVO vo); //ID, Password 생성
+	
 	
 }
