@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapperInterface.MenuMapper">
+  
+
+						<!--<<  CREATE  >>-->
+	
+	<insert id="menuInsert">
+		INSERT INTO menuinfo (MENUNAME,MENUINTRO,MENUIMAGE,MENUPRICE)
+		VALUES (#{MENUNAME},#{MENUINTRO}, #{MENUIMAGE},#{MENUPRICE})
+	</insert>
+	
+						<!--<<  READ  >>-->
+     					<!--<<  read_all  >>-->
+	<select id="selectMenuList" resultType="vo.MenuVO">
+		SELECT menuname, menuintro, menuimage, menuprice FROM MENUINFO
+	</select>
+     					<!--<<  read_one  >>-->
+	<select id="selectMenuOne" resultType="vo.MenuVO">
+		SELECT menuname, menuintro, menuimage, menuprice FROM MENUINFO
+		WHERE MENUNAME = #{MENUNAME}
+	</select>		
+	
+						<!--<<  UPDATE  >>-->
+	<update id="menuUpdate">
+		UPDATE MENUINFO SET 
+		MENUNAME=#{MENUNAME}, 
+		MENUINTRO=#{MENUINTRO},  
+		MENUIMAGE=#{MENUIMAGE}
+		where MENUNAME=#{MENUNAME}
+	</update>
+							
+						<!--<<  DELETE  >>-->	
+	<delete id="delete">
+		delete from member where NAME=#{NAME}	
+	</delete>
+	
+		
+	
+</mapper>

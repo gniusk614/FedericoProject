@@ -1,5 +1,6 @@
 package com.project.federico;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,16 +13,17 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j;
 import service.HeadOfficeService;
+import service.MenuService;
 import vo.HeadOfficeVO;
 import vo.ItemInfoVO;
+import vo.MenuVO;
 import vo.StaffVO;
 
 
@@ -34,6 +36,8 @@ public class HeadOfficeController {
 	HeadOfficeService service;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	MenuService menuService;
 	
 	// 본사: 자재 삭제 (강현구)
 	@RequestMapping(value = "/itemdelete")
@@ -232,10 +236,80 @@ public class HeadOfficeController {
 	
 	//============================Menu=======================
 	@RequestMapping(value = "/menuList")
-	public ModelAndView menuRegistration(ModelAndView mv) {
+	public ModelAndView menuList(ModelAndView mv,MenuVO vo) {
+		List<MenuVO> list = menuService.selectMenuList();
+		if(list != null) {
+			mv.addObject("menuList",list);
+		} else {
+			mv.addObject("message","출력자료 없음.");
+		}
 		mv.setViewName("headoffice/menuList");
 		return mv;
 	}
+	@RequestMapping(value = "/menuRegistrationf") // 메뉴등록 양식으로 이동(김민석_22.01.13)
+	public ModelAndView menuRegistrationf(HttpServletRequest request, ModelAndView mv, MenuVO vo) 
+		 	 throws IOException {
+		
+		//******** FileUpload 기능 *******
+		// 현재 웹 어플리케이션의 실행 위치 확인.
+		String realPath = request.getRealPath("/"); // Wabapp까지의 경로.
+		System.out.println("** realPath => "+realPath);
+		
+		// 저장공간 확인.
+		if(realPath.contains(".eclipse."))
+			realPath="\"C:\\Users\\19467\\eclipse-workspace\\Spring02\\src\\main\\webapp\\resources\\uploadImage";
+		else realPath += "resources\\Image\\"; 
+		
+		// 폴더만들기. (file 클래스 활용)
+		File f1 = new File(realPath);
+				
+		if ( !f1.exists() ) f1.mkdir();
+				
+		// ** 기본 이미지 지정하기 
+		String file1, file2="resources/uploadImage/basicman1.jpg";
+		
+		// ** MultipartFile
+		// => 업로드한 파일에 대한 모든 정보를 가지고 있으며 이의 처리를 위한 메서드를 제공한다.
+		//    -> String getOriginalFilename(), 
+		//    -> void transferTo(File destFile),
+		//    -> boolean isEmpty()
+		
+		MultipartFile uploadfilef = vo.getMenuUploadfilef();
+		if ( uploadfilef !=null && !uploadfilef.isEmpty() ) {
+			// Image 를 선택했음 -> Image 처리 (realPath+화일명)
+			// 1) 물리적 위치에 Image 저장 
+			file1=realPath + uploadfilef.getOriginalFilename(); //  전송된File명 추출 & 연결
+			uploadfilef.transferTo(new File(file1)); // real 위치에 전송된 File 붙여넣기
+			// 2) Table 저장위한 경로 
+			file2 = "resources/uploadImage/"+ uploadfilef.getOriginalFilename();
+		}
+		vo.setMenuUploadfile(file2);
+	
+		// 2. Service 처리
+		String uri = "/headoffice/menuList";  // 성공시 로그인폼으로
+		
+	      // *** Transaction Test 
+	      // 1) Transaction 적용전 : 동일자료 2번 insert
+	      //    => 첫번째는 입력완료 되고, 두번째 자료입력시 Key중복 오류발생
+	      // 2) Transaction 적용후 : 동일자료 2번 insert
+	      //    => 첫번째는 입력완료 되고, 두번째 자료입력시 Key중복 오류발생 하지만,
+	      //       rollback 되어 둘다 입력 안됨
+			
+		
+		if ( menuService.menuInsert(vo) > 0 ) {
+			 // insert 성공
+			 mv.addObject("message", "메뉴등록 성공");
+		 }else { 
+			 // insert 실패
+			 mv.addObject("message", "메뉴등록 실패");
+			 uri="member/joinForm";
+		 }
+		mv.setViewName(uri);
+		return mv;
+		
+		
+	}
+	
 	
 	
 
