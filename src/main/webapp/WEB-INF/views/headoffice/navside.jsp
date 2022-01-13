@@ -41,9 +41,6 @@
 						aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
 							<a class="nav-link" href="staffList">직원계정 조회</a>
-							<c:if test="${loginID == 'admin' }">
-								<a class="nav-link" href="staffJoinf">직원계정 생성</a>
-							</c:if>
 						</nav>
 					</div>
 					<!-- 직원계정조회 -->

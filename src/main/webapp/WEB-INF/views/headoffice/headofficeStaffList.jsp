@@ -6,13 +6,34 @@
 <head>
 <meta charset="UTF-8">
 
-<title>사원 정보 리스트</title>
+<title>Federico Company</title>
 <link href="/federico/resources/css/styles.css" rel="stylesheet" />
-<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+	crossorigin="anonymous"></script>
 <script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
 <script src="/federico/resources/myLib/headOffice_Script.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script
+	src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
 <style>
+a:visited {
+	text-decoration: none;
+	color: black;
+}
+
+a:hover {
+	text-decoration: none;
+	color: black;
+}
+
+a {
+	color: black;
+	text-decoration: none;
+}
 </style>
 </head>
 <body>
@@ -64,7 +85,7 @@
 								<div class="col-sm-7"></div>
 							</div>
 							<div class="dataTable-container">
-								<table class="table table-striped table-hover">
+								<table id="table_id" class="table table-striped table-hover">
 									<thead>
 										<tr>
 											<th scope="col">#</th>
@@ -75,30 +96,40 @@
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="list" items="${memberList}" varStatus="status">
+										<c:forEach var="list" items="${staffList}" varStatus="status">
 											<tr>
 												<th scope="row">${status.count}</th>
 												<td>${list.staffCode}</td>
 												<td>${list.staffName}</td>
 												<td>${list.staffPosition}</td>
-												<td><span id="${list.staffCode}" class="modalbtn">
-														<svg xmlns="http://www.w3.org/2000/svg" width="16"
-															height="16" fill="currentColor" class="bi bi-zoom-in"
-															viewBox="0 0 16 16">
-										  <path fill-rule="evenodd"
+												<td><a id="${list.staffCode}" class="modalbtn"
+													href="Javascript:;"> <svg
+															xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+															fill="currentColor" class="bi bi-zoom-in"
+															viewBox="0 0 16 16"> 
+															<path fill-rule="evenodd"
 																d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
-										  <path
+											 				<path
 																d="M10.344 11.742c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1 6.538 6.538 0 0 1-1.398 1.4z" />
-										  <path fill-rule="evenodd"
+											  				<path fill-rule="evenodd"
 																d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5z" />
-										</svg>
-												</span></td>
+														</svg>
+												</a></td>
 											</tr>
 										</c:forEach>
 									</tbody>
 								</table>
 							</div>
 							<div class="dataTable-bottom">
+								<c:if test="${loginID == 'admin' }">
+									<a id="joinBtn" href="Javascript:;"> &nbsp;<svg
+											xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+											fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+	  								<path
+												d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+									</svg> &nbsp;계정생성
+									</a>
+								</c:if>
 								<nav class="dataTable-pagination">
 									<ul class="pagination">
 										<li class="page-item"><a class="page-link" href="#"
@@ -119,8 +150,10 @@
 			</div>
 			<!-- footer inlcud -->
 			<div><%@ include file="footer.jsp"%></div>
-		</div><!-- 본문 끝 -->
-	</div><!-- layoutSidenav 끝 -->
+		</div>
+		<!-- 본문 끝 -->
+	</div>
+	<!-- layoutSidenav 끝 -->
 
 
 
@@ -189,9 +222,96 @@
 		</div>
 	</div>
 
-	
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-<script src="/federico/resources/js/scripts.js"></script>
+
+
+	<div class="modal fade" id="joinfmodal" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+							fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+	  					<path
+								d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+					</svg>
+						&nbsp;사원 계정생성
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div id="modal-body" class="modal-body">
+				<div class="container-fluid px-4">
+					<div class="form-group gy-3">
+						<label class="form-label mt-4">사원번호(ID)</label>
+						<div class="input-group mb-3">
+							<input type="text" id="code" class="form-control">
+							<!-- <button class="btn btn-outline-secondary" type="button"
+									id="button-addon2">중복확인</button> -->
+							<div class="invalid-feedback">
+								<c:if test="${not empty codeMessage}">${codeMessage}</c:if>
+							</div>
+						</div>
+
+					</div>
+					<!-- 맞으면 스크립트에서 ${password}.addclass('is-valid')addclass -->
+					<div class="form-group has-success gy-3">
+						<label class="form-label mt-4">비밀번호</label> <input type="password"
+							class="form-control" id="hoPassword">
+						<div class="valid-feedback"></div>
+					</div>
+					<!-- 맞으면 스크립트에서 ${passwordRepeat}.addclass('is-valid')addclass -->
+					<!-- 틀리면 스크립트에서 ${passwordRepeat}.addclass('is-invalid')addclass -->
+					<div class="form-group has-danger gy-3">
+						<label class="form-label mt-4">비밀번호 확인</label> <input
+							type="password" class="form-control" id="passwordRepeat">
+						<div class="invalid-feedback">
+							<c:if test="${not empty pwMessage}">${pwMessage}</c:if>
+						</div>
+					</div>
+					<div class="form-group gy-3">
+						<label class="form-label mt-4">이름</label> <input type="text"
+							id="name" class="form-control">
+					</div>
+					<div class="form-group gy-3">
+						<label class="form-label mt-4">직 급</label> <select
+							class="form-select" id="position">
+							<option selected value="주임">주임</option>
+							<option value="대리">대리</option>
+							<option value="과장">과장</option>
+							<option value="차장">차장</option>
+						</select>
+					</div>
+					<div class="form-group gy-3">
+						<label class="form-label mt-4">E-mail</label> <input type="text"
+							id="email" class="form-control">
+					</div>
+					<div class="form-group gy-3">
+						<label class="form-label mt-4">연락처</label> <input type="text"
+							id="phone" class="form-control">
+					</div>
+					<div>
+						<br>
+					</div>
+					<div>
+						<input class="btn btn-primary" type="button" id="submitBtn"
+							value="계정생성"> <input class="btn btn-secondary"
+							type="reset" value="입력취소">
+					</div>
+			</div>
+				</div>
+				<div class="modal-footer"></div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		crossorigin="anonymous"></script>
+	<script src="/federico/resources/js/scripts.js"></script>
 
 </body>
 </html>
