@@ -8,9 +8,9 @@ import lombok.Data;
 public class FcOrderVO {
 
 	private int fcOrderSeq;
-	private FranchiseVO fcVo;
+	private String fcId;
 	private Date fcOrderDate;
-	private String fcFlag;
+	private String fcOrderFlag;
 	
 	
 }

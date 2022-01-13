@@ -119,21 +119,22 @@ $(function(){
     function inputNumberFormat(obj) {
         obj.value = comma(uncomma(obj.value));
     }
-    //실행함수 
-	//콤마찍기
-    function comma(str) {
-        str = String(str);
-        return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-    }
-    //콤마풀기
-    function uncomma(str) {
-        str = String(str);
-        return str.replace(/[^\d]+/g, '');
-    }
 
 
 });//ready
 	
+//실행함수 
+//콤마찍기
+function comma(str) {
+    str = String(str);
+    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+}
+//콤마풀기
+function uncomma(str) {
+    str = String(str);
+    return str.replace(/[^\d]+/g, '');
+}
+
 	
 // 자재등록 값체크 및 자재등록 메서드 실행
 function itemInsertCheck(){
@@ -286,3 +287,64 @@ function itemDelete(){
 }
 
 //===============< 자재등록(현구) >============================
+
+
+
+//===============< 가맹점발주관련(현구) >============================
+
+$(function(){
+	
+	// 자재상세조회 modal 닫힐 시 내용 clear
+	$('#fcOrderDetailModal').on('hidden.bs.modal', function(){
+		$('#fcOrderDeatilTableBody').html('');
+	})
+
+})//ready
+
+
+
+//자재 상세조회 modal 열기
+function fcOrderDetailForm(fcOrderSeq){
+	
+	$.ajax({
+		type: 'get',
+		url: 'fcorderdetail',
+		data:{
+			fcOrderSeq : fcOrderSeq
+		},
+		success: function(data){
+			var list = data.list;
+			var sumCol = 0;
+			$.each(list, function(index, vo){
+				var	itemPrice = comma(vo.itemInfoVO.itemPrice);
+				var itemQty = comma(vo.itemQty);
+				var sumRow = comma(vo.itemInfoVO.itemPrice*vo.itemQty);
+				sumCol = sumCol + (vo.itemInfoVO.itemPrice*vo.itemQty);
+				console.info('합계' + sumCol);
+				$('#fcOrderDeatilTableBody').append(
+					'<tr><th>'+vo.fcOrderDetailSeq+'</th><td>'+vo.itemInfoVO.itemFlag
+					+'</td><td>'+vo.itemInfoVO.itemName+'</td><td>'+itemQty
+					+'</td><td>'+vo.itemInfoVO.itemUnit+'</td><td>'+itemPrice
+					+'</td><td>'+sumRow+'</td></tr>' 
+				);//append
+			}) //each
+			
+			sumCol = comma(sumCol);
+			$('#fcOrderDetailModalSumCol').html('합계 : '+sumCol);
+			$('#fcOrderNumber').html('  &nbsp;발주번호 : '+fcOrderSeq);
+			$('#fcOrderDetailModal').modal('show');
+		},
+		error: function(){
+		}
+	})
+}//fcOrderDetailForm
+
+
+
+
+
+
+
+
+
+//===============< 가맹점발주관련등록(현구) >============================

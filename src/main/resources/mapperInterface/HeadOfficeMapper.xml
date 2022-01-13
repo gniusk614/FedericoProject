@@ -4,8 +4,22 @@
 <mapper namespace="mapperInterface.HeadOfficeMapper">
 
 	
-	<!-- staff 인서트 -->
+	<!-- 가맹점 발주내역 상세보기(발주번호 별로) -->
+	<select id="selectFcOrderDetailbyOrderNumber" resultType="vo.FcOrderDetailVO">
+		SELECT * FROM fcorderdetail WHERE fcorderseq = #{fcOrderSeq}
+	</select>
 	
+	
+	<!-- 가맹점 발주정보 전체조회 -->
+	<select id="selectFcOrder" resultType="vo.FcOrderVO" >
+		SELECT * FROM fcorder 
+		<if test="value != null and value != '' ">
+		WHERE fcorderflag = #{value}
+		</if>
+		ORDER BY fcorderseq 
+	</select>
+	
+	<!-- staff 인서트 -->
 	<insert id="staffInsert">
 		INSERT INTO staff VALUES(#{staffCode}, #{staffName}, #{staffPosition}, #{staffPhone}, #{staffEmail})
 	</insert>
