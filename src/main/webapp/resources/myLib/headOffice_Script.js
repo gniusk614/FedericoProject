@@ -260,3 +260,57 @@ function itemDelete(){
 }
 
 //===============< 자재등록(현구) >============================
+
+//===< 메뉴관련(민석) >========!!시작!!===========================================
+
+$(function() {
+	
+	
+	$('#menuRegistrationf').click(function(){
+	
+		var formData = new FormData($('myForm')[0]);
+		
+		$.ajax({
+			type:"post",
+			url:"menuRegistration",
+			processData : false,
+			contentData : false,
+			data:formData,
+			success:function(resultPage){
+				$('#menuRegistrationf').html(resultPage);
+			},
+			error:function(){
+				$('#menuRegistrationf').html("메뉴등록 오류");
+			}
+		});// ajax
+		
+	})
+		
+	
+	
+//===< 메뉴관련(민석) >========!!종료!!===========================================	
+})// MenuReady End 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

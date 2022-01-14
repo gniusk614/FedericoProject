@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j;
+import net.sf.json.spring.web.servlet.view.JsonView;
 import service.HeadOfficeService;
 import service.MenuService;
 import vo.HeadOfficeVO;
@@ -237,6 +238,7 @@ public class HeadOfficeController {
 	//============================Menu=======================
 	@RequestMapping(value = "/menuList")
 	public ModelAndView menuList(ModelAndView mv,MenuVO vo) {
+		
 		List<MenuVO> list = menuService.selectMenuList();
 		if(list != null) {
 			mv.addObject("menuList",list);
@@ -246,6 +248,7 @@ public class HeadOfficeController {
 		mv.setViewName("headoffice/menuList");
 		return mv;
 	}
+	
 	@RequestMapping(value = "/menuRegistrationf") // 메뉴등록 양식으로 이동(김민석_22.01.13)
 	public ModelAndView menuRegistrationf(HttpServletRequest request, ModelAndView mv, MenuVO vo) 
 		 	 throws IOException {
@@ -257,7 +260,7 @@ public class HeadOfficeController {
 		
 		// 저장공간 확인.
 		if(realPath.contains(".eclipse."))
-			realPath="\"C:\\Users\\19467\\eclipse-workspace\\Spring02\\src\\main\\webapp\\resources\\uploadImage";
+			realPath="C:\\Users\\19467\\eclipse-workspace\\Spring02\\src\\main\\webapp\\resources\\uploadImage";
 		else realPath += "resources\\Image\\"; 
 		
 		// 폴더만들기. (file 클래스 활용)
@@ -309,7 +312,23 @@ public class HeadOfficeController {
 		
 		
 	}
+	@RequestMapping(value = "/menuUpdate")
+	public ModelAndView menuUpdate(ModelAndView mv,MenuVO vo) {
+		
+		if(menuService.menuUpdate(vo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		mv.setViewName("jsonView"); 
+		return mv;
+		
+	} //mupdate
 	
+	// ** Member Delete : 회원탈퇴
+	// => member delete, session 무효화
+	// => 삭제 성공 -> home,
+	//    삭제 실패 -> memberDetail 
 	
 	
 
