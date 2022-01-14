@@ -40,7 +40,7 @@ a {
 	text-decoration: none;
 }
 @media (min-width: 992px) {
-  .card {
+  #contentCard {
    width: 900px;
   }
 }
@@ -55,7 +55,7 @@ a {
 		<div id="layoutSidenav_content">
 			<!-- 본문 시작 -->
 			<div class="container-fluid px-4" style="margin-top: 20px;">
-				<div class="card">
+				<div class="card" id="contentCard">
 					<div class="card-header">
 						<svg class="svg-inline--fa fa-table fa-w-16 me-1"
 							aria-hidden="true" focusable="false" data-prefix="fas"
@@ -267,7 +267,7 @@ a {
 					<div class="container-fluid px-4">
 						<form>
 							<div class="form-group gy-5">
-								<div class="input-group mb-2">
+								<div class="input-group mb-2 ">
 									<label class="form-label">사원번호(ID)</label>
 									<input type="text" id="code" class="form-control">
 									<button class="btn btn-outline-secondary" type="button"
