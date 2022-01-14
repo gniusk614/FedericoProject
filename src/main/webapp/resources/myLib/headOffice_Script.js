@@ -354,7 +354,7 @@ function comma(str) {
 	}
 	// 콤마풀기
 	function uncomma(str) {
-		str = String(str);
+			str = String(str);
 		return str.replace(/[^\d]+/g, '');
 	}
 
@@ -525,6 +525,9 @@ $(function(){
 
 //자재 상세조회 modal 열기
 function fcOrderDetailForm(fcOrderSeq){
+	console.log("세션 => "+ window.sessionStorage);
+	console.log("세션 => "+ window.sessionStorage.getItem('loginID'));
+	
 	
 	$.ajax({
 		type: 'get',
@@ -563,11 +566,29 @@ function fcOrderDetailForm(fcOrderSeq){
 
 
 // 가맹점 발주 완료처리
-function fcOrderComplete(){
+function fcOrderFlagUpdate(flag){
 	var fcOrderSeq = $('#fcOrderNumber').attr('ordernumber');
 	console.log("ordernumber : "+fcOrderSeq);
-	
-}
+	console.log("ordernumber : "+flag);
+	$.ajax({
+		type: 'get',
+		url: 'fcordersequpdate?flag='+flag,
+		data: {
+			fcOrderSeq : fcOrderSeq
+		},
+		success: function(data){
+			if (data.success == 'success'){
+			location.reload();
+			}
+			else{
+				alert("시스템 오류입니다.<br>다시 시도해주세요.")
+			}
+		},	
+		error: function(){
+			alert("시스템 오류입니다.<br>다시 시도해주세요.")
+		}
+	})//ajax
+}//fcOrderComplete
 
 
 

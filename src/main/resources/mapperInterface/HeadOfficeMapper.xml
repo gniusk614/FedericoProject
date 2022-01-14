@@ -32,6 +32,14 @@
 		WHERE staffCode = #{staffCode}
 	</insert>
 	
+	
+	<!-- 가맹점 발주내역 처리완료로 변경 -->
+	<update id="fcOrderSeqUpdate" parameterType="hashmap">
+		UPDATE fcorder SET fcorderflag = #{flag} where fcorderseq = #{vo.fcOrderSeq}
+	</update>
+	
+	
+	
 	<!-- 가맹점 발주내역 상세보기(발주번호 별로) -->
 	<select id="selectFcOrderDetailbyOrderNumber" resultType="vo.FcOrderDetailVO">
 		SELECT * FROM fcorderdetail WHERE fcorderseq = #{fcOrderSeq}
@@ -44,7 +52,7 @@
 		<if test="value != null and value != '' ">
 		WHERE fcorderflag = #{value}
 		</if>
-		ORDER BY fcorderseq 
+		ORDER BY fcorderseq desc
 	</select>
 	
 	<!-- staff 인서트 -->

@@ -2,17 +2,21 @@ package com.project.federico;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -64,6 +68,23 @@ public class HeadOfficeController {
 		mv.setViewName("jsonView");
 		return mv;
 	}
+	
+	// 가맹점 발주내역 처리완료로 변경
+	@RequestMapping(value = "/fcordersequpdate")
+	public ModelAndView fcOrderSeqUpdate(ModelAndView mv, FcOrderVO vo, @RequestParam("flag") String flag) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("flag", flag);
+		param.put("vo", vo);
+		
+		if(service.fcOrderSeqUpdate(param) > 0) {
+			mv.addObject("success","success");
+		} else {
+			mv.addObject("success","fail");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
 	
 	
 	

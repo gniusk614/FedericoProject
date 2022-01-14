@@ -1,6 +1,7 @@
 package service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,13 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 
 	@Autowired
 	HeadOfficeMapper dao;
+
+	// 가맹점 발주내역 처리완료로 변경
+	@Override
+	public int fcOrderSeqUpdate(Map<String, Object> param) {
+		return dao.fcOrderSeqUpdate(param);
+	}
+	
 	
 	// 가맹점 발주내역 상세보기(발주번호 별로)
 	@Override
