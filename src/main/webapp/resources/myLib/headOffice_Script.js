@@ -681,7 +681,6 @@ function fcOrderFlagUpdate(flag){
 }//fcOrderComplete
 
 
-}
 
 // ===============< 가맹점발주관련등록(현구) >============================
 
