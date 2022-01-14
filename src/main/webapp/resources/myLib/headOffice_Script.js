@@ -344,7 +344,11 @@ $(function() {
 	}
 	// 실행함수
 	// 콤마찍기
-	function comma(str) {
+	
+
+});// ready
+
+function comma(str) {
 		str = String(str);
 		return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
 	}
@@ -353,8 +357,6 @@ $(function() {
 		str = String(str);
 		return str.replace(/[^\d]+/g, '');
 	}
-
-});// ready
 
 // 자재등록 값체크 및 자재등록 메서드 실행
 function itemInsertCheck() {
