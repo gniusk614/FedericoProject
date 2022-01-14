@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 <!DOCTYPE html>
 <html>
 
@@ -20,9 +21,15 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">내 정보 보기</a></li>
+                        <li><a class="dropdown-item" href="staffMyInfo">내 정보 보기</a></li>
                         <li><hr class="dropdown-divider" /></li>
+                        <!-- 세션종료후 동작 추가 1.13 광훈 -->
+                        <c:if test="${not empty loginID}">
                         <li><a class="dropdown-item" href="logout">Logout</a></li>
+                        </c:if>
+                        <c:if test="${empty loginID}">
+                        <li><a class="dropdown-item" href="loginf">Login</a></li>
+                        </c:if>
                     </ul>
                 </li>   
             </ul>

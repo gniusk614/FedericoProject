@@ -108,13 +108,15 @@ public class HeadOfficeController {
 		return mv;
 	}
 
-	@RequestMapping(value = "/loginf") // 로그인폼이동 (강광훈)
+	// 로그인폼이동 (강광훈)
+	@RequestMapping(value = "/loginf")
 	public ModelAndView loginf(ModelAndView mv) {
 		mv.setViewName("headoffice/loginForm");
 		return mv;
 	}// loginf-> 폼으로 이동시켜줌
 
-	@RequestMapping(value = "/login") // 로그인(강광훈)
+	// 로그인(강광훈)
+	@RequestMapping(value = "/login")
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
 			HeadOfficeVO headOfficeVo, StaffVO staffVo) throws ServletException, IOException {
 
@@ -133,7 +135,7 @@ public class HeadOfficeController {
 			// 정보 확인
 			if (headOfficeVo != null) { // ID는 일치 -> Password 확인
 				if (passwordEncoder.matches(password, headOfficeVo.getHoPassword())) {
-				//if (headOfficeVo.getHoPassword().equals(password)) {
+					// if (headOfficeVo.getHoPassword().equals(password)) {
 
 					headOfficeVo.setStaffVo(staffVo);// 굳이 이걸왜 한번 더 해야하는지모르겠는데 이거해야 밑에 널포인트 안뜸 ...
 					// 로그인 성공 -> 로그인 정보 session에 보관, home
@@ -156,7 +158,8 @@ public class HeadOfficeController {
 		return mv;
 	}// login
 
-	@RequestMapping(value = "/logout") // 로그아웃 (강광훈)
+	// 로그아웃 (강광훈)
+	@RequestMapping(value = "/logout")
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
 			RedirectAttributes rttr) throws ServletException, IOException {
 
@@ -181,12 +184,14 @@ public class HeadOfficeController {
 		return mv;
 	} // logout
 
-	@RequestMapping(value = "/passwordReset") // 비번변경폼이동 (강광훈)
+	// 비번변경폼이동 (강광훈)
+	@RequestMapping(value = "/passwordReset")
 	public ModelAndView passwordReset(ModelAndView mv) {
 		mv.setViewName("headoffice/passwordResetForm");
 		return mv;
 	}// passwordResetf-> 폼으로 이동시켜줌
 
+	// staff 리스트
 	@RequestMapping(value = "/staffList")
 	public ModelAndView staffList(ModelAndView mv, HeadOfficeVO headvo, StaffVO staffvo) {
 
@@ -201,7 +206,8 @@ public class HeadOfficeController {
 		return mv;
 	}// staff 목록 리스트
 
-	@RequestMapping(value = "/staffDetail") // staff 디테일 (강광훈)
+	// staff 디테일 (강광훈)
+	@RequestMapping(value = "/staffDetail")
 	public ModelAndView staffDetail(HttpServletResponse response, ModelAndView mv, StaffVO vo) {
 
 		vo = service.selectOne(vo);
@@ -221,34 +227,93 @@ public class HeadOfficeController {
 		return mv;
 	}// joinf
 
-	
-	
-	@RequestMapping(value = "/staffJoin") // staffJoin -> Insert (강광훈)
-	public ModelAndView staffJoin(ModelAndView mv, StaffVO svo, HeadOfficeVO hvo ) {
-		
-		
+	// staffJoin -> Insert (강광훈)
+	@RequestMapping(value = "/staffJoin")
+	public ModelAndView staffJoin(ModelAndView mv, StaffVO svo, HeadOfficeVO hvo) {
+
 		hvo.setHoPassword(passwordEncoder.encode(hvo.getHoPassword()));
-		
-		if(service.staffInsert(svo)>0) {
+
+		if (service.staffInsert(svo) > 0) {
 			hvo.setStaffVo(svo);
-			if(service.headOfficeInsert(hvo) >0) {
-				mv.addObject("message",  "계정생성이 완료되었습니다.");
+			if (service.headOfficeInsert(hvo) > 0) {
+				mv.addObject("message", "계정생성이 완료되었습니다.");
 				mv.addObject("success", "success");
-			}else {
-				mv.addObject("message",  "계정생성이 실패하였습니다.");
+			} else {
+				mv.addObject("message", "계정생성이 실패하였습니다.");
 				mv.addObject("success", "fail");
 			}
-		}else {
+		} else {
 			mv.addObject("message", " 계정생성이 실패하였습니다.");
 			mv.addObject("success", "fail");
 		}
-		
-	mv.setViewName("jsonView");
-		
-		
-		
+
+		mv.setViewName("jsonView");
 		return mv;
 	}// join
+
+	@RequestMapping(value = "/staffUpdate")
+	public ModelAndView staffUpdate(ModelAndView mv, StaffVO svo) {
+		if (service.staffUpdate(svo) > 0) {
+			mv.addObject("message", "정보수정이 완료되었습니다.");
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("message", "정보수정이 실패하였습니다.");
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+		return mv;
+	}// join
+	
+	// ** staff 삭제
+	@RequestMapping(value = "/staffDelete")
+	public ModelAndView staffDelete(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
+			StaffVO svo, HeadOfficeVO hvo, RedirectAttributes rttr) {
+		hvo.setStaffVo(svo);
+		if (service.headOfficeDelete(hvo) >0){
+			if (service.staffDelete(svo)> 0) {
+				mv.addObject("success", "success");
+			} else {
+				mv.addObject("success", "fail");
+			}
+		} else {
+			mv.addObject("success", "fail");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+
+	}// delete
+	
+	
+	
+	
+	// ** staff 내정보보기 클릭시
+	@RequestMapping(value = "/staffMyInfo")
+	public ModelAndView staffDetail( HttpServletRequest request, ModelAndView mv, StaffVO svo, HeadOfficeVO hvo) {
+		String id = (String) request.getSession().getAttribute("loginID");
+		String password = (String) request.getSession().getAttribute("loginPW");
+		
+		svo.setStaffCode(id);
+
+		svo = service.selectOne(svo);
+
+		hvo.setStaffVo(svo);
+		
+		hvo = service.loginSelectOne(hvo);
+		
+		
+		if (hvo != null)
+			{hvo.setHoPassword(password);
+			hvo.setStaffVo(svo);
+			System.out.println(hvo.getHoPassword());
+			System.out.println(hvo.getStaffVo().getStaffCode());
+			mv.addObject("staffMyInfo", hvo); // MyBatis 에선 null , size()>0 으로 확인
+		}else mv.addObject("message", "정보가 없습니다.");
+		
+			mv.setViewName("headoffice/headofficeStaffMyInfo");
+
+		return mv;
+	}// staffDetail
 	
 	
 	

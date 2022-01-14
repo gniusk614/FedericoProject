@@ -25,6 +25,12 @@ public interface HeadOfficeService {
 	StaffVO selectOne(StaffVO vo); // staffVO selectOne
 
 	int staffInsert(StaffVO vo); // 스탭 계정생성
+	
+	int staffUpdate(StaffVO vo); //스탭 정보수정
+	
+	int staffDelete(StaffVO vo); //스탭 정보삭제
+
+	int headOfficeDelete(HeadOfficeVO vo); // ID, Password 삭제
 
 	int headOfficeInsert(HeadOfficeVO vo); // ID, Password 생성
 

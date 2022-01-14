@@ -5,7 +5,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="" />
+<meta name="author" content="" />
 <title>Federico Company</title>
 <link href="/federico/resources/css/styles.css" rel="stylesheet" />
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
@@ -14,6 +18,7 @@
 	crossorigin="anonymous"></script>
 <script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
 <script src="/federico/resources/myLib/headOffice_Script.js"></script>
+<script src="/federico/resources/myLib/inCheck.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 <script
 	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
@@ -157,14 +162,14 @@ a {
 
 
 
-
+	<!-- 사원상세정보 modal -->
 	<div class="modal fade" id="modal" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">사원 상세정보</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+					<button type="button" class="btn-close infoClose"
+						data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<div class="card">
@@ -214,8 +219,21 @@ a {
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">Close</button>
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-sm-3">
+									<button type="button" id="staffDeleteBtn"
+										class="btn btn-danger pull-left">삭제</button>
+								</div>
+								<div class="col-sm-4"></div>
+								<div class="col-sm-5">
+									<input class="btn btn-primary" type="button" id="infoUp"
+										value="정보수정">
+									<button type="button" class="btn btn-secondary infoClose"
+										data-bs-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -223,7 +241,7 @@ a {
 	</div>
 
 
-
+	<!-- 사원계정생성 modal -->
 	<div class="modal fade" id="joinfmodal" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -240,64 +258,60 @@ a {
 						aria-label="Close"></button>
 				</div>
 				<div id="modal-body" class="modal-body">
-				<div class="container-fluid px-4">
-					<div class="form-group gy-3">
-						<label class="form-label mt-4">사원번호(ID)</label>
-						<div class="input-group mb-3">
-							<input type="text" id="code" class="form-control">
-							<!-- <button class="btn btn-outline-secondary" type="button"
-									id="button-addon2">중복확인</button> -->
-							<div class="invalid-feedback">
-								<c:if test="${not empty codeMessage}">${codeMessage}</c:if>
-							</div>
-						</div>
+					<div class="container-fluid px-4">
+						<form>
+							<div class="form-group gy-3">
+								<label class="form-label mt-4">사원번호(ID)</label>
+								<div class="input-group mb-3">
+									<input type="text" id="code" class="form-control">
+									<button class="btn btn-outline-secondary" type="button"
+										id="codeDupcheck">중복확인</button>
+									<div class="invalid-feedback" id="codeMessage"></div>
+									<div class="valid-feedback" id="codeSuccessMessage"></div>
 
+								</div>
+								<!-- 맞으면 스크립트에서 ${password}.addclass('is-valid')addclass -->
+								<div class="form-group has-success gy-3">
+									<label class="form-label mt-4">비밀번호</label> <input
+										type="password" class="form-control" id="hoPassword"
+										placeholder="길이4이상, 영문자, 숫자와 특수문자는 1개 이상 포함">
+									<div class="invalid-feedback" id="pMessage"></div>
+								</div>
+								<!-- 맞으면 스크립트에서 ${passwordRepeat}.addclass('is-valid')addclass -->
+								<!-- 틀리면 스크립트에서 ${passwordRepeat}.addclass('is-invalid')addclass -->
+								<div class="form-group has-danger gy-3">
+									<label class="form-label mt-4">비밀번호 확인</label> <input
+										type="password" class="form-control" id="passwordRepeat"
+										disabled="disabled">
+									<div class="invalid-feedback" id="prMessage"></div>
+								</div>
+								<div class="form-group gy-3">
+									<label class="form-label mt-4">이름</label> <input type="text"
+										id="name" class="form-control">
+								</div>
+								<div class="form-group gy-3">
+									<label class="form-label mt-4">직 급</label> <select
+										class="form-select" id="position">
+										<option selected value="주임">주임</option>
+										<option value="대리">대리</option>
+										<option value="과장">과장</option>
+										<option value="차장">차장</option>
+									</select>
+								</div>
+								<div class="form-group gy-3">
+									<label class="form-label mt-4">E-mail</label> <input
+										type="text" id="email" class="form-control">
+								</div>
+								<div class="form-group gy-3">
+									<label class="form-label mt-4">연락처</label> <input type="text"
+										id="phone" class="form-control">
+								</div>
+								<div>
+									<br>
+								</div>
+							</div>
+						</form>
 					</div>
-					<!-- 맞으면 스크립트에서 ${password}.addclass('is-valid')addclass -->
-					<div class="form-group has-success gy-3">
-						<label class="form-label mt-4">비밀번호</label> <input type="password"
-							class="form-control" id="hoPassword">
-						<div class="valid-feedback"></div>
-					</div>
-					<!-- 맞으면 스크립트에서 ${passwordRepeat}.addclass('is-valid')addclass -->
-					<!-- 틀리면 스크립트에서 ${passwordRepeat}.addclass('is-invalid')addclass -->
-					<div class="form-group has-danger gy-3">
-						<label class="form-label mt-4">비밀번호 확인</label> <input
-							type="password" class="form-control" id="passwordRepeat">
-						<div class="invalid-feedback">
-							<c:if test="${not empty pwMessage}">${pwMessage}</c:if>
-						</div>
-					</div>
-					<div class="form-group gy-3">
-						<label class="form-label mt-4">이름</label> <input type="text"
-							id="name" class="form-control">
-					</div>
-					<div class="form-group gy-3">
-						<label class="form-label mt-4">직 급</label> <select
-							class="form-select" id="position">
-							<option selected value="주임">주임</option>
-							<option value="대리">대리</option>
-							<option value="과장">과장</option>
-							<option value="차장">차장</option>
-						</select>
-					</div>
-					<div class="form-group gy-3">
-						<label class="form-label mt-4">E-mail</label> <input type="text"
-							id="email" class="form-control">
-					</div>
-					<div class="form-group gy-3">
-						<label class="form-label mt-4">연락처</label> <input type="text"
-							id="phone" class="form-control">
-					</div>
-					<div>
-						<br>
-					</div>
-					<div>
-						<input class="btn btn-primary" type="button" id="submitBtn"
-							value="계정생성"> <input class="btn btn-secondary"
-							type="reset" value="입력취소">
-					</div>
-			</div>
 				</div>
 				<div class="modal-footer"></div>
 			</div>
