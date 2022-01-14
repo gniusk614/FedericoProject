@@ -42,5 +42,7 @@ public interface HeadOfficeMapper {
 	
 	int headOfficeInsert(HeadOfficeVO vo); //ID, Password 생성
 	
+	int headOfficePwUpdate(HeadOfficeVO vo); // password 변경
+	
 	
 }

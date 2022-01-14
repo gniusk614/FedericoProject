@@ -197,7 +197,6 @@ public class HeadOfficeController {
 					// 로그인 성공 -> 로그인 정보 session에 보관, home
 					request.getSession().setAttribute("loginID", headOfficeVo.getStaffVo().getStaffCode());
 					request.getSession().setAttribute("loginName", headOfficeVo.getStaffVo().getStaffName());
-					request.getSession().setAttribute("loginPW", password);
 					uri = "redirect:headofficeMain";
 				} else {
 					mv.addObject("message", "Password가 일치하지않습니다.");
@@ -361,8 +360,6 @@ public class HeadOfficeController {
 		if (hvo != null)
 			{hvo.setHoPassword(password);
 			hvo.setStaffVo(svo);
-			System.out.println(hvo.getHoPassword());
-			System.out.println(hvo.getStaffVo().getStaffCode());
 			mv.addObject("staffMyInfo", hvo); // MyBatis 에선 null , size()>0 으로 확인
 		}else mv.addObject("message", "정보가 없습니다.");
 		
@@ -371,6 +368,52 @@ public class HeadOfficeController {
 		return mv;
 	}// staffDetail
 	
+	
+	// ** 비번변경시 현재비번확인
+	@RequestMapping(value = "/staffloginPwCheck")
+	public ModelAndView staffloginPwCheck( HttpServletRequest request, ModelAndView mv, HeadOfficeVO hvo, StaffVO svo) {
+		String hoid = (String) request.getSession().getAttribute("loginID");
+		
+		String inputPw = hvo.getHoPassword();
+		svo.setStaffCode(hoid);
+		
+		hvo.setStaffVo(service.selectOne(svo));
+		hvo = service.loginSelectOne(hvo);
+		
+		if(passwordEncoder.matches(inputPw, hvo.getHoPassword())) {
+			mv.addObject("success", "success");
+		}else {
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+
+		return mv;
+	}// staffDetail
+	
+	
+	//  ** 비번 변경
+	@RequestMapping(value = "/headOfficePwUpdate")
+	public ModelAndView headOfficePwUpdate( HttpServletRequest request, ModelAndView mv, HeadOfficeVO hvo, StaffVO svo) {
+		String hoid = (String) request.getSession().getAttribute("loginID");
+		String inputPw = hvo.getHoPassword();
+		svo.setStaffCode(hoid);
+		
+		hvo.setStaffVo(service.selectOne(svo));
+		hvo = service.loginSelectOne(hvo);
+		hvo.setStaffVo(service.selectOne(svo));
+		hvo.setHoPassword(passwordEncoder.encode(inputPw));
+		
+		if(service.headOfficePwUpdate(hvo)>0) {
+			mv.addObject("success", "success");
+		}else {
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+
+		return mv;
+	}// staffDetail
 	
 	
 	

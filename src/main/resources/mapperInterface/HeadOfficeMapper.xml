@@ -5,7 +5,12 @@
 
 
   
-  
+ 	 <!-- headOffice PW 변경 -->
+	
+	<insert id="headOfficePwUpdate">
+	UPDATE headOffice SET hoPassword = #{hoPassword} WHERE hoid = #{staffVo.staffCode}
+	</insert>
+	
   
 	
 	<!-- headOffice 삭제 -->
@@ -13,7 +18,6 @@
 	<delete id="headOfficeDelete">
 	DELETE FROM headOffice where hoid = #{staffVo.staffCode}
 	</delete>
-	
 	
 	
 	<!-- staff 삭제 -->
