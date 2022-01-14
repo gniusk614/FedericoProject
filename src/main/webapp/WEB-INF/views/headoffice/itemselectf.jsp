@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Federico Company</title>
 <link href="/federico/resources/css/styles.css" rel="stylesheet" />
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
@@ -20,8 +20,8 @@
 <!-- layoutSidenav 시작 -->
 <div id="layoutSidenav">
 	<%@ include file="navside.jsp" %>
-	<!-- 본문 시작 -->
 	<div id="layoutSidenav_content">
+	<!-- 본문 시작 -->
 		<div class="container-fluid px-4" style="margin-top: 20px;">
 			<div class="card">
 				<div class="card-header">
@@ -45,10 +45,10 @@
 										<input class="form-control me-2" type="search"
 											placeholder="Search" value="${pageMaker.cri.keyword}" aria-label="Search">
 								</div>
-								<div class="col-sm-1">
+								<div class="col-sm-2">
 									<button id="itemsearch" class="btn btn-outline-primary">검색</button>
 								</div>
-								<div class="col-sm-6"></div>
+								<div class="col-sm-5"></div>
 								<div class="col-sm-2" align="right">
 									<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#itemInsertModal">
  										자재등록
@@ -57,7 +57,8 @@
 							</div>
 						</div>
 					</div>
-					<table class="table table-striped table-hover">
+					<!-- table -->
+					<table id="t_itemselect" class="table table-striped table-hover">
 						<thead align="center">
 							<tr>
 								<th scope="col" width="5%">품 번</th>
