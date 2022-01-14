@@ -140,7 +140,7 @@
 		</div> <!-- modal-body -->		
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-		  <button type="button" class="btn btn-primary" onclick="">완료처리</button>
+		  <button type="button" class="btn btn-primary" onclick="fcOrderComplete()">완료처리</button>
 		</div>
       </div>
     </div>

@@ -331,6 +331,7 @@ function fcOrderDetailForm(fcOrderSeq){
 			
 			sumCol = comma(sumCol);
 			$('#fcOrderDetailModalSumCol').html('합계 : '+sumCol);
+			$('#fcOrderNumber').attr('ordernumber',fcOrderSeq);
 			$('#fcOrderNumber').html('  &nbsp;발주번호 : '+fcOrderSeq);
 			$('#fcOrderDetailModal').modal('show');
 		},
@@ -340,6 +341,13 @@ function fcOrderDetailForm(fcOrderSeq){
 }//fcOrderDetailForm
 
 
+
+// 가맹점 발주 완료처리
+function fcOrderComplete(){
+	var fcOrderSeq = $('#fcOrderNumber').attr('ordernumber');
+	console.log("ordernumber : "+fcOrderSeq);
+	
+}
 
 
 
