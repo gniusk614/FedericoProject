@@ -4,6 +4,33 @@
 <mapper namespace="mapperInterface.HeadOfficeMapper">
 
 	
+	
+	
+	<!-- headOffice 삭제 -->
+	
+	<delete id="headOfficeDelete">
+	DELETE FROM headOffice where hoid = #{staffVo.staffCode}
+	</delete>
+	
+	
+	
+	<!-- staff 삭제 -->
+	
+	<delete id="staffDelete">
+		DELETE FROM staff where staffCode = #{staffCode}
+	
+	</delete>
+	
+	
+	<!-- staff 업데이트 -->
+	
+	<insert id="staffUpdate">
+		UPDATE staff 
+		SET staffName=#{staffName}, staffPosition= #{staffPosition}, staffPhone=#{staffPhone},staffEmail=#{staffEmail} 
+		WHERE staffCode = #{staffCode}
+	</insert>
+	
+	
 	<!-- staff 인서트 -->
 	
 	<insert id="staffInsert">

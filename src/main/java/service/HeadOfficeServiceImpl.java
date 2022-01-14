@@ -65,15 +65,34 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 	public StaffVO selectOne(StaffVO vo) {
 		return dao.selectOne(vo);
 	}
+
 	// Staff 계정생성
 	@Override
 	public int staffInsert(StaffVO vo) {
 		return dao.staffInsert(vo);
 	}
+
+	// Staff 정보수정
+	@Override
+	public int staffUpdate(StaffVO vo) {
+		return dao.staffUpdate(vo);
+	}
+	// Staff 정보삭제
+	@Override
+	public int staffDelete(StaffVO vo) {
+		return dao.staffDelete(vo);
+	}
+	
 	// HeadOffice Id, password 생성
 	@Override
 	public int headOfficeInsert(HeadOfficeVO vo) {
 		return dao.headOfficeInsert(vo);
+	}
+	
+	// HeadOffice 계정 삭제
+	@Override
+	public int headOfficeDelete(HeadOfficeVO vo) {
+		return dao.headOfficeDelete(vo);
 	}
 
 }
