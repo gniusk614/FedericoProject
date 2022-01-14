@@ -23,6 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j;
+import paging.PageMaker;
+import paging.SearchCriteria;
 import service.FranchiseService;
 import service.HeadOfficeService;
 import vo.FcOrderDetailVO;
@@ -168,12 +170,13 @@ public class HeadOfficeController {
 		return mv;
 	}
 
-	// 본사: 자재리스트 가져오기 + 자재조회폼 이동 (강현구)
+	// 본사: 자재리스트 가져오기 + 자재조회폼 이동 (강현구) - 페이징 진행중
 	@RequestMapping(value = "/itemselect")
-	public ModelAndView iteminsertf(ModelAndView mv) {
-
-		List<ItemInfoVO> list = new ArrayList<ItemInfoVO>();
-		list = service.selectAllItem();
+	public ModelAndView iteminsertf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		
+		cri.setSnoEno();
+		
+		List<ItemInfoVO> list = service.searchItemList(cri);
 
 		if (list != null && list.size() > 0) {
 			mv.addObject("list", list);
@@ -181,6 +184,10 @@ public class HeadOfficeController {
 		} else {
 			mv.setViewName("haedoffice/headofficeMain");
 		}
+		pageMaker.setCri(cri);
+		pageMaker.setTotalRowCount(service.searchItemRows(cri));
+		
+		
 
 		return mv;
 	}

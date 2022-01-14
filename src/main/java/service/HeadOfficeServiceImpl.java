@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j;
 import mapperInterface.HeadOfficeMapper;
+import paging.SearchCriteria;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.HeadOfficeVO;
@@ -66,6 +67,20 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 		return dao.selectOneItem(vo);
 	}
 
+	// 자재정보 Search
+	@Override
+	public List<ItemInfoVO> searchItemList(SearchCriteria cri) {
+		return dao.searchItemList(cri);
+	}
+	
+	// 자재정보 Search 결과 Rows 조회
+	@Override
+	public int searchItemRows(SearchCriteria cri) {
+		return dao.searchItemRows(cri);
+	}
+	
+	
+	
 	// 자재정보 모두출력
 	@Override
 	public List<ItemInfoVO> selectAllItem() {

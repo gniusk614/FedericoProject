@@ -3,6 +3,7 @@ package mapperInterface;
 import java.util.List;
 import java.util.Map;
 
+import paging.SearchCriteria;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.HeadOfficeVO;
@@ -24,6 +25,10 @@ public interface HeadOfficeMapper {
 	
 	ItemInfoVO selectOneItem(ItemInfoVO vo); //자재정보 1건출력
 
+	List<ItemInfoVO> searchItemList(SearchCriteria cri); // 자재정보 Search
+	
+	int searchItemRows(SearchCriteria cri); // 자재정보 Search 결과 Rows 조회
+	
 	List<ItemInfoVO> selectAllItem(); 	// 자재정보 모두출력	
 	
 	List<StaffVO> selectMList(StaffVO vo); //사원정보 리스트

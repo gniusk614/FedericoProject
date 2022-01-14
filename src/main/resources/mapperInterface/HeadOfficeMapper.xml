@@ -91,13 +91,39 @@
 		SELECT * FROM iteminfo where itemIndex=#{itemIndex}
 	</select>
 
-
-
 	<!-- selectAllItem 본사자재 모두출력 -->
 	<select id="selectAllItem" resultType="vo.ItemInfoVO">
 		SELECT * FROM iteminfo order by itemindex
 	</select>
 	
+	<!-- searchItemRow -->
+	<select id="searchItemRows" resultType="int">
+		SELECT COUNT(*) FROM iteminfo <include refid="search"></include>
+	</select>
+	
+	<!-- searchItem 본사자재 서치,페이징 -->
+	<select id="searchItemList" resultType="vo.ItemInfoVO">
+		SELECT * FROM iteminfo ORDER BY itemindex
+		<include refid="search"></include>
+		OFFSET #{sno}-1 ROWS FETCH NEXT 10 ROWS ONLY
+	</select>
+
+	<sql id="search" >
+		<if test="keyword != null">
+			<bind name="keyVal" value="'%'+keyword+'%'"/>
+		</if>
+		<choose>
+			<when test="searchType == 'name'.toString()">
+				where itemname LIKE #{keyVal} 
+				 <!-- and title Like  CONCAT('%',CONCAT(#{keyword},'%')) 
+                 and title Like  '%' || #{keyword} || '%' ) -->
+			</when>
+			<when test="searchType == 'c'.toString()">
+				where content LIKE #{keyVal} 
+			</when>			
+			<otherwise></otherwise>						
+		</choose>
+	</sql>
 
 
 	<!-- iteminfo insrt 본사 자재 입력 -->
