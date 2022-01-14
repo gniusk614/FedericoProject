@@ -39,6 +39,12 @@ a {
 	color: black;
 	text-decoration: none;
 }
+@media (min-width: 992px) {
+  #contentCard {
+   width: 900px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -49,7 +55,7 @@ a {
 		<div id="layoutSidenav_content">
 			<!-- 본문 시작 -->
 			<div class="container-fluid px-4" style="margin-top: 20px;">
-				<div class="card">
+				<div class="card" id="contentCard">
 					<div class="card-header">
 						<svg class="svg-inline--fa fa-table fa-w-16 me-1"
 							aria-hidden="true" focusable="false" data-prefix="fas"
@@ -260,37 +266,36 @@ a {
 				<div id="modal-body" class="modal-body">
 					<div class="container-fluid px-4">
 						<form>
-							<div class="form-group gy-3">
-								<label class="form-label mt-4">사원번호(ID)</label>
-								<div class="input-group mb-3">
+							<div class="form-group gy-5">
+								<div class="input-group mb-2 ">
+									<label class="form-label">사원번호(ID)</label>
 									<input type="text" id="code" class="form-control">
 									<button class="btn btn-outline-secondary" type="button"
 										id="codeDupcheck">중복확인</button>
 									<div class="invalid-feedback" id="codeMessage"></div>
 									<div class="valid-feedback" id="codeSuccessMessage"></div>
-
 								</div>
 								<!-- 맞으면 스크립트에서 ${password}.addclass('is-valid')addclass -->
-								<div class="form-group has-success gy-3">
-									<label class="form-label mt-4">비밀번호</label> <input
+								<div class="form-group has-success mb-2">
+									<label class="form-label">비밀번호</label> <input
 										type="password" class="form-control" id="hoPassword"
 										placeholder="길이4이상, 영문자, 숫자와 특수문자는 1개 이상 포함">
 									<div class="invalid-feedback" id="pMessage"></div>
 								</div>
 								<!-- 맞으면 스크립트에서 ${passwordRepeat}.addclass('is-valid')addclass -->
 								<!-- 틀리면 스크립트에서 ${passwordRepeat}.addclass('is-invalid')addclass -->
-								<div class="form-group has-danger gy-3">
-									<label class="form-label mt-4">비밀번호 확인</label> <input
+								<div class="form-group has-danger mb-2">
+									<label class="form-label">비밀번호 확인</label> <input
 										type="password" class="form-control" id="passwordRepeat"
 										disabled="disabled">
 									<div class="invalid-feedback" id="prMessage"></div>
 								</div>
-								<div class="form-group gy-3">
-									<label class="form-label mt-4">이름</label> <input type="text"
+								<div class="form-group mb-2">
+									<label class="form-label">이름</label> <input type="text"
 										id="name" class="form-control">
 								</div>
-								<div class="form-group gy-3">
-									<label class="form-label mt-4">직 급</label> <select
+								<div class="form-group mb-2">
+									<label class="form-label">직 급</label> <select
 										class="form-select" id="position">
 										<option selected value="주임">주임</option>
 										<option value="대리">대리</option>
@@ -298,16 +303,21 @@ a {
 										<option value="차장">차장</option>
 									</select>
 								</div>
-								<div class="form-group gy-3">
-									<label class="form-label mt-4">E-mail</label> <input
+								<div class="form-group mb-2">
+									<label class="form-label">E-mail</label> <input
 										type="text" id="email" class="form-control">
 								</div>
-								<div class="form-group gy-3">
-									<label class="form-label mt-4">연락처</label> <input type="text"
+								<div class="form-group mb-2">
+									<label class="form-label">연락처</label> <input type="text"
 										id="phone" class="form-control">
 								</div>
 								<div>
 									<br>
+								</div>
+								<div>
+									<input class="btn btn-primary" type="button" id="submitBtn"
+										value="계정생성"> 
+									<input class="btn btn-secondary" type="reset" value="입력취소">
 								</div>
 							</div>
 						</form>
