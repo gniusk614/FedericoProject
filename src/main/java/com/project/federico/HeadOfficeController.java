@@ -3,6 +3,7 @@ package com.project.federico;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,14 +13,17 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j;
+import service.FranchiseService;
 import service.HeadOfficeService;
+import vo.FcOrderDetailVO;
+import vo.FcOrderVO;
+import vo.FranchiseVO;
 import vo.HeadOfficeVO;
 import vo.ItemInfoVO;
 import vo.StaffVO;
@@ -30,10 +34,62 @@ import vo.StaffVO;
 public class HeadOfficeController {
 
 	@Autowired
+	FranchiseService fcService;
+	@Autowired
 	HeadOfficeService service;
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
+
+	
+	// 가맹점 발주내역 상세보기(발주번호 별로) return json
+	@RequestMapping(value = "/fcorderdetail")
+	public ModelAndView fcorderdetail(ModelAndView mv, FcOrderDetailVO vo, ItemInfoVO ivo){
+		List<FcOrderDetailVO> list = service.selectFcOrderDetailbyOrderNumber(vo);
+		
+		int i=0;
+		for (FcOrderDetailVO dvo:list) {
+			ivo.setItemIndex(dvo.getItemIndex());
+			dvo.setItemInfoVO(service.selectOneItem(ivo));
+			list.set(i, dvo);
+			i++;
+		}
+		
+		if(list.size() > 0) {
+			mv.addObject("list",list);
+		} else {
+			mv.addObject("message","조회할 자료가 없습니다.");
+		}
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
+	
+	// 발주내역조회 + 폼 이동(강현구) 
+	// 요청에 쿼리스트링으로 구분
+	// flag = Y -> 처리완료
+	// flag = N -> 미러치
+	// 쿼리스트링X -> 전체조회(미구현)
+	@RequestMapping(value = "/fcorder")
+	public ModelAndView fcorder(ModelAndView mv, FcOrderVO vo, FcOrderDetailVO detailVo, FranchiseVO fcVo, @RequestParam("flag") String flag) {
+		
+		String uri="headoffice/headofficeMain";
+		if("Y".equals(flag)) uri = "headoffice/fcOrderY";
+		else if("N".equals(flag)) uri = "headoffice/fcOrderN";
+		
+		List<FcOrderVO> list = service.selectFcOrder(flag);
+		
+		if(list != null && list.size()>0) {
+			mv.addObject("list",list);
+		} else {
+			mv.addObject("message", "조회할 자료가 없습니다.");
+		}
+		mv.setViewName(uri);
+		return mv;
+	};
+	
 	// 본사: 자재 삭제 (강현구)
 	@RequestMapping(value = "/itemdelete")
 	public ModelAndView itemdelete(ModelAndView mv, ItemInfoVO vo) {

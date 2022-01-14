@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j;
 import mapperInterface.HeadOfficeMapper;
+import vo.FcOrderDetailVO;
+import vo.FcOrderVO;
 import vo.HeadOfficeVO;
 import vo.ItemInfoVO;
 import vo.StaffVO;
@@ -17,6 +19,20 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 
 	@Autowired
 	HeadOfficeMapper dao;
+	
+	// 가맹점 발주내역 상세보기(발주번호 별로)
+	@Override
+	public List<FcOrderDetailVO> selectFcOrderDetailbyOrderNumber(FcOrderDetailVO vo) {
+		
+		return dao.selectFcOrderDetailbyOrderNumber(vo);
+	}
+	
+	// 가맹점발주정보 전체조회
+	@Override
+	public List<FcOrderVO> selectFcOrder(String flag) {
+		return dao.selectFcOrder(flag);
+	}
+	
 
 	// 사원정보리스트
 	@Override
