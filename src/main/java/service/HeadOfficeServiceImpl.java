@@ -133,5 +133,11 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 	public int headOfficeDelete(HeadOfficeVO vo) {
 		return dao.headOfficeDelete(vo);
 	}
+	
+	@Override
+	public int headOfficePwUpdate(HeadOfficeVO vo) {
+		
+		return dao.headOfficePwUpdate(vo);
+	}
 
 }
