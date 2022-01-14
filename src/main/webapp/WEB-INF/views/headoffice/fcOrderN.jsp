@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Federico Company</title>
 <link href="/federico/resources/css/styles.css" rel="stylesheet" />
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
@@ -59,8 +59,8 @@
 							<tr>
 								<th scope="col" width="10%">발주번호</th>
 								<th scope="col" width="30%">가맹점명</th>
-								<th scope="col" width="25%">상세내역</th>
 								<th scope="col" width="20%">발주일</th>
+								<th scope="col" width="25%">상세내역</th>
 								<th scope="col" width="15%">처리여부</th>
 							</tr>
 						</thead>
@@ -72,8 +72,9 @@
 								<tr>
 									<th scope="row">${vo.fcOrderSeq}</th>
 									<td>${vo.fcId}</td>
-									<td><span class="btn" onclick="fcOrderDetailForm(${vo.fcOrderSeq})">상세내역 보기</span></td>
 									<td>${vo.fcOrderDate}</td>
+									<td><button class="btn btn-secondary" onclick="fcOrderDetailForm(${vo.fcOrderSeq})">상세내역 보기</button>
+									</td>
 									<td>${vo.fcOrderFlag}</td>
 									
 								</tr>
@@ -110,7 +111,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="fcOrderDetailModal">발주 상세내역</h5>
+        <h5 class="modal-title" id="fcOrderDetailModal">미처리발주 상세내역</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -140,12 +141,11 @@
 		</div> <!-- modal-body -->		
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-		  <button type="button" class="btn btn-primary" onclick="fcOrderComplete()">완료처리</button>
+		  <button type="button" class="btn btn-primary" onclick="fcOrderFlagUpdate('Y')">완료처리</button>
 		</div>
       </div>
     </div>
-  </div>
-</div><!-- 발주상세조회 modal -->
+  </div><!-- 발주상세조회 modal -->
 
 
 

@@ -2,23 +2,29 @@ package com.project.federico;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j;
+import paging.PageMaker;
+import paging.SearchCriteria;
 import service.FranchiseService;
 import service.HeadOfficeService;
 import vo.FcOrderDetailVO;
@@ -64,6 +70,23 @@ public class HeadOfficeController {
 		mv.setViewName("jsonView");
 		return mv;
 	}
+	
+	// 가맹점 발주내역 처리완료로 변경
+	@RequestMapping(value = "/fcordersequpdate")
+	public ModelAndView fcOrderSeqUpdate(ModelAndView mv, FcOrderVO vo, @RequestParam("flag") String flag) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("flag", flag);
+		param.put("vo", vo);
+		
+		if(service.fcOrderSeqUpdate(param) > 0) {
+			mv.addObject("success","success");
+		} else {
+			mv.addObject("success","fail");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
 	
 	
 	
@@ -147,12 +170,13 @@ public class HeadOfficeController {
 		return mv;
 	}
 
-	// 본사: 자재리스트 가져오기 + 자재조회폼 이동 (강현구)
+	// 본사: 자재리스트 가져오기 + 자재조회폼 이동 (강현구) - 페이징 진행중
 	@RequestMapping(value = "/itemselect")
-	public ModelAndView iteminsertf(ModelAndView mv) {
-
-		List<ItemInfoVO> list = new ArrayList<ItemInfoVO>();
-		list = service.selectAllItem();
+	public ModelAndView iteminsertf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		
+		cri.setSnoEno();
+		
+		List<ItemInfoVO> list = service.searchItemList(cri);
 
 		if (list != null && list.size() > 0) {
 			mv.addObject("list", list);
@@ -160,6 +184,10 @@ public class HeadOfficeController {
 		} else {
 			mv.setViewName("haedoffice/headofficeMain");
 		}
+		pageMaker.setCri(cri);
+		pageMaker.setTotalRowCount(service.searchItemRows(cri));
+		
+		
 
 		return mv;
 	}

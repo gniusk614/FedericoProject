@@ -37,8 +37,8 @@
 								<div class="col-sm-1">
 									<select id="" class="form-select" aria-label="Default select example">
 										<option value="none" <c:out value="${pageMaker.cri.searchType==null ? 'selected':''}"/>> - - </option>
-										<option value="" <c:out value="${pageMaker.cri.searchType=='code' ? 'selected':''}"/>>품 명</option>
-										<option value="" <c:out value="${pageMaker.cri.searchType=='name' ? 'selected':''}"/>>분 류<option>
+										<option value="name" <c:out value="${pageMaker.cri.searchType=='name' ? 'selected':''}"/>>품 명</option>
+										<option value="flag" <c:out value="${pageMaker.cri.searchType=='flag' ? 'selected':''}"/>>분 류<option>
 									</select>
 								</div>
 								<div class="col-sm-2">
@@ -93,13 +93,17 @@
 						<nav class="dataTable-pagination">
 							<ul class="pagination">
 								<li class="page-item"><a class="page-link" href="#"
-									aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+									aria-label="Previous"> <span aria-hidden=true>&laquo;</span>
 								</a></li>
-								<li class="page-item"><a class="page-link" href="#">1</a></li>
-								<li class="page-item"><a class="page-link" href="#">2</a></li>
-								<li class="page-item"><a class="page-link" href="#">3</a></li>
-								<li class="page-item"><a class="page-link" href="#"
-									aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+									<c:forEach var="i" begin="${pageMaker.spageNo}" end="${pageMaker.epageNo}">
+										<c:if test="${i==pageMaker.cri.currPage}">
+										<li class="page-item active" aria-current="page"><a class="page-link">${i}</a></li>
+										</c:if>
+										<c:if test="${i!=pageMaker.cri.currPage}">
+										<li class="page-item"><a href="itemselect${pageMaker.searchQuery(i)}">${i}</a></li>
+										</c:if>
+									</c:forEach>
+									<li class="page-item"><a class="page-link" href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 								</a></li>
 							</ul>
 						</nav>
