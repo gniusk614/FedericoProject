@@ -12,6 +12,25 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 <script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
 <script src="/federico/resources/myLib/headOffice_Script.js"></script>
+<script>
+//Search 이벤트 -> makequery 메서드 사용하기위해 jsp파일에 배치
+$(function() {	
+	// SearchType 이 '---' 면 keyword 클리어
+	$('#searchType').change(function() {
+		if ($(this).val()=='n') $('#keyword').val('');
+	}); //change
+	// 검색후 요청
+ 	$('#searchBtn').on("click", function() {
+		self.location="fcorder"
+			+"${pageMaker.makeQuery(1)}"
+			+"&searchType="
+			+$('#searchType').val()
+			+'&keyword='
+			+$('#keyword').val()
+			+'&flag=Y'
+	}); //on_click 
+}) //ready
+</script>
 </head>
 <body>
 <!-- navtop inlcud -->
@@ -34,21 +53,20 @@
 					<div class="dataTable-top">
 						<div class="container-fluid">
 							<div class="row">
-								<div class="col-sm-1">
-									<select id="" class="form-select" aria-label="Default select example">
+								<div class="col-sm-2">
+									<select id="searchType" class="form-select" aria-label="Default select example">
 										<option value="none" <c:out value="${pageMaker.cri.searchType==null ? 'selected':''}"/>> - - </option>
-										<option value="" <c:out value="${pageMaker.cri.searchType=='code' ? 'selected':''}"/>>품 명</option>
-										<option value="" <c:out value="${pageMaker.cri.searchType=='name' ? 'selected':''}"/>>분 류<option>
+										<option value="fcId" <c:out value="${pageMaker.cri.searchType=='fcId' ? 'selected':''}"/>>가맹점명</option>
 									</select>
 								</div>
 								<div class="col-sm-3">
-										<input class="form-control me-2" type="search"
+										<input class="form-control me-2" type="search" id="keyword"
 											placeholder="Search" value="${pageMaker.cri.keyword}" aria-label="Search">
 								</div>
 								<div class="col-sm-2">
-									<button id="itemsearch" class="btn btn-outline-primary">검색</button>
+									<button id="searchBtn" class="btn btn-outline-primary">검색</button>
 								</div>
-								<div class="col-sm-7"></div>
+								<div class="col-sm-6"></div>
 								
 							</div>
 						</div>
@@ -66,7 +84,7 @@
 						</thead>
 						<tbody align="center">
 							<c:if test="${! empty message }">
-							${message }
+							<tr><td colspan="6" class="fw-bold fs-5">${message}</td></tr>
 							</c:if>
 							<c:forEach var="vo" items="${list}" varStatus="status">
 								<tr>
@@ -85,15 +103,36 @@
 					<div class="dataTable-bottom">
 						<nav class="dataTable-pagination">
 							<ul class="pagination">
-								<li class="page-item"><a class="page-link" href="#"
-									aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-								</a></li>
-								<li class="page-item"><a class="page-link" href="#">1</a></li>
-								<li class="page-item"><a class="page-link" href="#">2</a></li>
-								<li class="page-item"><a class="page-link" href="#">3</a></li>
-								<li class="page-item"><a class="page-link" href="#"
-									aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-								</a></li>
+								<c:if test="${pageMaker.prev}">
+									<li class="page-item"><a class="page-link" href="fcorder${pageMaker.searchQuery(pageMaker.spageNo-1)}&flag=Y"
+										aria-label="Previous"> <span aria-hidden=true>&laquo;</span>
+									</a></li>
+								</c:if>	
+								<c:if test="${! pageMaker.prev}">
+									<li class="page-item disabled"><a class="page-link"
+										aria-label="Previous"> <span aria-hidden=true>&laquo;</span>
+									</a></li>
+								</c:if>	
+									<c:forEach var="i" begin="${pageMaker.spageNo}" end="${pageMaker.epageNo}">
+										<c:if test="${i==pageMaker.cri.currPage}">
+										<li class="page-item active" aria-current="page"><a class="page-link">${i}</a></li>
+										</c:if>
+										<c:if test="${i!=pageMaker.cri.currPage}">
+										<li class="page-item"><a href="fcorder${pageMaker.searchQuery(i)}&flag=Y">${i}</a></li>
+										</c:if>
+									</c:forEach>
+									
+									
+									<c:if test="${pageMaker.next}">
+										<li class="page-item"><a class="page-link" href="fcorder${pageMaker.searchQuery(pageMaker.epageNo+1)}&flag=Y" 
+										aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+									</a></li>
+									</c:if>
+									<c:if test="${! pageMaker.next}">
+										<li class="page-item disabled"><a class="page-link" 
+										aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+									</a></li>
+									</c:if>
 							</ul>
 						</nav>
 					</div>

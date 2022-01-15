@@ -12,6 +12,26 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 <script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
 <script src="/federico/resources/myLib/headOffice_Script.js"></script>
+<script>
+//Search 이벤트 -> makequery 메서드 사용하기위해 jsp파일에 배치
+$(function() {	
+	// SearchType 이 '---' 면 keyword 클리어
+	$('#searchType').change(function() {
+		if ($(this).val()=='n') $('#keyword').val('');
+	}); //change
+	// 검색후 요청
+ 	$('#searchBtn').on("click", function() {
+		self.location="itemselect"
+			+"${pageMaker.makeQuery(1)}"
+			+"&searchType="
+			+$('#searchType').val()
+			+'&keyword='
+			+$('#keyword').val()
+	}); //on_click 
+	
+	
+}) //ready 
+</script>
 </head>
 <body>
 <!-- navtop inlcud -->
@@ -35,18 +55,36 @@
 						<div class="container-fluid">
 							<div class="row">
 								<div class="col-sm-1">
-									<select id="" class="form-select" aria-label="Default select example">
+									<select id="searchType" class="form-select" onchange="changeSearchItemOption()">
 										<option value="none" <c:out value="${pageMaker.cri.searchType==null ? 'selected':''}"/>> - - </option>
 										<option value="name" <c:out value="${pageMaker.cri.searchType=='name' ? 'selected':''}"/>>품 명</option>
 										<option value="flag" <c:out value="${pageMaker.cri.searchType=='flag' ? 'selected':''}"/>>분 류<option>
 									</select>
 								</div>
-								<div class="col-sm-2">
-										<input class="form-control me-2" type="search"
-											placeholder="Search" value="${pageMaker.cri.keyword}" aria-label="Search">
+								
+								<div class="col-sm-2" id="changeSearchFinder">
+										<c:if test="${pageMaker.cri.searchType!='flag'}">
+											<input class="form-control me-2" type="search" id="keyword"
+												placeholder="Search" value="${pageMaker.cri.keyword}" >
+											<select class="form-select" id="keywordHide" style="display: none;">
+												<option value=""> - - </option>
+												<option value="식자재">식자재</option>
+												<option value="부자재">부자재</option>
+											</select>
+										</c:if>
+										<c:if test="${pageMaker.cri.searchType=='flag'}">
+											<input class="form-control me-2" type="search" id="keywordHide"
+												placeholder="Search" value="${pageMaker.cri.keyword}" style="display: none;">
+											<select class="form-select" id="keyword" >
+												<option value=""> - - </option>
+												<option value="식자재" <c:out value="${pageMaker.cri.keyword=='식자재' ? 'selected':''}"/>>식자재</option>
+												<option value="부자재" <c:out value="${pageMaker.cri.keyword=='부자재' ? 'selected':''}"/>>부자재</option>
+											</select>
+										</c:if>
 								</div>
+								
 								<div class="col-sm-2">
-									<button id="itemsearch" class="btn btn-outline-primary">검색</button>
+									<button id="searchBtn" class="btn btn-outline-primary">검색</button>
 								</div>
 								<div class="col-sm-5"></div>
 								<div class="col-sm-2" align="right">
@@ -70,6 +108,9 @@
 							</tr>
 						</thead>
 						<tbody align="center">
+							<c:if test="${! empty message }">
+							<tr><td colspan="6" class="fw-bold fs-5">${message}</td></tr>
+							</c:if>
 							<c:forEach var="vo" items="${list}" varStatus="status">
 								<tr>
 									<th scope="row">${vo.itemIndex}</th>
@@ -82,19 +123,27 @@
 									<td><span id="itemEditButton" class="btn"  onclick="itemUpdateForm(${vo.itemIndex})">  
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">
 										  <path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11l.471.242z"/>
-										</svg>										
+										</svg>								
 									</span></td>
 								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
-			<!-- tabel bottom -->				
+			<!-- tabel bottom -->
+				<!-- Paging Block 통쨰로 떠가서 써도 잘 먹힐거에요 !! -->				
 					<div class="dataTable-bottom">
 						<nav class="dataTable-pagination">
 							<ul class="pagination">
-								<li class="page-item"><a class="page-link" href="#"
-									aria-label="Previous"> <span aria-hidden=true>&laquo;</span>
-								</a></li>
+								<c:if test="${pageMaker.prev}">
+									<li class="page-item"><a class="page-link" href="itemselect${pageMaker.searchQuery(pageMaker.spageNo-1)}"
+										aria-label="Previous"> <span aria-hidden=true>&laquo;</span>
+									</a></li>
+								</c:if>	
+								<c:if test="${! pageMaker.prev}">
+									<li class="page-item disabled"><a class="page-link"
+										aria-label="Previous"> <span aria-hidden=true>&laquo;</span>
+									</a></li>
+								</c:if>	
 									<c:forEach var="i" begin="${pageMaker.spageNo}" end="${pageMaker.epageNo}">
 										<c:if test="${i==pageMaker.cri.currPage}">
 										<li class="page-item active" aria-current="page"><a class="page-link">${i}</a></li>
@@ -103,11 +152,21 @@
 										<li class="page-item"><a href="itemselect${pageMaker.searchQuery(i)}">${i}</a></li>
 										</c:if>
 									</c:forEach>
-									<li class="page-item"><a class="page-link" href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-								</a></li>
+									
+									
+									<c:if test="${pageMaker.next}">
+										<li class="page-item"><a class="page-link" href="itemselect${pageMaker.searchQuery(pageMaker.epageNo+1)}" 
+										aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+									</a></li>
+									</c:if>
+									<c:if test="${! pageMaker.next}">
+										<li class="page-item disabled"><a class="page-link" 
+										aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+									</a></li>
+									</c:if>
 							</ul>
 						</nav>
-					</div>
+					</div><!-- Paging Block 통쨰로 떠가서 써도 잘 먹힐거에요 !! -->
 				</div>
 			</div> 
 		</div> 

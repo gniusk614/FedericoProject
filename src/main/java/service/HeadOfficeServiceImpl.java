@@ -1,5 +1,6 @@
 package service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +25,8 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 
 	// 가맹점 발주내역 처리완료로 변경
 	@Override
-	public int fcOrderSeqUpdate(Map<String, Object> param) {
-		return dao.fcOrderSeqUpdate(param);
+	public int fcOrderSeqUpdate(Map<String, Object> params) {
+		return dao.fcOrderSeqUpdate(params);
 	}
 	
 	
@@ -42,6 +43,17 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 		return dao.selectFcOrder(flag);
 	}
 	
+	// 가맹점발주정보 조회,서치,페이징
+	@Override
+	public List<FcOrderVO> searchFcOrder(Map<String, Object> params) {
+		return dao.searchFcOrder(params);
+	}
+	
+	// 가맹점발주정보 Search 결과 Rows 조회
+	@Override
+	public int searchFcOrderRows(Map<String, Object> params) {
+		return dao.searchFcOrderRows(params);
+	}
 
 	// 사원정보리스트
 	@Override
