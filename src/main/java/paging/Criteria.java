@@ -32,9 +32,7 @@ public class Criteria {
 	// => 당장은 사용하지 않지만 사용가능하도록 작성
 	
 	public void setRowsPerPage(int rowsPerPage) {
-		if ( rowsPerPage <11 || rowsPerPage > 50 ) 
-			this.rowsPerPage=10;
-		else this.rowsPerPage=rowsPerPage;
+		this.rowsPerPage = 10;
 	}
 	
 	// 4) SetSnoEno : sno, eno 계산
