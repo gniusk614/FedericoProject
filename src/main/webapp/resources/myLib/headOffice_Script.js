@@ -1,4 +1,3 @@
-
 $(function() {
 
 	// ===============< 사원리스트 스크립트(광훈) >============================
@@ -56,6 +55,23 @@ $(function() {
 	$('#joinBtn').click(function() {
 		$('#joinfmodal').modal('show');
 	});
+	// ** 비밀번호수정 클릭시 모달창
+	$('#staffPwChange').click(function() {
+		$('#staffPwChangeModal').modal('show');
+	});
+	// ** 비밀번호수정 모달 닫힐시
+	$('#staffPwChangeModal').on('hidden.bs.modal', function() {
+		$('#loginPassword').val('');
+		$('#hoPassword').val('');
+		$('#passwordRepeat').val('');
+		inputClear();
+		$('#hoPassword').attr("disabled", true)
+		$('#passwordRepeat').attr("disabled", true)
+	});
+	// ** 계정생성 리셋버튼 클릭시 모달창
+	$('#staffInputresetBtn').click(function() {
+		inputClear();
+	});
 	// ** 계정생성 모달 닫힐시
 	$('#joinfmodal').on('hidden.bs.modal', function() {
 		$('.form-control').val('');
@@ -67,7 +83,7 @@ $(function() {
 	});
 
 	var click_check = 0; // 2번 클릭시 구분
-	// ** 계정디테일에서 정보수정 클릭시
+	// ** 계정디테일, 나의정보에서 정보수정 클릭시
 	$('#infoUp').click(
 			function() {
 
@@ -95,8 +111,6 @@ $(function() {
 									+ staffEmail
 									+ '" class="form-control" size="7">');
 					$('#passUp').attr("hidden", false);
-					$('#passUpRepeat').attr("hidden", false);
-					
 					click_check = 1;
 				} else if (click_check == 1) {
 					if (confirm('정보를 수정하시겠습니까?')) {
@@ -199,21 +213,24 @@ $(function() {
 
 // ===============< 가입시 입력제한조건 (광훈) >============================
 // 1) 개별적 오류 확인을 위한 switch 변수(전역)
-var cCheck = false;
-var pCheck = false;
-var prCheck = false;
-var dubCheck = false;
+var cCheck = false; // => 사원번호
+var lpCheck = false; // =>로그인비번
+var pCheck = false; // ->비번
+var prCheck = false; // ->비번확인
+var dubCheck = false; // ->사원번호중복
 
 // 2) 개별적 오류점검 위한 focusout 이벤트 핸들러 : JQuery
 $(function() {
+	// 사원번호
 	$('#code').focusout(function() {
 		cCheck = codeCheck();
 		if (cCheck == false) {
 			$(this).removeClass('is-valid');
 			$(this).addClass('is-invalid');
-		} 
+		}
 	});// id_focusout
 
+	// 비밀번호
 	$('#hoPassword').focusout(function() {
 		pCheck = pwCheck();
 		if (pCheck == false) {
@@ -221,24 +238,30 @@ $(function() {
 			$(this).addClass('is-invalid');
 			$('#passwordRepeat').attr("disabled", true)
 		} else {
-			$(this).removeClass('is-invalid');
-			$(this).addClass('is-valid');
+			// $(this).removeClass('is-invalid');
+			// $(this).addClass('is-valid');
 			$('#passwordRepeat').attr("disabled", false)
 		}
 		$('#passwordRepeat').focus();
 	});// password_focusout
 
+	// 비밀번호확인
 	$('#passwordRepeat').focusout(function() {
 		prCheck = pwrpCheck();
 		if (prCheck == false) {
 			$(this).removeClass('is-valid');
 			$(this).addClass('is-invalid');
+			$('#hoPassword').removeClass('is-valid');
+			$('#hoPassword').addClass('is-invalid');
 		} else {
+			$('#hoPassword').removeClass('is-invalid');
+			$('#hoPassword').addClass('is-valid');
 			$(this).removeClass('is-invalid');
 			$(this).addClass('is-valid');
 		}
 	})
 
+	// 사원번호 중복체크
 	$('#codeDupcheck').click(function() {
 		cCheck = codeCheck();
 		if (cCheck == true) {
@@ -263,8 +286,74 @@ $(function() {
 					dubCheck = false;
 				}
 			});// ajax
-		}//if
+		}// if
 	})
+	
+	
+// =======================< 비번 변경 >===============================
+	
+// 비밀번호 변경시 현재 비밀번호 확인
+$('#staffPwUpBtn').click(function() {
+	if (confirm('비밀번호를 변경하시겠습니까?')) {
+		$.ajax({
+			type : "post",
+			url : "headOfficePwUpdate",
+			data : {
+				hoPassword : $('#hoPassword').val(),
+			},
+			success : function(data) {
+				if (data.success == 'success') {
+					alert('비밀번호가 변경되었습니다.')
+					$('#staffPwChangeModal').modal('hide');
+				}
+				if (data.success == 'fail') {
+					alert('비밀번호 변경에 실패했습니다.')
+				}
+			},
+			error : function() {
+				alert("서버와 접속에 실패했습니다.");
+			}
+		});// ajax
+	}
+});// loginPassword_click
+
+
+
+
+
+// 비밀번호 변경시 현재 비밀번호 확인
+$('#pwCheck').click(function() {
+	var inputPW = $('#loginPassword').val();
+	$.ajax({
+		type : "post",
+		url : "staffloginPwCheck",
+		data : {
+			hoPassword : inputPW,
+		},
+		success : function(data) {
+			if (data.success == 'success') {
+				$('#loginPassword').removeClass('is-invalid');
+				$('#loginPassword').addClass('is-valid');
+				$('#hoPassword').attr("disabled", false);
+				$('#hoPassword').focus();
+			}
+			if (data.success == 'fail') {
+				$('#loginPassword').removeClass('is-valid');
+				$('#loginPassword').addClass('is-invalid');
+				$('#passwordRepeat').attr("disabled", true)
+				$('#lpMessage').html('비밀번호가 틀립니다.');
+			}
+		},
+		error : function() {
+			alert("서버와 접속에 실패했습니다.");
+		}
+	});// ajax
+
+});// loginPassword_click
+	
+	
+	
+	
 
 });// ready
 
@@ -277,7 +366,7 @@ function incheck() {
 	}
 	if (pCheck == false) {
 		$('#hoPassword').addClass('is-invalid');
-		$('#pMessage').html('password를  확인하세요');
+		$('#pMessage').html('password를 확인하세요');
 	}
 	if (prCheck == false) {
 		$('#passwordRepeat').addClass('is-invalid');
@@ -310,10 +399,6 @@ function idDupCheck() {
 	}
 }// idDupCheck
 
-
-
-
-
 // ** input창 클리어
 function inputClear() {
 
@@ -324,11 +409,18 @@ function inputClear() {
 	$('#passwordRepeat').removeClass('is-valid');
 	$('#passwordRepeat').removeClass('is-invalid');
 	$('#passwordRepeat').attr("disabled", true);
+	$('#loginPassword').removeClass('is-invalid');
+	$('#loginPassword').removeClass('is-valid');
 }
 
-// ====================================================================
 
-// ===============< 자재등록(현구) >============================
+
+
+// ==========================================================================
+
+// ===============< 자재등록(현구) >=================================
+
+
 
 $(function() {
 	// 숫자입력시 콤마찍기
@@ -344,19 +436,20 @@ $(function() {
 	}
 	// 실행함수
 	// 콤마찍기
-	
 
 });// ready
 
 function comma(str) {
+
 		str = String(str);
 		return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
 	}
 	// 콤마풀기
 	function uncomma(str) {
-		str = String(str);
+			str = String(str);
 		return str.replace(/[^\d]+/g, '');
 	}
+
 
 // 자재등록 값체크 및 자재등록 메서드 실행
 function itemInsertCheck() {
@@ -505,77 +598,94 @@ function itemDelete() {
 
 }
 
+// ===============< 자재등록(현구) >============================
 
-//===============< 자재등록(현구) >============================
+// ===============< 가맹점발주관련(현구) >============================
 
+$(function() {
 
-
-//===============< 가맹점발주관련(현구) >============================
-
-$(function(){
-	
 	// 자재상세조회 modal 닫힐 시 내용 clear
-	$('#fcOrderDetailModal').on('hidden.bs.modal', function(){
+	$('#fcOrderDetailModal').on('hidden.bs.modal', function() {
 		$('#fcOrderDeatilTableBody').html('');
 	})
 
-})//ready
+})// ready
 
 
 
 //자재 상세조회 modal 열기
 function fcOrderDetailForm(fcOrderSeq){
+	console.log("세션 => "+ window.sessionStorage);
+	console.log("세션 => "+ window.sessionStorage.getItem('loginID'));
 	
+
+	$.ajax({
+		type : 'get',
+		url : 'fcorderdetail',
+		data : {
+			fcOrderSeq : fcOrderSeq
+		},
+		success : function(data) {
+			var list = data.list;
+			var sumCol = 0;
+			$.each(list, function(index, vo) {
+				var itemPrice = comma(vo.itemInfoVO.itemPrice);
+				var itemQty = comma(vo.itemQty);
+				var sumRow = comma(vo.itemInfoVO.itemPrice * vo.itemQty);
+				sumCol = sumCol + (vo.itemInfoVO.itemPrice * vo.itemQty);
+				console.info('합계' + sumCol);
+				$('#fcOrderDeatilTableBody').append(
+						'<tr><th>' + vo.fcOrderDetailSeq + '</th><td>'
+								+ vo.itemInfoVO.itemFlag + '</td><td>'
+								+ vo.itemInfoVO.itemName + '</td><td>'
+								+ itemQty + '</td><td>'
+								+ vo.itemInfoVO.itemUnit + '</td><td>'
+								+ itemPrice + '</td><td>' + sumRow
+								+ '</td></tr>');// append
+			}) // each
+
+			sumCol = comma(sumCol);
+			$('#fcOrderDetailModalSumCol').html('합계 : ' + sumCol);
+			$('#fcOrderNumber').attr('ordernumber', fcOrderSeq);
+			$('#fcOrderNumber').html('  &nbsp;발주번호 : ' + fcOrderSeq);
+			$('#fcOrderDetailModal').modal('show');
+		},
+		error : function() {
+		}
+	})
+}// fcOrderDetailForm
+
+// 가맹점 발주 완료처리
+
+
+function fcOrderFlagUpdate(flag){
+	var fcOrderSeq = $('#fcOrderNumber').attr('ordernumber');
+	console.log("ordernumber : "+fcOrderSeq);
+	console.log("ordernumber : "+flag);
 	$.ajax({
 		type: 'get',
-		url: 'fcorderdetail',
-		data:{
+		url: 'fcordersequpdate?flag='+flag,
+		data: {
 			fcOrderSeq : fcOrderSeq
 		},
 		success: function(data){
-			var list = data.list;
-			var sumCol = 0;
-			$.each(list, function(index, vo){
-				var	itemPrice = comma(vo.itemInfoVO.itemPrice);
-				var itemQty = comma(vo.itemQty);
-				var sumRow = comma(vo.itemInfoVO.itemPrice*vo.itemQty);
-				sumCol = sumCol + (vo.itemInfoVO.itemPrice*vo.itemQty);
-				console.info('합계' + sumCol);
-				$('#fcOrderDeatilTableBody').append(
-					'<tr><th>'+vo.fcOrderDetailSeq+'</th><td>'+vo.itemInfoVO.itemFlag
-					+'</td><td>'+vo.itemInfoVO.itemName+'</td><td>'+itemQty
-					+'</td><td>'+vo.itemInfoVO.itemUnit+'</td><td>'+itemPrice
-					+'</td><td>'+sumRow+'</td></tr>' 
-				);//append
-			}) //each
-			
-			sumCol = comma(sumCol);
-			$('#fcOrderDetailModalSumCol').html('합계 : '+sumCol);
-			$('#fcOrderNumber').attr('ordernumber',fcOrderSeq);
-			$('#fcOrderNumber').html('  &nbsp;발주번호 : '+fcOrderSeq);
-			$('#fcOrderDetailModal').modal('show');
-		},
+			if (data.success == 'success'){
+			location.reload();
+			}
+			else{
+				alert("시스템 오류입니다.<br>다시 시도해주세요.")
+			}
+		},	
 		error: function(){
+			alert("시스템 오류입니다.<br>다시 시도해주세요.")
 		}
-	})
-}//fcOrderDetailForm
+	})//ajax
+}//fcOrderComplete
 
 
-
-// 가맹점 발주 완료처리
-function fcOrderComplete(){
-	var fcOrderSeq = $('#fcOrderNumber').attr('ordernumber');
-	console.log("ordernumber : "+fcOrderSeq);
-	
 }
 
-
-
-
-
-
-
-//===============< 가맹점발주관련등록(현구) >============================
+// ===============< 가맹점발주관련등록(현구) >============================
 
 
 

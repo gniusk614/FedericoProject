@@ -1,7 +1,9 @@
 package service;
 
 import java.util.List;
+import java.util.Map;
 
+import paging.SearchCriteria;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.HeadOfficeVO;
@@ -10,6 +12,8 @@ import vo.StaffVO;
 
 public interface HeadOfficeService {
 
+	int fcOrderSeqUpdate(Map<String, Object> param); // 가맹점 발주내역 처리완료로 변경
+	
 	List<FcOrderDetailVO> selectFcOrderDetailbyOrderNumber(FcOrderDetailVO vo);  // 가맹점 발주내역 상세보기(발주번호 별로)
 	
 	List<FcOrderVO> selectFcOrder(String flag); // 가맹점발주정보 전체조회
@@ -20,6 +24,10 @@ public interface HeadOfficeService {
 
 	ItemInfoVO selectOneItem(ItemInfoVO vo); // 자재정보 1건 출력
 
+	List<ItemInfoVO> searchItemList(SearchCriteria cri); // 자재정보 Search
+	
+	int searchItemRows(SearchCriteria cri); // 자재정보 Search 결과 Rows 조회
+	
 	List<ItemInfoVO> selectAllItem(); // 자재정보 모두출력
 
 	List<StaffVO> selectMList(StaffVO vo); // 사원정보 리스트
@@ -39,5 +47,7 @@ public interface HeadOfficeService {
 	int headOfficeDelete(HeadOfficeVO vo); // ID, Password 삭제
 
 	int headOfficeInsert(HeadOfficeVO vo); // ID, Password 생성
+	
+	int headOfficePwUpdate(HeadOfficeVO vo); // password 변경
 
 }
