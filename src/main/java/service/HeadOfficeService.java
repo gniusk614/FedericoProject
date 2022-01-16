@@ -52,5 +52,7 @@ public interface HeadOfficeService {
 	int headOfficeDelete(HeadOfficeVO vo); // ID, Password 삭제
 
 	int headOfficeInsert(HeadOfficeVO vo); // ID, Password 생성
+	
+	int headOfficePwUpdate(HeadOfficeVO vo); // password 변경
 
 }

@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapperInterface.HeadOfficeMapper">
+
 <!-- resultMap 설정 ============================================================-->
 	<resultMap type="vo.FcOrderDetailVO" id="FcOrderDetailVO">
 		<result column="fcOrderDetailSeq" property="fcOrderDetailSeq"/>
@@ -10,8 +11,9 @@
 		<result column="itemQty" property="itemQty"/>
 		<collection property="itemInfoVO" resultMap="ItemInfoVO"/>
 	</resultMap>
-  
-  	<resultMap type="vo.ItemInfoVO" id="ItemInfoVO">
+
+ 
+  <resultMap type="vo.ItemInfoVO" id="ItemInfoVO">
 		<result column="itemIndex" property="itemIndex"/>
 		<result column="itemName" property="itemName"/>
 		<result column="itemFlag" property="itemFlag"/>
@@ -19,13 +21,22 @@
 		<result column="itemPrice" property="itemPrice"/>
 	</resultMap>
 <!-- resultMap 설정 ============================================================-->  
+
+  
+ 	 <!-- headOffice PW 변경 -->
+	
+	<insert id="headOfficePwUpdate">
+	UPDATE headOffice SET hoPassword = #{hoPassword} WHERE hoid = #{staffVo.staffCode}
+	</insert>
+	
+
+
 	
 	<!-- headOffice 삭제 -->
 	
 	<delete id="headOfficeDelete">
 	DELETE FROM headOffice where hoid = #{staffVo.staffCode}
 	</delete>
-	
 	
 	
 	<!-- staff 삭제 -->
