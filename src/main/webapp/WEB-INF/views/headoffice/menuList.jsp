@@ -23,10 +23,19 @@
  
       </head>
 <body bgcolor="">
+<!-- navtop inlcud -->
+ 	<%@ include file="navtop.jsp" %> 
+
+<!-- layoutSidenav 시작 -->
+<div id="layoutSidenav">
+	<%@ include file="navside.jsp" %> 
+	<div id="layoutSidenav_content">
+	<!-- 본문 시작 -->
+		
 				<div class="container">
 				<h1 align="center">메뉴 목록</h1>
 				<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-				<button type="button" class="btn btn-primary me-md-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="menuRegistrationf">메뉴등록</button>
+				<button type="button" class="btn btn-primary me-md-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">메뉴등록</button>
   				</div> <!-- d-grid end -->
 				</div> <!-- container end -->
 				
@@ -63,8 +72,8 @@
       </div>
       <div class="modal-body">
       <!-- content start -->
-      <select class="form-select form-select-lg mb-3" aria-label="Default select example">
-  <option selected>분류(피자 세트 사이드)</option>
+      <select class="form-select mb-3" aria-label="Default select example">
+  <option selected>분류</option>
   <option value="PIZZA">피자(PIZZA)</option>
   <option value="SET">세트(SET)</option>
   <option value="SIDE">사이드(SIDE)</option>
@@ -72,18 +81,18 @@
       
  <div class="input-group mb-3">
   <span class="input-group-text" id="menuName">메뉴</span>
-  <input type="text" class="form-control" placeholder="메뉴이름을 입력하세요" aria-label="menuName" aria-describedby="basic-addon1">
+  <input type="text" class="form-control" id="menuName" placeholder="메뉴이름을 입력하세요" aria-label="menuName" aria-describedby="basic-addon1">
 </div>
 
 <div class="input-group mb-3">
   <span class="input-group-text">가격</span>
-  <input type="text" class="form-control" aria-label="Amount (to the nearest won)">
+  <input type="text" class="form-control" id="menuPrice" aria-label="Amount (to the nearest won)">
   <span class="input-group-text">￦(원)</span>
 </div>
 
 <div class="input-group mb-4">
   <span class="input-group-text" id="basic-addon3">메뉴소개<br>(200자내)</span> <!-- 200자내 글씨크기 작게 -->
-  <textarea class="form-control" aria-label="With textarea" aria-describedby="basic-addon3"></textarea> 
+  <textarea class="form-control" id="menuIntro" aria-label="With textarea" aria-describedby="basic-addon3"></textarea> 
 </div>
 
 <div class="input-group mb-3">
@@ -94,14 +103,25 @@
 <!-- content finish -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary" id="menuReg">등록</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >취소</button>
+        <button type="button" class="btn btn-primary" id="menuReg"  onclick="menuRegistration()">등록</button>
       </div>
     </div>
   </div>
 </div>
 </div> <!-- container class finish -->
 
+
+
+<!-- footer inlcud -->
+		<div><%@ include file="footer.jsp" %></div>
+	</div> <!-- 본문 끝 -->
+</div> <!-- layoutSidenav 끝 -->			
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/federico/resources/js/scripts.js"></script>
+
 </body>
 </html>
-

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,28 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-<<<<<<< HEAD
-import org.springframework.web.multipart.MultipartFile;
-=======
 import org.springframework.web.bind.annotation.RequestParam;
->>>>>>> branch 'develop' of https://github.com/KKKhg/FedericoProject.git
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j;
-<<<<<<< HEAD
-import net.sf.json.spring.web.servlet.view.JsonView;
-=======
 import service.FranchiseService;
->>>>>>> branch 'develop' of https://github.com/KKKhg/FedericoProject.git
 import service.HeadOfficeService;
-<<<<<<< HEAD
 import service.MenuService;
-=======
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
->>>>>>> branch 'develop' of https://github.com/KKKhg/FedericoProject.git
 import vo.HeadOfficeVO;
 import vo.ItemInfoVO;
 import vo.MenuVO;
@@ -53,10 +42,10 @@ public class HeadOfficeController {
 	HeadOfficeService service;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-<<<<<<< HEAD
+
 	@Autowired
 	MenuService menuService;
-=======
+
 
 
 	
@@ -107,7 +96,7 @@ public class HeadOfficeController {
 		mv.setViewName(uri);
 		return mv;
 	};
->>>>>>> branch 'develop' of https://github.com/KKKhg/FedericoProject.git
+
 	
 	// 본사: 자재 삭제 (강현구)
 	@RequestMapping(value = "/itemdelete")
@@ -404,7 +393,7 @@ public class HeadOfficeController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/menuRegistrationf") // 메뉴등록 양식으로 이동(김민석_22.01.13)
+	@RequestMapping(value = "/menuRegistration") // 메뉴등록 양식으로 이동(김민석_22.01.13)
 	public ModelAndView menuRegistrationf(HttpServletRequest request, ModelAndView mv, MenuVO vo) 
 		 	 throws IOException {
 		

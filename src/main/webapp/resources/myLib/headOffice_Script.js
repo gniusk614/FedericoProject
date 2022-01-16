@@ -579,40 +579,42 @@ function fcOrderComplete(){
 
 
 
-
-
-
-
-
-
-
 //===< 메뉴관련(민석) >========!!시작!!===========================================
 
 $(function() {
 	
+})// MenuReady End 
 	
-	$('#menuRegistrationf').click(function(){
 	
-		var formData = new FormData($('myForm')[0]);
+function menuRegistration(){
 		
 		$.ajax({
-			type:"post",
-			url:"menuRegistration",
-			processData : false,
-			contentData : false,
-			data:formData,
-			success:function(resultPage){
-				$('#menuRegistrationf').html(resultPage);
-			},
-			error:function(){
-				$('#menuRegistrationf').html("메뉴등록 오류");
+			
+		type:'get',
+		url:'menuRegistration',
+		data:{
+		menuName:$('#menuName').val(),
+		menuPrice:$('#menuPrice').val(),
+		menuIntro:$('#menuIntro').val(),
+		menuImage:$('#inpuGroupFile02').val()
+		},
+		success:function(data){
+			if(data.success=='success'){
+				loacation().reload();
+				alert("메뉴가 등록되었습니다.")
 			}
-		});// ajax
+		},
+		error:function(){
+			alert("똑같은 메뉴가 있습니다.")
+		}
 		
-	})
+		
+		});// ajax
+		}//menuReg
+
 		
 	
 	
 //===< 메뉴관련(민석) >========!!종료!!===========================================	
-})// MenuReady End 
+
 
