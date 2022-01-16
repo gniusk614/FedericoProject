@@ -51,15 +51,9 @@ public class HeadOfficeController {
 	// 가맹점 발주내역 상세보기(발주번호 별로) return json
 	@RequestMapping(value = "/fcorderdetail")
 	public ModelAndView fcorderdetail(ModelAndView mv, FcOrderDetailVO vo, ItemInfoVO ivo){
+		vo.setItemInfoVO(ivo);
 		List<FcOrderDetailVO> list = service.selectFcOrderDetailbyOrderNumber(vo);
 		
-		int i=0;
-		for (FcOrderDetailVO dvo:list) {
-			ivo.setItemIndex(dvo.getItemIndex());
-			dvo.setItemInfoVO(service.selectOneItem(ivo));
-			list.set(i, dvo);
-			i++;
-		}
 		
 		if(list.size() > 0) {
 			mv.addObject("list",list);
@@ -88,27 +82,36 @@ public class HeadOfficeController {
 	}
 	
 	
-	
-	
-	// 발주내역조회 + 폼 이동(강현구) 
+	// 발주내역 서치,페이징 + 폼 이동(강현구) 
 	// 요청에 쿼리스트링으로 구분
 	// flag = Y -> 처리완료
 	// flag = N -> 미러치
-	// 쿼리스트링X -> 전체조회(미구현)
+	// 쿼리스트링X -> 전체조회?(미구현)
 	@RequestMapping(value = "/fcorder")
-	public ModelAndView fcorder(ModelAndView mv, FcOrderVO vo, FcOrderDetailVO detailVo, FranchiseVO fcVo, @RequestParam("flag") String flag) {
+	public ModelAndView fcorder(ModelAndView mv, FcOrderVO vo, @RequestParam("flag") String flag,
+			PageMaker pageMaker, SearchCriteria cri) {
 		
 		String uri="headoffice/headofficeMain";
 		if("Y".equals(flag)) uri = "headoffice/fcOrderY";
 		else if("N".equals(flag)) uri = "headoffice/fcOrderN";
+
+		cri.setSnoEno();
 		
-		List<FcOrderVO> list = service.selectFcOrder(flag);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("flag", flag);
+		params.put("cri", cri);
+		
+		List<FcOrderVO> list = service.searchFcOrder(params);
+		
 		
 		if(list != null && list.size()>0) {
 			mv.addObject("list",list);
 		} else {
 			mv.addObject("message", "조회할 자료가 없습니다.");
 		}
+		pageMaker.setCri(cri);
+		pageMaker.setTotalRowCount(service.searchFcOrderRows(params));
+		
 		mv.setViewName(uri);
 		return mv;
 	};
@@ -170,23 +173,22 @@ public class HeadOfficeController {
 		return mv;
 	}
 
-	// 본사: 자재리스트 가져오기 + 자재조회폼 이동 (강현구) - 페이징 진행중
+	// 본사: 자재리스트 서치 + 조회 + 자재조회폼 이동 (강현구)
 	@RequestMapping(value = "/itemselect")
 	public ModelAndView iteminsertf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
 		
 		cri.setSnoEno();
-		
 		List<ItemInfoVO> list = service.searchItemList(cri);
-
+		
 		if (list != null && list.size() > 0) {
 			mv.addObject("list", list);
 			mv.setViewName("headoffice/itemselectf");
 		} else {
-			mv.setViewName("haedoffice/headofficeMain");
+			mv.setViewName("headoffice/itemselectf");
+			mv.addObject("message", "조회된 자료가 없습니다.");
 		}
 		pageMaker.setCri(cri);
 		pageMaker.setTotalRowCount(service.searchItemRows(cri));
-		
 		
 
 		return mv;

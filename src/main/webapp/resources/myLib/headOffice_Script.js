@@ -6,7 +6,7 @@ $(function() {
 
 	// ** 검색기능
 	// SearchType 이 '---' 면 keyword 클리어
-	$('#searchType').change(function() {
+/*	$('#searchType').change(function() {
 		// if ($(this).val()=='n')
 		$('#keyword').val('');
 	}); // change
@@ -17,7 +17,7 @@ $(function() {
 				self.location = "mcplist" + "${pageMaker.makeQuery(1)}"
 						+ "&searchType=" + $('#searchType').val() + '&keyword='
 						+ $('#keyword').val()
-			}); // on_click
+			}); // on_click*/
 
 	// ** 돋보기 눌렀을때 모달창 띄우기
 	$('.modalbtn').click(function() {
@@ -471,6 +471,28 @@ function itemInsertCheck() {
 	}
 
 }// itemInsertCheck
+
+
+// 검색조건에 따라 select, input 동적 변경
+function changeSearchItemOption(){
+	
+	$input = $('#changeSearchFinder').children('input');
+	$select = $('#changeSearchFinder').children('select');
+	if($('#searchType').val() == 'flag'){
+		$input.css('display','none')
+		.attr('id','keywordHide');
+		$select.css('display','block')
+		.attr('id','keyword');
+	} else{
+		$select.css('display','none')
+		.attr('id','keywordHide');
+		$input.css('display','block')
+		.attr('id','keyword');
+	}
+	
+}
+
+
 
 // 자재등록
 function itemInsert() {
