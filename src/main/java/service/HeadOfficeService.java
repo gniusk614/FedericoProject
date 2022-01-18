@@ -7,6 +7,7 @@ import java.util.Map;
 import paging.SearchCriteria;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
+import vo.FranchiseVO;
 import vo.HeadOfficeVO;
 import vo.ItemInfoVO;
 import vo.StaffVO;
@@ -54,5 +55,19 @@ public interface HeadOfficeService {
 	int headOfficeInsert(HeadOfficeVO vo); // ID, Password 생성
 	
 	int headOfficePwUpdate(HeadOfficeVO vo); // password 변경
+	
+	List<StaffVO> searchStaffList(SearchCriteria cri); // 스탭정보 Search
 
+	int searchStaffRows(SearchCriteria cri); // 스탭정보 Search 결과 Rows 조회
+	
+	List<FranchiseVO> searchFcList(SearchCriteria cri); // 가맹점정보 Search
+	
+	int searchFcRows(SearchCriteria cri); // 가맹점정보 Search 결과 Rows 조회
+	
+	
+	
+	
+	
+	
+	
 }

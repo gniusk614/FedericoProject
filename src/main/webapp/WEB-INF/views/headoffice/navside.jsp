@@ -60,8 +60,10 @@
 					<div class="collapse" id="collapseLayouts2"
 						aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
-							<a class="nav-link" href="layout-static.html">가맹점 정보</a> <a
-								class="nav-link" href="layout-sidenav-light.html">가맹점 조회</a> 
+							<a class="nav-link" href="fclist">가맹점 정보</a> 
+							<c:if test="${loginID == 'admin' }">
+							<a class="nav-link" href="fcinsertf">가맹점 등록</a> 
+							</c:if>
 						</nav>
 					</div>
 					<!-- 가맹점관리 -->

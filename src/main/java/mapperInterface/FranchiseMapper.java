@@ -14,4 +14,9 @@ public interface FranchiseMapper {
 	
 	FranchiseVO selectFcOne(FranchiseVO vo); //특정 가맹점정보 불러오기
 
+	int fcUpdate(FranchiseVO vo); //프랜차이즈 정보 업데이트
+	int fcInsert(FranchiseVO vo); //프랜차이즈 계정생성
+	int fcClose(FranchiseVO vo); ////프랜차이즈 폐점,오픈처리
+	
+	
 }
