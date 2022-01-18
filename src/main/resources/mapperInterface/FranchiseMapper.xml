@@ -11,9 +11,31 @@
 	
 	<select id="selectFcOne" resultType="vo.FranchiseVO">
 		SELECT fcid,fcpassword,fcname,fcaddress,fcarea,fcphone,hoid
-		FROM franchise WHERE fcid = #{fcid}
+		FROM franchise WHERE fcid = #{fcId}
 	</select>
 
+	
+	<!-- 프랜차이즈 폐점,오픈처리 -->
+	<insert id="fcClose">
+		UPDATE franchise 
+		SET fcClose= 'Y'
+		WHERE fcId = #{fcId}
+	</insert>
+	
+	
+	
+	<!-- 프랜차이즈 업데이트 -->
+	<insert id="fcUpdate">
+		UPDATE franchise 
+		SET fcName=#{fcName}, fcaddress= #{fcAddress}, fcPhone=#{fcPhone},hoid=#{hoId} 
+		WHERE fcId = #{fcId}
+	</insert>
+
+	<!-- HeadOffice 인서트 -->
+	<insert id="fcInsert">
+		INSERT INTO franchise(fcId, fcPassword, fcName, fcAddress, fcArea, fcPhone, hoId,fcClose) 
+		VALUES(#{fcId}, #{fcPassword}, #{fcName}, #{fcAddress},#{fcArea}, #{fcPhone}, #{hoId}, #{fcClose})
+	</insert>
 
 
 </mapper>

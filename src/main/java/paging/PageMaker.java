@@ -65,7 +65,7 @@ public class PageMaker {
     	
     // 3.2) lastPageNo 계산, ePageNo 확인
     	
-    	lastPageNo=(int)Math.ceil(totalRowCount/cri.getRowsPerPage());  
+    	lastPageNo=(int)Math.ceil(totalRowCount/(double)cri.getRowsPerPage());  
     	if(epageNo>lastPageNo) epageNo=lastPageNo;
     	
     // 3.3) prev, next
