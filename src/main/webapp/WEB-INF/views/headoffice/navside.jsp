@@ -103,7 +103,7 @@
 					<div class="collapse" id="collapseLayouts4"
 						aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
-							<a class="nav-link" href="layout-static.html">메뉴조회</a> <a
+							<a class="nav-link" href="menuList">메뉴조회</a> <a
 								class="nav-link" href="layout-sidenav-light.html">메뉴등록</a> <a
 								class="nav-link" href="layout-sidenav-light.html">이벤트게시판</a> <a
 								class="nav-link" href="layout-sidenav-light.html">고객의 소리</a>

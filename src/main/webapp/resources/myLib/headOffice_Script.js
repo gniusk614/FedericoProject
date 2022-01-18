@@ -765,6 +765,11 @@ function changeSearchItemOption() {
 }
 
 // 자재등록
+
+
+
+
+
 function itemInsert() {
 	// 가격 콤마빼기
 	var itemprice = $('#itemprice').val();
@@ -966,10 +971,47 @@ function fcOrderFlagUpdate(flag) {
 		error : function() {
 			alert("시스템 오류입니다.<br>다시 시도해주세요.")
 		}
-	})// ajax
-}// fcOrderComplete
+
+	})//ajax
+}//fcOrderComplete
+
+
 
 // ===============< 가맹점발주관련등록(현구) >============================
+
+
+
+
+//===< 메뉴관련(민석) >========!!시작!!====================================
+
+		
+
+
+function menuDelete() {
+	console.log("menuDelete start");
+
+	if (confirm('정말 삭제하시겠습니까?')) {
+		
+		$.ajax({
+			type:"get",
+			url:"menuList",
+			data:{
+				menuIndex:$('menuIndex').val()
+				},
+			success : function(data) {
+				if(data.success=='success')
+				console.info();
+				location.reload();
+				},
+				error:function(){
+				alert("메뉴가 삭제되지 않았습니다.")
+				console.info();
+				console.warn();	
+				}
+				
+		})// ajax
+		}// if	
+		}//menuDelete
 
 // ===============< 사원리스트 스크립트(광훈) >============================
 // 테이블 페이징기능
@@ -987,4 +1029,5 @@ function fcOrderFlagUpdate(flag) {
 
 // ===============< 프랜차이즈계정 정보(광훈) >============================
 // ** 돋보기 눌렀을때 모달창 띄우기
+
 
