@@ -567,7 +567,6 @@ function fcOrderDetailForm(fcOrderSeq){
 				var itemQty = comma(vo.itemQty);
 				var sumRow = comma(vo.itemInfoVO.itemPrice*vo.itemQty);
 				sumCol = sumCol + (vo.itemInfoVO.itemPrice*vo.itemQty);
-				console.info('합계' + sumCol);
 				$('#fcOrderDeatilTableBody').append(
 					'<tr><th>'+vo.fcOrderDetailSeq+'</th><td>'+vo.itemInfoVO.itemFlag
 					+'</td><td>'+vo.itemInfoVO.itemName+'</td><td>'+itemQty
