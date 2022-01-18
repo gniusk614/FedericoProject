@@ -1,24 +1,315 @@
 
 $(function() {
+	$('.fcmodalbtn').click(function() {
+		var fcId = $(this).attr('id');
+		$.ajax({
+			type : "Get",
+			url : "fcdetail?fcId=" + fcId,
+			success : function(resultData) {
+				$('#fcId').html(resultData.fcDetail.fcId);
+				$('#fcName').html(resultData.fcDetail.fcName);
+				$('#fcAddress').html(resultData.fcDetail.fcAddress);
+				$('#fcPhone').html(resultData.fcDetail.fcPhone);
+				$('#hoid').html(resultData.fcDetail.hoId);
+				$('#fcmodal').modal('show');
+			},
+			error : function() {
+				alert("Ajax 오류");
+			}
+		});// ajax
+	});
+	var click_fcCheck = 0;
+	$('#fcinfoUp').click(function() {
 
-	// ===============< 사원리스트 스크립트(광훈) >============================
-	// 테이블 페이징기능
-	// $("#table_id").DataTable();
+					var fcId = $('#fcId').html();
+					var fcAddress = $('#fcAddress').html();
+					var fcPhone = $('#fcPhone').html();
+					var hoId = $('#hoid').html();
+					var fcName = $('#fcName').html();
+						if (click_fcCheck == 0) {
+						$('#fcName').html('<input type="text" id="nameUp" value="'
+												+ fcName
+												+ '" class="form-control" size="7">');
+						$('#fcAddress').html('<input type="text" id="addressUp" value="'
+												+ fcAddress
+												+ '" class="form-control" size="7">');
+						$('#fcPhone').html('<input type="text" id="phoneUp" value="'
+												+ fcPhone
+												+ '" class="form-control" size="7">');
+						$('#hoid').html('<input type="text" id="hoidUp" value="'
+												+ hoId
+												+ '" class="form-control" size="7">');
+						$('#passUp').attr("hidden", false);
+						click_fcCheck = 1;
+					} else if (click_fcCheck == 1) {
+						if (confirm('정보를 수정하시겠습니까?')) {
+							$.ajax({
+								type : "post",
+								url : "fcupdate",
+								data : {
+									fcId : fcId,
+									fcName : $('#nameUp').val(),
+									fcAddress : $('#addressUp').val(),
+									fcPhone : $('#phoneUp').val(),
+									hoId : $('#hoidUp').val()
+								},
+								success : function(data) {
+									if (data.success == 'success') {
+										alert('정보수정에 성공했습니다.');
+											$('#fcName').html($('#nameUp').val());
+											$('#fcAddress').html($('#addressUp').val());
+											$('#fcPhone').html($('#phoneUp').val());
+											$('#hoid').html($('#hoidUp').val());
+											click_check = 0;
+										}
+										if (data.success == 'fail') {
+											alert('정보수정에 실패했습니다.');
+										}
+									},
+									error : function() {
+										alert("서버와 접속에 실패했습니다.")
+									}
+								})// ajax
+							}// confirm
+						}// if
 
-	// ** 검색기능
-	// SearchType 이 '---' 면 keyword 클리어
-/*	$('#searchType').change(function() {
-		// if ($(this).val()=='n')
-		$('#keyword').val('');
-	}); // change
-	// 검색후 요청
-	$('#searchBtn').on(
-			"click",
-			function() {
-				self.location = "mcplist" + "${pageMaker.makeQuery(1)}"
-						+ "&searchType=" + $('#searchType').val() + '&keyword='
-						+ $('#keyword').val()
-			}); // on_click*/
+					});// infoUp
+	
+	$('#fcmodal').on('hidden.bs.modal', function() {
+		if (click_fcCheck == 1) {
+			click_fcCheck = 0;
+		} else
+			location.reload();
+	})
+	
+	
+	
+	
+	
+	$('#fcCloseBtn').click(function() {
+		if (confirm('폐점처리 하시겠습니까?')) {
+			$.ajax({
+				type : "get",
+				url : "fcclose",
+				data : {
+					fcId : $('#fcId').html()
+				},
+				success : function(data) {
+					if (data.success == 'success') {
+						alert('폐업신청이 완료되었습니다.');
+						location.reload();
+					}
+					if (data.success == 'fail') {
+						alert('폐업신청에 실패했습니다.');
+					}
+				},
+				error : function() {
+					alert("서버와 접속에 실패했습니다.")
+				}
+			})// ajax
+		}
+	})
+})//ready
+
+var fcidCheck = false; // => 사원번호
+var fclpCheck = false; // =>로그인비번
+var fcpCheck = false; // ->비번
+var fcprCheck = false; // ->비번확인
+var fcdubCheck = false; // ->사원번호중복
+
+$(function() {
+	// ==================<가맹정계정생성 (광훈)>==========================
+	//담당자 검색클릭시
+	$('#fcSearchStaff').click(function() {
+		$('#fcSearchModal').modal('show');
+	});
+	// ** 계정생성 리셋버튼 클릭시 
+	$('#fcInputresetBtn').click(function() {
+		$('.form-control').val('');
+		$('.form-select').val('서울');
+		fcInputClear();
+	});
+	
+	
+	
+	
+	
+	// 가맹점 ID
+	$('#fcId').focusout(function() {
+		fcidCheck = fcIdCheck();
+		if (fcidCheck == false) {
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+		}
+	});// id_focusout
+
+	// 비밀번호
+	$('#fcPassword').focusout(function() {
+		fcpCheck = fcpwCheck();
+		if (fcpCheck == false) {
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+			$('#fcPasswordRepeat').attr("disabled", true)
+		} else {
+			// $(this).removeClass('is-invalid');
+			// $(this).addClass('is-valid');
+			$('#fcPasswordRepeat').attr("disabled", false)
+		}
+		$('#fcPasswordRepeat').focus();
+	});// password_focusout
+
+	// 비밀번호확인
+	$('#fcPasswordRepeat').focusout(function() {
+		fcprCheck = fcpwrpCheck();
+		if (fcprCheck == false) {
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+			$('#fcPassword').removeClass('is-valid');
+			$('#fcPassword').addClass('is-invalid');
+		} else {
+			$('#fcPassword').removeClass('is-invalid');
+			$('#fcPassword').addClass('is-valid');
+			$(this).removeClass('is-invalid');
+			$(this).addClass('is-valid');
+		}
+	})
+
+	// 가맹점ID 중복체크
+	$('#fcidDupcheck').click(function() {
+		fcidCheck = fcIdCheck();
+		if (fcidCheck == true) {
+			$.ajax({
+				type : "Get",
+				url : "fcdetail?fcId=" + $('#fcId').val(),
+				success : function(resultData) {
+					if (resultData.message != null) {
+						console.log(resultData.message)
+						$('#fcId').removeClass('is-invalid');
+						$('#fcId').addClass('is-valid');
+						$('#fcidsuccessMessage').html('사용가능한 코드입니다.');
+						fcdubCheck = true;
+					} else {
+						$('#fcId').removeClass('is-valid');
+						$('#fcId').addClass('is-invalid');
+						$('#fcidMessage').html('이미 등록된 가맹점ID입니다.');
+						fcdubCheck = false;
+					}
+				},
+				error : function() {
+					alert("Ajax 오류");
+					fcdubCheck = false;
+				}
+			});// ajax
+		}// if
+	})
+	
+	// ** 계정 생성 확인버튼 클릭시
+	$('#fcSubmitBtn').click(function() {
+		if (fcincheck() == true) {
+			$.ajax({
+				type : "post",
+				url : "fcinsert",
+				data : {
+					fcId : $('#fcId').val(),
+					fcPassword : $('#fcPassword').val(),
+					fcName : $('#fcName').val(),
+					fcAddress : $('#address').val()+" "+$('#addressDetail').val(),
+					fcArea : $('#fcArea').val(),
+					fcPhone : $('#fcPhone').val(),
+					hoId : $('#hoId').val(),
+					fcClose : "N"
+				},
+				success : function(data) {
+					if (data.success == 'success') {
+						alert('계정생성에 성공했습니다.');
+						fcInputClear();
+						location.reload();
+					}
+					if (data.success == 'fail') {
+						alert('계정생성에 실패했습니다.');
+						fcInputClear();
+					}
+				},
+				error : function() {
+					alert("서버와 접속에 실패했습니다.");
+					fcInputClear();
+				}
+			})// ajax
+		}
+	})
+})//ready
+// ** ID 중복 확인하기
+
+// ** input창 클리어
+function fcInputClear() {
+
+	$('#fcId').removeClass('is-valid');
+	$('#fcId').removeClass('is-invalid');
+	$('#fcPassword').removeClass('is-valid');
+	$('#fcPassword').removeClass('is-invalid');
+	$('#fcPasswordRepeat').removeClass('is-valid');
+	$('#fcPasswordRepeat').removeClass('is-invalid');
+	$('#fcPasswordRepeat').attr("disabled", true);
+}
+
+function fcincheck() {
+	// 모든 항목에 오류 없음을 확인 : switch 변수
+	if (fcidCheck == false || fcdubCheck == false) {
+		$('#fcId').addClass('is-invalid');
+		$('#fcidMessage').html('가맹점ID를 확인하세요');
+	}
+	if (fcpCheck == false) {
+		$('#fcPassword').addClass('is-invalid');
+		$('#fcpMessage').html('password를 확인하세요');
+	}
+	if (fcprCheck == false) {
+		$('#fcPasswordRepeat').addClass('is-invalid');
+		$('#fcprMessage').html('password를 확인하세요');
+	}
+
+	if (fcidCheck == true && fcpCheck == true && fcprCheck == true) {
+		if (confirm('계정을 생성하시겠습니까?')) {
+			return true;
+		} else {
+			return false;
+		}
+	} else
+		return false;
+}// inCheck
+// ====================================================================
+
+// ===============< 사원계정생성 스크립트(광훈) >============================
+$(function() {
+	// ** 계정생성 클릭시 모달창
+	$('#joinBtn').click(function() {
+		$('#joinfmodal').modal('show');
+	});
+	// ** 비밀번호수정 클릭시 모달창
+	$('#staffPwChange').click(function() {
+		$('#staffPwChangeModal').modal('show');
+	});
+	// ** 비밀번호수정 모달 닫힐시
+	$('#staffPwChangeModal').on('hidden.bs.modal', function() {
+		$('#loginPassword').val('');
+		$('#hoPassword').val('');
+		$('#passwordRepeat').val('');
+		inputClear();
+		$('#hoPassword').attr("disabled", true)
+		$('#passwordRepeat').attr("disabled", true)
+	});
+	// ** 계정생성 리셋버튼 클릭시 모달창
+	$('#staffInputresetBtn').click(function() {
+		inputClear();
+	});
+	// ** 계정생성 모달 닫힐시
+	$('#joinfmodal').on('hidden.bs.modal', function() {
+		$('.form-control').val('');
+		inputClear();
+	});
+	// ** 계정생성 모달 열릴시
+	$('#joinfmodal').on('show.bs.modal', function() {
+		$('#code').focus();
+	});
 
 	// ** 돋보기 눌렀을때 모달창 띄우기
 	$('.modalbtn').click(function() {
@@ -40,6 +331,9 @@ $(function() {
 		});// ajax
 	});
 
+	
+	
+	var click_check = 0;
 	// ** 모달 닫는버튼 새로고침 기능 추가
 	$('.infoClose').click(function() {
 		if (click_check == 1) {
@@ -47,27 +341,9 @@ $(function() {
 		} else
 			location.reload();
 	})
-
-	// ====================================================================
-
-	// ===============< 사원계정생성 스크립트(광훈) >============================
-
-	// ** 계정생성 클릭시 모달창
-	$('#joinBtn').click(function() {
-		$('#joinfmodal').modal('show');
-	});
-	// ** 계정생성 모달 닫힐시
-	$('#joinfmodal').on('hidden.bs.modal', function() {
-		$('.form-control').val('');
-		inputClear();
-	});
-	// ** 계정생성 모달 열릴시
-	$('#joinfmodal').on('show.bs.modal', function() {
-		$('#code').focus();
-	});
-
-	var click_check = 0; // 2번 클릭시 구분
-	// ** 계정디테일에서 정보수정 클릭시
+	
+	
+	// ** 계정디테일, 나의정보에서 정보수정 클릭시
 	$('#infoUp').click(
 			function() {
 
@@ -95,8 +371,6 @@ $(function() {
 									+ staffEmail
 									+ '" class="form-control" size="7">');
 					$('#passUp').attr("hidden", false);
-					$('#passUpRepeat').attr("hidden", false);
-					
 					click_check = 1;
 				} else if (click_check == 1) {
 					if (confirm('정보를 수정하시겠습니까?')) {
@@ -197,23 +471,58 @@ $(function() {
 
 }); // ready
 
+// ========================< 페이징, 서치 도구 >===============================
+
+function changeSearchStaffOption() {
+
+	$input = $('#changeSearchFinder').children('input');
+	$select = $('#changeSearchFinder').children('select');
+	if ($('#searchType').val() == 'position') {
+		$input.css('display', 'none').attr('id', 'keywordHide');
+		$select.css('display', 'block').attr('id', 'keyword');
+	} else {
+		$select.css('display', 'none').attr('id', 'keywordHide');
+		$input.css('display', 'block').attr('id', 'keyword');
+	}
+
+}
+
+function changeSearchFranchiseOption() {
+
+	$input = $('#changeSearchFinder').children('input');
+	$select = $('#changeSearchFinder').children('select');
+	if ($('#searchType').val() == 'area') {
+		$input.css('display', 'none').attr('id', 'keywordHide');
+		$select.css('display', 'block').attr('id', 'keyword');
+	} else {
+		$select.css('display', 'none').attr('id', 'keywordHide');
+		$input.css('display', 'block').attr('id', 'keyword');
+	}
+
+}
+
+// ==========================================================================
+
 // ===============< 가입시 입력제한조건 (광훈) >============================
 // 1) 개별적 오류 확인을 위한 switch 변수(전역)
-var cCheck = false;
-var pCheck = false;
-var prCheck = false;
-var dubCheck = false;
+var cCheck = false; // => 사원번호
+var lpCheck = false; // =>로그인비번
+var pCheck = false; // ->비번
+var prCheck = false; // ->비번확인
+var dubCheck = false; // ->사원번호중복
 
 // 2) 개별적 오류점검 위한 focusout 이벤트 핸들러 : JQuery
 $(function() {
+	// 사원번호
 	$('#code').focusout(function() {
 		cCheck = codeCheck();
 		if (cCheck == false) {
 			$(this).removeClass('is-valid');
 			$(this).addClass('is-invalid');
-		} 
+		}
 	});// id_focusout
 
+	// 비밀번호
 	$('#hoPassword').focusout(function() {
 		pCheck = pwCheck();
 		if (pCheck == false) {
@@ -221,24 +530,30 @@ $(function() {
 			$(this).addClass('is-invalid');
 			$('#passwordRepeat').attr("disabled", true)
 		} else {
-			$(this).removeClass('is-invalid');
-			$(this).addClass('is-valid');
+			// $(this).removeClass('is-invalid');
+			// $(this).addClass('is-valid');
 			$('#passwordRepeat').attr("disabled", false)
 		}
 		$('#passwordRepeat').focus();
 	});// password_focusout
 
+	// 비밀번호확인
 	$('#passwordRepeat').focusout(function() {
 		prCheck = pwrpCheck();
 		if (prCheck == false) {
 			$(this).removeClass('is-valid');
 			$(this).addClass('is-invalid');
+			$('#hoPassword').removeClass('is-valid');
+			$('#hoPassword').addClass('is-invalid');
 		} else {
+			$('#hoPassword').removeClass('is-invalid');
+			$('#hoPassword').addClass('is-valid');
 			$(this).removeClass('is-invalid');
 			$(this).addClass('is-valid');
 		}
 	})
 
+	// 사원번호 중복체크
 	$('#codeDupcheck').click(function() {
 		cCheck = codeCheck();
 		if (cCheck == true) {
@@ -263,8 +578,65 @@ $(function() {
 					dubCheck = false;
 				}
 			});// ajax
-		}//if
+		}// if
 	})
+
+	// =======================< 비번 변경 >===============================
+
+	// 비밀번호 변경시 현재 비밀번호 확인
+	$('#staffPwUpBtn').click(function() {
+		if (confirm('비밀번호를 변경하시겠습니까?')) {
+			$.ajax({
+				type : "post",
+				url : "headOfficePwUpdate",
+				data : {
+					hoPassword : $('#hoPassword').val(),
+				},
+				success : function(data) {
+					if (data.success == 'success') {
+						alert('비밀번호가 변경되었습니다.')
+						$('#staffPwChangeModal').modal('hide');
+					}
+					if (data.success == 'fail') {
+						alert('비밀번호 변경에 실패했습니다.')
+					}
+				},
+				error : function() {
+					alert("서버와 접속에 실패했습니다.");
+				}
+			});// ajax
+		}
+	});// loginPassword_click
+
+	// 비밀번호 변경시 현재 비밀번호 확인
+	$('#pwCheck').click(function() {
+		var inputPW = $('#loginPassword').val();
+		$.ajax({
+			type : "post",
+			url : "staffloginPwCheck",
+			data : {
+				hoPassword : inputPW,
+			},
+			success : function(data) {
+				if (data.success == 'success') {
+					$('#loginPassword').removeClass('is-invalid');
+					$('#loginPassword').addClass('is-valid');
+					$('#hoPassword').attr("disabled", false);
+					$('#hoPassword').focus();
+				}
+				if (data.success == 'fail') {
+					$('#loginPassword').removeClass('is-valid');
+					$('#loginPassword').addClass('is-invalid');
+					$('#passwordRepeat').attr("disabled", true)
+					$('#lpMessage').html('비밀번호가 틀립니다.');
+				}
+			},
+			error : function() {
+				alert("서버와 접속에 실패했습니다.");
+			}
+		});// ajax
+
+	});// loginPassword_click
 
 });// ready
 
@@ -277,7 +649,7 @@ function incheck() {
 	}
 	if (pCheck == false) {
 		$('#hoPassword').addClass('is-invalid');
-		$('#pMessage').html('password를  확인하세요');
+		$('#pMessage').html('password를 확인하세요');
 	}
 	if (prCheck == false) {
 		$('#passwordRepeat').addClass('is-invalid');
@@ -310,10 +682,6 @@ function idDupCheck() {
 	}
 }// idDupCheck
 
-
-
-
-
 // ** input창 클리어
 function inputClear() {
 
@@ -324,13 +692,13 @@ function inputClear() {
 	$('#passwordRepeat').removeClass('is-valid');
 	$('#passwordRepeat').removeClass('is-invalid');
 	$('#passwordRepeat').attr("disabled", true);
+	$('#loginPassword').removeClass('is-invalid');
+	$('#loginPassword').removeClass('is-valid');
 }
 
 // ====================================================================
 
 // ===============< 자재등록(현구) >=================================
-
-
 
 $(function() {
 	// 숫자입력시 콤마찍기
@@ -346,19 +714,19 @@ $(function() {
 	}
 	// 실행함수
 	// 콤마찍기
-	
 
 });// ready
 
 function comma(str) {
-		str = String(str);
-		return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-	}
-	// 콤마풀기
-	function uncomma(str) {
-			str = String(str);
-		return str.replace(/[^\d]+/g, '');
-	}
+
+	str = String(str);
+	return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+}
+// 콤마풀기
+function uncomma(str) {
+	str = String(str);
+	return str.replace(/[^\d]+/g, '');
+}
 
 // 자재등록 값체크 및 자재등록 메서드 실행
 function itemInsertCheck() {
@@ -381,27 +749,20 @@ function itemInsertCheck() {
 
 }// itemInsertCheck
 
-
 // 검색조건에 따라 select, input 동적 변경
-function changeSearchItemOption(){
-	
+function changeSearchItemOption() {
+
 	$input = $('#changeSearchFinder').children('input');
 	$select = $('#changeSearchFinder').children('select');
-	if($('#searchType').val() == 'flag'){
-		$input.css('display','none')
-		.attr('id','keywordHide');
-		$select.css('display','block')
-		.attr('id','keyword');
-	} else{
-		$select.css('display','none')
-		.attr('id','keywordHide');
-		$input.css('display','block')
-		.attr('id','keyword');
+	if ($('#searchType').val() == 'flag') {
+		$input.css('display', 'none').attr('id', 'keywordHide');
+		$select.css('display', 'block').attr('id', 'keyword');
+	} else {
+		$select.css('display', 'none').attr('id', 'keywordHide');
+		$input.css('display', 'block').attr('id', 'keyword');
 	}
-	
+
 }
-
-
 
 // 자재등록
 function itemInsert() {
@@ -529,95 +890,101 @@ function itemDelete() {
 
 }
 
+// ===============< 자재등록(현구) >============================
 
-//===============< 자재등록(현구) >============================
+// ===============< 가맹점발주관련(현구) >============================
 
+$(function() {
 
-
-//===============< 가맹점발주관련(현구) >============================
-
-$(function(){
-	
 	// 자재상세조회 modal 닫힐 시 내용 clear
-	$('#fcOrderDetailModal').on('hidden.bs.modal', function(){
+	$('#fcOrderDetailModal').on('hidden.bs.modal', function() {
 		$('#fcOrderDeatilTableBody').html('');
 	})
 
-})//ready
+})// ready
 
+// 자재 상세조회 modal 열기
+function fcOrderDetailForm(fcOrderSeq) {
+	console.log("세션 => " + window.sessionStorage);
+	console.log("세션 => " + window.sessionStorage.getItem('loginID'));
 
-
-//자재 상세조회 modal 열기
-function fcOrderDetailForm(fcOrderSeq){
-	console.log("세션 => "+ window.sessionStorage);
-	console.log("세션 => "+ window.sessionStorage.getItem('loginID'));
-	
-	
 	$.ajax({
-		type: 'get',
-		url: 'fcorderdetail',
-		data:{
+		type : 'get',
+		url : 'fcorderdetail',
+		data : {
 			fcOrderSeq : fcOrderSeq
 		},
-		success: function(data){
+		success : function(data) {
 			var list = data.list;
 			var sumCol = 0;
-			$.each(list, function(index, vo){
-				var	itemPrice = comma(vo.itemInfoVO.itemPrice);
+			$.each(list, function(index, vo) {
+				var itemPrice = comma(vo.itemInfoVO.itemPrice);
 				var itemQty = comma(vo.itemQty);
-				var sumRow = comma(vo.itemInfoVO.itemPrice*vo.itemQty);
-				sumCol = sumCol + (vo.itemInfoVO.itemPrice*vo.itemQty);
+				var sumRow = comma(vo.itemInfoVO.itemPrice * vo.itemQty);
+				sumCol = sumCol + (vo.itemInfoVO.itemPrice * vo.itemQty);
+				console.info('합계' + sumCol);
 				$('#fcOrderDeatilTableBody').append(
-					'<tr><th>'+vo.fcOrderDetailSeq+'</th><td>'+vo.itemInfoVO.itemFlag
-					+'</td><td>'+vo.itemInfoVO.itemName+'</td><td>'+itemQty
-					+'</td><td>'+vo.itemInfoVO.itemUnit+'</td><td>'+itemPrice
-					+'</td><td>'+sumRow+'</td></tr>' 
-				);//append
-			}) //each
-			
+						'<tr><th>' + vo.fcOrderDetailSeq + '</th><td>'
+								+ vo.itemInfoVO.itemFlag + '</td><td>'
+								+ vo.itemInfoVO.itemName + '</td><td>'
+								+ itemQty + '</td><td>'
+								+ vo.itemInfoVO.itemUnit + '</td><td>'
+								+ itemPrice + '</td><td>' + sumRow
+								+ '</td></tr>');// append
+			}) // each
+
 			sumCol = comma(sumCol);
-			$('#fcOrderDetailModalSumCol').html('합계 : '+sumCol);
-			$('#fcOrderNumber').attr('ordernumber',fcOrderSeq);
-			$('#fcOrderNumber').html('  &nbsp;발주번호 : '+fcOrderSeq);
+			$('#fcOrderDetailModalSumCol').html('합계 : ' + sumCol);
+			$('#fcOrderNumber').attr('ordernumber', fcOrderSeq);
+			$('#fcOrderNumber').html('  &nbsp;발주번호 : ' + fcOrderSeq);
 			$('#fcOrderDetailModal').modal('show');
 		},
-		error: function(){
+		error : function() {
 		}
 	})
-}//fcOrderDetailForm
-
-
+}// fcOrderDetailForm
 
 // 가맹점 발주 완료처리
-function fcOrderFlagUpdate(flag){
+
+function fcOrderFlagUpdate(flag) {
 	var fcOrderSeq = $('#fcOrderNumber').attr('ordernumber');
-	console.log("ordernumber : "+fcOrderSeq);
-	console.log("ordernumber : "+flag);
+	console.log("ordernumber : " + fcOrderSeq);
+	console.log("ordernumber : " + flag);
 	$.ajax({
-		type: 'get',
-		url: 'fcordersequpdate?flag='+flag,
-		data: {
+		type : 'get',
+		url : 'fcordersequpdate?flag=' + flag,
+		data : {
 			fcOrderSeq : fcOrderSeq
 		},
-		success: function(data){
-			if (data.success == 'success'){
-			location.reload();
-			}
-			else{
+		success : function(data) {
+			if (data.success == 'success') {
+				location.reload();
+			} else {
 				alert("시스템 오류입니다.<br>다시 시도해주세요.")
 			}
-		},	
-		error: function(){
+		},
+		error : function() {
 			alert("시스템 오류입니다.<br>다시 시도해주세요.")
 		}
-	})//ajax
-}//fcOrderComplete
+	})// ajax
+}// fcOrderComplete
 
+// ===============< 가맹점발주관련등록(현구) >============================
 
+// ===============< 사원리스트 스크립트(광훈) >============================
+// 테이블 페이징기능
+// $("#table_id").DataTable();
 
+// ** 검색기능
+// SearchType 이 '---' 면 keyword 클리어
+/*
+ * $('#searchType').change(function() { // if ($(this).val()=='n')
+ * $('#keyword').val(''); }); // change // 검색후 요청 $('#searchBtn').on( "click",
+ * function() { self.location = "mcplist" + "${pageMaker.makeQuery(1)}" +
+ * "&searchType=" + $('#searchType').val() + '&keyword=' + $('#keyword').val()
+ * }); // on_click
+ */
 
-
-
-
-//===============< 가맹점발주관련등록(현구) >============================
+// ===============< 프랜차이즈계정 정보(광훈) >============================
+// ** 돋보기 눌렀을때 모달창 띄우기
 

@@ -40,82 +40,79 @@ import vo.StaffVO;
 public class HeadOfficeController {
 
 	@Autowired
-	FranchiseService fcService;
+	FranchiseService fservice;
 	@Autowired
 	HeadOfficeService service;
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
-
-	
 	// 가맹점 발주내역 상세보기(발주번호 별로) return json
 	@RequestMapping(value = "/fcorderdetail")
-	public ModelAndView fcorderdetail(ModelAndView mv, FcOrderDetailVO vo, ItemInfoVO ivo){
+	public ModelAndView fcorderdetail(ModelAndView mv, FcOrderDetailVO vo, ItemInfoVO ivo) {
 		vo.setItemInfoVO(ivo);
 		List<FcOrderDetailVO> list = service.selectFcOrderDetailbyOrderNumber(vo);
-		
-		
-		if(list.size() > 0) {
-			mv.addObject("list",list);
+
+		if (list.size() > 0) {
+			mv.addObject("list", list);
 		} else {
-			mv.addObject("message","조회할 자료가 없습니다.");
+			mv.addObject("message", "조회할 자료가 없습니다.");
 		}
-		
+
 		mv.setViewName("jsonView");
 		return mv;
 	}
-	
+
 	// 가맹점 발주내역 처리완료로 변경
 	@RequestMapping(value = "/fcordersequpdate")
 	public ModelAndView fcOrderSeqUpdate(ModelAndView mv, FcOrderVO vo, @RequestParam("flag") String flag) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("flag", flag);
 		param.put("vo", vo);
-		
-		if(service.fcOrderSeqUpdate(param) > 0) {
-			mv.addObject("success","success");
+
+		if (service.fcOrderSeqUpdate(param) > 0) {
+			mv.addObject("success", "success");
 		} else {
-			mv.addObject("success","fail");
+			mv.addObject("success", "fail");
 		}
 		mv.setViewName("jsonView");
 		return mv;
 	}
-	
-	
-	// 발주내역 서치,페이징 + 폼 이동(강현구) 
+
+	// 발주내역 서치,페이징 + 폼 이동(강현구)
 	// 요청에 쿼리스트링으로 구분
 	// flag = Y -> 처리완료
 	// flag = N -> 미러치
 	// 쿼리스트링X -> 전체조회?(미구현)
 	@RequestMapping(value = "/fcorder")
-	public ModelAndView fcorder(ModelAndView mv, FcOrderVO vo, @RequestParam("flag") String flag,
-			PageMaker pageMaker, SearchCriteria cri) {
-		
-		String uri="headoffice/headofficeMain";
-		if("Y".equals(flag)) uri = "headoffice/fcOrderY";
-		else if("N".equals(flag)) uri = "headoffice/fcOrderN";
+	public ModelAndView fcorder(ModelAndView mv, FcOrderVO vo, @RequestParam("flag") String flag, PageMaker pageMaker,
+			SearchCriteria cri) {
+
+		String uri = "headoffice/headofficeMain";
+		if ("Y".equals(flag))
+			uri = "headoffice/fcOrderY";
+		else if ("N".equals(flag))
+			uri = "headoffice/fcOrderN";
 
 		cri.setSnoEno();
-		
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("flag", flag);
 		params.put("cri", cri);
-		
+
 		List<FcOrderVO> list = service.searchFcOrder(params);
-		
-		
-		if(list != null && list.size()>0) {
-			mv.addObject("list",list);
+
+		if (list != null && list.size() > 0) {
+			mv.addObject("list", list);
 		} else {
 			mv.addObject("message", "조회할 자료가 없습니다.");
 		}
 		pageMaker.setCri(cri);
 		pageMaker.setTotalRowCount(service.searchFcOrderRows(params));
-		
+
 		mv.setViewName(uri);
 		return mv;
 	};
-	
+
 	// 본사: 자재 삭제 (강현구)
 	@RequestMapping(value = "/itemdelete")
 	public ModelAndView itemdelete(ModelAndView mv, ItemInfoVO vo) {
@@ -176,10 +173,10 @@ public class HeadOfficeController {
 	// 본사: 자재리스트 서치 + 조회 + 자재조회폼 이동 (강현구)
 	@RequestMapping(value = "/itemselect")
 	public ModelAndView iteminsertf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
-		
+
 		cri.setSnoEno();
 		List<ItemInfoVO> list = service.searchItemList(cri);
-		
+
 		if (list != null && list.size() > 0) {
 			mv.addObject("list", list);
 			mv.setViewName("headoffice/itemselectf");
@@ -189,10 +186,11 @@ public class HeadOfficeController {
 		}
 		pageMaker.setCri(cri);
 		pageMaker.setTotalRowCount(service.searchItemRows(cri));
-		
 
 		return mv;
 	}
+
+//=========================< 본사 계정 관리 >=========================	
 
 	// 로그인폼이동 (강광훈)
 	@RequestMapping(value = "/loginf")
@@ -227,7 +225,6 @@ public class HeadOfficeController {
 					// 로그인 성공 -> 로그인 정보 session에 보관, home
 					request.getSession().setAttribute("loginID", headOfficeVo.getStaffVo().getStaffCode());
 					request.getSession().setAttribute("loginName", headOfficeVo.getStaffVo().getStaffName());
-					request.getSession().setAttribute("loginPW", password);
 					uri = "redirect:headofficeMain";
 				} else {
 					mv.addObject("message", "Password가 일치하지않습니다.");
@@ -279,16 +276,20 @@ public class HeadOfficeController {
 
 	// staff 리스트
 	@RequestMapping(value = "/staffList")
-	public ModelAndView staffList(ModelAndView mv, HeadOfficeVO headvo, StaffVO staffvo) {
+	public ModelAndView staffList(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		cri.setSnoEno();
 
-		List<StaffVO> list = service.selectMList(staffvo);
+		List<StaffVO> list = service.searchStaffList(cri);
 
-		if (list != null)
+		if (list != null && list.size() > 0) {
 			mv.addObject("staffList", list);
-		else
+		} else {
 			mv.addObject("message", "출력할 자료가 없습니다.");
-
+		}
 		mv.setViewName("headoffice/headofficeStaffList");
+		pageMaker.setCri(cri);
+		pageMaker.setTotalRowCount(service.searchStaffRows(cri));
+
 		return mv;
 	}// staff 목록 리스트
 
@@ -337,6 +338,7 @@ public class HeadOfficeController {
 		return mv;
 	}// join
 
+	// staff 정보 업데이트
 	@RequestMapping(value = "/staffUpdate")
 	public ModelAndView staffUpdate(ModelAndView mv, StaffVO svo) {
 		if (service.staffUpdate(svo) > 0) {
@@ -350,14 +352,14 @@ public class HeadOfficeController {
 		mv.setViewName("jsonView");
 		return mv;
 	}// join
-	
+
 	// ** staff 삭제
 	@RequestMapping(value = "/staffDelete")
 	public ModelAndView staffDelete(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
 			StaffVO svo, HeadOfficeVO hvo, RedirectAttributes rttr) {
 		hvo.setStaffVo(svo);
-		if (service.headOfficeDelete(hvo) >0){
-			if (service.staffDelete(svo)> 0) {
+		if (service.headOfficeDelete(hvo) > 0) {
+			if (service.staffDelete(svo) > 0) {
 				mv.addObject("success", "success");
 			} else {
 				mv.addObject("success", "fail");
@@ -369,41 +371,175 @@ public class HeadOfficeController {
 		return mv;
 
 	}// delete
-	
-	
-	
-	
+
 	// ** staff 내정보보기 클릭시
 	@RequestMapping(value = "/staffMyInfo")
-	public ModelAndView staffDetail( HttpServletRequest request, ModelAndView mv, StaffVO svo, HeadOfficeVO hvo) {
+	public ModelAndView staffDetail(HttpServletRequest request, ModelAndView mv, StaffVO svo, HeadOfficeVO hvo) {
 		String id = (String) request.getSession().getAttribute("loginID");
 		String password = (String) request.getSession().getAttribute("loginPW");
-		
+
 		svo.setStaffCode(id);
 
 		svo = service.selectOne(svo);
 
 		hvo.setStaffVo(svo);
-		
+
 		hvo = service.loginSelectOne(hvo);
-		
-		
-		if (hvo != null)
-			{hvo.setHoPassword(password);
+
+		if (hvo != null) {
+			hvo.setHoPassword(password);
 			hvo.setStaffVo(svo);
-			System.out.println(hvo.getHoPassword());
-			System.out.println(hvo.getStaffVo().getStaffCode());
 			mv.addObject("staffMyInfo", hvo); // MyBatis 에선 null , size()>0 으로 확인
-		}else mv.addObject("message", "정보가 없습니다.");
-		
-			mv.setViewName("headoffice/headofficeStaffMyInfo");
+		} else
+			mv.addObject("message", "정보가 없습니다.");
+
+		mv.setViewName("headoffice/headofficeStaffMyInfo");
 
 		return mv;
 	}// staffDetail
-	
-	
-	
-	
+
+	// ** 비번변경시 현재비번확인
+	@RequestMapping(value = "/staffloginPwCheck")
+	public ModelAndView staffloginPwCheck(HttpServletRequest request, ModelAndView mv, HeadOfficeVO hvo, StaffVO svo) {
+		String hoid = (String) request.getSession().getAttribute("loginID");
+
+		String inputPw = hvo.getHoPassword();
+		svo.setStaffCode(hoid);
+
+		hvo.setStaffVo(service.selectOne(svo));
+		hvo = service.loginSelectOne(hvo);
+
+		if (passwordEncoder.matches(inputPw, hvo.getHoPassword())) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+
+		return mv;
+	}// staffDetail
+
+	// ** 비번 변경
+	@RequestMapping(value = "/headOfficePwUpdate")
+	public ModelAndView headOfficePwUpdate(HttpServletRequest request, ModelAndView mv, HeadOfficeVO hvo, StaffVO svo) {
+		String hoid = (String) request.getSession().getAttribute("loginID");
+		String inputPw = hvo.getHoPassword();
+		svo.setStaffCode(hoid);
+
+		hvo.setStaffVo(service.selectOne(svo));
+		hvo = service.loginSelectOne(hvo);
+		hvo.setStaffVo(service.selectOne(svo));
+		hvo.setHoPassword(passwordEncoder.encode(inputPw));
+
+		if (service.headOfficePwUpdate(hvo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+
+		return mv;
+	}// staffDetail
+
+//=========================< 가맹점 관리 >=========================
+
+	// 가맹점 리스트
+	@RequestMapping(value = "/fclist")
+	public ModelAndView fclist(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		cri.setSnoEno();
+		List<FranchiseVO> list = service.searchFcList(cri);
+
+		if (list != null && list.size() > 0) {
+			mv.addObject("fcList", list);
+		} else {
+			mv.addObject("message", "출력할 자료가 없습니다.");
+		}
+		mv.setViewName("headoffice/fcList");
+
+		pageMaker.setCri(cri);
+		pageMaker.setTotalRowCount(service.searchFcRows(cri));
+		return mv;
+	}// staff 목록 리스트
+
+	// 가맹점 생성 폼 이동
+	@RequestMapping(value = "/fcinsertf")
+	public ModelAndView fcinsertf(ModelAndView mv) {
+		mv.setViewName("headoffice/fcInsertf");
+		return mv;
+	}// joinf
+
+	// 가맹점 insert (강광훈)
+	@RequestMapping(value = "/fcinsert")
+	public ModelAndView fcInsert(ModelAndView mv, FranchiseVO vo) {
+
+		vo.setFcPassword(passwordEncoder.encode(vo.getFcPassword()));
+		System.out.println(vo.getFcId());
+		System.out.println(vo.getFcName());
+		System.out.println(vo.getFcPassword());
+		System.out.println(vo.getFcArea());
+		System.out.println(vo.getFcAddress());
+		System.out.println(vo.getFcPhone());
+		System.out.println(vo.getHoId());
+		System.out.println(vo.getFcClose());
+		if (fservice.fcInsert(vo) > 0) {
+			mv.addObject("message", "계정생성이 완료되었습니다.");
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("message", " 계정생성이 실패하였습니다.");
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+		return mv;
+	}// join
+
+	// ** 가맹점 detail
+	@RequestMapping(value = "/fcdetail")
+	public ModelAndView fcdetail(HttpServletResponse response, ModelAndView mv, FranchiseVO vo) {
+
+		vo = fservice.selectFcOne(vo);
+
+		if (vo != null)
+			mv.addObject("fcDetail", vo); // MyBatis 에선 null , size()>0 으로 확인
+		else
+			mv.addObject("message", "정보가 없습니다.");
+		mv.setViewName("jsonView");
+
+		return mv;
+	}// fcdetail
+
+	// 가맹점 정보 업데이트
+	@RequestMapping(value = "/fcupdate")
+	public ModelAndView fcUpdate(ModelAndView mv, FranchiseVO vo) {
+		if (fservice.fcUpdate(vo) > 0) {
+			mv.addObject("message", "정보수정이 완료되었습니다.");
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("message", "정보수정이 실패하였습니다.");
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+		return mv;
+	}// fcupdate
+
+	// 가맹점 폐점처리
+	@RequestMapping(value = "/fcclose")
+	public ModelAndView fcClose(ModelAndView mv, FranchiseVO vo) {
+
+		if (fservice.fcClose(vo) > 0) {
+			mv.addObject("message", "폐점처리가 완료되었습니다.");
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("message", "폐점처리에 실패하였습니다.");
+			mv.addObject("success", "fail");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}// fcclose
+
 
 }
 // class

@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapperInterface.HeadOfficeMapper">
+
 <!-- resultMap 설정 ============================================================-->
 	<resultMap type="vo.FcOrderDetailVO" id="FcOrderDetailVO">
 		<result column="fcOrderDetailSeq" property="fcOrderDetailSeq"/>
@@ -10,8 +11,9 @@
 		<result column="itemQty" property="itemQty"/>
 		<collection property="itemInfoVO" resultMap="ItemInfoVO"/>
 	</resultMap>
-  
-  	<resultMap type="vo.ItemInfoVO" id="ItemInfoVO">
+
+ 
+  <resultMap type="vo.ItemInfoVO" id="ItemInfoVO">
 		<result column="itemIndex" property="itemIndex"/>
 		<result column="itemName" property="itemName"/>
 		<result column="itemFlag" property="itemFlag"/>
@@ -19,30 +21,9 @@
 		<result column="itemPrice" property="itemPrice"/>
 	</resultMap>
 <!-- resultMap 설정 ============================================================-->  
-	
-	<!-- headOffice 삭제 -->
-	
-	<delete id="headOfficeDelete">
-	DELETE FROM headOffice where hoid = #{staffVo.staffCode}
-	</delete>
-	
-	
-	
-	<!-- staff 삭제 -->
-	
-	<delete id="staffDelete">
-		DELETE FROM staff where staffCode = #{staffCode}
-	
-	</delete>
-	
-	
-	<!-- staff 업데이트 -->
-	
-	<insert id="staffUpdate">
-		UPDATE staff 
-		SET staffName=#{staffName}, staffPosition= #{staffPosition}, staffPhone=#{staffPhone},staffEmail=#{staffEmail} 
-		WHERE staffCode = #{staffCode}
-	</insert>
+
+  
+
 	
 	
 	<!-- 가맹점 발주내역 처리완료로 변경 -->
@@ -89,26 +70,6 @@
 		</choose>
 	</sql>
 	
-	
-	<!-- staff 인서트 -->
-	<insert id="staffInsert">
-		INSERT INTO staff VALUES(#{staffCode}, #{staffName}, #{staffPosition}, #{staffPhone}, #{staffEmail})
-	</insert>
-	
-	
-	<!-- HeadOffice 인서트 -->
-	<insert id="headOfficeInsert">
-		INSERT INTO headOffice(hoid, hoPassword) VALUES(#{staffVo.staffCode}, #{hoPassword})
-	</insert>
-	
-	
-	
-	<!-- stafflist 전부출력 -->
-	<select id="selectMList" resultType="vo.StaffVO">
-		SELECT * FROM staff ORDER BY staffCode desc
-	</select>
-
-
 
 	<delete id="itemdelete">
 		DELETE iteminfo WHERE itemindex = #{itemIndex}
@@ -167,6 +128,9 @@
 		VALUES((select nvl(max(itemindex),0)+1 from iteminfo), #{itemName}, #{itemFlag}, #{itemUnit}, #{itemPrice})
 	</insert>
 	
+	
+	
+<!-- ===================================< 사원관리 >======================================== -->
 	<!-- ** LoginSelectOne -->
 	<select id="loginSelectOne" resultType="vo.HeadOfficeVO">
 		SELECT * FROM HeadOffice
@@ -177,6 +141,140 @@
 		SELECT * FROM staff WHERE
 		StaffCode = #{staffCode}
 	</select>
+
+
+	<!-- staff 인서트 -->
+	<insert id="staffInsert">
+		INSERT INTO staff VALUES(#{staffCode}, #{staffName}, #{staffPosition}, #{staffPhone}, #{staffEmail})
+	</insert>
+	
+	
+	<!-- HeadOffice 인서트 -->
+	<insert id="headOfficeInsert">
+		INSERT INTO headOffice(hoid, hoPassword) VALUES(#{staffVo.staffCode}, #{hoPassword})
+	</insert>
+	
+	
+	
+	<!-- stafflist 전부출력 -->
+	<select id="selectMList" resultType="vo.StaffVO">
+		SELECT * FROM staff ORDER BY staffCode desc
+	</select>
+	
+		<!-- searchStaffRow -->
+	<select id="searchStaffRows" resultType="int">
+		SELECT COUNT(*) FROM Staff <include refid="staffSearch"></include>
+	</select>
+
+		<!-- searchStaff 서치,페이징 -->
+	<select id="searchStaffList" resultType="vo.StaffVO">
+		SELECT * FROM staff <include refid="staffSearch"></include> 
+		ORDER BY staffCode desc
+		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY
+	</select>
+
+	<sql id="staffSearch" >
+		<if test="keyword != null">
+			<bind name="keyVal" value="'%'+keyword+'%'"/>
+		</if>
+		<choose>
+			<when test="searchType == 'code'.toString()">
+				where staffCode LIKE #{keyVal} 
+				 <!-- and title Like  CONCAT('%',CONCAT(#{keyword},'%')) 
+                 and title Like  '%' || #{keyword} || '%' ) -->
+			</when>
+			<when test="searchType == 'name'.toString()">
+				where staffName LIKE #{keyVal} 
+			</when>			
+			<when test="searchType == 'position'.toString()">
+				where staffPosition LIKE #{keyVal} 
+			</when>			
+			<when test="searchType == 'phone'.toString()">
+				where staffPhone LIKE #{keyVal} 
+			</when>			
+			<when test="searchType == 'email'.toString()">
+				where staffEmail LIKE #{keyVal} 
+			</when>			
+			<otherwise></otherwise>						
+		</choose>
+	</sql>
+
+ 	 <!-- headOffice PW 변경 -->
+	<insert id="headOfficePwUpdate">
+	UPDATE headOffice SET hoPassword = #{hoPassword} WHERE hoid = #{staffVo.staffCode}
+	</insert>
+	
+	
+	<!-- headOffice 삭제 -->
+	<delete id="headOfficeDelete">
+	DELETE FROM headOffice where hoid = #{staffVo.staffCode}
+	</delete>
+	
+	
+	<!-- staff 삭제 -->
+	<delete id="staffDelete">
+		DELETE FROM staff where staffCode = #{staffCode}
+	</delete>
+	
+	
+	<!-- staff 업데이트 -->
+	<insert id="staffUpdate">
+		UPDATE staff 
+		SET staffName=#{staffName}, staffPosition= #{staffPosition}, staffPhone=#{staffPhone},staffEmail=#{staffEmail} 
+		WHERE staffCode = #{staffCode}
+	</insert>
+
+<!-- ===================================< 가맹점관리 >=================================== -->
+
+
+	<!-- searchFcRow -->
+	<select id="searchFcRows" resultType="int">
+		SELECT COUNT(*) FROM franchise <include refid="fcSearch"></include>
+	</select>
+
+
+	<!-- searchItem 본사자재 서치,페이징 -->
+	<select id="searchFcList" resultType="vo.FranchiseVO">
+		SELECT * FROM franchise <include refid="fcSearch"></include> 
+		ORDER BY length(fcid) desc,fcid desc
+		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY
+	</select>
+
+	<sql id="fcSearch" >
+		<if test="keyword != null">
+			<bind name="keyVal" value="'%'+keyword+'%'"/>
+		</if>
+		<choose>
+			<when test="searchType == 'fcid'.toString()">
+				where fcId LIKE #{keyVal} and fcClose='N'
+				 <!-- and title Like  CONCAT('%',CONCAT(#{keyword},'%')) 
+                 and title Like  '%' || #{keyword} || '%' ) -->
+			</when>
+			<when test="searchType == 'fcname'.toString()">
+				where fcName LIKE #{keyVal} and fcClose='N'
+			</when>			
+			<when test="searchType == 'phone'.toString()">
+				where fcPhone LIKE #{keyVal}  and fcClose='N'
+			</when>			
+			<when test="searchType == 'area'.toString()">
+				where fcArea LIKE #{keyVal} and fcClose='N'
+			</when>			
+			<when test="searchType == 'address'.toString()">
+				where fcAddress LIKE #{keyVal} and fcClose='N'
+			</when>			 
+			<when test="searchType == 'staff'.toString()">
+				where hoId LIKE #{keyVal} and fcClose='N'
+			</when>			
+			<otherwise>where fcClose='N'</otherwise>						
+		</choose>
+	</sql>
+
+
+
+
+
+
+
 
 
 
