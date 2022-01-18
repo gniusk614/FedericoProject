@@ -8,8 +8,8 @@
 	
 	<insert id="menuInsert">
 		
-		INSERT INTO menuinfo(menuindex, menuname, menuflag, menuintro, menuprice, menuimage)
-		VALUES((select nvl(max(menuindex),0)+1 from menuinfo), #{menuName}, #{menuFlag}, #{menuIntro}, #{menuPrice},#{menuUploadfile})
+		INSERT INTO MENUINFO (MENUINDEX, MENUNAME, MENUFLAG, MENUINTRO, MENUPRICE, MENUIMAGE)
+		VALUES((select nvl(max(menuIndex),0)+1 from menuinfo), #{menuName}, #{menuFlag}, #{menuIntro}, #{menuPrice},#{menuImage})
 		
 	</insert>
 	

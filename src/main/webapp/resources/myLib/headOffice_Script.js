@@ -971,82 +971,19 @@ function fcOrderFlagUpdate(flag) {
 		error : function() {
 			alert("시스템 오류입니다.<br>다시 시도해주세요.")
 		}
-<<<<<<< HEAD
+
 	})//ajax
 }//fcOrderComplete
 
 
 
-=======
-	})// ajax
-}// fcOrderComplete
->>>>>>> branch 'develop' of https://github.com/KKKhg/FedericoProject.git
-
 // ===============< 가맹점발주관련등록(현구) >============================
 
-<<<<<<< HEAD
+
 
 
 //===< 메뉴관련(민석) >========!!시작!!====================================
-function menuinputClear() {
 
-	$('#menuName').removeClass('is-valid');
-	$('#menuIntro').removeClass('is-valid');
-	$('#menuPrice').removeClass('is-valid');
-	$('#menuImage').removeClass('is-valid');
-	
-}
-/*
-$(	function() {
-		
-		console.log("menuInsert start");
-		$('#inputGroupFileAddon04').on('click',function(e){
-					console.log("menuInsert onclick fileupload");
-			var formData = new FormData();
-			var inputFile = $("input[name='inputGroupFile04']");
-			var files= inputFile[0].files;
-			
-					console.log(files);
-			//add File Data to FormData
-			for(var i = 0; i<files.length; i++) {
-				formData.append("inputGroupFile04",files[i]);
-			}
-					console.log("menuInsert onclick fileupload end / Ajax Start");
-	});	
-	});// ready
-	*/
-	
-	
-function menuInsert(){
-	console.log("menuInsert start");
-	
-	$.ajax({
-		type:'get',
-		url:'menuInsert',
-		data: {
-			menuName  : $('#menuName').val(),
-			menuIntro : $('#menuIntro').val(),
-			menuUploadfile : $('#uploadfilef').val(),
-			menuPrice : $('#menuPrice').val(),
-			menuFlag : $('#menuFlag').val(),				
-			
-		},success:function(data){
-			if(data.success=='success'){
-				location.reload();
-				menuinputClear();
-				console.log("menuInsert success");
-						}
-		},error:function(){
-			alert('시스템 오류입니다.-error function')
-			console.log("menuInsert error");
-			
-		}
-	}) // ajax 
-		console.log("menuInsert finish");
-		}//menuInsert()
-		
-		
-		
 		
 
 
@@ -1075,7 +1012,7 @@ function menuDelete() {
 		})// ajax
 		}// if	
 		}//menuDelete
-=======
+
 // ===============< 사원리스트 스크립트(광훈) >============================
 // 테이블 페이징기능
 // $("#table_id").DataTable();
@@ -1093,4 +1030,4 @@ function menuDelete() {
 // ===============< 프랜차이즈계정 정보(광훈) >============================
 // ** 돋보기 눌렀을때 모달창 띄우기
 
->>>>>>> branch 'develop' of https://github.com/KKKhg/FedericoProject.git
+

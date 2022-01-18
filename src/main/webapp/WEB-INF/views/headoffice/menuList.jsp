@@ -70,13 +70,13 @@
 							</tr>
 						</thead>
 						<tbody align="center">
-							<c:forEach var="vo" items="${list}" varStatus="status">
+							<c:forEach var="vo" items="${menuList}" varStatus="status">
 								<tr>
 									<th scope="row">${vo.menuIndex}</th>
 									<td>${vo.menuName}</td>
 									<td>${vo.menuIntro}</td>
-									<td><fmt:formatNumber value="${vo.menumPrice}"/></td>
-									<td>${vo.menuImage}</td>
+									<td><fmt:formatNumber value="${vo.menuPrice}"/></td>
+									<td><img src="${vo.menuImage}"></td>
 									<td>${vo.menuFlag}</td>
 									<!--모달창에 수정폼 띄우기  -->
 									<!-- data-bs-toggle="modal" data-bs-target="#menuUpdateModal" -->
@@ -119,7 +119,7 @@
 
 
 <!-- 자재등록 modal -->
-<form action="insertMenu" method="post" enctype="multipart/form-data" id="myForm">
+<form action="menuInsert" method="post" enctype="multipart/form-data">
 <div class="modal fade" id="menuInsertModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -129,12 +129,14 @@
       </div>
       <div class="modal-body">
 		<!-- 입력, inputform -->
+
+
 		
 		<!-- 분류 -->	
 		<div class="container" id="modalcontrol">
 				<div class="input-group mb-3">
 				  <label class="input-group-text" for="inputGroupSelect01">분류</label>
-				  <select class="form-select itemselect" id="menuFlag">
+				  <select class="form-select itemselect" id="menuFlag" name="menuFlag">
 				    <option selected value="pizza">피자</option>
 				    <option value="sets">세트메뉴</option>
 				    <option value="side">사이드</option>
@@ -144,36 +146,39 @@
 				<!-- 메뉴명 -->		
 				<div class="input-group mb-3">
 				  <span class="input-group-text" id="basic-addon1">메뉴명</span>
-				  <input type="text" class="form-control "  id="menuName">
+				  <input type="text" class="form-control "  id="menuName" name="menuName">
 				</div>
 				<!-- 메뉴소개 -->		
 				<div class="input-group mb-3">
 				  <span class="input-group-text" id="basic-addon1">메뉴<br>소개</span>
-				  <textarea title="메뉴소개" class="form-control "  id="menuIntro"></textarea>
+				  <textarea title="메뉴소개" class="form-control "  id="menuIntro" name="menuIntro"></textarea>
 				</div>
 				<!-- 가격 -->
 				<div class="input-group mb-3">
 				  <span class="input-group-text" id="basic-addon1">가격</span>
-				  <input type="text" class="form-control "  id="menuPrice">
+				  <input type="text" class="form-control "  id="menuPrice" name="menuPrice">
 				</div>		
     			<!-- 이미지등록 -->
     			<div class="input-group mb-3">
-				  <input type="file" class="form-control" name="uploadfilef" id="uploadfilef" aria-describedby="inputGroupFileAddon04" aria-label="Upload" multiple>
-				  <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">전송</button>
+				  <input type="file" class="form-control" name="menuUploadfilef" multiple >
+				 
 				  <span id="m_menuinput"></span><br>
 				</div>
+			</div>
+
 				
 		</div><!-- option : pizza -->
 		
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-        <button type="button" class="btn btn-primary" onclick="menuInsert()">등록</button>
+        <button type="submit" class="btn btn-primary" >등록</button>
       </div>
     </div>
   </div>
 </div>
-</div><!-- 자재등록 modal -->
 </form>
+<!-- 자재등록 modal -->
+
 <!-- 자재 수정 modal -->
 <div class="modal fade" id="menuUpdateModal" tabindex="-1" aria-labelledby="menuUpdateModal" aria-hidden="true">
   <div class="modal-dialog">

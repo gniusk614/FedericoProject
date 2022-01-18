@@ -1,10 +1,9 @@
 package com.project.federico;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -12,13 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -27,11 +25,13 @@ import paging.PageMaker;
 import paging.SearchCriteria;
 import service.FranchiseService;
 import service.HeadOfficeService;
+import service.MenuService;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
 import vo.HeadOfficeVO;
 import vo.ItemInfoVO;
+import vo.MenuVO;
 import vo.StaffVO;
 
 @RequestMapping(value = "/headoffice")
@@ -45,6 +45,8 @@ public class HeadOfficeController {
 	HeadOfficeService service;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	MenuService menuService;
 
 	// 가맹점 발주내역 상세보기(발주번호 별로) return json
 	@RequestMapping(value = "/fcorderdetail")
@@ -541,11 +543,12 @@ public class HeadOfficeController {
 	}// fcclose
 
 
-}
+
 // class
 	//============================Menu=======================
 	@RequestMapping(value = "/menuList")
 	public ModelAndView menuList(ModelAndView mv,MenuVO vo) {
+
 		
 		List<MenuVO> list = menuService.selectMenuList();
 		if(list != null) {
@@ -560,6 +563,9 @@ public class HeadOfficeController {
 	@RequestMapping(value = "/menuInsert") // 민석
 	public ModelAndView menuInsert(HttpServletRequest request, ModelAndView mv, MenuVO vo) 
 		 	throws IOException {
+		System.out.println("11111"+vo.getMenuUploadfilef().toString());
+		System.out.println("222222"+vo.getMenuUploadfilef());
+		
 		// Form을 이용한 파일 업로드 방식
 	log.info("before getRealPath");
 		// 1) 현재 웹어플리케이션의 실행 위치 확인 : 
@@ -568,8 +574,8 @@ public class HeadOfficeController {
 	log.info("before SaveTrack check");
 		// 2) 위 의 값을 이용해서 실제저장위치 확인 
 		// 경로는 각자의 경로로 바꾸시면 좋을 것 같습니다~
-		if (realPath.contains(".git."))
-			 realPath = "C:\\Users\\19467\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage";
+		if (realPath.contains(".eclipse."))
+			 realPath = "C:\\Users\\19467\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage\\menuImage/";
 		// realPath = "D:/MTest/MyWork/Spring02/src/main/webapp/resources/"+vo.getId()+"/";
 		else realPath += "/federico/resources/uploadImage/";
 	log.info("before get folder");
@@ -577,18 +583,19 @@ public class HeadOfficeController {
 		File f1 = new File(realPath);
 		if ( !f1.exists() ) f1.mkdir();
 		
-		String file1, file2="/federico/resources/uploadImage/";
+		String file1, file2="/federico/resources/uploadImage/menuImage/";
 		
 		MultipartFile uploadfilef = vo.getMenuUploadfilef();
 		if ( uploadfilef !=null && !uploadfilef.isEmpty() ) {
 			// Image 를 선택했음 -> Image 처리 (realPath+화일명)
 			// 1) 물리적 위치에 Image 저장 
 			file1=realPath + uploadfilef.getOriginalFilename(); //  전송된File명 추출 & 연결
+			System.out.println(file1);
 			uploadfilef.transferTo(new File(file1)); // real 위치에 전송된 File 붙여넣기
 			// 2) Table 저장위한 경로 
-			file2 = "/federico/resources/uploadImage/"+ uploadfilef.getOriginalFilename();
+			file2 = "/federico/resources/uploadImage/menuImage/"+ uploadfilef.getOriginalFilename();
 		}
-		vo.setMenuUploadfile(file2);
+		vo.setMenuImage(file2);
 		
 		// 2. Service 처리
 		
@@ -603,7 +610,7 @@ public class HeadOfficeController {
 			
 		}
 			
-		mv.setViewName("jsonview");
+		mv.setViewName("headoffice/menuList");
 		return mv;
 
 		/*
