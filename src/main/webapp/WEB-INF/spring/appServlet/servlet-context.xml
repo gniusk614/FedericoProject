@@ -35,7 +35,7 @@
 	
 	
 	<!--  JDBC Connection -->
-	<beans:bean id="dataSource"
+	 <beans:bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <beans:property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
         <beans:property name="url" value="jdbc:oracle:thin:@federico.ccbxcsa5848c.ap-northeast-2.rds.amazonaws.com:1521:orcl"/>
@@ -44,7 +44,7 @@
     </beans:bean>      
 	
 	<!-- SessionFactory -->
-	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+	 <beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>	
 	

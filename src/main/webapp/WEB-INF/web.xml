@@ -7,6 +7,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+		<!--  /WEB-INF/spring/security-context1.xml -->
 	</context-param>
 	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
@@ -30,6 +31,20 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	
+	
+	
+	<!-- 스프링 시큐리티 Filter 적용   
+   -->
+  <!--  <filter>
+      <filter-name>springSecurityFilterChain</filter-name>
+      <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+   </filter>
+   <filter-mapping>
+      <filter-name>springSecurityFilterChain</filter-name>
+      <url-pattern>/*</url-pattern>
+   </filter-mapping>
+	 -->
+	
 	<!-- 한글처리 필터 -->
 	<filter>
 		<filter-name>characterEncoding</filter-name>
@@ -44,5 +59,25 @@
 		<filter-name>characterEncoding</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+	<!-- Exception Test
+ 		=> 스프링의 "exceptionsResolver" 설정을 하면 우선적용되므로
+ 		   500은 전달되지 않음, 그러나 404는 전달됨(설정하지않아서)
+ 	 	=> Spring Security Test 시에는 막아놓고 
+ 	 -->
+ 	<!-- <error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/views/errorPage/exception_404.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/views/errorPage/exception_500.jsp</location>
+	</error-page> -->
+
+
+
+
+
+
 
 </web-app>
