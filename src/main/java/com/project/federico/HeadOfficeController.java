@@ -540,6 +540,14 @@ public class HeadOfficeController {
 		return mv;
 	}// fcclose
 
-
+//	=========================< 시큐리티 로그인적용(광훈) >==========================
+	
+	// 로그인폼이동 (강광훈)
+	@RequestMapping(value = "/securityHeadofficeLoginf")
+	public ModelAndView securityHeadofficeLoginf(ModelAndView mv) {
+		mv.setViewName("headoffice/ssloginForm");
+		return mv;
+	}// loginf-> 폼으로 이동시켜줌
+	
 }
 // class
