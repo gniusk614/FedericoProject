@@ -18,7 +18,7 @@ public class PageMaker {
     //    => setter, getter 는 setsPageNo , getsPageNo 형태로 만들어지기때문에
     //       Lombok.. 등등 사용시 불편 -> 그러므로 대.소문자 섞어사용시 주의.  
     
-    private int displayPageNo = 10; // 1page당 표시할 page개수
+    private int displayPageNo = 5; // 1page당 표시할 page개수
     private int lastPageNo;
     
     private boolean prev; // 이전 PageBlock 으로 
@@ -65,7 +65,7 @@ public class PageMaker {
     	
     // 3.2) lastPageNo 계산, ePageNo 확인
     	
-    	lastPageNo=(int)Math.ceil(totalRowCount/cri.getRowsPerPage());  
+    	lastPageNo=(int)Math.ceil(totalRowCount/(double)cri.getRowsPerPage());  
     	if(epageNo>lastPageNo) epageNo=lastPageNo;
     	
     // 3.3) prev, next

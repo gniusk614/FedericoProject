@@ -39,8 +39,25 @@ a {
 	color: black;
 	text-decoration: none;
 }
-
 </style>
+<script>
+	//Search 이벤트 -> makequery 메서드 사용하기위해 jsp파일에 배치
+	$(
+			function() {
+				// SearchType 이 '---' 면 keyword 클리어
+				$('#searchType').change(function() {
+					$('#keyword').val('');
+				}); //change
+				// 검색후 요청
+				$('#searchBtn').on( "click", function() {
+							self.location = "staffList"
+									+ "${pageMaker.makeQuery(1)}"
+									+ "&searchType=" + $('#searchType').val()
+									+ '&keyword=' + $('#keyword').val()
+						}); //on_click 
+
+			}) //ready
+</script>
 </head>
 <body>
 	<%@ include file="navtop.jsp"%>
@@ -52,49 +69,90 @@ a {
 			<div class="container-fluid px-4" style="margin-top: 20px;">
 				<div class="card" id="contentCard">
 					<div class="card-header">
-						<svg class="svg-inline--fa fa-table fa-w-16 me-1"
-							aria-hidden="true" focusable="false" data-prefix="fas"
-							data-icon="table" role="img" xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 512 512" data-fa-i2svg="">
-					<path fill="currentColor"
-								d="M464 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V80c0-26.51-21.49-48-48-48zM224 416H64v-96h160v96zm0-160H64v-96h160v96zm224 160H288v-96h160v96zm0-160H288v-96h160v96z"></path></svg>
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-rolodex" viewBox="0 0 16 16">
+  						<path d="M8 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+  						<path d="M1 1a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h.5a.5.5 0 0 0 .5-.5.5.5 0 0 1 1 0 .5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5.5.5 0 0 1 1 0 .5.5 0 0 0 .5.5h.5a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H6.707L6 1.293A1 1 0 0 0 5.293 1H1Zm0 1h4.293L6 2.707A1 1 0 0 0 6.707 3H15v10h-.085a1.5 1.5 0 0 0-2.4-.63C11.885 11.223 10.554 10 8 10c-2.555 0-3.886 1.224-4.514 2.37a1.5 1.5 0 0 0-2.4.63H1V2Z"/>
+					</svg>
 						사원 정보 리스트
 					</div>
 					<div class="card-body">
 						<div
 							class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
 							<div class="dataTable-top">
-								<div class="col-sm-1">
-									<select name="searchType" id="searchType" class="form-select"
-										aria-label="Default select example">
-										<option value="none"
-											<c:out value="${pageMaker.cri.searchType==null ? 'selected':''}"/>>
-											- -</option>
-										<option value="code"
-											<c:out value="${pageMaker.cri.searchType=='code' ? 'selected':''}"/>>사원번호</option>
-										<option value="name"
-											<c:out value="${pageMaker.cri.searchType=='name' ? 'selected':''}"/>>이름</option>
-										<option value="posi"
-											<c:out value="${pageMaker.cri.searchType=='posi' ? 'selected':''}"/>>직급</option>
-										<option value="phon"
-											<c:out value="${pageMaker.cri.searchType=='phon' ? 'selected':''}"/>>핸드폰번호</option>
-									</select>
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-sm-2">
+											<select name="searchType" id="searchType" class="form-select"
+												onchange="changeSearchStaffOption()">
+												<option value="none"
+													<c:out value="${pageMaker.cri.searchType==null ? 'selected':''}"/>>-
+													-</option>
+												<option value="code"
+													<c:out value="${pageMaker.cri.searchType=='code' ? 'selected':''}"/>>사원번호</option>
+												<option value="name"
+													<c:out value="${pageMaker.cri.searchType=='name' ? 'selected':''}"/>>이름</option>
+												<option value="position"
+													<c:out value="${pageMaker.cri.searchType=='position' ? 'selected':''}"/>>직급</option>
+												<option value="phone"
+													<c:out value="${pageMaker.cri.searchType=='phone' ? 'selected':''}"/>>연락처</option>
+												<option value="email"
+													<c:out value="${pageMaker.cri.searchType=='email' ? 'selected':''}"/>>이메일</option>
+											</select>
+										</div>
+
+
+
+
+
+										<div class="col-sm-3" id="changeSearchFinder">
+											<c:if test="${pageMaker.cri.searchType!='position'}">
+												<input class="form-control mr-1" type="search" id="keyword"
+													placeholder="Search" value="${pageMaker.cri.keyword}">
+												<select class="form-select" id="keywordHide"
+													style="display: none;">
+													<option value="">- -</option>
+													<option value="주임"
+														<c:out value="${pageMaker.cri.keyword=='주임' ? 'selected':''}"/>>주임</option>
+													<option value="대리"
+														<c:out value="${pageMaker.cri.keyword=='대리' ? 'selected':''}"/>>대리</option>
+													<option value="과장"
+														<c:out value="${pageMaker.cri.keyword=='과장' ? 'selected':''}"/>>과장</option>
+													<option value="차장"
+														<c:out value="${pageMaker.cri.keyword=='차장' ? 'selected':''}"/>>차장</option>
+													<option value="대표"
+														<c:out value="${pageMaker.cri.keyword=='대표' ? 'selected':''}"/>>대표</option>
+												</select>
+											</c:if>
+											<c:if test="${pageMaker.cri.searchType=='position'}">
+												<input class="form-control  mr-1" type="search"
+													id="keywordHide" placeholder="Search"
+													value="${pageMaker.cri.keyword}" style="display: none;">
+												<select class="form-select" id="keyword">
+													<option value="">- -</option>
+													<option value="주임"
+														<c:out value="${pageMaker.cri.keyword=='주임' ? 'selected':''}"/>>주임</option>
+													<option value="대리"
+														<c:out value="${pageMaker.cri.keyword=='대리' ? 'selected':''}"/>>대리</option>
+													<option value="과장"
+														<c:out value="${pageMaker.cri.keyword=='과장' ? 'selected':''}"/>>과장</option>
+													<option value="차장"
+														<c:out value="${pageMaker.cri.keyword=='차장' ? 'selected':''}"/>>차장</option>
+													<option value="대표"
+														<c:out value="${pageMaker.cri.keyword=='대표' ? 'selected':''}"/>>대표</option>
+												</select>
+											</c:if>
+
+										</div>
+										<div class="col-sm-6">
+											<button id="searchBtn" class="btn btn-outline-primary">검색</button>
+										</div>
+									</div>
 								</div>
-								<div class="col-sm-4">
-									<form class="d-flex">
-										<input class="form-control me-2" type="search"
-											placeholder="Search" value="${pageMaker.cri.keyword}"
-											aria-label="Search">
-										<button id="searchBtn" class="btn btn-outline-primary">Search</button>
-									</form>
-								</div>
-								<div class="col-sm-7"></div>
 							</div>
 							<div class="dataTable-container">
 								<table id="table_id" class="table table-striped table-hover">
 									<thead>
 										<tr>
-											<th scope="col">#</th>
 											<th scope="col">사원번호</th>
 											<th scope="col">이 름</th>
 											<th scope="col">직 급</th>
@@ -102,9 +160,13 @@ a {
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="list" items="${staffList}" varStatus="status">
+										<c:if test="${! empty message }">
 											<tr>
-												<th scope="row">${status.count}</th>
+												<td colspan="6" class="fw-bold fs-5">${message}</td>
+											</tr>
+										</c:if>
+										<c:forEach var="list" items="${staffList}">
+											<tr>
 												<td>${list.staffCode}</td>
 												<td>${list.staffName}</td>
 												<td>${list.staffPosition}</td>
@@ -138,15 +200,37 @@ a {
 								</c:if>
 								<nav class="dataTable-pagination">
 									<ul class="pagination">
-										<li class="page-item"><a class="page-link" href="#"
-											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-										</a></li>
-										<li class="page-item"><a class="page-link" href="#">1</a></li>
-										<li class="page-item"><a class="page-link" href="#">2</a></li>
-										<li class="page-item"><a class="page-link" href="#">3</a></li>
-										<li class="page-item"><a class="page-link" href="#"
-											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-										</a></li>
+										<c:if test="${pageMaker.prev}">
+											<li class="page-item"><a class="page-link"
+												href="staffList${pageMaker.searchQuery(pageMaker.spageNo-1)}"
+												aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+											</a></li>
+										</c:if>
+										<c:if test="${! pageMaker.prev}">
+											<li class="page-item disabled"><a class="page-link"
+												aria-label="Previous"> <span aria-hidden=true>&laquo;</span>
+											</a></li>
+										</c:if>
+										<c:forEach var="i" begin="${pageMaker.spageNo}" end="${pageMaker.epageNo}">
+											<c:if test="${i==pageMaker.cri.currPage}">
+												<li class="page-item active" aria-current="page"><a
+													class="page-link">${i}</a></li>
+											</c:if>
+											<c:if test="${i!=pageMaker.cri.currPage}">
+												<li class="page-item"><a href="staffList${pageMaker.searchQuery(i)}">${i}</a></li>
+											</c:if>
+										</c:forEach>
+										<c:if test="${pageMaker.next}">
+											<li class="page-item"><a class="page-link"
+												href="staffList${pageMaker.searchQuery(pageMaker.epageNo+1)}"
+												aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+											</a></li>
+										</c:if>
+										<c:if test="${! pageMaker.next}">
+											<li class="page-item disabled"><a class="page-link"
+												aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+											</a></li>
+										</c:if>
 									</ul>
 								</nav>
 							</div>
@@ -264,8 +348,7 @@ a {
 							<div class="form-group gy-5">
 								<label class="form-label">사원번호(ID)</label>
 								<div class="input-group mb-2 ">
-									<input type="text"
-										id="code" class="form-control">
+									<input type="text" id="code" class="form-control">
 									<button class="btn btn-outline-secondary" type="button"
 										id="codeDupcheck">중복확인</button>
 									<div class="invalid-feedback" id="codeMessage"></div>
