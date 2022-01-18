@@ -473,6 +473,11 @@ function itemInsertCheck() {
 }// itemInsertCheck
 
 // 자재등록
+
+
+
+
+
 function itemInsert() {
 	// 가격 콤마빼기
 	var itemprice = $('#itemprice').val();
@@ -683,48 +688,97 @@ function fcOrderFlagUpdate(flag){
 }//fcOrderComplete
 
 
-}
+
 
 // ===============< 가맹점발주관련등록(현구) >============================
 
 
 
-//===< 메뉴관련(민석) >========!!시작!!===========================================
+//===< 메뉴관련(민석) >========!!시작!!====================================
+function menuinputClear() {
 
-$(function() {
+	$('#menuName').removeClass('is-valid');
+	$('#menuIntro').removeClass('is-valid');
+	$('#menuPrice').removeClass('is-valid');
+	$('#menuImage').removeClass('is-valid');
 	
-})// MenuReady End 
+}
+/*
+$(	function() {
+		
+		console.log("menuInsert start");
+		$('#inputGroupFileAddon04').on('click',function(e){
+					console.log("menuInsert onclick fileupload");
+			var formData = new FormData();
+			var inputFile = $("input[name='inputGroupFile04']");
+			var files= inputFile[0].files;
+			
+					console.log(files);
+			//add File Data to FormData
+			for(var i = 0; i<files.length; i++) {
+				formData.append("inputGroupFile04",files[i]);
+			}
+					console.log("menuInsert onclick fileupload end / Ajax Start");
+	});	
+	});// ready
+	*/
 	
 	
-function menuRegistration(){
+function menuInsert(){
+	console.log("menuInsert start");
+	
+	$.ajax({
+		type:'get',
+		url:'menuInsert',
+		data: {
+			menuName  : $('#menuName').val(),
+			menuIntro : $('#menuIntro').val(),
+			menuUploadfile : $('#uploadfilef').val(),
+			menuPrice : $('#menuPrice').val(),
+			menuFlag : $('#menuFlag').val(),				
+			
+		},success:function(data){
+			if(data.success=='success'){
+				location.reload();
+				menuinputClear();
+				console.log("menuInsert success");
+						}
+		},error:function(){
+			alert('시스템 오류입니다.-error function')
+			console.log("menuInsert error");
+			
+		}
+	}) // ajax 
+		console.log("menuInsert finish");
+		}//menuInsert()
+		
+		
+		
+		
+
+
+function menuDelete() {
+	console.log("menuDelete start");
+
+	if (confirm('정말 삭제하시겠습니까?')) {
 		
 		$.ajax({
-			
-		type:'get',
-		url:'menuRegistration',
-		data:{
-		menuName:$('#menuName').val(),
-		menuPrice:$('#menuPrice').val(),
-		menuIntro:$('#menuIntro').val(),
-		menuImage:$('#inpuGroupFile02').val()
-		},
-		success:function(data){
-			if(data.success=='success'){
-				loacation().reload();
-				alert("메뉴가 등록되었습니다.")
-			}
-		},
-		error:function(){
-			alert("똑같은 메뉴가 있습니다.")
-		}
-		
-		
-		});// ajax
-		}//menuReg
-
-		
-	
-	
-//===< 메뉴관련(민석) >========!!종료!!===========================================	
-
-
+			type:"get",
+			url:"menuList",
+			data:{
+				menuIndex:$('menuIndex').val()
+				},
+			success : function(data) {
+				if(data.success=='success')
+				console.info();
+				location.reload();
+				},
+				error:function(){
+				alert("메뉴가 삭제되지 않았습니다.")
+				console.info();
+				console.warn();	
+				}
+				
+		})// ajax
+		}// if	
+		}//menuDelete

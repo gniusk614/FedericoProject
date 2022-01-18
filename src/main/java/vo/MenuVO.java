@@ -15,7 +15,7 @@ public class MenuVO {
 	private int menuIndex;
 	private String menuName;
 	private String menuIntro;
-	private String menuflag;
+	private String menuFlag;
 	private int menuPrice;
 	
 	private String menuUploadfile; //  Table에 저장된 경로및 화일명 처리를 위한 필드

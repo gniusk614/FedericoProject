@@ -7,8 +7,10 @@
 						<!--<<  CREATE  >>-->
 	
 	<insert id="menuInsert">
-		INSERT INTO menuinfo (MENUNAME,MENUINTRO,MENUIMAGE,MENUPRICE)
-		VALUES (#{MENUNAME},#{MENUINTRO}, #{MENUIMAGE},#{MENUPRICE})
+		
+		INSERT INTO menuinfo(menuindex, menuname, menuflag, menuintro, menuprice, menuimage)
+		VALUES((select nvl(max(menuindex),0)+1 from menuinfo), #{menuName}, #{menuFlag}, #{menuIntro}, #{menuPrice},#{menuUploadfile})
+		
 	</insert>
 	
 						<!--<<  READ  >>-->
@@ -32,8 +34,8 @@
 	</update>
 							
 						<!--<<  DELETE  >>-->	
-	<delete id="delete">
-		delete from member where NAME=#{NAME}	
+	<delete id="menuDelete">
+		delete from menuinfo where MENUINDEX=#{menuIndex}	
 	</delete>
 	
 		

@@ -1,7 +1,7 @@
 package com.project.federico;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,21 +75,7 @@ public class HeadOfficeController {
 		return mv;
 	}
 	
-	// 가맹점 발주내역 처리완료로 변경
-	@RequestMapping(value = "/fcordersequpdate")
-	public ModelAndView fcOrderSeqUpdate(ModelAndView mv, FcOrderVO vo, @RequestParam("flag") String flag) {
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("flag", flag);
-		param.put("vo", vo);
-		
-		if(service.fcOrderSeqUpdate(param) > 0) {
-			mv.addObject("success","success");
-		} else {
-			mv.addObject("success","fail");
-		}
-		mv.setViewName("jsonView");
-		return mv;
-	}
+	
 	// 가맹점 발주내역 처리완료로 변경
 	@RequestMapping(value = "/fcordersequpdate")
 	public ModelAndView fcOrderSeqUpdate(ModelAndView mv, FcOrderVO vo, @RequestParam("flag") String flag) {
@@ -431,35 +415,29 @@ public class HeadOfficeController {
 		}
 		mv.setViewName("headoffice/menuList");
 		return mv;
-	}
+	}// menuList end
 	
-	@RequestMapping(value = "/menuRegistration") // 메뉴등록 양식으로 이동(김민석_22.01.13)
-	public ModelAndView menuRegistrationf(HttpServletRequest request, ModelAndView mv, MenuVO vo) 
-		 	 throws IOException {
-		
-		//******** FileUpload 기능 *******
-		// 현재 웹 어플리케이션의 실행 위치 확인.
-		String realPath = request.getRealPath("/"); // Wabapp까지의 경로.
+	@RequestMapping(value = "/menuInsert") // 민석
+	public ModelAndView menuInsert(HttpServletRequest request, ModelAndView mv, MenuVO vo) 
+		 	throws IOException {
+		// Form을 이용한 파일 업로드 방식
+	log.info("before getRealPath");
+		// 1) 현재 웹어플리케이션의 실행 위치 확인 : 
+		String realPath = request.getRealPath("/"); // deprecated Method
 		System.out.println("** realPath => "+realPath);
-		
-		// 저장공간 확인.
-		if(realPath.contains(".eclipse."))
-			realPath="C:\\Users\\19467\\eclipse-workspace\\Spring02\\src\\main\\webapp\\resources\\uploadImage";
-		else realPath += "resources\\Image\\"; 
-		
-		// 폴더만들기. (file 클래스 활용)
+	log.info("before SaveTrack check");
+		// 2) 위 의 값을 이용해서 실제저장위치 확인 
+		// 경로는 각자의 경로로 바꾸시면 좋을 것 같습니다~
+		if (realPath.contains(".git."))
+			 realPath = "C:\\Users\\19467\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage";
+		// realPath = "D:/MTest/MyWork/Spring02/src/main/webapp/resources/"+vo.getId()+"/";
+		else realPath += "/federico/resources/uploadImage/";
+	log.info("before get folder");
+		// ** 폴더 만들기 (File 클래스활용)
 		File f1 = new File(realPath);
-				
 		if ( !f1.exists() ) f1.mkdir();
-				
-		// ** 기본 이미지 지정하기 
-		String file1, file2="resources/uploadImage/basicman1.jpg";
 		
-		// ** MultipartFile
-		// => 업로드한 파일에 대한 모든 정보를 가지고 있으며 이의 처리를 위한 메서드를 제공한다.
-		//    -> String getOriginalFilename(), 
-		//    -> void transferTo(File destFile),
-		//    -> boolean isEmpty()
+		String file1, file2="/federico/resources/uploadImage/";
 		
 		MultipartFile uploadfilef = vo.getMenuUploadfilef();
 		if ( uploadfilef !=null && !uploadfilef.isEmpty() ) {
@@ -468,34 +446,54 @@ public class HeadOfficeController {
 			file1=realPath + uploadfilef.getOriginalFilename(); //  전송된File명 추출 & 연결
 			uploadfilef.transferTo(new File(file1)); // real 위치에 전송된 File 붙여넣기
 			// 2) Table 저장위한 경로 
-			file2 = "resources/uploadImage/"+ uploadfilef.getOriginalFilename();
+			file2 = "/federico/resources/uploadImage/"+ uploadfilef.getOriginalFilename();
 		}
 		vo.setMenuUploadfile(file2);
-	
+		
 		// 2. Service 처리
-		String uri = "/headoffice/menuList";  // 성공시 로그인폼으로
 		
-	      // *** Transaction Test 
-	      // 1) Transaction 적용전 : 동일자료 2번 insert
-	      //    => 첫번째는 입력완료 되고, 두번째 자료입력시 Key중복 오류발생
-	      // 2) Transaction 적용후 : 동일자료 2번 insert
-	      //    => 첫번째는 입력완료 되고, 두번째 자료입력시 Key중복 오류발생 하지만,
-	      //       rollback 되어 둘다 입력 안됨
+		
+		if(menuService.menuInsert(vo)>0) {
+			mv.addObject("message",vo.getMenuName()+"입력이 완료되었습니다.");
+			mv.addObject("success","success");
 			
-		
-		if ( menuService.menuInsert(vo) > 0 ) {
-			 // insert 성공
-			 mv.addObject("message", "메뉴등록 성공");
-		 }else { 
-			 // insert 실패
-			 mv.addObject("message", "메뉴등록 실패");
-			 uri="member/joinForm";
-		 }
-		mv.setViewName(uri);
+		}else {
+			mv.addObject("message",vo.getMenuName()+"입력이 실패하였습니다.");
+			mv.addObject("success","fail");
+			
+		}
+			
+		mv.setViewName("jsonview");
 		return mv;
+
+		/*
+	// Ajax를 이용한 파일 업로드 방식
+		log.info("upload Ajax");
 		
+		String uploadFolder = "C:\\Users\\19467\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage";
 		
-	}
+		for(MultipartFile multipartFile : uploadFile) {
+			log.info("----------------------------------------");
+			log.info("upload File Name : "+multipartFile.getOriginalFilename());
+			log.info("upload File Size : "+multipartFile.getSize());
+			
+			String uploadFileName = multipartFile.getOriginalFilename();
+			//IE has file path
+			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
+			
+			log.info("only File Name : "+ uploadFile);
+			File saveFile = new File(uploadFolder, uploadFileName);
+			try {
+				multipartFile.transferTo(saveFile);
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}// end catch
+			
+		}// end for
+		*/	
+		
+	} // end method
+	
 	@RequestMapping(value = "/menuUpdate")
 	public ModelAndView menuUpdate(ModelAndView mv,MenuVO vo) {
 		
@@ -509,11 +507,19 @@ public class HeadOfficeController {
 		
 	} //mupdate
 	
-	// ** Member Delete : 회원탈퇴
-	// => member delete, session 무효화
-	// => 삭제 성공 -> home,
-	//    삭제 실패 -> memberDetail 
-	
+	@RequestMapping(value = "/menuDelete")
+	public ModelAndView menuDelete(ModelAndView mv,MenuVO vo) {
+		
+		if(menuService.menuDelete(vo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		mv.setViewName("jsonView"); 
+		return mv;
+		
+		
+	} //mupdate
 
 }
 // class
