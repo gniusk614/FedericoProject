@@ -16,6 +16,11 @@ public class MenuServiceImpl implements MenuService {
 	@Autowired
 	MenuMapper dao;
 	
+	
+	@Override
+	public List<MenuVO> selectMenuListbyFlag(MenuVO vo) {
+		return dao.selectMenuListbyFlag(vo);
+	}
 	@Override
 	public List<MenuVO> selectMenuList(){
 		return dao.selectMenuList();	
