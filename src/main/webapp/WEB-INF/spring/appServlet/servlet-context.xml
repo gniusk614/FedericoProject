@@ -35,23 +35,30 @@
 	
 	
 	<!--  JDBC Connection -->
-	 <beans:bean id="dataSource"
+	<!--  <beans:bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <beans:property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
         <beans:property name="url" value="jdbc:oracle:thin:@federico.ccbxcsa5848c.ap-northeast-2.rds.amazonaws.com:1521:orcl"/>
         <beans:property name="username" value="admin"/>
         <beans:property name="password" value="oracleoracle"/>
-    </beans:bean>      
+    </beans:bean>    -->   
 	
 	<!-- SessionFactory -->
-	 <beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+	<!--  <beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
 		<beans:property name="dataSource" ref="dataSource" />
-	</beans:bean>	
+	</beans:bean>	 -->
 	
 	<beans:bean id="multipartResolver" 
 			class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<beans:property name="maxUploadSize" value="-1" />	
 	</beans:bean>
+	
+	<!--  << 2022.01.16. 파일 업로드를 위해 추가함 (민석) 
+		<context:component-scan base-package="org.zerock.controller"/>
+		<beans:bean id="multipartResolver"
+				class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+		</beans:bean>-->
+	
 	
 	   <beans:bean id="jsonView" class="net.sf.json.spring.web.servlet.view.JsonView" >
 	   	  <beans:property name="contentType" value="application/json;charset=UTF-8"></beans:property>
@@ -65,12 +72,12 @@
 	<!-- 다운로드 기능 구현시 클래스 만들어서 지정해야될거같아요 -->
 	<!-- <beans:bean id="download" class="downTest.DownloadView" /> -->
 	
-	
+	<!-- 22.01.16 JDBC null 오류 발생억제 Tag 추가 (김민석) -->
 	
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    ** 인터셉터 설정 
    1) 인터셉터 클래스 빈등록 --> 
- 	<beans:bean id="loginInterceptor" class="com.project.federico.LoginIntercepter"/>
+ <!-- 	<beans:bean id="loginInterceptor" class="com.project.federico.LoginIntercepter"/> -->
 
 <!--    2) url 과 인터셉터 설정 
    => Namespaces 에서 mvc 확인 ,
@@ -78,18 +85,18 @@
          <mvc:annotation-driven  ,  <mvc:resources
  -->
 
-	<mvc:interceptors>
+	<!-- <mvc:interceptors>
 		<mvc:interceptor>
-			<!-- 전체를 지정하고 제외경로 지정 -->
+			전체를 지정하고 제외경로 지정
 			<mvc:mapping path="/headoffice/*"/>
 			<mvc:exclude-mapping path="/headoffice/loginf"/>
 			<mvc:exclude-mapping path="/headoffice/login"/>
 		
-			<!-- <mvc:mapping path="/headoffice/*"/> -->
-			<!-- 경로 지정 후 인터셉터 빈 등록 -->
+			<mvc:mapping path="/headoffice/*"/>
+			경로 지정 후 인터셉터 빈 등록
 			<beans:ref bean = "loginInterceptor"/>
 		</mvc:interceptor>
-	</mvc:interceptors> 
+	</mvc:interceptors>  -->
 	
 	
 </beans:beans>

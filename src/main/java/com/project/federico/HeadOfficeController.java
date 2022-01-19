@@ -1,10 +1,10 @@
 package com.project.federico;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -12,13 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -27,11 +26,13 @@ import paging.PageMaker;
 import paging.SearchCriteria;
 import service.FranchiseService;
 import service.HeadOfficeService;
+import service.MenuService;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
 import vo.HeadOfficeVO;
 import vo.ItemInfoVO;
+import vo.MenuVO;
 import vo.StaffVO;
 
 @RequestMapping(value = "/headoffice")
@@ -45,6 +46,8 @@ public class HeadOfficeController {
 	HeadOfficeService service;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	MenuService menuService;
 
 	// 가맹점 발주내역 상세보기(발주번호 별로) return json
 	@RequestMapping(value = "/fcorderdetail")
@@ -205,17 +208,22 @@ public class HeadOfficeController {
 			HeadOfficeVO headOfficeVo, StaffVO staffVo) throws ServletException, IOException {
 
 		// 정보 저장
-		String staffCode = staffVo.getStaffCode();
 		String password = headOfficeVo.getHoPassword();
 		String uri = "/headoffice/loginForm";
 
+		
+		System.out.println(headOfficeVo.getHoPassword());
+		System.out.println(staffVo.getStaffCode());
+		
+		
+		
 		// 로그인서비스처리
 		staffVo = service.selectOne(staffVo);
 
 		if (staffVo != null) {
 			headOfficeVo.setStaffVo(staffVo);
 			headOfficeVo = service.loginSelectOne(headOfficeVo);
-
+			
 			// 정보 확인
 			if (headOfficeVo != null) { // ID는 일치 -> Password 확인
 				if (passwordEncoder.matches(password, headOfficeVo.getHoPassword())) {
@@ -543,11 +551,136 @@ public class HeadOfficeController {
 //	=========================< 시큐리티 로그인적용(광훈) >==========================
 	
 	// 로그인폼이동 (강광훈)
-	@RequestMapping(value = "/securityHeadofficeLoginf")
-	public ModelAndView securityHeadofficeLoginf(ModelAndView mv) {
-		mv.setViewName("headoffice/ssloginForm");
-		return mv;
-	}// loginf-> 폼으로 이동시켜줌
+//	@RequestMapping(value = "/securityHeadofficeLoginf")
+//	public ModelAndView securityHeadofficeLoginf(ModelAndView mv) {
+//		mv.setViewName("headoffice/ssloginForm");
+//		return mv;
+//	}// loginf-> 폼으로 이동시켜줌
 	
+
+	
+	//============================Menu=======================
+	@RequestMapping(value = "/menuList")
+	public ModelAndView menuList(ModelAndView mv,MenuVO vo) {
+
+		
+		List<MenuVO> list = menuService.selectMenuList();
+		if(list != null) {
+			mv.addObject("menuList",list);
+		} else {
+			mv.addObject("message","출력자료 없음.");
+		}
+		mv.setViewName("headoffice/menuList");
+		return mv;
+	}// menuList end
+	
+	@RequestMapping(value = "/menuInsert") // 민석
+	public ModelAndView menuInsert(HttpServletRequest request, ModelAndView mv, MenuVO vo) 
+		 	throws IOException {
+		System.out.println("11111"+vo.getMenuUploadfilef().toString());
+		System.out.println("222222"+vo.getMenuUploadfilef());
+		
+		// Form을 이용한 파일 업로드 방식
+	log.info("before getRealPath");
+		// 1) 현재 웹어플리케이션의 실행 위치 확인 : 
+		String realPath = request.getRealPath("/"); // deprecated Method
+		System.out.println("** realPath => "+realPath);
+	log.info("before SaveTrack check");
+		// 2) 위 의 값을 이용해서 실제저장위치 확인 
+		// 경로는 각자의 경로로 바꾸시면 좋을 것 같습니다~
+		if (realPath.contains(".eclipse."))
+			 realPath = "C:\\Users\\19467\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage\\menuImage/";
+		// realPath = "D:/MTest/MyWork/Spring02/src/main/webapp/resources/"+vo.getId()+"/";
+		else realPath += "/federico/resources/uploadImage/";
+	log.info("before get folder");
+		// ** 폴더 만들기 (File 클래스활용)
+		File f1 = new File(realPath);
+		if ( !f1.exists() ) f1.mkdir();
+		
+		String file1, file2="/federico/resources/uploadImage/menuImage/";
+		
+		MultipartFile uploadfilef = vo.getMenuUploadfilef();
+		if ( uploadfilef !=null && !uploadfilef.isEmpty() ) {
+			// Image 를 선택했음 -> Image 처리 (realPath+화일명)
+			// 1) 물리적 위치에 Image 저장 
+			file1=realPath + uploadfilef.getOriginalFilename(); //  전송된File명 추출 & 연결
+			System.out.println(file1);
+			uploadfilef.transferTo(new File(file1)); // real 위치에 전송된 File 붙여넣기
+			// 2) Table 저장위한 경로 
+			file2 = "/federico/resources/uploadImage/menuImage/"+ uploadfilef.getOriginalFilename();
+		}
+		vo.setMenuImage(file2);
+		
+		// 2. Service 처리
+		
+		
+		if(menuService.menuInsert(vo)>0) {
+			mv.addObject("message",vo.getMenuName()+"입력이 완료되었습니다.");
+			mv.addObject("success","success");
+			
+		}else {
+			mv.addObject("message",vo.getMenuName()+"입력이 실패하였습니다.");
+			mv.addObject("success","fail");
+			
+		}
+			
+		mv.setViewName("headoffice/menuList");
+		return mv;
+
+		/*
+	// Ajax를 이용한 파일 업로드 방식
+		log.info("upload Ajax");
+		
+		String uploadFolder = "C:\\Users\\19467\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage";
+		
+		for(MultipartFile multipartFile : uploadFile) {
+			log.info("----------------------------------------");
+			log.info("upload File Name : "+multipartFile.getOriginalFilename());
+			log.info("upload File Size : "+multipartFile.getSize());
+			
+			String uploadFileName = multipartFile.getOriginalFilename();
+			//IE has file path
+			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
+			
+			log.info("only File Name : "+ uploadFile);
+			File saveFile = new File(uploadFolder, uploadFileName);
+			try {
+				multipartFile.transferTo(saveFile);
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}// end catch
+			
+		}// end for
+		*/	
+		
+	} // end method
+	
+	@RequestMapping(value = "/menuUpdate")
+	public ModelAndView menuUpdate(ModelAndView mv,MenuVO vo) {
+		
+		if(menuService.menuUpdate(vo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		mv.setViewName("jsonView"); 
+		return mv;
+		
+	} //mupdate
+	
+	@RequestMapping(value = "/menuDelete")
+	public ModelAndView menuDelete(ModelAndView mv,MenuVO vo) {
+		
+		if(menuService.menuDelete(vo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		mv.setViewName("jsonView"); 
+		return mv;
+		
+		
+	} //mupdate
+
 }
 // class

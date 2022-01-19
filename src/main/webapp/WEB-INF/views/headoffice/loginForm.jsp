@@ -26,14 +26,14 @@
 									<h3 class="text-center font-weight-light my-4">로그인</h3>
 								</div>
 								<div class="card-body">
-									<form action="login" method="post">
+									<form action="/login" method="post">
 										<div class="form-floating mb-3">
 											<input class="form-control" type="text" id="staffCode"
-												name="staffCode" placeholder="staffCode" /> <label
-												for="inputEmail">사원 번호(ID)</label>
+												name="username" placeholder="staffCode" /> <label
+												for="inputId">사원 번호(ID)</label>
 										</div>
 										<div class="form-floating mb-3">
-											<input class="form-control" id="hopassword" name="hoPassword"
+											<input class="form-control" id="hopassword" name="password"
 												type="password" placeholder="Password" /> <label
 												for="inputPassword">Password</label>
 										</div>
@@ -49,6 +49,7 @@
 												<!-- <a class="btn btn-primary" href="/green/views/company/index.html">Login</a> -->
 												<a class="btn btn-primary" href="/federico/">메인으로</a> 
 												<input class="btn btn-primary" type="submit" value="Login">
+												<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 											</div>
 										</div>
 									</form>
