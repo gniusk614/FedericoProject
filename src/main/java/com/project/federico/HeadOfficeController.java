@@ -561,7 +561,7 @@ public class HeadOfficeController {
 	}// menuList end
 	
 	@RequestMapping(value = "/menuInsert") // 민석
-	public ModelAndView menuInsert(HttpServletRequest request, ModelAndView mv, MenuVO vo) 
+	public ModelAndView menuInsert(HttpServletRequest request, ModelAndView mv, MenuVO vo,RedirectAttributes rttr) 
 		 	throws IOException {
 		System.out.println("11111"+vo.getMenuUploadfilef().toString());
 		System.out.println("222222"+vo.getMenuUploadfilef());
@@ -575,7 +575,8 @@ public class HeadOfficeController {
 		// 2) 위 의 값을 이용해서 실제저장위치 확인 
 		// 경로는 각자의 경로로 바꾸시면 좋을 것 같습니다~
 		if (realPath.contains(".eclipse."))
-			 realPath = "C:\\Users\\19467\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage\\menuImage/";
+			 realPath = "C:\\Users\\Administrator\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage\\menuImage\\";
+		
 		// realPath = "D:/MTest/MyWork/Spring02/src/main/webapp/resources/"+vo.getId()+"/";
 		else realPath += "/federico/resources/uploadImage/";
 	log.info("before get folder");
@@ -598,11 +599,13 @@ public class HeadOfficeController {
 		vo.setMenuImage(file2);
 		
 		// 2. Service 처리
-		
+		String uri = null;
 		
 		if(menuService.menuInsert(vo)>0) {
 			mv.addObject("message",vo.getMenuName()+"입력이 완료되었습니다.");
 			mv.addObject("success","success");
+			
+			uri="redirect:menuList";
 			
 		}else {
 			mv.addObject("message",vo.getMenuName()+"입력이 실패하였습니다.");
@@ -610,7 +613,7 @@ public class HeadOfficeController {
 			
 		}
 			
-		mv.setViewName("headoffice/menuList");
+		mv.setViewName(uri);
 		return mv;
 
 		/*
