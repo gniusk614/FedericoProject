@@ -671,5 +671,14 @@ public class HeadOfficeController {
 		
 	} //mupdate
 
+	
+	//메인화면 보내기
+	@RequestMapping(value = "/headofficeMain")
+	public String headOfficeMain(ModelAndView mv,MenuVO vo) {
+		return "headoffice/headofficeMain";
+	} //headofficeMain
+	
+	
+	
 }
 // class
