@@ -16,11 +16,11 @@
 						<!--<<  READ  >>-->
      					<!--<<  read_all  >>-->
 	<select id="selectMenuList" resultType="vo.MenuVO">
-		SELECT menuname, menuintro, menuimage, menuprice FROM MENUINFO
+		SELECT * FROM MENUINFO order by menuIndex asc
 	</select>
      					<!--<<  read_one  >>-->
 	<select id="selectMenuOne" resultType="vo.MenuVO">
-		SELECT menuname, menuintro, menuimage, menuprice FROM MENUINFO
+		SELECT * FROM MENUINFO
 		WHERE MENUNAME = #{MENUNAME}
 	</select>		
 	
@@ -35,7 +35,7 @@
 							
 						<!--<<  DELETE  >>-->	
 	<delete id="menuDelete">
-		delete from menuinfo where MENUINDEX=#{menuIndex}	
+		delete from menuinfo where MENUINDEX = #{menuIndex}	
 	</delete>
 	
 		

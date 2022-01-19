@@ -2,6 +2,8 @@ package com.project.federico;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -560,11 +564,19 @@ public class HeadOfficeController {
 		return mv;
 	}// menuList end
 	
+
+	
 	@RequestMapping(value = "/menuInsert") // 민석
-	public ModelAndView menuInsert(HttpServletRequest request, ModelAndView mv, MenuVO vo) 
+	public ModelAndView menuInsert(HttpServletRequest request,RedirectAttributes rttr, ModelAndView mv, MenuVO vo) 
 		 	throws IOException {
-		System.out.println("11111"+vo.getMenuUploadfilef().toString());
-		System.out.println("222222"+vo.getMenuUploadfilef());
+		// 날짜폴더자동생성
+		/*
+		String uploadFolder = "C:\\Users\\19467\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage\\menuImage/";
+		File uploadPath = new File(uploadFolder, getFolder());
+		log.info("upload path"+uploadPath);
+		if(uploadPath.exists()==false)
+			uploadPath.mkdirs();
+			*/	
 		
 		// Form을 이용한 파일 업로드 방식
 	log.info("before getRealPath");
@@ -599,18 +611,19 @@ public class HeadOfficeController {
 		
 		// 2. Service 처리
 		
-		
+		String uri = null;
 		if(menuService.menuInsert(vo)>0) {
 			mv.addObject("message",vo.getMenuName()+"입력이 완료되었습니다.");
 			mv.addObject("success","success");
+			uri = "redirect:menuList";
 			
 		}else {
 			mv.addObject("message",vo.getMenuName()+"입력이 실패하였습니다.");
 			mv.addObject("success","fail");
-			
+			uri = ""; // 실패했을 때 
 		}
 			
-		mv.setViewName("headoffice/menuList");
+		mv.setViewName(uri);
 		return mv;
 
 		/*
@@ -654,17 +667,16 @@ public class HeadOfficeController {
 		
 	} //mupdate
 	
+	
+
 	@RequestMapping(value = "/menuDelete")
 	public ModelAndView menuDelete(ModelAndView mv,MenuVO vo) {
-		
-		if(menuService.menuDelete(vo) > 0) {
-			mv.addObject("success", "success");
-		} else {
-			mv.addObject("success", "fail");
-		}
+					
+		if(menuService.menuDelete(vo) > 0) 
+     	     mv.addObject("success", "T");
+		else mv.addObject("success", "F");
 		mv.setViewName("jsonView"); 
 		return mv;
-		
 		
 	} //mupdate
 
