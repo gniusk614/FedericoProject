@@ -2,6 +2,7 @@ package com.project.federico;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,17 +211,22 @@ public class HeadOfficeController {
 			HeadOfficeVO headOfficeVo, StaffVO staffVo) throws ServletException, IOException {
 
 		// 정보 저장
-		String staffCode = staffVo.getStaffCode();
 		String password = headOfficeVo.getHoPassword();
 		String uri = "/headoffice/loginForm";
 
+		
+		System.out.println(headOfficeVo.getHoPassword());
+		System.out.println(staffVo.getStaffCode());
+		
+		
+		
 		// 로그인서비스처리
 		staffVo = service.selectOne(staffVo);
 
 		if (staffVo != null) {
 			headOfficeVo.setStaffVo(staffVo);
 			headOfficeVo = service.loginSelectOne(headOfficeVo);
-
+			
 			// 정보 확인
 			if (headOfficeVo != null) { // ID는 일치 -> Password 확인
 				if (passwordEncoder.matches(password, headOfficeVo.getHoPassword())) {
@@ -545,9 +551,17 @@ public class HeadOfficeController {
 		return mv;
 	}// fcclose
 
+//	=========================< 시큐리티 로그인적용(광훈) >==========================
+	
+	// 로그인폼이동 (강광훈)
+//	@RequestMapping(value = "/securityHeadofficeLoginf")
+//	public ModelAndView securityHeadofficeLoginf(ModelAndView mv) {
+//		mv.setViewName("headoffice/ssloginForm");
+//		return mv;
+//	}// loginf-> 폼으로 이동시켜줌
+	
 
-
-// class
+	
 	//============================Menu=======================
 	@RequestMapping(value = "/menuList")
 	public ModelAndView menuList(ModelAndView mv,MenuVO vo) {
@@ -564,7 +578,7 @@ public class HeadOfficeController {
 	}// menuList end
 	
 	@RequestMapping(value = "/menuInsert") // 민석
-	public ModelAndView menuInsert(HttpServletRequest request, ModelAndView mv, MenuVO vo) 
+	public ModelAndView menuInsert(HttpServletRequest request, ModelAndView mv, MenuVO vo,RedirectAttributes rttr) 
 		 	throws IOException {
 		System.out.println("11111"+vo.getMenuUploadfilef().toString());
 		System.out.println("222222"+vo.getMenuUploadfilef());
@@ -578,7 +592,8 @@ public class HeadOfficeController {
 		// 2) 위 의 값을 이용해서 실제저장위치 확인 
 		// 경로는 각자의 경로로 바꾸시면 좋을 것 같습니다~
 		if (realPath.contains(".eclipse."))
-			 realPath = "C:\\Users\\19467\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage\\menuImage/";
+			 realPath = "C:\\Users\\Administrator\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage\\menuImage\\";
+		
 		// realPath = "D:/MTest/MyWork/Spring02/src/main/webapp/resources/"+vo.getId()+"/";
 		else realPath += "/federico/resources/uploadImage/";
 	log.info("before get folder");
@@ -601,11 +616,13 @@ public class HeadOfficeController {
 		vo.setMenuImage(file2);
 		
 		// 2. Service 처리
-		
+		String uri = null;
 		
 		if(menuService.menuInsert(vo)>0) {
 			mv.addObject("message",vo.getMenuName()+"입력이 완료되었습니다.");
 			mv.addObject("success","success");
+			
+			uri="redirect:menuList";
 			
 		}else {
 			mv.addObject("message",vo.getMenuName()+"입력이 실패하였습니다.");
@@ -613,7 +630,7 @@ public class HeadOfficeController {
 			
 		}
 			
-		mv.setViewName("headoffice/menuList");
+		mv.setViewName(uri);
 		return mv;
 
 		/*

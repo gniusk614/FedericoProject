@@ -6,7 +6,9 @@
 
 
 
+
 // ============================= 메뉴조회, 비회원 장바구니 관련 (현구) =======================================
+
 $(function(){
 	
 	// 모달닫힐떄 장바구니 수량 1로 리셋
@@ -260,3 +262,58 @@ function deleteCartMenuM(index){
 
 
 // ============================= 메뉴조회, 회원 장바구니 관련 (현구) =======================================
+
+
+// ============================= 로그인 회원관련 (광훈) =======================================
+
+$(function(){
+	
+	
+	
+	
+	
+	
+})//
+
+//클릭이펙트
+function clickEffect(id){
+	$('.checked').css({
+		"color" : 'gray',
+		"border-bottom" : "1px solid lightgray"
+		
+	});
+	$('#'+id).css({
+		"color" : 'black',
+		"border-bottom" : "2px solid black"
+	});
+}//clickEffect
+
+
+function showdiv(id) {
+	if (id == 'clientLogin') {
+		$('#outer_1').css('display', 'block');
+		$('#outer_2').css('display', 'none');
+		$('#innerTitle').css('display','block');
+		$('#inner_1').css('display', 'block');
+		$('#inner_2').css('display', 'none');
+
+	} else if (id == 'nonOrder') {
+		$('#outer_1').css('display', 'block');
+		$('#outer_2').css('display', 'none');
+		$('#innerTitle').css('display','none');
+		$('#inner_1').css('display', 'none');
+		$('#inner_2').css('display', 'block');
+		
+	} else {
+		$('#outer_1').css('display', 'none');
+		$('#outer_2').css('display', 'block');
+	}
+
+}
+
+
+
+
+
+
+

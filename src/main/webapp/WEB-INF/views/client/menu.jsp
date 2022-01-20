@@ -47,8 +47,7 @@ input::-webkit-inner-spin-button {
 	<%@include file="nav.jsp"%>
 	
 	<!-- Section-->
-	<section class="container"
-		style="height: auto; min-height: 100%; padding-bottom: 168px;">
+	<section class="container" style="height: auto; min-height: 100%; padding-bottom: 168px;">
 
 		<c:if test="${flag == 'pizza'}">
 			<br>
