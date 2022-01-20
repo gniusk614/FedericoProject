@@ -987,35 +987,42 @@ function fcOrderFlagUpdate(flag) {
 
 //Ajax 검색기능
 
-	function menuSearch(flag,name){
-		if(menuSearch(flag)){
-			$.ajax({
-				url:"menuSearch?flag="+flag,
-				data:{
-					menuFlag:$('menuFlag').val()
-				},
-				success:function(){
-					
-				},error
-				
-			})//ajax
-		}else {
+
+	// menuUpdateFrom()
+	function menuUpdate(menuIndex){
 		
 		$.ajax({
-			url:'menuSearch',
+			type:'get',
+			url:'menuUpdate',
 			data:{
-				
+				menuIndex:menuIndex,
 			},
+			success:function(data) {
+				$('#menuName').val(data.vo.menuName);
+				$('#menuPrice').val(data.vo.menuPrice);
+				$('#menuIntro').val(data.vo.menuIntro);
+				$('#menuImage').val(data.vo.menuImage);
+				
+				if(data.vo.menuFlag == '메뉴명'){
+					$('#menuFlag option:eq(0)').prop('selected',true);
+				}else
+					$('#menuFlag option:eq(1)').prop('selected',true);
+					
+				$('#menuUpdateModal').modal('show');
+								
+			},error:function(){
+				console.log("수정 실패");
+				alert("수정에 실패하였습니다.");
+			}
 			
-			
-			})//ajax
-		}
-		
-	}// function menuSearch
+		})
+	}
+	
 
 
-
+	// menuDelete
 	function menuDelete(menuIndex) {
+		if(confirm("해당 메뉴를 삭제하시겠습니까?"))
 		
 	$.ajax({
 		type:'post',

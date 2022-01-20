@@ -21,7 +21,7 @@
      					<!--<<  read_one  >>-->
 	<select id="selectMenuOne" resultType="vo.MenuVO">
 		SELECT * FROM MENUINFO
-		WHERE MENUNAME = #{MENUNAME}
+		WHERE MenuIndex = #{MenuIndex}
 	</select>		
 	
 						<!--<<  UPDATE  >>-->

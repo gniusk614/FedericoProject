@@ -657,11 +657,9 @@ public class HeadOfficeController {
 	@RequestMapping(value = "/menuUpdate")
 	public ModelAndView menuUpdate(ModelAndView mv,MenuVO vo) {
 		
-		if(menuService.menuUpdate(vo) > 0) {
-			mv.addObject("success", "success");
-		} else {
-			mv.addObject("success", "fail");
-		}
+		if(menuService.menuUpdate(vo) > 0) 
+			 mv.addObject("success", "success");
+		else mv.addObject("success", "fail");
 		mv.setViewName("jsonView"); 
 		return mv;
 		

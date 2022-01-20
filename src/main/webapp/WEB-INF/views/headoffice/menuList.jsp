@@ -92,7 +92,7 @@
 									<td>  
 										
 										  <div class="d-grid gap-2 col-md-6">
-											<button type="button" class="btn btn-primary">수정</button>
+											<button type="button" class="btn btn-primary" onclick="menuUpdate(${vo.menuIndex})">수정</button>
 											<button type="button" class="btn btn-danger" onclick="menuDelete(${vo.menuIndex})">삭제</button>
 										  </div>
 																	
@@ -234,7 +234,7 @@
       			
       			<div class="col-5"></div>
       			<div class="col-4"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-    		    <button type="button" class="btn btn-primary" onclick="itemUpdateCheck()">수정</button></div>
+    		    <button type="button" class="btn btn-primary" onclick="menuUpdate()">완료</button></div>
 			</div>
 		</div>
       </div>
