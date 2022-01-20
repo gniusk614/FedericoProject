@@ -2,6 +2,7 @@ package com.project.federico;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -207,17 +208,22 @@ public class HeadOfficeController {
 			HeadOfficeVO headOfficeVo, StaffVO staffVo) throws ServletException, IOException {
 
 		// 정보 저장
-		String staffCode = staffVo.getStaffCode();
 		String password = headOfficeVo.getHoPassword();
 		String uri = "/headoffice/loginForm";
 
+		
+		System.out.println(headOfficeVo.getHoPassword());
+		System.out.println(staffVo.getStaffCode());
+		
+		
+		
 		// 로그인서비스처리
 		staffVo = service.selectOne(staffVo);
 
 		if (staffVo != null) {
 			headOfficeVo.setStaffVo(staffVo);
 			headOfficeVo = service.loginSelectOne(headOfficeVo);
-
+			
 			// 정보 확인
 			if (headOfficeVo != null) { // ID는 일치 -> Password 확인
 				if (passwordEncoder.matches(password, headOfficeVo.getHoPassword())) {
@@ -542,9 +548,17 @@ public class HeadOfficeController {
 		return mv;
 	}// fcclose
 
+//	=========================< 시큐리티 로그인적용(광훈) >==========================
+	
+	// 로그인폼이동 (강광훈)
+//	@RequestMapping(value = "/securityHeadofficeLoginf")
+//	public ModelAndView securityHeadofficeLoginf(ModelAndView mv) {
+//		mv.setViewName("headoffice/ssloginForm");
+//		return mv;
+//	}// loginf-> 폼으로 이동시켜줌
+	
 
-
-// class
+	
 	//============================Menu=======================
 	@RequestMapping(value = "/menuList")
 	public ModelAndView menuList(ModelAndView mv,MenuVO vo) {
