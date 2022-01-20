@@ -124,6 +124,20 @@ function showdiv(id) {
 
 }
 
+var checkboxChecked = false
+function checkboxCheck() {
+	if(checkboxChecked == false){
+		$('#checkbox_no').css('display','none');
+		$('#checkbox_yes').css('display','inline');
+		checkboxChecked = true;
+	}else{
+		$('#checkbox_yes').css('display','none');
+		$('#checkbox_no').css('display','inline');
+		checkboxChecked = false;
+	}
+
+}
+
 
 
 

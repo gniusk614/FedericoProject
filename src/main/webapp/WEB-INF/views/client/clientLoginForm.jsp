@@ -68,24 +68,30 @@
 					onclick="clickEffect('nonOrderCheck'); showdiv('nonOrderCheck');">
 					비회원주문조회</div>
 			</div>
+			<!-- 컨텐츠 -->
 			<div id="content">
+				<!-- 가입, 비회원주문 -->
 				<div id="outer_1" class="container" style="display: block;">
+					<!-- 타이틀 -->
 					<div class="row justify-content-md-center mt-5 mb-5"
 						style="font-size: x-large;">
-						<div class="col-md-3" align="center">
+						<div class="col-md-4" align="center">
 							<div id="innerTitle">
 								페데리코를 즐기기 위해<br> <span style="color: Crimson;">로그인</span>을
 								해주세요 :)
 							</div>
 						</div>
 						<div class="col-md-2" align="center"></div>
-						<div class="col-md-3" align="center">
+						<div class="col-md-4" align="center">
 							<div>
 								페데리코의 가족이 되시면<br> 특별한 혜택을 드립니다.
 							</div>
 						</div>
+
+						<!-- 내용 -->
 						<div class="row justify-content-md-center" style="height: 400px;">
-							<div id="innerContent" class="col-md-3">
+							<div id="innerContent" class="col-md-4">
+								<!-- 로그인창 -->
 								<div id="inner_1" style="display: block;">
 									<div align="center">
 										<form action="clientLogin" method="post">
@@ -126,15 +132,72 @@
 										</form>
 									</div>
 								</div>
-								<!-- 바뀔내용(비회원주문) -->
+								<!-- 비회원주문창 -->
 								<div id="inner_2" style="display: none;">
-									<div class="col-md-3" align="center">야호</div>
+									<div align="center">
+										<form action="clientLogin" method="post">
+											<div class="row justify-content-md-center mt-1"
+												style="height: 200px;">
+												<div class="col">
+													<div class="form mb-3">
+														<input class="form-control" type="text" id="clientId"
+															name="clientId" placeholder="고객명" />
+													</div>
+													<div class="form input-group mb-3">
+														<input class="form-control" id="clientPassword"
+															name="clientPassword" type="text" placeholder="핸드폰번호" />
+														<button class="btn btn-outline-danger" type="button"
+															id="button-addon2">인증번호 발송</button>
+													</div>
+													<div class="form input-group mb-3">
+														<input class="form-control" id="clientPassword"
+															name="clientPassword" type="text" placeholder="인증번호"
+															readonly="readonly" />
+														<button class="btn btn-outline-danger" type="button"
+															id="button-addon2">인증번호 확인</button>
+													</div>
+													<div style="font-size: small; color: red;">
+														<c:if test="${not empty message}">${message}</c:if>
+													</div>
+													<div class="row">
+														<div class="col-8 align-self-center" align="left" onclick="checkboxCheck()" style="cursor: pointer;">
+															<i id="checkbox_no" class="bi bi-check-circle danger" style="color:crimson;"></i> 
+															<i id="checkbox_yes" class="bi bi-check-circle-fill danger" style="color:crimson; display: none;"></i>
+															<span class="align-middle" style="font-size: medium;">개인정보 수집/이용동의(필수)</span>
+														</div>
+														<div class="col-4" align="right">
+															<a class="small" href="passwordReset"
+																style="color: Crimson; font-size: medium;">내용보기 ></a>
+														</div>
+													</div>
+
+												</div>
+											</div>
+											<div class="row mt-2"
+												style="font-size: small; color: crimson;">
+												<div class="col" align="left">비회원 주문 시 멤버십 혜택을 받을 수 없습니다.</div>
+
+											</div>
+											<div class="row" style="height: 100px;">
+												<div
+													class="d-flex align-items-center justify-content-between mb-0">
+													<button class="btn btn-danger" type="submit"
+														disabled="disabled"
+														style="width: 100%; height: 60px; font-size: large;">주문하기</button>
+												</div>
+											</div>
+										</form>
+									</div>
 								</div>
 							</div>
+
+							<!-- 공백그리드 -->
 							<div class="col-md-1" align="center"
 								style="border-right: 1px dashed gray;"></div>
 							<div class="col-md-1" align="center"></div>
-							<div class="col-md-3" align="center">
+
+							<!-- 회원가입그리드 -->
+							<div class="col-md-4" align="center">
 								<div class="row justify-content-md-center mt-5"
 									style="height: 200px;">
 									<header class="mt-5 mb-5">
@@ -179,6 +242,7 @@
 						</div>
 					</div>
 				</div>
+				<!-- 비회원주문조회 -->
 				<div id="outer_2" class="container" style="display: none;">
 					<div class="row justify-content-md-center mt-5 mb-5"
 						style="font-size: x-large;">서어어어엉공?</div>
@@ -190,10 +254,10 @@
 	<%@ include file="footer.jsp"%>
 
 
-	
-	
-	
-	
+
+
+
+
 
 
 
