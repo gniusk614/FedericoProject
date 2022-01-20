@@ -26,14 +26,14 @@
 									<h3 class="text-center font-weight-light my-4">로그인</h3>
 								</div>
 								<div class="card-body">
-									<form action="/login" method="post">
+									<form action="login" method="post">
 										<div class="form-floating mb-3">
 											<input class="form-control" type="text" id="staffCode"
-												name="username" placeholder="staffCode" /> <label
+												name="staffCode" placeholder="staffCode" /> <label
 												for="inputId">사원 번호(ID)</label>
 										</div>
 										<div class="form-floating mb-3">
-											<input class="form-control" id="hopassword" name="password"
+											<input class="form-control" id="hopassword" name="hoPassword"
 												type="password" placeholder="Password" /> <label
 												for="inputPassword">Password</label>
 										</div>
