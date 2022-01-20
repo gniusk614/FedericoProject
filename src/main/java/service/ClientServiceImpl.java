@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j;
 import mapperInterface.ClientMapper;
 import paging.SearchCriteria;
+import vo.CartVO;
 import vo.ClientVO;
 
 @Log4j
@@ -16,6 +17,30 @@ public class ClientServiceImpl implements ClientService {
 
 	@Autowired
 	ClientMapper dao;
+	
+	// 회원장바구니 항목 삭제
+	@Override
+	public int deleteCart(CartVO vo) {
+		return dao.deleteCart(vo);
+	}
+	
+	// 회원장바구니 수량변경
+	@Override
+	public int updateCart(CartVO vo) {
+		return dao.updateCart(vo);
+	}
+	
+	// 회원장바구니 조회
+	@Override
+	public List<CartVO> selectCartbyClient(CartVO vo) {
+		return dao.selectCartbyClient(vo);
+	}
+	
+	// 회원 장바구니 항목추가
+	@Override
+	public int insertCart(CartVO vo) {
+		return dao.insertCart(vo);
+	}
 	
 	
 	//고객 정보 1건 출력
