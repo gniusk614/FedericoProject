@@ -51,23 +51,23 @@ input::-webkit-inner-spin-button {
 
 		<c:if test="${flag == 'pizza'}">
 			<br>
-			<div class="text-center fw-bold fst-italic fs-1">PIZZA</div>
-			<div class="text-center fs-4 fst-italic">
-				<span class="badge bg-danger">FEDERICO</span>만의 개성이 담긴 피자를 주문해보세요
+			<div class="text-center"><h1 class="display-6">피자</h1></div>
+			<div class="text-center h5 my-4"> 
+				맛있고 건강한 피자! 페데리코의 <span style="color: Crimson;">다양한 피자</span>를 주문해 보세요
 			</div>
 		</c:if>
 		<c:if test="${flag == 'sets'}">
 			<br>
-			<div class="text-center fw-bold fst-italic fs-1">SET</div>
-			<div class="text-center fs-4 fst-italic">
-				<span class="badge bg-danger">FEDERICO</span>의 개성을 모아둔 세트를 만나보세요
+			<div class="text-center"><h1 class="display-6">세트</h1></div>
+			<div class="text-center h5 my-4"> 
+				내가 좋아하는 피자와 사이드를 골라 <span style="color: Crimson;">나만의 세트메뉴</span>를 주문해 보세요
 			</div>
 		</c:if>
 		<c:if test="${flag == 'side'}">
 			<br>
-			<div class="text-center fw-bold fst-italic fs-1">SIDE</div>
-			<div class="text-center fs-4 fst-italic">
-				<span class="badge bg-danger">FEDERICO</span>만의 특별한 사이드메뉴를 경험해보세요
+			<div class="text-center"><h1 class="display-6">사이드</h1></div>
+			<div class="text-center h5 my-4"> 
+				페데리코만의 <span style="color: Crimson;">특별한 사이드메뉴</span>를 만나보세요
 			</div>
 		</c:if>
 		<hr>
@@ -95,14 +95,14 @@ input::-webkit-inner-spin-button {
 						</div>
 					</div>
 					<div class="menu-hidden" id="hidden${vs.index}">
-					<c:if test="${empty loginID && empty client}">
+					<c:if test="${empty clientLoginID}">
 						<button type="button" class="btn btn-success menu-button" id="hiddenbtn${vs.index}"
 						onclick="showAddCartModal(${vo.menuIndex})">
 							장바구니</button>
 					</c:if>		
-					<c:if test="${! empty loginID && ! empty client}">
+					<c:if test="${! empty clientLoginID}">
 						<button type="button" class="btn btn-success menu-button" id="hiddenbtn${vs.index}"
-						onclick="showAddCartModalMember(${vo.menuIndex}, '${loginID}')">
+						onclick="showAddCartModalMember(${vo.menuIndex})">
 							장바구니</button>
 					</c:if>		
 					</div>
@@ -136,20 +136,21 @@ input::-webkit-inner-spin-button {
 				</div>
 				<!-- modal-body -->
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-						<button type="button" class="btn btn-primary" id="btn-addCart">추가</button>
+					<div class="container-fluid">	
+						<div class="row">
+							<div class="col-6" align="left">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+							</div>
+							<div class="col-6" align="right">
+								<button type="button" class="btn btn-danger" id="btn-addCart">추가</button>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- 장바구니 추가 모달 -->
-
-
-
-
-
-
-
 
 
 

@@ -61,11 +61,11 @@ function arrowAction(inputId){
 function saveChangeOn(index){
 	$('#saveChangeNM'+index).attr({
 		onclick : 'updateCartQtyNM('+index+')',
-		class : 'btn badge bg-primary text-wrap'
+		class : 'btn badge bg-danger text-wrap'
 	})
 	$('#saveChangeM'+index).attr({
 		onclick : 'updateCartQtyM('+index+')',
-		class : 'btn badge bg-primary text-wrap'
+		class : 'btn badge bg-danger text-wrap'
 	})
 }
 
@@ -162,18 +162,20 @@ function updateCartQtyNM(index){
 
 //비회원 장바구니 항목 삭제
 function deleteCartMenuNM(index){
-	$.ajax({
-		type: 'get',
-		url: 'deleteCartNM',
-		data: {index : index},
-		success: function(){
-			$('#divdiv').load('cart?m=n #divdiv');
-			$('#listSize').html(Number($('#listSize').html())-1);
-		},
-		error: function(){
-			alert('통신 장애입니다.<br>다시 시도해주세요.')
-		}	
-	})//ajax
+	if(confirm('정말 삭제하시겠습니까?')){
+		$.ajax({
+			type: 'get',
+			url: 'deleteCartNM',
+			data: {index : index},
+			success: function(){
+				$('#divdiv').load('cart?m=n #divdiv');
+				$('#listSize').html(Number($('#listSize').html())-1);
+			},
+			error: function(){
+				alert('통신 장애입니다.<br>다시 시도해주세요.')
+			}	
+		})//ajax
+	}
 }
 
 
@@ -185,7 +187,7 @@ function deleteCartMenuNM(index){
 
 
 // 회원 장바구니모달 열기
-function showAddCartModalMember(menuIndex, clientId){
+function showAddCartModalMember(menuIndex){
 	$('#addCartModal').modal('show');
 	$('#btn-addCart').attr('onclick','addCartMember('+menuIndex+')');
 }
@@ -197,13 +199,14 @@ function addCartMember(menuIndex){
 		url: 'addCartM',
 		data: {
 			menuIndex: menuIndex,
-			clientId: $('#loginId').attr('loginid'),
+			clientId: $('#clientloginId').attr('data-clientloginid'),
 			menuQty: $('#addCartQty').html()			
 		},
 		success: function(data){
 			if(data.success == 'success'){
 				alert('장바구니에 담았습니다.');
 				$('#addCartModal').modal('hide');
+				$('#listSize').html(Number($('#listSize').html())+1);
 			} else{
 				alert('통신장애로 실패했습니다.<br>다시 시도해주세요.');
 			}
@@ -223,7 +226,6 @@ function updateCartQtyM(index){
 		data: {
 			menuQty : $('#cartQty'+index).html(),
 			cartSeq : $('#cartQty'+index).attr('data-seq'),
-			clientId: $('#loginId').attr('loginid')
 			},
 		success: function(data){
 			if(data.success == 'success'){
@@ -240,20 +242,22 @@ function updateCartQtyM(index){
 
 // 회원 장바구니 항목 삭제
 function deleteCartMenuM(index){
-	$.ajax({
-		type: 'get',
-		url: 'deleteCartM',
-		data: {
-			clientId: $('#loginId').attr('loginid'),
-			cartSeq : $('#cartQty'+index).attr('data-seq')		
+	if(confirm('정말 삭제하시겠습니까?')){
+		$.ajax({
+			type: 'get',
+			url: 'deleteCartM',
+			data: {
+				cartSeq : $('#cartQty'+index).attr('data-seq')		
+				},
+			success: function(){
+				$('#divdiv').load('cart?m=y #divdiv');
+				$('#listSize').html(Number($('#listSize').html())-1);				
 			},
-		success: function(){
-			$('#divdiv').load('cart?m=y #divdiv');
-		},
-		error: function(){
-			alert('통신 장애입니다.<br>다시 시도해주세요.')
-		}	
-	})//ajax
+			error: function(){
+				alert('통신 장애입니다.<br>다시 시도해주세요.')
+			}	
+		})//ajax
+	}		
 }
 
 

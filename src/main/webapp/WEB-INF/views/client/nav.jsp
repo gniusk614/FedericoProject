@@ -49,7 +49,6 @@ a {
 					<li class="nav-item"><a class="nav-link active"
 						aria-current="page" href="#!">고객게시판&nbsp;&nbsp;</a></li>
 				</ul>
-				<div><a href="imsiLogin" style="color: black; text-decoration: none;">로그인</a></div>
 				
 					<c:if test="${empty clientLoginID}">
 						<div>
@@ -79,7 +78,7 @@ a {
 						</button>
 					</c:if>
 					<c:if test="${! empty clientLoginID}">
-					<button id="loginId" class="btn btn-light" onclick="location.href='cart?m=y'" data-loginid=${loginID}>
+					<button id="clientloginId" class="btn btn-light" onclick="location.href='cart?m=y'" data-clientloginid=${clientLoginID}>
 						<i class="bi-cart-fill me-1"></i> Cart 
 						<c:if test="${empty listSize}">
 							<span id="listSize" class="badge bg-black text-white ms-1 rounded-pill">0</span>

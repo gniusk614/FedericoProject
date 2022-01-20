@@ -102,11 +102,13 @@ public class ClientController {
 
 	// 회원 장바구니에서 항목 삭제
 	@RequestMapping(value = "/deleteCartM")
-	public ModelAndView deleteCartM(ModelAndView mv, CartVO cartVo) {
+	public ModelAndView deleteCartM(ModelAndView mv, CartVO vo, HttpSession session) {
 		
-//		if(service.deleteCart() > 0) mv.addObject("success", "success");
-//		else mv.addObject("success", "fail");
-		mv.addObject("success", "success");
+		if(clientService.deleteCart(vo) > 0) {
+			mv.addObject("success", "success");
+			session.setAttribute("listSize", (Integer)session.getAttribute("listSize")-1);
+		}
+		else mv.addObject("success", "fail");
 		mv.setViewName("jsonView");
 		return mv;
 	}
@@ -116,8 +118,8 @@ public class ClientController {
 	@RequestMapping(value = "/updateCartM")
 	public ModelAndView updateCartM(ModelAndView mv, HttpSession session, CartVO vo) {
 		
-//		if(service.updateCart(vo) > 0) mv.addObject("success", "success");
-//		else mv.addObject("success", "fail");
+		if(clientService.updateCart(vo) > 0) mv.addObject("success", "success");
+		else mv.addObject("success", "fail");
 		mv.addObject("success", "success");
 		
 		mv.setViewName("jsonView");
@@ -130,8 +132,11 @@ public class ClientController {
 	public ModelAndView addCartMember(ModelAndView mv, HttpSession session, CartVO vo, MenuVO menuVo) {
 		vo.setMenuVo(menuVo);
 		
-//		if(service.insertCart(vo) > 0) mv.addObject("success","success"); 
-//		else mv.addObject("success","fail"); 
+		if(clientService.insertCart(vo) > 0) {
+			mv.addObject("success","success");
+			session.setAttribute("listSize", (Integer)session.getAttribute("listSize")+1);
+		}
+		else mv.addObject("success","fail"); 
 		mv.addObject("success","success"); 
 		
 		mv.setViewName("jsonView");
@@ -144,9 +149,14 @@ public class ClientController {
 	public ModelAndView cart(ModelAndView mv, HttpSession session, CartVO vo, MenuVO menuVo, @RequestParam("m") String m) {
 		//회원일 경우 db에서 조회해서 session에 담아줌.
 		if (! "n".equals(m)) {
-			List<CartVO> list = null;
-//			list = service.selectCartbyClient(vo);
-//			if(list.size() > 1) session.setAttribute("list", list);
+			vo.setClientId((String)session.getAttribute("clientLoginID"));
+			List<CartVO> list = clientService.selectCartbyClient(vo);
+			if(list.size() > 0) {
+				session.setAttribute("list", list);
+				session.setAttribute("listSize", list.size());
+
+			}
+			else session.setAttribute("list", null);
 		}
 		mv.setViewName("client/cart");
 		return mv;

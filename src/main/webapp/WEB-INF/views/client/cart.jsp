@@ -73,12 +73,12 @@
 							</div>
 							<!-- 변경저장 -->
 							<div class="col-1" style="line-height: 200px;">
-							<c:if test="${empty loginID && empty client}">
+							<c:if test="${empty clientLoginID}">
 								<div id="saveChangeNM${vs.index}" class="badge bg-secondary text-wrap" style="width: 5rem;">
 									변경저장
 								</div>			
 							</c:if>		
-							<c:if test="${! empty loginID && ! empty client}">
+							<c:if test="${! empty clientLoginID}">
 								<div id="saveChangeM${vs.index}" class="badge bg-secondary text-wrap" style="width: 5rem;">
 									변경저장
 								</div>			
@@ -87,10 +87,10 @@
 							</div>
 							<!-- 삭제 -->
 							<div class="col-1" style="line-height: 200px;">
-								<c:if test="${empty loginID && empty client }">
+								<c:if test="${empty clientLoginID}">
 								<a href="javascript:;" style="color: black; text-decoration: none;" onclick="deleteCartMenuNM(${vs.index})">X</a>
 								</c:if>
-								<c:if test="${! empty loginID && ! empty client }">
+								<c:if test="${! empty clientLoginID}">
 								<a href="javascript:;" style="color: black; text-decoration: none;" onclick="deleteCartMenuM(${vs.index})">X</a>
 								</c:if>
 								
@@ -120,7 +120,7 @@
 							</button>
 						</div>
 						<div align="right" class="col-6" >
-							<button type="button" class="btn btn-danger btn-lg" onclick="location.href='menuList?menuFlag=pizza'" style="font-size: 2rem; width: 237.25px;">
+							<button type="button" class="btn btn-danger btn-lg" onclick="javascript:;" style="font-size: 2rem; width: 237.25px;">
 								결제하기
 							</button>
 						</div>

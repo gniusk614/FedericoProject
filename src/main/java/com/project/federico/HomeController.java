@@ -12,8 +12,8 @@ public class HomeController {
 
 	@RequestMapping(value = {"/home","/"})
 	public String home() {
-
-		return "redirect:client/home";
+			System.out.println("거기있니?");
+			return "redirect:client/home";
 	}
 
 	
