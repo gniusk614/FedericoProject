@@ -14,8 +14,8 @@
 	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/root-context.xml
-					 /WEB-INF/spring/security-context1.xml</param-value>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+					<!--  /WEB-INF/spring/security-context1.xml -->
 		
 	</context-param>
 	
@@ -83,7 +83,7 @@
  		   500은 전달되지 않음, 그러나 404는 전달됨(설정하지않아서)
  	 	=> Spring Security Test 시에는 막아놓고 
  	 -->
- 	<error-page>
+ <!-- 	<error-page>
 		<error-code>404</error-code>
 		<location>/WEB-INF/views/errorPage/exception_404.jsp</location>
 	</error-page>
@@ -92,7 +92,7 @@
 		<location>/WEB-INF/views/errorPage/exception_500.jsp</location>
 	</error-page> 
 
-
+ -->
 
 
 
