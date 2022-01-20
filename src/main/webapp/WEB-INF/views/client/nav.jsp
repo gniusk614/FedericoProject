@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,28 +49,45 @@ a {
 					<li class="nav-item"><a class="nav-link active"
 						aria-current="page" href="#!">고객게시판&nbsp;&nbsp;</a></li>
 				</ul>
-
-				<c:if test="${empty clientLoginID}">
-					<div>
-						<a href="#">회원가입</a>&nbsp;&nbsp;&nbsp;&nbsp;
-					</div>
-					<div>
-						<a href="clientLoginf">로그인</a>&nbsp;&nbsp;&nbsp;&nbsp;
-					</div>
-				</c:if>
-
-				<c:if test="${not empty clientLoginID}">
-					<div>
-						<a href="#">마이페이지</a>&nbsp;&nbsp;&nbsp;&nbsp;
-					</div>
-					<div>
-						<a href="clientLogout">로그아웃</a>&nbsp;&nbsp;&nbsp;&nbsp;
-					</div>
-				</c:if>
-				<button class="btn btn-light" onclick="location.href='cart'">
-					<i class="bi-cart-fill me-1"></i> Cart <span id="cartNumber"
-						class="badge bg-black text-white ms-1 rounded-pill">0</span>
-				</button>
+				
+					<c:if test="${empty clientLoginID}">
+						<div>
+							<a href="#">회원가입</a>&nbsp;&nbsp;&nbsp;&nbsp;
+						</div>
+						<div>
+							<a href="clientLoginf">로그인</a>&nbsp;&nbsp;&nbsp;&nbsp;
+						</div>
+					</c:if>				
+					<c:if test="${not empty clientLoginID}">
+						<div>
+							<a href="#">마이페이지</a>&nbsp;&nbsp;&nbsp;&nbsp;
+						</div>
+						<div>
+							<a href="clientLogout">로그아웃</a>&nbsp;&nbsp;&nbsp;&nbsp;
+						</div>
+					</c:if>				
+					<c:if test="${empty clientLoginID}">
+						<button class="btn btn-light" onclick="location.href='cart?m=n'">
+						<i class="bi-cart-fill me-1"></i> Cart 
+						<c:if test="${empty listSize}">
+							<span id="listSize" class="badge bg-black text-white ms-1 rounded-pill">0</span>
+						</c:if>
+						<c:if test="${! empty listSize}">
+							<span id="listSize" class="badge bg-black text-white ms-1 rounded-pill">${listSize}</span>
+						</c:if>
+						</button>
+					</c:if>
+					<c:if test="${! empty clientLoginID}">
+					<button id="clientloginId" class="btn btn-light" onclick="location.href='cart?m=y'" data-clientloginid=${clientLoginID}>
+						<i class="bi-cart-fill me-1"></i> Cart 
+						<c:if test="${empty listSize}">
+							<span id="listSize" class="badge bg-black text-white ms-1 rounded-pill">0</span>
+						</c:if>
+						<c:if test="${! empty listSize}">
+							<span id="listSize" class="badge bg-black text-white ms-1 rounded-pill">${listSize}</span>
+						</c:if>
+					</button>
+					</c:if>
 			</div>
 		</div>
 	</nav>

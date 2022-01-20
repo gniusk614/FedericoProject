@@ -25,7 +25,7 @@
                         <li><hr class="dropdown-divider" /></li>
                         <!-- 세션종료후 동작 추가 1.13 광훈 -->
                         <c:if test="${not empty loginID}">
-                        <li><a class="dropdown-item" href="/ssLogout">Logout</a></li>
+                        <li><a class="dropdown-item" href="logout">Logout</a></li>
                         </c:if>
                         <c:if test="${empty loginID}">
                         <li><a class="dropdown-item" href="loginf">Login</a></li>
