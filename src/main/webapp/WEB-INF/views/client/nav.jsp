@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,12 +33,34 @@
 						aria-current="page" href="#!">고객게시판</a></li>
 
 				</ul>
-				<div>로그인</div>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<button class="btn btn-outline-dark" onclick="location.href='cart'">
+				<!-- 임시 -->
+				<c:if test="${! empty loginID}">${loginID}접속중</c:if>&nbsp;&nbsp;&nbsp;&nbsp;
+				<!-- 임시 -->
+				<div><a href="imsiLogin" style="color: black; text-decoration: none;">로그인</a></div>
+					<c:if test="${empty loginID && empty client}">
+						<button class="btn btn-outline-dark" onclick="location.href='cart?m=n'">
 						<i class="bi-cart-fill me-1"></i> Cart 
-						<span id="cartNumber" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+						<c:if test="${empty listSize}">
+							<span id="listSize" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+						</c:if>
+						<c:if test="${! empty listSize}">
+							<span id="listSize" class="badge bg-dark text-white ms-1 rounded-pill">${listSize}</span>
+						</c:if>
+						</button>
+					</c:if>
+					<c:if test="${! empty loginID && ! empty client}">
+					<button id="loginId" class="btn btn-outline-dark" onclick="location.href='cart?m=y'" data-loginid=${loginID}>
+						<i class="bi-cart-fill me-1"></i> Cart 
+						<c:if test="${empty listSize}">
+							<span id="listSize" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+						</c:if>
+						<c:if test="${! empty listSize}">
+							<span id="listSize" class="badge bg-dark text-white ms-1 rounded-pill">${listSize}</span>
+						</c:if>
 					</button>
+					</c:if>
+					
+						
 			</div>
 		</div>
 	</nav>

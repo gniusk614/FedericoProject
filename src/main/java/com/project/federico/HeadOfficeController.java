@@ -67,6 +67,9 @@ public class HeadOfficeController {
 	// 가맹점 발주내역 처리완료로 변경
 	@RequestMapping(value = "/fcordersequpdate")
 	public ModelAndView fcOrderSeqUpdate(ModelAndView mv, FcOrderVO vo, @RequestParam("flag") String flag) {
+		log.info("flag"+flag);
+		log.info("fcorderseq"+vo.getFcOrderSeq());
+		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("flag", flag);
 		param.put("vo", vo);

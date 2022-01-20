@@ -96,9 +96,16 @@ input::-webkit-inner-spin-button {
 						</div>
 					</div>
 					<div class="menu-hidden" id="hidden${vs.index}">
+					<c:if test="${empty loginID && empty client}">
 						<button type="button" class="btn btn-success menu-button" id="hiddenbtn${vs.index}"
 						onclick="showAddCartModal(${vo.menuIndex})">
 							장바구니</button>
+					</c:if>		
+					<c:if test="${! empty loginID && ! empty client}">
+						<button type="button" class="btn btn-success menu-button" id="hiddenbtn${vs.index}"
+						onclick="showAddCartModalMember(${vo.menuIndex}, '${loginID}')">
+							장바구니</button>
+					</c:if>		
 					</div>
 				</div>
 			</c:forEach>
@@ -116,13 +123,13 @@ input::-webkit-inner-spin-button {
 				</div>
 				<!-- "modal-body" -->
 				<div class="modal-body">
-					<div class="row">
-						<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-down-circle-fill col btn" id="arrowUp" viewBox="0 0 16 16"
+					<div align="center">
+						<svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" fill="currentColor" class="bi bi-arrow-down-circle-fill btn" id="arrowUp" viewBox="0 0 16 16"
 							onclick="arrowDown('addCartQty')">
 						  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
 						</svg>						
-						<input type="number" class="col" id="addCartQty" value=1 style="width: 50px; height: 50px; font-size: 1.5rem; text-align: center;">
-						<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-arrow-up-circle-fill col btn" id="arrowDown" viewBox="0 0 16 16"
+						&nbsp;&nbsp;<span  id="addCartQty" style="font-size: 2.5rem; text-align: center;">1</span>&nbsp;&nbsp;
+						<svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" fill="currentColor" class="bi bi-arrow-up-circle-fill btn" id="arrowDown" viewBox="0 0 16 16"
 							onclick="arrowUp('addCartQty')">
 						  <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
 						</svg>					
@@ -131,7 +138,7 @@ input::-webkit-inner-spin-button {
 				<!-- modal-body -->
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-					<button type="button" class="btn btn-primary" id="btn-addCart"">담기</button>
+						<button type="button" class="btn btn-primary" id="btn-addCart">추가</button>
 				</div>
 			</div>
 		</div>
