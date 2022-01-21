@@ -14,6 +14,12 @@ public class FranchiseServiceImple implements FranchiseService {
 	@Autowired
 	FranchiseMapper dao;
 
+	//지역 가맹점 찾기. 
+	@Override
+	public List<FranchiseVO> selectListbyArea(String area) {
+		return dao.selectListbyArea(area);
+	}
+	
 	// 가맹점정보 모두 불러오기
 	@Override
 	public List<FranchiseVO> selectFc() {

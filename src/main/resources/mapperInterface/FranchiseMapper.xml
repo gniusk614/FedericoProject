@@ -8,6 +8,11 @@
 		SELECT * FROM franchise order by fcid	
 	</select>
 	
+	<!-- 지역으로 가맹점 조회 -->
+	<select id="selectListbyArea" resultType="vo.FranchiseVO">
+		SELECT * FROM franchise where fcarea = #{value} ORDER BY fcid
+	</select>
+	
 	
 	<select id="selectFcOne" resultType="vo.FranchiseVO">
 		SELECT fcid,fcpassword,fcname,fcaddress,fcarea,fcphone,hoid

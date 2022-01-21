@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,6 +40,16 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+.menuIntro {
+  width: 260px;
+  
+  /* 특정 단위로 텍스트를 자르기 위한 구문 */
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* 텍스트를 자를 때 원하는 단위 ex) 3줄 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;  
+}
 </style>
 
 </head>
@@ -87,12 +98,13 @@ input::-webkit-inner-spin-button {
 						<!-- 이미지 들어가는 부분 -->
 						<!-- 내용 들어가는 부분 -->
 						<div class="col-7">
-							<div class="card-body">
-								<span class="fw-bold fs-2">${vo.menuName }</span>
-								<p class="card-text">${vo.menuIntro}</p>
+							<div class="card-body py-3 px-4">
+								<div class="fw-bold fs-4" style="text-align: center;">${vo.menuName }</div>
+								<p class="card-text menuIntro mt-1" style="height: 100px;">${vo.menuIntro}</p>
+								<span class="mt-4 fw-bold fst-italic fs-4"><fmt:formatNumber value="${vo.menuPrice}"/></span>
 							</div>
-							<!-- 내용 들어가는 부분 -->
 						</div>
+							<!-- 내용 들어가는 부분 -->
 					</div>
 					<div class="menu-hidden" id="hidden${vs.index}">
 					<c:if test="${empty clientLoginID}">

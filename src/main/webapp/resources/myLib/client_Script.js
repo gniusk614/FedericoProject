@@ -7,6 +7,71 @@
 
 
 
+
+// ============================= 주문페이지 관련 (현구) =======================================
+
+// 주문페이지 지역 선택시 가맹점option 바뀌도록
+function selectArea(){
+	var area = $('#selectarea').val();
+	if  (area == 'default'){
+		$('#selectFranchise').html(
+							'<option value="default">- - -</option>'
+							)	
+	} else {
+		$.ajax({
+			type: 'get',
+			url : 'selectarea',
+			data : {area : area},
+			success: function(data){
+				if(data.success == 'success'){
+					$('#selectFranchise').html(
+						'<option value="null">선택하세요</option>'
+					);
+					var list = data.list;
+					$.each(list, function(FranchiseVO, index){
+						$('#selectFranchise').append(
+						'<option value="'+index.fcId+'" data-address="' + index.fcAddress 
+						+ '" data-phone=' + index.fcPhone + '    >'+index.fcId+'</option>'
+						)	
+					})
+				} else{
+					$('#selectFranchise').html('');
+					alert('죄송합니다.\n가맹점이 없는 지역입니다.')
+				}
+			},
+			error: function(){
+				alert('통신 장애입니다.\n다시 시도해주세요.')	
+				location.reload();				
+			}
+		})//ajax
+		$('#fcId').html('');
+		$('#fcPhone').html('');
+		$('#fcAddress').html('');
+	}
+}//selectDistrict
+
+
+// 가맹점 선택하면 가맹점 정보 나오도록.
+function selectFc(){
+	$selected = $('#selectFranchise option:selected');
+	var fcPhone = $selected.attr('data-phone');
+	fcPhone = fcPhone.substring(0,3)+'-'+fcPhone.substring(3,7)+'-'+fcPhone.substring(7);
+	if ($selected.val() == 'default' || $selected.val() == 'null'){
+		$('#fcId').html('');
+		$('#fcPhone').html('');
+		$('#fcAddress').html('');
+	} else{
+		$('#fcId').html($selected.val());
+		$('#fcPhone').html('( '+fcPhone+' )');
+		$('#fcAddress').html($selected.attr('data-address'));	
+	}
+	
+}
+
+
+
+// ============================= 주문페이지 관련 (현구) =======================================
+
 // ============================= 메뉴조회, 비회원 장바구니 관련 (현구) =======================================
 
 $(function(){

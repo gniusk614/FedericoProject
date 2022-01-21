@@ -1,6 +1,7 @@
 package com.project.federico;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +20,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j;
 import service.ClientServiceImpl;
+import service.FranchiseService;
 import service.MenuServiceImpl;
 import vo.CartVO;
 import vo.ClientVO;
+import vo.FranchiseVO;
 import vo.MenuVO;
 
 @RequestMapping(value = "/client")
@@ -34,11 +37,65 @@ public class ClientController {
 	@Autowired
 	ClientServiceImpl clientService;
 	@Autowired
+	FranchiseService fcService;
+	@Autowired
 	PasswordEncoder passwordEncoder;
 
 	
 	
 	
+	
+	
+	
+	
+	// 카카오페이 결제요청
+	/*
+	 * @RequestMapping(value = "/kakaoPay") public String kakaoPay() { URL url = new
+	 * URL("https://kapi.kakao.com");
+	 * 
+	 * return ""; }
+	 */
+	
+	
+	
+	// 주문페이지 : 가맹점 선택
+	@RequestMapping(value = "/selectarea")
+	public ModelAndView selectarea(ModelAndView mv, @RequestParam("area") String area) {
+		
+		List<FranchiseVO> list = fcService.selectListbyArea(area);
+		if (list != null && list.size() > 0) {
+			log.info(list.get(0));
+			mv.addObject("list", list);
+			mv.addObject("success","success");
+		} else {
+			mv.addObject("success","fail");
+		}
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
+	// 회원 주문화면으로 이동
+	@RequestMapping(value = "/orderInfo")
+	public ModelAndView orderInfo(ModelAndView mv, HttpSession session, ClientVO vo) {
+		String uri = "client/orderInfo";
+		
+		// 회원일경우 이름,주소,전화번호 갖고가기, 비회원이면 로그인페이지로
+		if (session.getAttribute("clientLoginID") != null) {
+			vo.setClientId(session.getAttribute("clientLoginID").toString());
+			String clientPhone = clientService.selectOne(vo).getClientPhone();
+			clientPhone = clientPhone.substring(0, 3) + "-" + clientPhone.substring(3, 7) + "-" + clientPhone.substring(7);
+			mv.addObject("clientAddress", clientService.selectOne(vo).getClientAddress());
+			mv.addObject("clientPhone", clientPhone);
+			mv.addObject("clientName", clientService.selectOne(vo).getClientName());
+		} else {
+			uri="client/clientLoginForm";
+		}
+		
+		mv.setViewName(uri);
+		return mv;
+	}	
 	
 	
 	
@@ -106,7 +163,7 @@ public class ClientController {
 		
 		if(clientService.deleteCart(vo) > 0) {
 			mv.addObject("success", "success");
-			session.setAttribute("listSize", (Integer)session.getAttribute("listSize")-1);
+			session.setAttribute("listSize", Integer.parseInt(session.getAttribute("listSize").toString())-1);
 		}
 		else mv.addObject("success", "fail");
 		mv.setViewName("jsonView");
@@ -134,7 +191,11 @@ public class ClientController {
 		
 		if(clientService.insertCart(vo) > 0) {
 			mv.addObject("success","success");
-			session.setAttribute("listSize", (Integer)session.getAttribute("listSize")+1);
+			if (session.getAttribute("listSize") == null) {
+			session.setAttribute("listSize", 1);
+			} else {
+				session.setAttribute("listSize", Integer.parseInt(session.getAttribute("listSize").toString())+1);
+			}
 		}
 		else mv.addObject("success","fail"); 
 		mv.addObject("success","success"); 
