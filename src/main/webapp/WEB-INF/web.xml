@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<web-app>
+<web-app
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://xmlns.jcp.org/xml/ns/javaee"
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
@@ -15,6 +15,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+		
 	</context-param>
 	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
@@ -38,6 +39,20 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	
+	
+	
+	<!-- 스프링 시큐리티 Filter 적용   
+   -->
+  <!--  <filter>
+      <filter-name>springSecurityFilterChain</filter-name>
+      <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+   </filter>
+   <filter-mapping>
+      <filter-name>springSecurityFilterChain</filter-name>
+      <url-pattern>/*</url-pattern>
+   </filter-mapping>
+	 -->
+	
 	<!-- 한글처리 필터 -->
 	<filter>
 		<filter-name>characterEncoding</filter-name>
@@ -60,6 +75,13 @@
             <file-size-threshold>20971520</file-size-threshold> 
 		</multipart-config>
 						-->
+
+
+
+
+
+
+
 
 
 </web-app>
