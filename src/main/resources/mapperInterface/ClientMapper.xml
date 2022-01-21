@@ -3,8 +3,13 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapperInterface.ClientMapper">
 
+	<!-- 클라이언트 selectOne (WHERE = ID) -->
 	<select id="selectOne" resultType="vo.ClientVO">
 		SELECT * FROM client where clientId = #{clientId}
+	</select>
+	<!-- 클라이언트 selectOne (WHERE = Phone) -->
+	<select id="selectOnePhone" resultType="vo.ClientVO">
+		SELECT * FROM client where clientPhone = #{clientPhone}
 	</select>
 	
 	

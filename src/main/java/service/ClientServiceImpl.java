@@ -48,7 +48,11 @@ public class ClientServiceImpl implements ClientService {
 	public ClientVO selectOne(ClientVO vo) {
 		return dao.selectOne(vo);
 	}
-	
+	//고객 정보 핸드폰으로 찾기 1건 출력
+	@Override
+	public ClientVO selectOnePhone(ClientVO vo) {
+		return dao.selectOnePhone(vo);
+	}//selectOnePhone
 	
 	
 	//고객정보 search

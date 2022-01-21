@@ -21,7 +21,7 @@
 				<div class="container">
 					<div class="row" style="height: 100px;"></div>
 					<!-- 로고 -->
-					<div class="row justify-content-center mt-2 py-1">
+					<div class="row justify-content-center mt-1 py-1">
 						<div class="col-lg-5" align="center">
 							<img src="/federico/resources/Image/companyLogo.png" style="width: 300px;">
 						</div>
@@ -29,9 +29,6 @@
 					<div class="row justify-content-center">
 						<div class="col-lg-5">
 							<div class="card shadow-lg border-0 rounded-lg mt-2">
-								<div class="card-header">
-									<h3 class="text-center font-weight-light my-4">로그인</h3>
-								</div>
 								<div class="card-body">
 									<form action="login" method="post">
 										<div class="form-floating mb-3">

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<web-app>
+<web-app
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-    id="WebApp_ID" version="3.1">
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+    
 <!-- 2022.01.16. 파일 업로드를 하기위해 위코드로 변경함 (민석)
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -15,11 +15,6 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/spring/root-context.xml</param-value>
-<<<<<<< HEAD
-					<!--  /WEB-INF/spring/security-context1.xml -->
-		
-=======
->>>>>>> branch 'develop' of https://github.com/KKKhg/FedericoProject.git
 	</context-param>
 	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
@@ -66,28 +61,4 @@
 		</multipart-config>
 						-->
 
-
-<<<<<<< HEAD
-	<!-- Exception Test
- 		=> 스프링의 "exceptionsResolver" 설정을 하면 우선적용되므로
- 		   500은 전달되지 않음, 그러나 404는 전달됨(설정하지않아서)
- 	 	=> Spring Security Test 시에는 막아놓고 
- 	 -->
- <!-- 	<error-page>
-		<error-code>404</error-code>
-		<location>/WEB-INF/views/errorPage/exception_404.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/WEB-INF/views/errorPage/exception_500.jsp</location>
-	</error-page> 
-
- -->
-
-
-
-
-
-=======
->>>>>>> branch 'develop' of https://github.com/KKKhg/FedericoProject.git
 </web-app>
