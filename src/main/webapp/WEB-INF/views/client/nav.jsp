@@ -27,7 +27,7 @@ a {
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-danger">
 		<div class="container px-4 px-lg-5">
-			<a href="home"><img src="/federico/resources/Image/tLogo.png"></a>
+			<a href="home"><img src="/federico/resources/Image/tLogo.png" style="width:170px;"></a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -52,18 +52,18 @@ a {
 				
 					<c:if test="${empty clientLoginID}">
 						<div>
-							<a href="#">회원가입</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="#" style="color:white;">회원가입</a>&nbsp;&nbsp;&nbsp;&nbsp;
 						</div>
 						<div>
-							<a href="clientLoginf">로그인</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="clientLoginf" style="color:white;">로그인</a>&nbsp;&nbsp;&nbsp;&nbsp;
 						</div>
 					</c:if>				
 					<c:if test="${not empty clientLoginID}">
 						<div>
-							<a href="#">마이페이지</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="#" style="color:white;">마이페이지</a>&nbsp;&nbsp;&nbsp;&nbsp;
 						</div>
 						<div>
-							<a href="clientLogout">로그아웃</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="clientLogout" style="color:white;">로그아웃</a>&nbsp;&nbsp;&nbsp;&nbsp;
 						</div>
 					</c:if>				
 					<c:if test="${empty clientLoginID}">

@@ -269,15 +269,30 @@ function deleteCartMenuM(index){
 
 
 // ============================= 로그인 회원관련 (광훈) =======================================
-
+var nameChecked = false
 $(function(){
+	//이름 체크
+	$('#nonClientName').focusout(function(){
+		if($(this).val().length<1){
+			$(this).removeClass('is-valid')
+			$(this).addClass('is-invalid')
+			$('#failMessage').html('이름을 입력해주세요')
+			nameChecked = false;
+		}else{
+			$(this).removeClass('is-invalid')
+			$(this).addClass('is-valid')
+			nameChecked = true;
+		}
+	})//focusout
+
 	
-	
-	
-	
-	
-	
-})//
+	//주소창 닫힐시
+	$('#addressModal').on('hidden.bs.modal', function() {
+		$('#address').val('');
+		$('#addressDetail').val('');
+	})
+
+})//ready
 
 //클릭이펙트
 function clickEffect(id){
@@ -292,7 +307,7 @@ function clickEffect(id){
 	});
 }//clickEffect
 
-
+//로그인,비회원주문,주문조회 화면 변경시켜주는
 function showdiv(id) {
 	if (id == 'clientLogin') {
 		$('#outer_1').css('display', 'block');
@@ -314,6 +329,145 @@ function showdiv(id) {
 	}
 
 }
+
+//개인정보수집동의 체크상태
+var checkboxChecked = false 
+//아이콘변경
+function checkboxCheck() {
+	if(checkboxChecked == false){
+		$('#checkbox_no').css('display','none');
+		$('#checkbox_yes').css('display','inline');
+		checkboxChecked = true;
+	}else{
+		$('#checkbox_yes').css('display','none');
+		$('#checkbox_no').css('display','inline');
+		checkboxChecked = false;
+	}
+}//checkboxCheck
+
+//핸드폰 인증 객체
+var phoneChecked = false
+//인증메시지 전송
+function sendSms(){
+	if($('#inputPhoneNumber').val().length<1){
+		$('#inputPhoneNumber').addClass('is-invalid');
+		alert('휴대폰번호를 입력해주세요');
+	}else{
+		$('#inputPhoneNumber').removeClass('is-invalid');
+    var phoneNumber = $('#inputPhoneNumber').val();
+    $.ajax({
+        type: "GET",
+        url: "sendSms",
+        data: {
+            clientPhone : phoneNumber
+        },
+        success: function(resultData){
+        	if(resultData.selectOne!=null){
+        		alert('이미 가입된 정보가 있습니다. 로그인 후 이용해주세요.');
+        		location.reload();
+        	}else{
+        	  alert('인증번호 발송 완료!');
+        	  $('#inputCertifiedNumber').attr('readonly',false);
+        	  $('#checkBtn').click(function(){
+                if($.trim(resultData.numStr)==$('#inputCertifiedNumber').val()){
+                    alert('휴대폰 인증이 정상적으로 완료되었습니다.')
+                    $('#inputPhoneNumber').removeClass('is-invalid');
+                    $('#inputCertifiedNumber').removeClass('is-invalid');
+                    $('#inputPhoneNumber').attr('readonly',true).addClass('is-valid');
+                    $('#inputCertifiedNumber').attr('readonly',true).addClass('is-valid');
+                    $('#nonOrderBtn').attr('disabled',false);
+                    phoneChecked=true;
+                }else{
+                   alert('휴대폰 인증에 실패하였습니다. 인증번호를 확인해줴요.')
+                   $('#inputPhoneNumber').removeClass('is-valid');
+                   $('#inputCertifiedNumber').removeClass('is-valid');
+                   $('#inputPhoneNumber').addClass('is-invalid');
+                   $('#inputCertifiedNumber').addClass('is-invalid');
+                   phoneChecked=false;
+                }
+            })
+        }},//success
+        error: function(){
+			alert('서버오류입니다.')
+		}	
+    })
+	}
+}
+
+
+//개인정보동의 내용 모달
+function showAgreeModal(){
+	$('#agreeModal').modal('show');
+}
+
+
+//비회원주문 클릭시 조건 다 채웠는지 확인
+function nonOrder(){
+	if(phoneChecked==true && checkboxChecked==true && nameChecked==true){
+		if (confirm('주문페이지로 이동하시겠습니까?')) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	if(nameChecked==false){
+		$('#nonClientName').addClass('is-invalid');
+		$('#failMessage').html('이름을 입력해주세요.');
+		return false;
+	}
+	if(phoneChecked==false){
+		$('#inputPhoneNumber').addClass('is-invalid');
+		alert('휴대폰인증을 진행해주세요.');
+		return false;
+	}
+	if(checkboxChecked==false){
+		alert('개인정보 수집/이용을 동의해야만 주문이 가능합니다.')
+		return false;
+	}
+	else{
+		return false
+	}
+}//nonOrder
+
+//주소검색 완료 후 주소 자동입력
+function inputAddress(){
+	$('#nonAddress').html($('#address').val());
+	$('#nonAddressDetail').html($('#addressDetail').val());
+	$('#addressModal').modal('hide');
+}
+//비회원인증 후 계산하러
+function moveOrder(){
+	$.ajax({
+		type : "post",
+		url : "orderinfo",
+		data : {
+			nonName : $('#nonName').html(),
+			nonPhone : $('#nonPhone').html(),
+			nonAddress : $('#nonAddress').html()+" "+$('#nonAddressDetail').html()
+		},success : function(resultPage){
+			location.href=resultPage;
+		},error : function(){
+			alert('서버오류 입니다.');
+		}//error
+	})//ajax
+}
+//비회원인증 후 메뉴고르러
+function moveMenu(){
+	$.ajax({
+		type : "post",
+		url : "menuList?menuFlag=pizza",
+		data : {
+			nonName : $('#nonName').html(),
+			nonPhone : $('#nonPhone').html(),
+			nonAddress : $('#nonAddress').html()+" "+$('#nonAddressDetail').html()
+		},success : function(resultPage){
+			location.href=resultPage;
+		},error : function(){
+			alert('서버오류 입니다.');
+		}//error
+	})
+}
+
 
 
 

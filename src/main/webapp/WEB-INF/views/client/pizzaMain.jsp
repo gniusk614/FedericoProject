@@ -40,6 +40,7 @@ a {
 }
 
 
+
 </style>
 </head>
 <body>
@@ -49,6 +50,7 @@ a {
 	
 	<!-- Header-->
 	<header class="bg-danger py-5">
+		<div class="row">
 			<div id="carouselExampleIndicators" class="carousel slide"
 				data-bs-ride="carousel">
 				<div class="carousel-indicators" style="z-index:3;">
@@ -85,6 +87,7 @@ a {
 					<span class="visually-hidden">Next</span>
 				</button>
 			</div>
+		</div>
 	</header>
 	<!-- Section-->
 	<section class="py-5 bg-danger" style="height: 300px; z-index: 3; position: relative; margin-bottom: 168px;">
