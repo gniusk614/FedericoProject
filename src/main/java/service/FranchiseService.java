@@ -6,6 +6,8 @@ import vo.FranchiseVO;
 
 public interface FranchiseService {
 	
+	List<FranchiseVO> selectListbyArea(String area); //지역 가맹점 찾기. 
+	
 	List<FranchiseVO> selectFc(); //가맹점정보 모두 불러오기
 	
 	FranchiseVO selectFcOne(FranchiseVO vo); //특정 가맹점정보 불러오기
