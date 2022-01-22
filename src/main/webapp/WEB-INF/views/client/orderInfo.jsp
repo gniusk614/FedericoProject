@@ -18,24 +18,6 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
 <link href="/federico/resources/css/styles.css" rel="stylesheet" />
 
-<script>
-
-function kakaoPay(){
-	$.ajax({
-		url: '',
-		
-		
-		
-	})//ajax
-}
-
-
-
-
-
-
-</script>
-
 
 </head>
 <body>
@@ -75,7 +57,7 @@ function kakaoPay(){
 				<option>- - -</option>
 			</select>				
 			<hr>
-			<!-- 간단정보 -->
+			<!-- 배송지,가맹점 정보 -->
 			<div>
 				<table class="table table-borderless">
 					<tr>
@@ -94,7 +76,7 @@ function kakaoPay(){
 						<td>3000원</td>
 					</tr>
 				</table>
-			</div><!-- 간단정보 -->
+			</div><!-- 배송지,가맹점 정보 -->
 			<hr><br>
 			<!-- 주문정보 -->
 			<div>
@@ -117,20 +99,22 @@ function kakaoPay(){
 						<hr>
 						<!-- 메뉴 본문 -->
 						<c:forEach var="vo" items="${list}" varStatus="vs">
-						<div  class="row  fs-5" style="height: 100px;">
-							<div class="col-6" id="menuName${vs.index}" align="left" style="padding-left: 50px; line-height: 100px;">${vo.menuVo.menuName }
-							</div>
-							<div class="col-2"  align="center" style="line-height: 100px;">
-								${vo.menuQty }
-							</div>
-							<div class="col-4"  align="right" style="padding-right: 60px;  line-height: 100px;	">
-								<fmt:formatNumber value="${vo.menuVo.menuPrice * vo.menuQty}"/>원
-							</div>
-						</div><hr><!-- 메뉴 본문 -->
-						<c:set var="totalPrice" value="${totalPrice + (vo.menuVo.menuPrice * vo.menuQty) }"/>
-						<c:if test="${vs.last}">
-						<input type="hidden" id="save" value="${vs.index}" data-totalPrice=${totalPrice}>
-						</c:if>
+							<div  class="row  fs-5" style="height: 100px;">
+								<div class="col-6" id="menuName${vs.index}" align="left" style="padding-left: 50px; line-height: 100px;">${vo.menuVo.menuName }
+								</div>
+								<div class="col-2" align="center" style="line-height: 100px;">
+									${vo.menuQty}
+								</div>
+								<div class="col-4"  align="right" style="padding-right: 60px;  line-height: 100px;	">
+									<fmt:formatNumber value="${vo.menuVo.menuPrice * vo.menuQty}"/>원
+								</div>
+							</div><hr><!-- 메뉴 본문 -->
+							<!-- 필요정보 숨기기 -->
+							<c:set var="totalPrice" value="${totalPrice + (vo.menuVo.menuPrice * vo.menuQty) }"/>
+							<c:set var="totalQty" value="${totalQty + vo.menuQty}"/>
+							<c:if test="${vs.last}">
+							<input type="hidden" id="save" value="${vs.index}" data-totalPrice=${totalPrice} data-totalQty=${totalQty }>
+							</c:if>
 						</c:forEach>
 						<!-- 메뉴 푸터 -->
 						<div class="row">
@@ -153,22 +137,18 @@ function kakaoPay(){
 				<span class="fs-4">주문자 정보</span>
 				<hr>
 				<div class="container" style="width: 800px;">
-					<div id="client_Name">
-						${clientName }	
-					</div>
+					<div id="client_Name">${clientName}</div>
 					<hr>
-					<div id="client_Phone">
-						${clientPhone}
-					</div>
+					<div id="client_Phone">${clientPhone}</div>
 					<hr>
 					<div class="input-group">
-						<input type="text" class="form-control" size="80" placeholder="주문 시 요청사항 (40자 까지 입력가능)">
+						<input type="text" id="clientMemo" class="form-control" size="80" placeholder="주문 시 요청사항 (40자 까지 입력가능)">
 					</div>
 				</div><!-- 주문자 정보 -->
 			</div>
 			<hr><br>				
 			<div align="center">
-				<button type="button" class="btn btn-danger btn-lg" onclick="kakaoPay()" style="font-size: 2rem; width: 250px;">
+				<button type="button" class="btn btn-danger btn-lg" id="kakaoPayBtn" onclick="kakaoPay()" style="font-size: 2rem; width: 250px;" disabled="disabled">
 					주문 결제 하기
 				</button>
 			</div>
