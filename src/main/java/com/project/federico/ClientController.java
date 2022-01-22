@@ -162,7 +162,10 @@ public class ClientController {
 
 	// flag에 따라 메뉴리스트 출력
 	@RequestMapping(value = "/menuList")
-	public ModelAndView menuList(ModelAndView mv, MenuVO vo) {
+	public ModelAndView menuList(ModelAndView mv, MenuVO vo , @RequestParam("nonName") String nonName) {
+		
+		System.out.println(nonName);
+		
 		List<MenuVO> list = menuService.selectMenuListbyFlag(vo);
 		if (list != null) {
 			mv.addObject("list", list);   
@@ -260,7 +263,7 @@ public class ClientController {
 			}
 			System.out.println("수신자 번호 : " + phoneNumber);
 			System.out.println("인증번호 : " + numStr);
-			sendService.certifiedPhoneNumber(phoneNumber, numStr);
+//			sendService.certifiedPhoneNumber(phoneNumber, numStr);
 			mv.addObject("numStr", numStr);
 		}
 		mv.setViewName("jsonView");

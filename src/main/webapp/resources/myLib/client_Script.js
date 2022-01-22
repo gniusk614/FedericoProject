@@ -461,6 +461,7 @@ function moveMenu(){
 			nonPhone : $('#nonPhone').html(),
 			nonAddress : $('#nonAddress').html()+" "+$('#nonAddressDetail').html()
 		},success : function(resultPage){
+			alert(resultPage)
 			location.href=resultPage;
 		},error : function(){
 			alert('서버오류 입니다.');
