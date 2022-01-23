@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:beans="http://www.springframework.org/schema/beans"
    xmlns:context="http://www.springframework.org/schema/context"
@@ -15,7 +14,11 @@
       http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
       
+
+ 
+
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
@@ -36,18 +39,18 @@
 	
 	
 	<!--  JDBC Connection -->
-	<beans:bean id="dataSource"
+	<!--  <beans:bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <beans:property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
         <beans:property name="url" value="jdbc:oracle:thin:@federico.ccbxcsa5848c.ap-northeast-2.rds.amazonaws.com:1521:orcl"/>
         <beans:property name="username" value="admin"/>
         <beans:property name="password" value="oracleoracle"/>
-    </beans:bean>      
+    </beans:bean>    -->   
 	
 	<!-- SessionFactory -->
-	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+	<!--  <beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
 		<beans:property name="dataSource" ref="dataSource" />
-	</beans:bean>	
+	</beans:bean>	 -->
 	
 	<beans:bean id="multipartResolver" 
 			class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -78,7 +81,7 @@
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    ** 인터셉터 설정 
    1) 인터셉터 클래스 빈등록 --> 
- 	<beans:bean id="loginInterceptor" class="com.project.federico.LoginIntercepter"/>
+ <!-- 	<beans:bean id="loginInterceptor" class="com.project.federico.LoginIntercepter"/> -->
 
 <!--    2) url 과 인터셉터 설정 
    => Namespaces 에서 mvc 확인 ,
@@ -86,18 +89,17 @@
          <mvc:annotation-driven  ,  <mvc:resources
  -->
 
-	<mvc:interceptors>
+	<!-- <mvc:interceptors>
 		<mvc:interceptor>
-			<!-- 전체를 지정하고 제외경로 지정 -->
+			전체를 지정하고 제외경로 지정
 			<mvc:mapping path="/headoffice/*"/>
 			<mvc:exclude-mapping path="/headoffice/loginf"/>
 			<mvc:exclude-mapping path="/headoffice/login"/>
 		
-			<!-- <mvc:mapping path="/headoffice/*"/> -->
-			<!-- 경로 지정 후 인터셉터 빈 등록 -->
-			<beans:ref bean = "loginInterceptor"/>
+			 경로 지정 후 인터셉터 빈 등록 -->
+		<!--	<beans:ref bean = "loginInterceptor"/>
 		</mvc:interceptor>
-	</mvc:interceptors> 
+	</mvc:interceptors>  -->
 	
 	
 	

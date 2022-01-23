@@ -6,6 +6,7 @@ import vo.MenuVO;
 
 public interface MenuMapper {
 	
+	List<MenuVO> selectMenuListbyFlag(MenuVO vo); //selectMenuListbyFlag
 	List<MenuVO> selectMenuList(); //selectList
 	MenuVO selectMenuOne(MenuVO vo); //selectOne
 	int menuInsert(MenuVO vo); //insert

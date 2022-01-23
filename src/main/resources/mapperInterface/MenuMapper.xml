@@ -4,6 +4,12 @@
 <mapper namespace="mapperInterface.MenuMapper">
   
 
+
+	<select id="selectMenuListbyFlag" resultType="vo.MenuVO">
+		SELECT * FROM menuinfo WHERE menuflag = #{menuFlag}
+	</select>
+
+
 						<!--<<  CREATE  >>-->
 	
 	<insert id="menuInsert">
@@ -16,7 +22,9 @@
 						<!--<<  READ  >>-->
      					<!--<<  read_all  >>-->
 	<select id="selectMenuList" resultType="vo.MenuVO">
+
 		SELECT * FROM MENUINFO order by menuIndex asc
+
 	</select>
      					<!--<<  read_one  >>-->
 	<select id="selectMenuOne" resultType="vo.MenuVO">

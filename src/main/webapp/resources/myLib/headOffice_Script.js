@@ -696,7 +696,7 @@ function inputClear() {
 	$('#loginPassword').removeClass('is-valid');
 }
 
-// ==========================================================================
+// ====================================================================
 
 // ===============< 자재등록(현구) >=================================
 
@@ -954,8 +954,6 @@ function fcOrderDetailForm(fcOrderSeq) {
 
 function fcOrderFlagUpdate(flag) {
 	var fcOrderSeq = $('#fcOrderNumber').attr('ordernumber');
-	console.log("ordernumber : " + fcOrderSeq);
-	console.log("ordernumber : " + flag);
 	$.ajax({
 		type : 'get',
 		url : 'fcordersequpdate?flag=' + flag,
