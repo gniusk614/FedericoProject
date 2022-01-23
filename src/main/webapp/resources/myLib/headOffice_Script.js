@@ -1055,26 +1055,3 @@ function fcOrderFlagUpdate(flag) {
 		
 		})// ajax
 	}//menuDelete(menuIndex)	
-/*
-$(function() {
-$('#menuUpdate').click(function(){
-	
-	var formData = new FormData(document.getElementById('menuUpdate'));
-	
-	$.ajax({
-		type:'post',
-		url:'menuUpdate',
-		processData:false,
-		conttentType:false,
-		data: formData,
-		success:function(resultPage){
-			$('#resultArea1').html(resultPage);
-		},
-		error:function(){
-			$('#resultArea1').html("Update Error");
-		}
-		
-		})//ajax
-	})// menuUpdate
-});//ready
-*/
