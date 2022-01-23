@@ -985,38 +985,56 @@ function fcOrderFlagUpdate(flag) {
 
 //===< 메뉴관련(민석) >========!!시작!!====================================
 
-//Ajax 검색기능
+
 
 
 	// menuUpdateFrom()
-	function menuUpdate(menuIndex){
+	
+	function menuUpdateForm(menuIndex){
 		
 		$.ajax({
 			type:'get',
-			url:'menuUpdate',
+			url:'menuDetail?menuIndex='+menuIndex,
 			data:{
-				menuIndex:menuIndex,
+				menuIndex : menuIndex,
 			},
 			success:function(data) {
-				$('#menuName').val(data.vo.menuName);
-				$('#menuPrice').val(data.vo.menuPrice);
-				$('#menuIntro').val(data.vo.menuIntro);
-				$('#menuImage').val(data.vo.menuImage);
 				
-				if(data.vo.menuFlag == '메뉴명'){
-					$('#menuFlag option:eq(0)').prop('selected',true);
-				}else
-					$('#menuFlag option:eq(1)').prop('selected',true);
-					
-				$('#menuUpdateModal').modal('show');
-								
+				$('#upmenuIndex').val(data.menuvo.menuIndex);
+				$('#upmenuName').val(data.menuvo.menuName);				
+				$('#upmenuIntro').val(data.menuvo.menuIntro);
+				$('#upmenuPrice').val(data.menuvo.menuPrice);
+				$('#upbeforemenuImage').attr("src",data.menuvo.menuImage);
+				$('#menuImage').val(data.menuvo.menuImage);
+				
+				console.log("menuIndex =>"+data.menuvo.menuIndex);
+				console.log("menuName =>"+data.menuvo.menuName);
+				console.log("menuIntro =>"+data.menuvo.menuIntro);
+				console.log("menuFlag =>"+data.menuvo.menuFlag);
+				console.log("menuImg =>"+data.menuvo.menuImage);			
+		
+											
+								// when 절로 다시 고민해보자.
+				if(data.menuvo.menuFlag == 'pizza'){
+					$('#upmenuFlag option:eq(0)').prop('selected',true);
+				}if (data.menuvo.menuFlag == 'sets'){
+					$('#upmenuFlag option:eq(1)').prop('selected',true);
+				}else {
+					$('#upmenuFlag option:eq(2)').prop('selected',true);
+				}
+						
+				//$('#menuUpdatef1').load('menuUpdatef.jsp #menuUpdatef');				
+				$('#menuUpdatef').modal('show');
+				console.log("전송 성공");				
 			},error:function(){
-				console.log("수정 실패");
-				alert("수정에 실패하였습니다.");
+				console.log("전송 실패");
+				alert("전송에 실패하였습니다.");
 			}
 			
-		})
-	}
+		})//ajax
+	
+	}//menuUpdateForm
+		 
 	
 
 
@@ -1037,4 +1055,26 @@ function fcOrderFlagUpdate(flag) {
 		
 		})// ajax
 	}//menuDelete(menuIndex)	
-
+/*
+$(function() {
+$('#menuUpdate').click(function(){
+	
+	var formData = new FormData(document.getElementById('menuUpdate'));
+	
+	$.ajax({
+		type:'post',
+		url:'menuUpdate',
+		processData:false,
+		conttentType:false,
+		data: formData,
+		success:function(resultPage){
+			$('#resultArea1').html(resultPage);
+		},
+		error:function(){
+			$('#resultArea1').html("Update Error");
+		}
+		
+		})//ajax
+	})// menuUpdate
+});//ready
+*/
