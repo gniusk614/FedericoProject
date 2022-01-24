@@ -1,6 +1,7 @@
 package service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,26 @@ public class ClientServiceImpl implements ClientService {
 
 	@Autowired
 	ClientMapper dao;
+	
+	
+	// 회원장바구니 통쨰로 삭제
+	@Override
+	public int deleteCartbyClientId(String clientId) {
+		return dao.deleteCartbyClientId(clientId);
+	}
+	
+	
+	// 주문상세목록에 등록
+	@Override
+	public int insertOrderDetailList(Map<String, Object> params) {
+		return dao.insertOrderDetailList(params);
+	}
+	
+	// 주문목록에 등록
+	@Override
+	public int insertOrderList(Map<String, Object> params) {
+		return dao.insertOrderList(params);
+	}
 	
 	// 회원장바구니 항목 삭제
 	@Override

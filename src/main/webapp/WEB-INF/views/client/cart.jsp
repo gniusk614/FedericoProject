@@ -120,7 +120,7 @@
 							</button>
 						</div>
 						<div align="right" class="col-6" >
-							<button type="button" class="btn btn-danger btn-lg" onclick="javascript:;" style="font-size: 2rem; width: 237.25px;">
+							<button type="button" class="btn btn-danger btn-lg" onclick="location.href='orderInfo'" style="font-size: 2rem; width: 237.25px;">
 								결제하기
 							</button>
 						</div>

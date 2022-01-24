@@ -7,6 +7,131 @@
 
 
 
+
+// ============================= 주문페이지 관련 (현구) =======================================
+
+$(function(){
+	// 가맹점 선택해야 주문결제클릭 가능하도록.
+	$('#selectFranchise').change(function(){
+		if($('#selectFranchise').val() != "null" && $('#selectFranchise').val() != "default"){
+			$('#kakaoPayBtn').attr('disabled',false);
+		} else {
+			$('#kakaoPayBtn').attr('disabled',true);
+		}
+	})//kakaoPayBtn change
+	
+	
+	
+	
+}) //ready
+
+
+
+// 주문결제버튼 -> 카카오페이 결제진행
+function kakaoPay(){
+	
+	
+	var menuName;
+	var itemQty;
+	if($('#menuName1').html() != null){
+		itemName = $('#menuName0').html() + ' 외';
+		itemQty = $('#save').attr('data-totalQty');
+	} else{
+		menuName = $('#menuName1').html();
+		itemQty = $('#save').attr('data-totalQty');
+	}
+	
+	$.ajax({
+		url: 'kakaoPay',
+		data:{
+			memo: $('#clientMemo').val(),
+			fcId: $('#fcId').html(), 
+			partner_order_id: '0000000',
+			partner_user_id: $('#client_Name').html(),
+			item_name: menuName,
+			quantity: itemQty,
+			total_amount: $('#save').attr('data-totalPrice')
+		},
+		dataType: 'json',
+		success: function(data){
+			alert("카카오페이로 결제가 진행됩니다.");
+			var url = data.next_redirect_pc_url;
+			window.open(url);
+		},
+		error: function(error){
+			alert('에러' + error);
+		}
+	})//ajax
+}
+
+
+
+
+
+// 주문페이지 지역 선택시 가맹점option 바뀌도록
+function selectArea(){
+	var area = $('#selectarea').val();
+	if  (area == 'default'){
+		$('#selectFranchise').html(
+							'<option value="default">- - -</option>'
+							)	
+	} else {
+		$.ajax({
+			type: 'get',
+			url : 'selectarea',
+			data : {area : area},
+			success: function(data){
+				if(data.success == 'success'){
+					$('#selectFranchise').html(
+						'<option value="null">선택하세요</option>'
+					);
+					var list = data.list;
+					$.each(list, function(FranchiseVO, index){
+						$('#selectFranchise').append(
+						'<option value="'+index.fcId+'" data-address="' + index.fcAddress 
+						+ '" data-phone=' + index.fcPhone + '    >'+index.fcId+'</option>'
+						)	
+					})
+				} else{
+					$('#selectFranchise').html('');
+					alert('죄송합니다.\n가맹점이 없는 지역입니다.')
+				}
+			},
+			error: function(){
+				alert('통신 장애입니다.\n다시 시도해주세요.')	
+				location.reload();				
+			}
+		})//ajax
+		$('#fcId').html('');
+		$('#fcPhone').html('');
+		$('#fcAddress').html('');
+	}
+}//selectDistrict
+
+
+// 가맹점 선택하면 가맹점 정보 나오도록.
+function selectFc(){
+	$selected = $('#selectFranchise option:selected');
+	if($selected.attr('data-phone') != null){
+		var fcPhone = $selected.attr('data-phone');
+		fcPhone = fcPhone.substring(0,3)+'-'+fcPhone.substring(3,7)+'-'+fcPhone.substring(7);
+	}
+	if ($selected.val() == 'default' || $selected.val() == 'null'){
+		$('#fcId').html('');
+		$('#fcPhone').html('');
+		$('#fcAddress').html('');
+	} else{
+		$('#fcId').html($selected.val());
+		$('#fcPhone').html('( '+fcPhone+' )');
+		$('#fcAddress').html($selected.attr('data-address'));	
+	}
+	
+}
+
+
+
+// ============================= 주문페이지 관련 (현구) =======================================
+
 // ============================= 메뉴조회, 비회원 장바구니 관련 (현구) =======================================
 
 $(function(){
@@ -433,41 +558,24 @@ function nonOrder(){
 function inputAddress(){
 	$('#nonAddress').html($('#address').val());
 	$('#nonAddressDetail').html($('#addressDetail').val());
+	$('input[name=nonAddress').val($('#address').val()+" "+$('#addressDetail').val());
 	$('#addressModal').modal('hide');
 }
-//비회원인증 후 계산하러
-function moveOrder(){
-	$.ajax({
-		type : "post",
-		url : "orderinfo",
-		data : {
-			nonName : $('#nonName').html(),
-			nonPhone : $('#nonPhone').html(),
-			nonAddress : $('#nonAddress').html()+" "+$('#nonAddressDetail').html()
-		},success : function(resultPage){
-			location.href=resultPage;
-		},error : function(){
-			alert('서버오류 입니다.');
-		}//error
-	})//ajax
+
+//장바구니 유무에 따른 경로 다르게 주기
+function moveOrder(flag){
+	alert($('input[name=nonAddress').val());
+	if (flag=='1'){
+		$('#jumun').attr('action', 'orderInfo');
+	}else{
+		$('#jumun').attr('action','menuList?menuFlag=pizza');
+	}
+	$('#jumun').submit();
 }
-//비회원인증 후 메뉴고르러
-function moveMenu(){
-	$.ajax({
-		type : "post",
-		url : "menuList?menuFlag=pizza",
-		data : {
-			nonName : $('#nonName').html(),
-			nonPhone : $('#nonPhone').html(),
-			nonAddress : $('#nonAddress').html()+" "+$('#nonAddressDetail').html()
-		},success : function(resultPage){
-			alert(resultPage)
-			location.href=resultPage;
-		},error : function(){
-			alert('서버오류 입니다.');
-		}//error
-	})
-}
+
+
+
+
 
 
 

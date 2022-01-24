@@ -1,6 +1,7 @@
 package service;
 
 import java.util.List;
+import java.util.Map;
 
 import paging.SearchCriteria;
 import vo.CartVO;
@@ -8,6 +9,10 @@ import vo.ClientVO;
 
 public interface ClientService {
 	
+	int insertOrderDetailList(Map<String, Object> params);// 주문상세목록에 등록
+	int insertOrderList(Map<String, Object> params); // 주문목록에 등록
+
+	int deleteCartbyClientId(String clientId); // 회원장바구니 통쨰로 삭제
 	int deleteCart(CartVO vo); // 회원장바구니 항목 삭제
 	int updateCart(CartVO vo); // 회원장바구니 수량변경
 	List<CartVO> selectCartbyClient(CartVO vo); // 회원장바구니 조회
