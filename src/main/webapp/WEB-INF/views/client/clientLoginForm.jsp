@@ -22,7 +22,7 @@
 	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script
 	src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-
+  <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-{SDK-Version 1.2.0}.js"></script>
 <style>
 .checked {
 	border-bottom: 2px solid black;
