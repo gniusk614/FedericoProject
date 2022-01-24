@@ -44,7 +44,7 @@
 						</button>
 					</div>
 				</c:if>
-				<c:if test="${! empty list}"> 
+				<c:if test="${! empty sessionScope.list}"> 
 					<c:forEach var="vo" items="${list}" varStatus="vs">
 						<div class="row" align="center" style="font-size: 1.1rem;">
 							<!-- 메뉴이미지, 이름 -->

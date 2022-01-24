@@ -27,18 +27,6 @@ public class ClientServiceImpl implements ClientService {
 	}
 	
 	
-	// 주문상세목록에 등록
-	@Override
-	public int insertOrderDetailList(Map<String, Object> params) {
-		return dao.insertOrderDetailList(params);
-	}
-	
-	// 주문목록에 등록
-	@Override
-	public int insertOrderList(Map<String, Object> params) {
-		return dao.insertOrderList(params);
-	}
-	
 	// 회원장바구니 항목 삭제
 	@Override
 	public int deleteCart(CartVO vo) {
