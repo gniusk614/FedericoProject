@@ -59,8 +59,8 @@
 			SELECT nvl(max(ordernumber),0)+1 from orderlist
 		</selectKey>
 		INSERT INTO orderlist(ordernumber, clientid, fcid, completeyn, memo, orderdate, clientName, clientAddress, clientPhone, memberYN)
-		VALUES (#{orderNumber}, #{vo.clientId}, #{fcId}, 'N',
-		nvl(#{memo},'X'), sysdate, #{vo.clientName}, #{vo.clientAddress}, #{vo.clientPhone}, #{memberYN})
+		VALUES (#{orderNumber}, #{clientId}, #{fcId}, 'N',
+		nvl(#{memo},'X'), sysdate, #{clientName}, #{clientAddress}, #{clientPhone}, #{memberYN})
 	</insert>
 
 

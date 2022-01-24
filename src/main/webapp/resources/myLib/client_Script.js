@@ -560,7 +560,6 @@ function inputAddress(){
 
 //장바구니 유무에 따른 경로 다르게 주기
 function moveOrder(flag){
-	alert($('input[name=nonAddress').val());
 	if (flag=='1'){
 		$('#jumun').attr('action', 'orderInfo');
 	}else{

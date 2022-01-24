@@ -68,7 +68,7 @@ public class ClientController {
 	
 	
 	
-	
+
 	
 	
 	
@@ -80,31 +80,47 @@ public class ClientController {
 		Map<String, Object> params = new HashMap<String, Object>();
 		String fcId = (String)session.getAttribute("fcId");
 		String memo = (String)session.getAttribute("memo");
-		log.info("clientname"+session.getAttribute("clientLoginID"));
-
+		
+		// map에 인서트할 값 세팅
 		if(session.getAttribute("clientLoginID") != null) {
 			clientVo.setClientId((String)session.getAttribute("clientLoginID"));
 			clientVo = clientService.selectOne(clientVo);
-			params.put("vo", clientVo);
+			params.put("clientId", clientVo.getClientId());
 			params.put("fcId", fcId);
 			params.put("memo", memo);
+			params.put("clientName", clientVo.getClientName());
+			params.put("clientAddress", clientVo.getClientAddress());
+			params.put("clientPhone", clientVo.getClientPhone());
 			params.put("memberYN", "Y");
 			params.put("orderNumber", null);
-			log.info("clientname"+clientVo.getClientName()+"!!!!!!!!!!!!!11");
-		} else if(session.getAttribute("nonmember") != null) {
-			
+		} else {
+			params.put("clientId", "NONE");
+			params.put("fcId", fcId);
+			params.put("memo", memo);
+			params.put("clientName", session.getAttribute("clientName"));
+			params.put("clientAddress", session.getAttribute("clientAddress"));
+			params.put("clientPhone", session.getAttribute("clientPhone"));
+			params.put("memberYN", "N");
+			params.put("orderNumber", null);
 		}
 		
+		// 주문정보 인서트
 		if (orderService.insertOrderList(params) > 0) {
-			log.info("1인서트 성공");
 			params.put("orderNumber", (int)params.get("orderNumber"));
 			params.put("list", list);
+		
+			// 주문상세정보 인서트
 			if(orderService.insertOrderDetailList(params) > 0) {
-				clientService.deleteCartbyClientId(clientVo.getClientId());
+				// 장바구니 비우기
+				if ("Y".equals(params.get("memberYN"))) {
+					clientService.deleteCartbyClientId(clientVo.getClientId());
+				} 
+				if(session.getAttribute("list") != null) {
+					session.removeAttribute("list");
+				}
 				session.removeAttribute("listSize");
 			}
 		}
-		
 		mv.setViewName("client/orderComplete");
 		return mv;
 	}
@@ -193,13 +209,10 @@ public class ClientController {
 			mv.addObject("clientAddress", clientService.selectOne(vo).getClientAddress());
 			mv.addObject("clientPhone", clientPhone);
 			mv.addObject("clientName", clientService.selectOne(vo).getClientName());
-		} else if(request.getAttribute("nonName") != null) {
-			session.setAttribute("nonName", request.getAttribute("nonName"));
-			session.setAttribute("nonPhone", request.getAttribute("nonPhone"));
-			session.setAttribute("nonAddress", request.getAttribute("nonAddress"));
-			System.out.println(request.getAttribute("nonName"));
-			System.out.println(request.getAttribute("nonPhone"));
-			System.out.println(request.getAttribute("nonAddress"));
+		} else if(request.getParameter("nonAddress") != null) {
+			session.setAttribute("clientName", request.getParameter("nonName"));
+			session.setAttribute("clientPhone", request.getParameter("nonPhone"));
+			session.setAttribute("clientAddress", request.getParameter("nonAddress"));
 		} else {
 			uri="client/clientLoginForm";
 		}
