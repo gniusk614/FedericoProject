@@ -60,42 +60,6 @@ public class HeadOfficeController {
 	PasswordEncoder passwordEncoder;
 	@Autowired
 	MenuService menuService;
-	
-	
-	
-	// 로그인폼이동 (김민석)
-	@RequestMapping(value = "/fcloginForm")
-	public ModelAndView fcloginForm(ModelAndView mv) {
-		mv.setViewName("headoffice/fcloginForm");
-		return mv;
-	}// loginf-> 폼으로 이동시켜줌
-	
-	@RequestMapping(value =  "/fclogin")
-	public ModelAndView fclogin(HttpServletRequest request, HttpServletResponse response, ModelAndView mv, FranchiseVO vo ) {
-		log.info("요청 확인");
-		
-		// uri loginForm 지정
-		String uri="/headOffice/fcLloginForm";
-		
-		// 비밀번호 password에 저장.
-		String password = vo.getFcPassword();
-		
-		return mv;
-	}
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	// 가맹점 발주내역 상세보기(발주번호 별로) return json
 	@RequestMapping(value = "/fcorderdetail")
@@ -532,7 +496,9 @@ public class HeadOfficeController {
 	// 가맹점 insert (강광훈)
 	@RequestMapping(value = "/fcinsert")
 	public ModelAndView fcInsert(ModelAndView mv, FranchiseVO vo) {
-
+		
+		
+		
 		vo.setFcPassword(passwordEncoder.encode(vo.getFcPassword()));
 		System.out.println(vo.getFcId());
 		System.out.println(vo.getFcName());

@@ -32,12 +32,12 @@
 								<div class="card-body">
 									<form action="login" method="post">
 										<div class="form-floating mb-3">
-											<input class="form-control" type="text" id="staffCode"
-												name="staffCode" placeholder="staffCode" /> <label
+											<input class="form-control" type="text" id="fcId"
+												name="fcId" placeholder="staffCode" /> <label
 												for="inputId">가맹점 ID</label>
 										</div>
 										<div class="form-floating mb-3">
-											<input class="form-control" id="hopassword" name="hoPassword"
+											<input class="form-control" id="fcPassword" name="fcPassword"
 												type="password" placeholder="Password" /> <label
 												for="inputPassword">Password</label>
 										</div>

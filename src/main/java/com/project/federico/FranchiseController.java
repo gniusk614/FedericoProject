@@ -3,6 +3,8 @@ package com.project.federico;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 import lombok.extern.log4j.Log4j;
 import service.FranchiseService;
 import service.OrderService;
+import vo.FranchiseVO;
+import vo.HeadOfficeVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
 
@@ -31,12 +35,7 @@ public class FranchiseController {
 	PasswordEncoder passwordEncoder;
 
 
-	// 로그인폼이동 (강광훈)
-		@RequestMapping(value = "/loginf")
-		public ModelAndView loginf(ModelAndView mv) {
-			mv.setViewName("franchise/fcLoginForm");
-			return mv;
-		}// loginf-> 폼으로 이동시켜줌
+	
 
 	
 
@@ -80,6 +79,108 @@ public class FranchiseController {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// 로그인폼이동 (김민석)
+		@RequestMapping(value = "/loginf") // client/footer -> 가맹점 전용 페이지 
+		public ModelAndView loginf(ModelAndView mv) {
+			mv.setViewName("franchise/fcLoginForm");
+			return mv;
+		}// loginf-> 폼으로 이동시켜줌
+		
+		@RequestMapping(value ="/login")
+		public ModelAndView login(HttpServletRequest request,HttpServletResponse response,ModelAndView mv,			
+				HeadOfficeVO hvo, FranchiseVO vo) {
+
+			// 각정보 저장
+			// login 성공시 이동화면
+			 // 가맹점게시판 현재 : null
+			// login 비밀번호 저장
+			String id=vo.getFcId();
+			String password =vo.getFcPassword();
+			String uri="/franchise/fcLoginForm";
+
+			System.out.println(vo.getFcId());
+			System.out.println(vo.getFcPassword());
+			
+			
+			// 프랜차이즈 정보 vo에 담기
+			vo=service.selectFcOne(vo);
+			
+			if(vo!=null) { // vo가 null이 아니면 = login이 성공하면 session에 보관			
+				if (passwordEncoder.matches(password, vo.getFcPassword())) {
+//				if(vo.getFcPassword().equals(password)) {
+					
+					mv.addObject("success","T");
+					request.getSession().setAttribute("fcId",vo.getFcId());
+					request.getSession().setAttribute("fcloginName",vo.getFcName());
+					uri="/franchise/home";
+				}else {
+					//mv.addObject("success","Password Fail");
+					mv.addObject("message","Password가 일치하지 않습니다.");
+				}
+				
+			}else {// id오류
+				//mv.addObject("success","ID Fail");
+				mv.addObject("message","회원정보가 없습니다. ID를 확인해주세요.");
+			}
+			
+			mv.setViewName(uri);
+					
+			return mv;
+			}
+			
+			
+			
+			
+			
+			
+			
 	
 }
 // class
