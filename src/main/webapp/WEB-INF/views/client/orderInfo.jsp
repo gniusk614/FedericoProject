@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -100,8 +99,7 @@
 						<!-- 메뉴 본문 -->
 						<c:forEach var="vo" items="${list}" varStatus="vs">
 							<div  class="row  fs-5" style="height: 100px;">
-								<div class="col-6" id="menuName${vs.index}" align="left" style="padding-left: 50px; line-height: 100px;">${vo.menuVo.menuName }
-								</div>
+								<div class="col-6" id="menuName${vs.index}" align="left" style="padding-left: 50px; line-height: 100px;">${vo.menuVo.menuName}</div>
 								<div class="col-2" align="center" style="line-height: 100px;">
 									${vo.menuQty}
 								</div>

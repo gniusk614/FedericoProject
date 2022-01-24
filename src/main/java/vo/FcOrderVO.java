@@ -1,6 +1,7 @@
 package vo;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -11,6 +12,5 @@ public class FcOrderVO {
 	private String fcId;
 	private Date fcOrderDate;
 	private String fcOrderFlag;
-	
 	
 }
