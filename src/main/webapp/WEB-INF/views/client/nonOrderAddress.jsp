@@ -98,15 +98,21 @@
 				<img src="/federico/resources/Image/delievery1.png"
 					style="width: 400px; opacity: 0.4">
 			</div>
+			<form id="jumun" method="POST" >
+				<input type="hidden" name="nonName" value="${nonName}"> 
+				<input type="hidden" name="nonPhone" value="${nonPhone}">
+				<input type="hidden" name="nonAddress">
+			</form>
+
 			<div class="row justify-content-md-center mt-5">
 				<div class="col-sm" align="center">
 					<c:if test="${not empty list}">
 					<button class="btn btn-danger" type="button"
-						onclick="moveOrder()">주문하러가기</button>
+						onclick="moveOrder(1)">주문하러가기</button>
 					</c:if>
 					<c:if test="${empty list}">
 					<button class="btn btn-danger" type="button"
-						onclick="moveMenu()">메뉴선택하러가기</button>
+						onclick="moveOrder(2)">메뉴선택하러가기</button>
 					</c:if>
 				</div>
 			</div>
@@ -179,9 +185,14 @@
 	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 	<script>
 		function findAddr() {
+			var width = 500; //팝업의 너비
+			var height = 600;
+			
 			new daum.Postcode({
+				width: width, //생성자에 크기 값을 명시적으로 지정해야 합니다.
+			    height: height,
 				oncomplete : function(data) {
-
+					
 					var roadAddr = data.roadAddress; // 도로명 주소 변수
 					var jibunAddr = data.jibunAddress; // 지번 주소 변수
 
@@ -191,8 +202,16 @@
 					} else if (jibunAddr !== '') {
 						$("#address").val(jibunAddr);
 					}
-				}
-			}).open();
+				},
+				theme : {
+						   bgColor: "#C00C0C", //바탕 배경색
+						   emphTextColor: "#C01160" //강조 글자색
+					}
+			}).open({
+				left: (window.screen.width/2)-(width/2),
+			    top: (window.screen.height/2)-(height/2),
+				popupTitle: '주소검색'
+			});
 		}
 	</script>
 	<script

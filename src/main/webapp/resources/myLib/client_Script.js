@@ -558,40 +558,24 @@ function nonOrder(){
 function inputAddress(){
 	$('#nonAddress').html($('#address').val());
 	$('#nonAddressDetail').html($('#addressDetail').val());
+	$('input[name=nonAddress').val($('#address').val()+" "+$('#addressDetail').val());
 	$('#addressModal').modal('hide');
 }
-//비회원인증 후 계산하러
-function moveOrder(){
-	$.ajax({
-		type : "post",
-		url : "orderinfo",
-		data : {
-			nonName : $('#nonName').html(),
-			nonPhone : $('#nonPhone').html(),
-			nonAddress : $('#nonAddress').html()+" "+$('#nonAddressDetail').html()
-		},success : function(resultPage){
-			location.href=resultPage;
-		},error : function(){
-			alert('서버오류 입니다.');
-		}//error
-	})//ajax
+
+//장바구니 유무에 따른 경로 다르게 주기
+function moveOrder(flag){
+	alert($('input[name=nonAddress').val());
+	if (flag=='1'){
+		$('#jumun').attr('action', 'orderInfo');
+	}else{
+		$('#jumun').attr('action','menuList?menuFlag=pizza');
+	}
+	$('#jumun').submit();
 }
-//비회원인증 후 메뉴고르러
-function moveMenu(){
-	$.ajax({
-		type : "post",
-		url : "menuList?menuFlag=pizza",
-		data : {
-			nonName : $('#nonName').html(),
-			nonPhone : $('#nonPhone').html(),
-			nonAddress : $('#nonAddress').html()+" "+$('#nonAddressDetail').html()
-		},success : function(resultPage){
-			location.href=resultPage;
-		},error : function(){
-			alert('서버오류 입니다.');
-		}//error
-	})
-}
+
+
+
+
 
 
 
