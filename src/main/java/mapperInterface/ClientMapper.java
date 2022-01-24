@@ -8,9 +8,7 @@ import vo.CartVO;
 import vo.ClientVO;
 
 public interface ClientMapper {
-	
-	int insertOrderDetailList(Map<String, Object> params);// 주문상세목록에 등록
-	int insertOrderList(Map<String, Object> params); // 주문목록에 등록
+
 	
 	int deleteCartbyClientId(String clientId); // 회원장바구니 통쨰로 삭제
 	int deleteCart(CartVO vo); // 회원장바구니 항목 삭제

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapperInterface.OrderMapper">
+
+	<resultMap type="vo.OrderDetailListVO" id="OrderDetailListVO">
+		<result property="orderDetailNumber" column="orderDetailNumber"/>
+		<result property="orderNumber" column="orderNumber"/>
+		<result property="menuIndex" column="menuIndex"/>
+		<result property="menuQty" column="menuQty"/>
+		<collection property="menuVo" resultMap="mapperInterface.ClientMapper.MenuVO"></collection>
+	</resultMap>
+
+
+	
+	
+<!-- ======================= 주문조회,수정 관련 ====================== -->
+	
+	
+	
+	<!-- 가맹점별 주문정보 조회 - completeYN 필드 유무로 조건검. -->
+	<select id="selectFcOrderbyFcId" resultType="vo.OrderListVO">
+		SELECT o.ordernumber, o.clientid, o.fcid, o.completeyn, o.memo, o.orderdate, c.clientPhone, c.clientAddress
+		FROM orderlist o, client c
+		WHERE o.fcid = #{fcId} AND o.clientId = c.clientId
+		<choose>
+			<when test="#{completeYN != null and completeYN != ''}">
+				AND completeyn = #{completeYN}
+			</when>
+			<otherwise></otherwise>
+		</choose>
+		ORDER BY orderdate
+	</select>
+
+
+	<!-- 주문번호별 주문상세내역 조회 -->
+	<select id="selectDetailbyOrderNumber" resultMap="OrderDetailListVO">
+		SELECT o.*, m.menuName, m.menuPrice
+		FROM orderdetaillist o, menuinfo m WHERE o.ordernumber = #{orderNumber} ORDER BY o.orderdetailnumber
+	</select>
+
+
+	
+
+
+
+
+
+
+
+<!-- ======================= 주문조회,수정 관련 ====================== -->
+
+
+<!-- ======================= 주문등록 관련 ====================== -->
+
+	<!-- 주문정보 등록 -->
+	<insert id="insertOrderList" parameterType="hashmap">
+		<selectKey keyProperty="orderNumber" resultType="int" order="BEFORE">
+			SELECT nvl(max(ordernumber),0)+1 from orderlist
+		</selectKey>
+		INSERT INTO orderlist(ordernumber, clientid, fcid, completeyn, memo, orderdate, clientName, clientAddress, clientPhone, memberYN)
+		VALUES (#{orderNumber}, #{vo.clientId}, #{fcId}, 'N',
+		nvl(#{memo},'X'), sysdate, #{vo.clientName}, #{vo.clientAddress}, #{vo.clientPhone}, #{memberYN})
+	</insert>
+
+
+	<!-- 주문상세정보 등록 -->
+	<insert id="insertOrderDetailList">
+		INSERT INTO orderdetaillist (orderdetailnumber, ordernumber, menuindex, menuqty)
+		<foreach collection="list" item="vo" separator=" UNION ALL " index="index">
+			SELECT (SELECT nvl(max(orderdetailnumber),0)+1+${index} FROM orderdetaillist),
+			 #{orderNumber}, #{vo.menuVo.menuIndex}, #{vo.menuQty} FROM DUAL
+		</foreach>
+	</insert>
+
+
+
+
+
+<!-- ======================= 주문등록 관련 ====================== -->
+
+</mapper>
+
+
+
+
+
+
+
+
+
+

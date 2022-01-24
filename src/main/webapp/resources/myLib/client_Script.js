@@ -30,17 +30,11 @@ $(function(){
 // 주문결제버튼 -> 카카오페이 결제진행
 function kakaoPay(){
 	
-	
-	var menuName;
-	var itemQty;
+	var menuName = $('#menuName0').html();
+	var itemQty = $('#save').attr('data-totalQty');
 	if($('#menuName1').html() != null){
-		itemName = $('#menuName0').html() + ' 외';
-		itemQty = $('#save').attr('data-totalQty');
-	} else{
-		menuName = $('#menuName1').html();
-		itemQty = $('#save').attr('data-totalQty');
-	}
-	
+		menuName = $('#menuName0').html() + ' 외';
+	} 
 	$.ajax({
 		url: 'kakaoPay',
 		data:{
@@ -56,7 +50,8 @@ function kakaoPay(){
 		success: function(data){
 			alert("카카오페이로 결제가 진행됩니다.");
 			var url = data.next_redirect_pc_url;
-			window.open(url);
+			window.open(url
+			); /*'width=500px, height=700px '*/
 		},
 		error: function(error){
 			alert('에러' + error);
@@ -151,7 +146,7 @@ function comma(str) {
 }
 
 
-// 장바구니모달 열기
+// 비회원 장바구니모달 열기
 function showAddCartModal(menuIndex){
 	$('#addCartModal').modal('show');
 	$('#btn-addCart').attr('onclick','addCartNoneMember('+menuIndex+')');
@@ -351,6 +346,7 @@ function updateCartQtyM(index){
 		data: {
 			menuQty : $('#cartQty'+index).html(),
 			cartSeq : $('#cartQty'+index).attr('data-seq'),
+			clientId : $('#clientloginId').attr('data-clientloginid')
 			},
 		success: function(data){
 			if(data.success == 'success'){
