@@ -187,6 +187,9 @@ public class ClientController {
 			session.setAttribute("nonName", request.getAttribute("nonName"));
 			session.setAttribute("nonPhone", request.getAttribute("nonPhone"));
 			session.setAttribute("nonAddress", request.getAttribute("nonAddress"));
+			System.out.println(request.getAttribute("nonName"));
+			System.out.println(request.getAttribute("nonPhone"));
+			System.out.println(request.getAttribute("nonAddress"));
 		} else {
 			uri="client/clientLoginForm";
 		}
@@ -322,7 +325,6 @@ public class ClientController {
 	// flag에 따라 메뉴리스트 출력
 	@RequestMapping(value = "/menuList")
 	public ModelAndView menuList(ModelAndView mv, MenuVO vo, HttpServletRequest request, HttpSession session) {
-		
 		List<MenuVO> list = menuService.selectMenuListbyFlag(vo);
 		if (list != null) {
 			mv.addObject("list", list);   
@@ -433,7 +435,7 @@ public class ClientController {
 			}
 			System.out.println("수신자 번호 : " + phoneNumber);
 			System.out.println("인증번호 : " + numStr);
-			sendService.certifiedPhoneNumber(phoneNumber, numStr);
+//			sendService.certifiedPhoneNumber(phoneNumber, numStr);
 			mv.addObject("numStr", numStr);
 		}
 		mv.setViewName("jsonView");
