@@ -18,14 +18,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,6 +33,7 @@ import lombok.extern.log4j.Log4j;
 import service.ClientServiceImpl;
 import service.FranchiseService;
 import service.MenuServiceImpl;
+import service.OrderService;
 import service.SendService;
 import vo.CartVO;
 import vo.ClientVO;
@@ -53,6 +51,8 @@ public class ClientController {
 	MenuServiceImpl menuService;
 	@Autowired
 	ClientServiceImpl clientService;
+	@Autowired
+	OrderService orderService;
 	@Autowired
 	FranchiseService fcService;
 	@Autowired
@@ -72,38 +72,59 @@ public class ClientController {
 	
 	
 	
-	
+
 	
 	
 	
 	
 	// 카카오페이 결제완료폼 이동 + 주문정보 인서트
 	@RequestMapping(value = "/ordercomplete")
-	public ModelAndView ordercomplete(ModelAndView mv, HttpSession session) {
+	public ModelAndView ordercomplete(ModelAndView mv, HttpSession session, ClientVO clientVo) {
 		List<CartVO> list = (List<CartVO>)session.getAttribute("list");
+		Map<String, Object> params = new HashMap<String, Object>();
 		String fcId = (String)session.getAttribute("fcId");
 		String memo = (String)session.getAttribute("memo");
-			
 		
-		
-		Map<String, Object> params = new HashMap<String, Object>();
-		String clientId = list.get(0).getClientId();
-		params.put("clientId", clientId);
-		params.put("fcId", fcId);
-		params.put("memo", memo);
-		params.put("orderNumber", null);
-
-		if (clientService.insertOrderList(params) > 0) {
-			log.info("1인서트 성공");
-			params.put("list", list);
-			if(clientService.insertOrderDetailList(params) > 0) {
-				clientService.deleteCartbyClientId(clientId);
-				session.removeAttribute("listSize");
-				
-			}
+		// map에 인서트할 값 세팅
+		if(session.getAttribute("clientLoginID") != null) {
+			clientVo.setClientId((String)session.getAttribute("clientLoginID"));
+			clientVo = clientService.selectOne(clientVo);
+			params.put("clientId", clientVo.getClientId());
+			params.put("fcId", fcId);
+			params.put("memo", memo);
+			params.put("clientName", clientVo.getClientName());
+			params.put("clientAddress", clientVo.getClientAddress());
+			params.put("clientPhone", clientVo.getClientPhone());
+			params.put("memberYN", "Y");
+			params.put("orderNumber", null);
+		} else {
+			params.put("clientId", "NONE");
+			params.put("fcId", fcId);
+			params.put("memo", memo);
+			params.put("clientName", session.getAttribute("clientName"));
+			params.put("clientAddress", session.getAttribute("clientAddress"));
+			params.put("clientPhone", session.getAttribute("clientPhone"));
+			params.put("memberYN", "N");
+			params.put("orderNumber", null);
 		}
 		
+		// 주문정보 인서트
+		if (orderService.insertOrderList(params) > 0) {
+			params.put("orderNumber", (int)params.get("orderNumber"));
+			params.put("list", list);
 		
+			// 주문상세정보 인서트
+			if(orderService.insertOrderDetailList(params) > 0) {
+				// 장바구니 비우기
+				if ("Y".equals(params.get("memberYN"))) {
+					clientService.deleteCartbyClientId(clientVo.getClientId());
+				} 
+				if(session.getAttribute("list") != null) {
+					session.removeAttribute("list");
+				}
+				session.removeAttribute("listSize");
+			}
+		}
 		mv.setViewName("client/orderComplete");
 		return mv;
 	}
@@ -113,6 +134,11 @@ public class ClientController {
 	  @RequestMapping(value = "/kakaoPay") 
 	  @ResponseBody
 	  public String kakaoPay(HttpServletRequest request) { 
+		  log.info("123"+request.getParameter("partner_order_id"));
+		  log.info("123"+request.getParameter("partner_user_id"));
+		  log.info("123"+request.getParameter("item_name"));
+		  log.info("123"+request.getParameter("quantity"));
+		  log.info("123"+request.getParameter("total_amount"));
 		  if(request.getSession(false) != null) {
 			  request.getSession(false).setAttribute("fcId", request.getParameter("fcId"));
 			  request.getSession(false).setAttribute("memo", request.getParameter("memo"));
@@ -175,7 +201,7 @@ public class ClientController {
 	}
 	
 	
-	// 회원이거나 인증비회원일경우 이름,주소,전화번호 갖고가기, 비회원이면 로그인페이지로
+	// 주문페이지 이동 - 회원이거나 인증비회원일경우 이름,주소,전화번호 갖고가기, 비회원이면 로그인페이지로
 	@RequestMapping(value = "/orderInfo")
 	public ModelAndView orderInfo(ModelAndView mv, HttpServletRequest request, HttpSession session, ClientVO vo) {
 		String uri = "client/orderInfo";
@@ -187,13 +213,10 @@ public class ClientController {
 			mv.addObject("clientAddress", clientService.selectOne(vo).getClientAddress());
 			mv.addObject("clientPhone", clientPhone);
 			mv.addObject("clientName", clientService.selectOne(vo).getClientName());
-		} else if(request.getAttribute("nonName") != null) {
-			session.setAttribute("nonName", request.getAttribute("nonName"));
-			session.setAttribute("nonPhone", request.getAttribute("nonPhone"));
-			session.setAttribute("nonAddress", request.getAttribute("nonAddress"));
-			System.out.println(request.getAttribute("nonName"));
-			System.out.println(request.getAttribute("nonPhone"));
-			System.out.println(request.getAttribute("nonAddress"));
+		} else if(request.getParameter("nonAddress") != null) {
+			session.setAttribute("clientName", request.getParameter("nonName"));
+			session.setAttribute("clientPhone", request.getParameter("nonPhone"));
+			session.setAttribute("clientAddress", request.getParameter("nonAddress"));
 		} else {
 			uri="client/clientLoginForm";
 		}
@@ -237,14 +260,13 @@ public class ClientController {
 	// 비회원 장바구니 항목 추가
 	@RequestMapping(value = "/addCartNM")
 	public ModelAndView addCartNoneMember(ModelAndView mv, HttpSession session, MenuVO menuVo, CartVO cartVo) {
-
 		List<CartVO> list = null;
 		if (session.getAttribute("list") != null) {
 			list = (List<CartVO>) session.getAttribute("list");
 		} else {
 			list = new ArrayList<CartVO>();
 		}
-
+		
 		menuVo = menuService.selectMenuOne(menuVo);
 		if (menuVo != null) {
 			cartVo.setMenuVo(menuVo);
@@ -277,12 +299,14 @@ public class ClientController {
 	@RequestMapping(value = "/updateCartM")
 	public ModelAndView updateCartM(ModelAndView mv, HttpSession session, CartVO vo) {
 
-		if (clientService.updateCart(vo) > 0)
+		if (clientService.updateCart(vo) > 0) {
+			List<CartVO> list = clientService.selectCartbyClient(vo);
+			session.setAttribute("list", list);
 			mv.addObject("success", "success");
-		else
+		}
+		else {
 			mv.addObject("success", "fail");
-		mv.addObject("success", "success");
-
+		}
 		mv.setViewName("jsonView");
 		return mv;
 	}
@@ -312,7 +336,7 @@ public class ClientController {
 	public ModelAndView cart(ModelAndView mv, HttpSession session, CartVO vo, MenuVO menuVo,
 			@RequestParam("m") String m) {
 		// 회원일 경우 db에서 조회해서 session에 담아줌.
-		if (!"n".equals(m)) {
+		if (! "n".equals(m)) {
 			vo.setClientId((String) session.getAttribute("clientLoginID"));
 			List<CartVO> list = clientService.selectCartbyClient(vo);
 			if (list.size() > 0) {
@@ -333,13 +357,13 @@ public class ClientController {
 		if (list != null) {
 			mv.addObject("list", list);   
 			mv.addObject("flag", vo.getMenuFlag());
-			session.setAttribute("list", list.size());
+			session.setAttribute("listsize", list.size());
 		}
 		// 비회원주문에서 넘어올떄 세션에 정보 담기
 		if(request.getParameter("nonName") != null) {
-			session.setAttribute("nonName", request.getAttribute("nonName"));
-			session.setAttribute("nonPhone", request.getAttribute("nonPhone"));
-			session.setAttribute("nonAddress", request.getAttribute("nonAddress"));
+			session.setAttribute("nonName", request.getParameter("nonName"));
+			session.setAttribute("nonPhone", request.getParameter("nonPhone"));
+			session.setAttribute("nonAddress", request.getParameter("nonAddress"));
 		}
 		
 		mv.setViewName("client/menu");

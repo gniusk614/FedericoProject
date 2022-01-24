@@ -95,7 +95,7 @@
 				</div>
 			</div>
 			<div class="row justify-content-md-center mt-5">
-				<img src="/federico/resources/Image/delievery1.png"
+				<img src="/federico/resources/Image/delievery2.png"
 					style="width: 400px; opacity: 0.4">
 			</div>
 			<form id="jumun" method="POST" >

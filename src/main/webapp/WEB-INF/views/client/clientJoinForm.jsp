@@ -42,10 +42,10 @@ a {
 </style>
 </head>
 <body>
-	<%@ include file="navtop.jsp"%>
+	<%-- <%@ include file="navtop.jsp"%> --%>
 	<!-- layoutSidenav 시작 -->
 	<div id="layoutSidenav">
-		<%@ include file="navside.jsp"%>
+		<%-- <%@ include file="navside.jsp"%> --%>
 		<div id="layoutSidenav_content">
 			<!-- 본문 시작 -->
 			<div class="container-fluid px-4" style="margin-top: 20px;">
@@ -153,7 +153,7 @@ a {
 
 
 	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-	<script>
+	<!-- <script>
 	function findAddr() {
 		var width = 500; //팝업의 너비
 		var height = 600;
@@ -188,7 +188,7 @@ a {
 			popupTitle: '주소검색'
 		});
 	}
-	</script>
+	</script> -->
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
