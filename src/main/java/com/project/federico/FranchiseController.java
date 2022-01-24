@@ -24,7 +24,8 @@ public class FranchiseController {
 	FranchiseService service;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-
+	
+	
 	
 
 }
