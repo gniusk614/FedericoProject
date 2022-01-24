@@ -30,12 +30,14 @@ public class FranchiseController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
+
 	// 로그인폼이동 (강광훈)
 		@RequestMapping(value = "/loginf")
 		public ModelAndView loginf(ModelAndView mv) {
 			mv.setViewName("franchise/fcLoginForm");
 			return mv;
 		}// loginf-> 폼으로 이동시켜줌
+
 	
 
 	
