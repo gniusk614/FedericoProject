@@ -1004,7 +1004,7 @@ function fcOrderFlagUpdate(flag) {
 				$('#upmenuPrice').val(data.menuvo.menuPrice);
 				$('#upbeforemenuImage').attr("src",data.menuvo.menuImage);
 				$('#menuImage').val(data.menuvo.menuImage);
-				
+				console.log("data throw test");
 				console.log("menuIndex =>"+data.menuvo.menuIndex);
 				console.log("menuName =>"+data.menuvo.menuName);
 				console.log("menuIntro =>"+data.menuvo.menuIntro);
