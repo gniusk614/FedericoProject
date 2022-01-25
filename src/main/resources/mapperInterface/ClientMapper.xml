@@ -3,6 +3,11 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapperInterface.ClientMapper">
 
+	<!-- 회원가입 insertClient -->
+	<insert id="insertClient">
+		INSERT INTO client(clientId, clientPassword, clientName, clientPhone, clientBirthday, clientAddress, clientEmail, smsCheck, emailCheck)
+		VALUES (#{clientId}, #{clientPassword},#{clientName},#{clientPhone},#{clientBirthday},#{clientAddress},#{clientEmail},#{smsCheck},#{emailCheck})
+	</insert>
 	<!-- 클라이언트 selectOne (WHERE = ID) -->
 	<select id="selectOne" resultType="vo.ClientVO">
 		SELECT * FROM client where clientId = #{clientId}

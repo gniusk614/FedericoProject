@@ -146,7 +146,7 @@
 			</div>
 			<hr><br>				
 			<div align="center">
-				<button type="button" class="btn btn-danger btn-lg" id="kakaoPayBtn" onclick="kakaoPay()" style="font-size: 2rem; width: 250px;" disabled="disabled">
+				<button type="button" class="btn btn-danger" id="kakaoPayBtn" onclick="kakaoPay()" disabled="disabled">
 					주문 결제 하기
 				</button>
 			</div>

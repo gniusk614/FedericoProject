@@ -70,5 +70,10 @@ public class ClientServiceImpl implements ClientService {
 		return dao.searchClientList(cri);
 	}
 	
+	//회원가입
+	@Override
+	public int insertClient(ClientVO vo) {
+		return dao.insertClient(vo);
+	}
 	
 }

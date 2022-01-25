@@ -253,7 +253,6 @@ function fcInputClear() {
 }
 
 function fcincheck() {
-	// 모든 항목에 오류 없음을 확인 : switch 변수
 	if (fcidCheck == false || fcdubCheck == false) {
 		$('#fcId').addClass('is-invalid');
 		$('#fcidMessage').html('가맹점ID를 확인하세요');
@@ -268,7 +267,7 @@ function fcincheck() {
 	}
 
 	if (fcidCheck == true && fcpCheck == true && fcprCheck == true) {
-		if (confirm('계정을 생성하시겠습니까?')) {
+		if (confirm('계정을 생성하시겠습니까?')==true) {
 			return true;
 		} else {
 			return false;
@@ -657,7 +656,7 @@ function incheck() {
 	}
 
 	if (cCheck == true && pCheck == true && prCheck == true) {
-		if (confirm('계정을 생성하시겠습니까?')) {
+		if (confirm('계정을 생성하시겠습니까?')==true) {
 			return true;
 		} else {
 			return false;

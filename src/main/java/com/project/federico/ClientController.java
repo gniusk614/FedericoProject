@@ -38,7 +38,9 @@ import service.SendService;
 import vo.CartVO;
 import vo.ClientVO;
 import vo.FranchiseVO;
+import vo.HeadOfficeVO;
 import vo.MenuVO;
+import vo.StaffVO;
 
 @RequestMapping(value = "/client")
 @Log4j
@@ -58,18 +60,6 @@ public class ClientController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
 	
 	
 	
@@ -257,6 +247,7 @@ public class ClientController {
 	@RequestMapping(value = "/addCartNM")
 	public ModelAndView addCartNoneMember(ModelAndView mv, HttpSession session, MenuVO menuVo, CartVO cartVo) {
 		List<CartVO> list = null;
+		System.out.println(session.getAttribute("list"));
 		if (session.getAttribute("list") != null) {
 			list = (List<CartVO>) session.getAttribute("list");
 		} else {
@@ -479,5 +470,54 @@ public class ClientController {
 
 		return mv;
 	}
+	
+	// 회원가입창 이동
+		@RequestMapping(value = "clientJoinf")
+		public ModelAndView clientJoinf(ModelAndView mv) {
+			String uri = "client/clientJoinForm";
+			mv.setViewName(uri);
+			return mv;
+		}
+		// 회원가입창 이동
+		@RequestMapping(value = "clientJoin2ndf")
+		public ModelAndView clientJoinf2ndf(ModelAndView mv, ClientVO vo) {
+			mv.addObject("clientName", vo.getClientName());
+			mv.addObject("clientPhone", vo.getClientPhone());
+			mv.addObject("smsCheck", vo.getSmsCheck());
+			mv.addObject("emailCheck", vo.getEmailCheck());
+			
+			String uri = "client/clientJoinFormDetail";
+			mv.setViewName(uri);
+			return mv;
+		}
+		
+		//selectOne
+		@RequestMapping(value = "/clientSelectOne")
+		public ModelAndView clientSelectOne(ModelAndView mv, ClientVO vo) throws ServletException, IOException {
+			vo = clientService.selectOne(vo);
 
+			if (vo != null)
+				mv.addObject("cleintDetail", vo); // MyBatis 에선 null , size()>0 으로 확인
+			else
+				mv.addObject("message", "정보가 없습니다.");
+			mv.setViewName("jsonView");
+			return mv;
+		}// login	
+		
+		@RequestMapping(value = "clientJoin")
+		public ModelAndView clientJoin(ModelAndView mv, ClientVO vo , RedirectAttributes rttr) {
+
+			vo.setClientPassword(passwordEncoder.encode(vo.getClientPassword()));
+			
+			if (clientService.insertClient(vo) > 0) {
+				rttr.addAttribute("message", "계정생성이 완료되었습니다.");
+			} else {
+				rttr.addAttribute("message", "계정생성이 실패하였습니다");
+			}
+
+			mv.setViewName("redirect:clientLoginf");
+			return mv;
+		}// join
+		
+		
 }// clientController
