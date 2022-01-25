@@ -52,7 +52,7 @@ a {
 				
 					<c:if test="${empty clientLoginID}">
 						<div>
-							<a href="#" style="color:white;">회원가입</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="clientJoinf" style="color:white;">회원가입</a>&nbsp;&nbsp;&nbsp;&nbsp;
 						</div>
 						<div>
 							<a href="clientLoginf" style="color:white;">로그인</a>&nbsp;&nbsp;&nbsp;&nbsp;

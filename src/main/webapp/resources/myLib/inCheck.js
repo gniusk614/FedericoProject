@@ -109,10 +109,78 @@ function fcpwrpCheck(){
 }//pwCheck
 
 
+//==============================< 고객계정 인체크(광훈) >=============================
 
+function clientIdCheck(){
+	var cid=$('#clientId').val(); 
+	if (cid.length<6) {
+		$('#cidMessage').html('6~12자리 길이로 입력하세요');
+		return false;
+	}else {
+		$('#cidMessage').html('');
+		return true;
+	}
+}//idCheck
 
+function clientPwCheck(){
+	var password=$('#clientPassword').val()
+	//** Password : 길이4이상, 영문자, 숫자와 특수문자는 1개 이상 포함
+	if (password.length<8) {
+		$('#cpMessage').html('password는 8자리 이상 입니다.');
+		return false;
+	}else if ( password.replace(/[!-*.@]/gi,'').length >= password.length ) {
+		$('#cpMessage').html('password는 특수문자가 반드시 1개 이상 포함되어야 합니다.');
+		return false;
+	}else if ( password.replace(/[a-z.0-9.!-*.@]/gi ,'').length > 0 ) {
+		$('#cpMessage').html('password는 영문자, 숫자, 특수문자로만 입력하세요');
+		return false;
+	}else {
+		$('#cpMessage').html('');
+		return true;
+	}
+}//pwCheck
 
-		
+function clientPwrpCheck(){
+	var passwordRepeat=$('#clientPasswordRepeat').val()
+	//** Password : 길이4이상, 영문자, 숫자와 특수문자는 반드시 1개 이상 포함할것
+	if (passwordRepeat != $('#clientPassword').val()) {
+		$('#cprMessage').html('비밀번호가 일치하지 않습니다.');
+		return false;
+	}else {
+		$('#cprMessage').html('');
+		return true;
+	}
+}//pwrCheck
 
+function clientAddressCheck(){
+	var cad=$('#addressDetail').val(); 
+	if (cad.length<1) {
+		$('#cadMessage').html('주소를 입력해주세요.');
+		return false;
+	}else {
+		$('#cadMessage').html('');
+		return true;
+	}
+}//addressCheck
 
+function clientEmailCheck(){
+	var cem=$('#inputEmail').val(); 
+	if (cem.length<1) {
+		$('#cemMessage').html('이메일을 입력해주세요');
+		return false;
+	}else {
+		$('#cemMessage').html('');
+		return true;
+	}
+}//emailCheck
 
+function clientEmailServerCheck(){
+	var cemser=$('#emailServer').val(); 
+	if (cemser.length<1) {
+		$('#cemMessage').html('이메일을 입력해주세요');
+		return false;
+	}else {
+		$('#cemMessage').html('');
+		return true;
+	}
+}//emailCheck
