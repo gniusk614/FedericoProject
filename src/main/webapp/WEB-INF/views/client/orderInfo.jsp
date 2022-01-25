@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,15 +13,21 @@
 <meta name="author" content="" />
 <title>페데리꼬 피자</title>
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
 <link rel="icon" type="image/x-icon"
 	href="/federico/resources/Image/LOGO.png" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
 <link href="/federico/resources/css/styles.css" rel="stylesheet" />
 
+<script>
+
+
+
+</script>
 
 </head>
 <body>
-	<!-- Navigation-->
+	<!-- Navigation-->	
 	<%@include file="nav.jsp"%>
 	
 	<!-- Section--> 
@@ -129,7 +136,17 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</div><br><hr><br>	
+				<!-- 결제방식 고르기 -->
+				<span class="fs-4">결제수단 선택</span><br>
+					<div class="form-check form-check-inline mt-3">
+					  <input class="form-check-input" type="radio" name="radioPay" id="radioCard" value="card">
+					  <label class="form-check-label" for="radioCard">카드결제</label>
+					</div>&nbsp;&nbsp;&nbsp;
+					<div class="form-check form-check-inline mb-3">
+					  <input class="form-check-input" type="radio" name="radioPay" id="radioKakao" value="kakao">
+					  <label class="form-check-label" for="radioKakao">카카오페이</label>
+					</div>					
 				<!-- 주문자 정보 -->
 				<br><hr><br>
 				<span class="fs-4">주문자 정보</span>
@@ -137,20 +154,24 @@
 				<div class="container" style="width: 800px;">
 					<div id="client_Name">${clientName}</div>
 					<hr>
-					<div id="client_Phone">${clientPhone}</div>
+					<div id="client_Phone">${fn:substring(vo.clientPhone,0,3)}-${fn:substring(vo.clientPhone,3,7)}-${fn:substring(vo.clientPhone,7,10)}</div>
 					<hr>
-					<div class="input-group">
+					<div class="input-group mb-3">
 						<input type="text" id="clientMemo" class="form-control" size="80" placeholder="주문 시 요청사항 (40자 까지 입력가능)">
 					</div>
-				</div><!-- 주문자 정보 -->
+				</div>
 			</div>
 			<hr><br>				
 			<div align="center">
-				<button type="button" class="btn btn-danger" id="kakaoPayBtn" onclick="kakaoPay()" disabled="disabled">
-					주문 결제 하기
+				<button type="button" class="btn btn-danger btn-lg" id="payBtn" onclick="alert('결제수단을 선택해주세요.')" style="font-size: 2rem; width: 250px;" disabled="disabled">
+					결제 하기
 				</button>
 			</div>
-			
+			<!-- iam페이 용 데이터 숨기기 -->
+			<form action="ordercomplete?iam=iam" method="post" id="iamForm">
+				<input id="iamfcId" name="fcId" type="hidden" value="">
+				<input id="iamMemo" name="memo" type="hidden" value="">
+			</form>
 			
 			
 			

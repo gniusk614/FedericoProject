@@ -9,7 +9,7 @@
 
 
 
-// ============================= 가맹점 주문조회 관련 (현구) =======================================
+// ============================= 가맹점 홈화면 (현구) =======================================
 
 // 상세주문조회 닫힐시 모달 clear
 $(function() {
@@ -19,8 +19,6 @@ $(function() {
 })
 
 
-
-
 //콤마찍기
 function comma(str) {
 	str = String(str);
@@ -28,8 +26,31 @@ function comma(str) {
 }
 
 
+// 배달소요시간 변경
+function updateDeliveryTime(){
+	
+	$.ajax({
+		type: 'get',
+		url : 'updatedeliverytime',
+		data: {
+			deliveryTime: $('#deliveryTime').val(),
+			fcId: $('#fcId').attr('data-fcid')
+		},
+		success: function(data){
+			if(data.success = 'success'){
+				location.reload;
+			}
+		},
+		error: function(){
+			alert('통신 에러입니다\n다시 시도해주세요.');
+			location.reload;
+		}
+	}) //ajax
+}
+
+
 // 상세주문정보 모달 열기
-function showOrderDetail(orderNumber){
+function showOrderDetail(orderNumber, clientAdrress){
 	
 	$.ajax({
 		type: 'get',
@@ -53,6 +74,9 @@ function showOrderDetail(orderNumber){
 								+ sumRow + '</td></tr>');// append
 			}) // each
 			sumCol = comma(sumCol);
+			$('#clientAdrress').html(clientAdrress);
+			$('#detailNumber').html(orderNumber);
+			$('#orderCompleteBtn').attr('onclick','orderComplete(' + orderNumber + ')');
 			$('#orderDetailFooter').html('합계 : ' + sumCol);
 				
 			$('#orderDetailModal').modal('show');
@@ -64,9 +88,29 @@ function showOrderDetail(orderNumber){
 			console.log('ajax실패');
 		}
 	})//ajax
-	
-	
-	
+}
+
+
+// 주문 완료처리
+function orderComplete(orderNumber){
+	$.ajax({
+		type: 'get',
+		url: 'ordercomplete',
+		data: {
+			orderNumber: orderNumber
+		},
+		success: function(data){
+			if(data.success == 'success'){
+				location.reload();
+			} else{
+				alert('통신 장애로 요청이 실패했습니다.\n다시 시도해주세요.')
+				$('#orderDetailModal').modal('hide');
+			}
+		},
+		error: function(){
+			
+		}	
+	}) //ajax
 }
 
 
@@ -77,13 +121,8 @@ function showOrderDetail(orderNumber){
 
 
 
+// ============================= 가맹점 홈화면 (현구) =======================================
 
-
-
-
-
-
-// ============================= 가맹점 주문조회 관련 (현구) =======================================
 
 
 

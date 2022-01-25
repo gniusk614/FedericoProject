@@ -14,20 +14,66 @@ $(function(){
 	// 가맹점 선택해야 주문결제클릭 가능하도록.
 	$('#selectFranchise').change(function(){
 		if($('#selectFranchise').val() != "null" && $('#selectFranchise').val() != "default"){
-			$('#kakaoPayBtn').attr('disabled',false);
+			$('#payBtn').attr('disabled',false);
 		} else {
-			$('#kakaoPayBtn').attr('disabled',true);
+			$('#payBtn').attr('disabled',true);
 		}
 	})//kakaoPayBtn change
 	
-	
-	
+	// 카드결제,카카페이 라디오버튼에 따라 onclick 메서드 바꿔주기
+	$('#radioCard').click(function(){
+		$('#payBtn').attr('onclick','iamPort()')
+		
+	})
+	$('#radioKakao').click(function(){
+		$('#payBtn').attr('onclick','kakaoPay()')
+	})
 	
 }) //ready
 
 
+// iamPort 결제 
+function iamPort(){
+	var today =  new Date();
+	var hour = today.getHours();
+	var minute = today.getMinutes();
+		
+	
+	$('#iamfcId').val($('#selectFranchise').val());
+	$('#iamMemo').val($('#clientMemo').val());	
+	
+	console.log("fcid => "+$('#iamfcId').val());
+	console.log("memo => "+$('#iamMemo').val());
+	
+	var itemQty = $('#save').attr('data-totalQty');
+	var menuName = $('#menuName0').html();
+	if($('#menuName1').html() != null){
+		menuName = $('#menuName0').html() + ' 외';
+	} 			
+	
+	IMP.init('imp15641198'); 	
+	IMP.request_pay({ 
+	    pg: "inicis",
+	    pay_method: "card",
+	    merchant_uid: $('#client_Name').html()+hour+minute,
+	    name: menuName,
+	    amount: 100,
+	    buyer_name: $('#client_Name').html(),
+	    buyer_tel: $('#client_Phone').html(),
+	    buyer_addr: $('#client_address').html(),
+	    buyer_postcode: "01181"
+	}, function (rsp) { 
+	    if (rsp.success) {
+	        $('#iamForm').submit();
+	    } else {
+	    	alert('결제가 실패되었습니다.\n다시 시도해주세요.')
+	    }
+	});
+}
 
-// 주문결제버튼 -> 카카오페이 결제진행
+
+
+// 카카오페이 결제
 function kakaoPay(){
 	
 	var menuName = $('#menuName0').html();

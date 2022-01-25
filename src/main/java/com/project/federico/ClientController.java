@@ -69,11 +69,22 @@ public class ClientController {
 	
 	// 카카오페이 결제완료폼 이동 + 주문정보 인서트
 	@RequestMapping(value = "/ordercomplete")
-	public ModelAndView ordercomplete(ModelAndView mv, HttpSession session, ClientVO clientVo) {
+	public ModelAndView ordercomplete(ModelAndView mv, HttpServletRequest request, HttpSession session, ClientVO clientVo) {
 		List<CartVO> list = (List<CartVO>)session.getAttribute("list");
 		Map<String, Object> params = new HashMap<String, Object>();
-		String fcId = (String)session.getAttribute("fcId");
-		String memo = (String)session.getAttribute("memo");
+		String fcId;
+		String memo;
+		
+		
+		// iampay 일 경우
+		if("iam".equals(request.getParameter("iam"))){
+			fcId = request.getParameter("fcId");
+			memo = request.getParameter("memo");
+		}else {
+			fcId = (String)session.getAttribute("fcId");
+			memo = (String)session.getAttribute("memo");
+		}
+		
 		
 		// map에 인서트할 값 세팅
 		if(session.getAttribute("clientLoginID") != null) {
@@ -114,6 +125,10 @@ public class ClientController {
 				}
 				session.removeAttribute("listSize");
 			}
+			
+			//해당가맹점 배달소요시간 조회
+			String deliveryTime = fcService.selectDeliveryTimebyFcId(fcId);
+			mv.addObject("deliveryTime", deliveryTime);
 		}
 		mv.setViewName("client/orderComplete");
 		return mv;
@@ -124,11 +139,6 @@ public class ClientController {
 	  @RequestMapping(value = "/kakaoPay") 
 	  @ResponseBody
 	  public String kakaoPay(HttpServletRequest request) { 
-		  log.info("123"+request.getParameter("partner_order_id"));
-		  log.info("123"+request.getParameter("partner_user_id"));
-		  log.info("123"+request.getParameter("item_name"));
-		  log.info("123"+request.getParameter("quantity"));
-		  log.info("123"+request.getParameter("total_amount"));
 		  if(request.getSession(false) != null) {
 			  request.getSession(false).setAttribute("fcId", request.getParameter("fcId"));
 			  request.getSession(false).setAttribute("memo", request.getParameter("memo"));
@@ -162,7 +172,7 @@ public class ClientController {
 			} else {
 				input = connection.getErrorStream();
 			}
-			InputStreamReader reader = new InputStreamReader(input);
+			InputStreamReader reader = new InputStreamReader(input, "UTF-8");
 			BufferedReader bReader = new BufferedReader(reader);
 			return bReader.readLine();
 			
