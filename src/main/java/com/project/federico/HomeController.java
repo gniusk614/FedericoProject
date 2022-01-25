@@ -13,6 +13,7 @@ public class HomeController {
 	@RequestMapping(value = {"/home","/"})
 	public String home() {
 			System.out.println("거기있니?");
+			System.out.println("Federico님이 입장하셨습니다.");
 			return "redirect:client/home";
 	}
 
