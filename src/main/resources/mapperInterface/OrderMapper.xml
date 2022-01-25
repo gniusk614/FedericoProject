@@ -41,12 +41,41 @@
 
 
 	<!-- 주문 완료처리 -->
-<!-- 	<update id="">
-		UPDATE orderlist SET completeyn = 'Y' WHERE 
-	</update> -->
+	<update id="orderComplete">
+		UPDATE orderlist SET completeyn = 'Y' WHERE ordernumber = #{orderNumber}
+	</update>
 
 
-
+	<!-- 완료주문 searchOrderRows -->
+	<select id="searchCompleteOrderRows" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) FROM orderlist 
+		<include refid="completeOrderSearch"></include>
+			AND completeyn = 'Y' AND fcid = #{vo.fcId}
+	</select>  
+	
+	<!-- 완료주문 서치,페이징 -->
+	<select id="searchCompleteOrder" parameterType="hashmap" resultType="vo.OrderListVO" >
+		SELECT * FROM orderlist
+		 <include refid="completeOrderSearch"></include>
+		AND completeyn = 'Y' AND fcid = #{vo.fcId}
+		ORDER BY ordernumber desc
+		OFFSET #{cri.sno}-1 ROWS FETCH NEXT #{cri.rowsPerPage} ROWS ONLY 
+	</select>
+	
+	<sql id="completeOrderSearch">
+		<if test="cri.keyword != null">
+			<bind name="keyVal" value="'%'+cri.keyword+'%'"/>
+		</if>
+		<choose>
+			<when test="cri.searchType == 'orderNumber'.toString()">
+				WHERE fcId like #{keyVal}
+			</when>
+			<when test="cri.searchType == 'orderDate'.toString()">
+				WHERE fcId like #{keyVal}
+			</when>
+			<otherwise>WHERE 1=1</otherwise>
+		</choose>
+	</sql>
 
 
 

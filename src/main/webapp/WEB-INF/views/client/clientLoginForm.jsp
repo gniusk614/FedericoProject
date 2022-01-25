@@ -22,7 +22,6 @@
 	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script
 	src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-  <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-{SDK-Version 1.2.0}.js"></script>
 <style>
 .checked {
 	border-bottom: 2px solid black;
@@ -242,7 +241,7 @@ table, tr, td, th {
 								<div class="row" style="height: 100px;">
 									<div
 										class="d-flex align-items-center justify-content-between mb-0">
-										<button class="btn btn-outline-danger" type="submit"
+										<button class="btn btn-outline-danger" type="submit" onclick="javaScrip:location.href='clientJoinf'"
 											style="width: 100%; height: 60px; font-size: large;">회원가입</button>
 									</div>
 								</div>
@@ -281,7 +280,7 @@ table, tr, td, th {
 					<div class="card">
 						<div class="card-header">
 							<i class="bi bi-person-check"></i>
-							개인정보 처리방침</a>
+							개인정보 처리방침
 						</div>
 						<div class="card-body" style="overflow: auto; height: 500px;">
 							<pre>
@@ -507,14 +506,6 @@ table, tr, td, th {
 			</div>
 		</div>
 	</div>
-	</div>
-
-
-
-
-
-
-
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

@@ -57,7 +57,7 @@
 							</thead>
 							<tbody>
 								<c:if test="${empty orderList}">
-									<tr><th colspan="6"><span>미처리 주문정보가 없습니다.</span></th></tr>
+									<tr align="center"><th colspan="6"><span>미처리 주문정보가 없습니다.</span></th></tr>
 								</c:if>								
 								<c:forEach var="vo" items="${orderList}">
 
@@ -67,35 +67,41 @@
 										<td style="width: 30%">${vo.memo}</td>
 										<td style="width: 10%">${fn:substring(vo.clientPhone,0,3)}-${fn:substring(vo.clientPhone,3,7)}-${fn:substring(vo.clientPhone,7,10)}</td>
 										<td style="width: 10%; padding-top: 4px;">
-											<span class="btn py-0" onclick="showOrderDetail(${vo.orderNumber})"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search" 
-											viewBox="0 0 16 16" >
+											<span class="btn py-0" onclick="showOrderDetail(${vo.orderNumber}, '${vo.clientAddress}')" >
+											<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" >
 											  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
 											</svg></span></td>																		
 										<td style="width: 10%">${vo.orderDate}</td>
 									</tr>
 								</c:forEach>
-								
-								
-								
 							</tbody>
 						</table><!-- 주문정보 나오는 테이블 -->
 				</div>
 			</div><!-- 메인화면 주문현황 -->
+		<a href="completeOrder">완료주문조회 test경로</a>
+		
+		
+		
+		
 		
 			<!-- 주문상세정보 모달 -->
 			<div class="modal fade " id="orderDetailModal" tabindex="-1">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title">주문상세정보 - <span id="detailNumber">1</span>번</h5>
+							<h5 class="modal-title">주문상세정보 - <span id="detailNumber"></span>번</h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<!-- "modal-body" -->
 						<div class="modal-body">
 							<!-- table head -->
+							<div class="mb-2">
+								<span class="fw-bold">배송지</span><br>
+								<span id="clientAdrress"></span>
+							</div>
 							<div>
-								<span>고객 요청사항</span><br>
-								<span id="memo">이이이</span>
+								<span class="fw-bold">고객 요청사항</span><br>
+								<span id="memo"></span>
 							</div>
 							<hr>
 							<table class="table">
@@ -119,8 +125,9 @@
 						</div>
 						<!-- modal-body -->
 						<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>&nbsp;&nbsp;
-										<button type="button" class="btn btn-danger" id="">완료처리</button>
+										<button type="button" class="btn btn-secondary" >닫기</button>&nbsp;&nbsp;
+										<button type="button" class="btn btn-primary" >인쇄</button>&nbsp;&nbsp;
+										<button type="button" class="btn btn-danger" id="orderCompleteBtn">완료처리</button>
 								</div>
 							</div>
 						</div>

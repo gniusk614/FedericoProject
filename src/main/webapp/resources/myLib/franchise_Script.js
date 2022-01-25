@@ -49,9 +49,8 @@ function updateDeliveryTime(){
 }
 
 
-
 // 상세주문정보 모달 열기
-function showOrderDetail(orderNumber){
+function showOrderDetail(orderNumber, clientAdrress){
 	
 	$.ajax({
 		type: 'get',
@@ -75,6 +74,9 @@ function showOrderDetail(orderNumber){
 								+ sumRow + '</td></tr>');// append
 			}) // each
 			sumCol = comma(sumCol);
+			$('#clientAdrress').html(clientAdrress);
+			$('#detailNumber').html(orderNumber);
+			$('#orderCompleteBtn').attr('onclick','orderComplete(' + orderNumber + ')');
 			$('#orderDetailFooter').html('합계 : ' + sumCol);
 				
 			$('#orderDetailModal').modal('show');
@@ -89,7 +91,27 @@ function showOrderDetail(orderNumber){
 }
 
 
-
+// 주문 완료처리
+function orderComplete(orderNumber){
+	$.ajax({
+		type: 'get',
+		url: 'ordercomplete',
+		data: {
+			orderNumber: orderNumber
+		},
+		success: function(data){
+			if(data.success == 'success'){
+				location.reload();
+			} else{
+				alert('통신 장애로 요청이 실패했습니다.\n다시 시도해주세요.')
+				$('#orderDetailModal').modal('hide');
+			}
+		},
+		error: function(){
+			
+		}	
+	}) //ajax
+}
 
 
 

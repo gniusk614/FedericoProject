@@ -1,7 +1,9 @@
 package com.project.federico;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,10 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.log4j.Log4j;
+import paging.PageMaker;
+import paging.SearchCriteria;
 import service.FranchiseService;
 import service.OrderService;
 import vo.FranchiseVO;
 import vo.HeadOfficeVO;
+import vo.ItemInfoVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
 
@@ -70,9 +75,46 @@ public class FranchiseController {
 		return mv;
 	}
 	
+	// 주문 완료처리
+	@RequestMapping(value = "/ordercomplete")
+	public ModelAndView orderComplete(ModelAndView mv, OrderListVO vo) {
+		log.info("dfsfsfsdf"+vo.getOrderNumber());
+		if (orderService.orderComplete(vo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
 	
-	
-
+	// 완료주문 조회
+	@RequestMapping(value = "/completeOrder")
+	public ModelAndView completeOrder(ModelAndView mv, HttpSession session, SearchCriteria cri, PageMaker pageMaker, FranchiseVO fcVo) {
+		if (session.getAttribute("fcId") != null) {
+			Map<String, Object> parmas = new HashMap<String, Object>();
+			cri.setSnoEno();
+			fcVo.setFcId((String)session.getAttribute("fcId"));
+			parmas.put("vo", fcVo);
+			parmas.put("cri", cri);
+			List<OrderListVO> list = orderService.searchCompleteOrder(parmas);
+			
+			if (list != null && list.size() > 0) {
+				mv.addObject("completeList", list);
+			} else {
+				mv.addObject("message", "조회된 자료가 없습니다.");
+			}
+			
+			pageMaker.setCri(cri);
+			pageMaker.setTotalRowCount(orderService.searchCompleteOrderRows(parmas));
+			
+			mv.setViewName("franchise/searchOrderCompleteY");
+		} else {
+			mv.setViewName("franchise/loginf");
+		}
+		return mv;
+	}
 
 
 	
