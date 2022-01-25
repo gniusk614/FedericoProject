@@ -45,7 +45,7 @@ a {
 					<li class="nav-item"><a class="nav-link active"
 						aria-current="page" href="#!">이벤트&nbsp;&nbsp;</a></li>
 					<li class="nav-item"><a class="nav-link active"
-						aria-current="page" href="#!">매장찾기&nbsp;&nbsp;</a></li>
+						aria-current="page" href="fcSearch">매장찾기&nbsp;&nbsp;</a></li>
 					<li class="nav-item"><a class="nav-link active"
 						aria-current="page" href="#!">고객게시판&nbsp;&nbsp;</a></li>
 				</ul>

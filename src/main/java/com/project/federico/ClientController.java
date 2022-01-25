@@ -60,8 +60,12 @@ public class ClientController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
-	
-	
+// 매장찾기(카카오맵 API) 삽입 시작 ======<민석>=========================
+	@RequestMapping(value = "/fcSearch")
+	public ModelAndView fcSearch(ModelAndView mv) {
+		mv.setViewName("client/fcSearch");
+		return mv;
+	}// fcSearch
 	
 	// 카카오페이 결제완료폼 이동 + 주문정보 인서트
 	@RequestMapping(value = "/ordercomplete")

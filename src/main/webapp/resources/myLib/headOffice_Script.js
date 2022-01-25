@@ -729,6 +729,7 @@ function uncomma(str) {
 
 // 자재등록 값체크 및 자재등록 메서드 실행
 function itemInsertCheck() {
+	
 	var i_name = $('#itemname').val();
 	var i_unit = $('#itemunit').val();
 	var i_price = $('#itemprice').val();
@@ -981,50 +982,69 @@ function fcOrderFlagUpdate(flag) {
 
 //===< 메뉴관련(민석) >========!!시작!!====================================
 
-		
 
 
-function menuDelete() {
-	console.log("menuDelete start");
 
-	if (confirm('정말 삭제하시겠습니까?')) {
+	// menuUpdateFrom()
+	
+	function menuUpdateForm(menuIndex){
 		
 		$.ajax({
-			type:"get",
-			url:"menuList",
+			type:'get',
+			url:'menuDetail?menuIndex='+menuIndex,
 			data:{
-				menuIndex:$('menuIndex').val()
-				},
-			success : function(data) {
-				if(data.success=='success')
-				console.info();
-				location.reload();
-				},
-				error:function(){
-				alert("메뉴가 삭제되지 않았습니다.")
-				console.info();
-				console.warn();	
-				}
+				menuIndex : menuIndex,
+			},
+			success:function(data) {
 				
+				$('#upmenuIndex').val(data.menuvo.menuIndex);
+				$('#upmenuName').val(data.menuvo.menuName);				
+				$('#upmenuIntro').val(data.menuvo.menuIntro);
+				$('#upmenuPrice').val(data.menuvo.menuPrice);
+				$('#upbeforemenuImage').attr("src",data.menuvo.menuImage);
+				$('#menuImage').val(data.menuvo.menuImage);
+				console.log("data throw test");
+				console.log("menuIndex =>"+data.menuvo.menuIndex);
+				console.log("menuName =>"+data.menuvo.menuName);
+				console.log("menuIntro =>"+data.menuvo.menuIntro);
+				console.log("menuFlag =>"+data.menuvo.menuFlag);
+				console.log("menuImg =>"+data.menuvo.menuImage);			
+			
+				// when 절로 update 할 것 
+				if(data.menuvo.menuFlag == 'pizza'){
+					$('#upmenuFlag option:eq(0)').prop('selected',true);
+				}if (data.menuvo.menuFlag == 'sets'){
+					$('#upmenuFlag option:eq(1)').prop('selected',true);
+				}else {
+					$('#upmenuFlag option:eq(2)').prop('selected',true);
+				}
+						
+				//$('#menuUpdatef1').load('menuUpdatef.jsp #menuUpdatef');				
+				$('#menuUpdatef').modal('show');
+				console.log("전송 성공");				
+			},error:function(){
+				console.log("전송 실패");
+				alert("전송에 실패하였습니다.");
+			}
+			
+		})//ajax
+	
+	}//menuUpdateForm
+		 
+	// menuDelete
+	function menuDelete(menuIndex) {
+		if(confirm("해당 메뉴를 삭제하시겠습니까?"))
+		
+	$.ajax({
+		type:'post',
+		url:'menuDelete?menuIndex='+menuIndex,
+		datatype:'json',
+		success:function (data) { 
+			// location.reload();	
+		    $('#t_menuselect').load('menuList #t_menuselect');		
+		},error:function() {
+			alert("삭제 실패")
+		}	
+		
 		})// ajax
-		}// if	
-		}//menuDelete
-
-// ===============< 사원리스트 스크립트(광훈) >============================
-// 테이블 페이징기능
-// $("#table_id").DataTable();
-
-// ** 검색기능
-// SearchType 이 '---' 면 keyword 클리어
-/*
- * $('#searchType').change(function() { // if ($(this).val()=='n')
- * $('#keyword').val(''); }); // change // 검색후 요청 $('#searchBtn').on( "click",
- * function() { self.location = "mcplist" + "${pageMaker.makeQuery(1)}" +
- * "&searchType=" + $('#searchType').val() + '&keyword=' + $('#keyword').val()
- * }); // on_click
- */
-
-// ===============< 프랜차이즈계정 정보(광훈) >============================
-// ** 돋보기 눌렀을때 모달창 띄우기
-
-
+	}//menuDelete(menuIndex)	

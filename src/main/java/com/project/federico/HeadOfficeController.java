@@ -2,21 +2,33 @@ package com.project.federico;
 
 import java.io.File;
 import java.io.IOException;
+
+import java.net.URI;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import java.security.Principal;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
 
+import org.apache.jasper.tagplugins.jstl.core.Url;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -484,7 +496,9 @@ public class HeadOfficeController {
 	// 가맹점 insert (강광훈)
 	@RequestMapping(value = "/fcinsert")
 	public ModelAndView fcInsert(ModelAndView mv, FranchiseVO vo) {
-
+		
+		
+		
 		vo.setFcPassword(passwordEncoder.encode(vo.getFcPassword()));
 		System.out.println(vo.getFcId());
 		System.out.println(vo.getFcName());
@@ -577,26 +591,36 @@ public class HeadOfficeController {
 		return mv;
 	}// menuList end
 	
+
+	
 	@RequestMapping(value = "/menuInsert") // 민석
 	public ModelAndView menuInsert(HttpServletRequest request, ModelAndView mv, MenuVO vo,RedirectAttributes rttr) 
 		 	throws IOException {
-		System.out.println("11111"+vo.getMenuUploadfilef().toString());
-		System.out.println("222222"+vo.getMenuUploadfilef());
+		// 날짜폴더자동생성
+		/*
+		String uploadFolder = "C:/Users/19467/git/FedericoProject/src/main/webapp/resources/uploadImage/menuImage/";
+		File uploadPath = new File(uploadFolder, getFolder());
+		log.info("upload path"+uploadPath);
+		if(uploadPath.exists()==false)
+			uploadPath.mkdirs();
+			*/	
 		
 		// Form을 이용한 파일 업로드 방식
-	log.info("before getRealPath");
+
 		// 1) 현재 웹어플리케이션의 실행 위치 확인 : 
+		
+		
 		String realPath = request.getRealPath("/"); // deprecated Method
 		System.out.println("** realPath => "+realPath);
-	log.info("before SaveTrack check");
+
 		// 2) 위 의 값을 이용해서 실제저장위치 확인 
 		// 경로는 각자의 경로로 바꾸시면 좋을 것 같습니다~
 		if (realPath.contains(".eclipse."))
-			 realPath = "C:\\Users\\Administrator\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage\\menuImage\\";
-		
+
+			 realPath = "C:/Users/19467/git/FedericoProject/src/main/webapp/resources/uploadImage/menuImage/";
 		// realPath = "D:/MTest/MyWork/Spring02/src/main/webapp/resources/"+vo.getId()+"/";
 		else realPath += "/federico/resources/uploadImage/";
-	log.info("before get folder");
+
 		// ** 폴더 만들기 (File 클래스활용)
 		File f1 = new File(realPath);
 		if ( !f1.exists() ) f1.mkdir();
@@ -608,7 +632,7 @@ public class HeadOfficeController {
 			// Image 를 선택했음 -> Image 처리 (realPath+화일명)
 			// 1) 물리적 위치에 Image 저장 
 			file1=realPath + uploadfilef.getOriginalFilename(); //  전송된File명 추출 & 연결
-			System.out.println(file1);
+		
 			uploadfilef.transferTo(new File(file1)); // real 위치에 전송된 File 붙여넣기
 			// 2) Table 저장위한 경로 
 			file2 = "/federico/resources/uploadImage/menuImage/"+ uploadfilef.getOriginalFilename();
@@ -616,18 +640,21 @@ public class HeadOfficeController {
 		vo.setMenuImage(file2);
 		
 		// 2. Service 처리
+
 		String uri = null;
 		
+
 		if(menuService.menuInsert(vo)>0) {
 			mv.addObject("message",vo.getMenuName()+"입력이 완료되었습니다.");
 			mv.addObject("success","success");
+			uri = "redirect:menuList";
 			
 			uri="redirect:menuList";
 			
 		}else {
 			mv.addObject("message",vo.getMenuName()+"입력이 실패하였습니다.");
 			mv.addObject("success","fail");
-			
+			uri = ""; // 실패했을 때 
 		}
 			
 		mv.setViewName(uri);
@@ -637,7 +664,7 @@ public class HeadOfficeController {
 	// Ajax를 이용한 파일 업로드 방식
 		log.info("upload Ajax");
 		
-		String uploadFolder = "C:\\Users\\19467\\git\\FedericoProject\\src\\main\\webapp\\resources\\uploadImage";
+		String uploadFolder = "C:/Users/19467/git/FedericoProject/src/main/webapp/resources/uploadImage";
 		
 		for(MultipartFile multipartFile : uploadFile) {
 			log.info("----------------------------------------");
@@ -646,7 +673,7 @@ public class HeadOfficeController {
 			
 			String uploadFileName = multipartFile.getOriginalFilename();
 			//IE has file path
-			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\")+1);
+			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("/")+1);
 			
 			log.info("only File Name : "+ uploadFile);
 			File saveFile = new File(uploadFolder, uploadFileName);
@@ -661,30 +688,94 @@ public class HeadOfficeController {
 		
 	} // end method
 	
-	@RequestMapping(value = "/menuUpdate")
-	public ModelAndView menuUpdate(ModelAndView mv,MenuVO vo) {
+	@RequestMapping(value = "/menuUpdate")	
+	public ModelAndView menuUpdate(HttpServletRequest request, 
+			ModelAndView mv,MenuVO vo,RedirectAttributes rttr ) 
+	throws IOException{
+		/*
+		 성공시 :
+		 1. 수정된 정보 확인 => list로 이동
+		 2. image 추가 : 
+		  image 수정여부 확인 
+		  => 수정하지 않은경우 vo에 전달된 menuImage 값을 사용
+		  => 수정시에만 변경처리.		  	  
+		 */
+		System.out.println("Index =>"+vo.getMenuIndex());
+		System.out.println("flag =>"+vo.getMenuFlag());
+		System.out.println("Image =>"+vo.getMenuImage());
+		System.out.println("Intro =>"+vo.getMenuIntro());		
+		System.out.println("Name =>"+vo.getMenuName());
+		System.out.println("Price =>"+vo.getMenuPrice());
+		System.out.println("menuUploadfilef =>"+vo.getMenuUploadfilef());
 		
-		if(menuService.menuUpdate(vo) > 0) {
-			mv.addObject("success", "success");
-		} else {
-			mv.addObject("success", "fail");
+	
+		
+		MultipartFile uploadfilef = vo.getMenuUploadfilef();
+		
+		String file1, file2;
+		
+		if(uploadfilef != null && !uploadfilef.isEmpty()) {
+			String realPath = request.getRealPath("/");
+			
+			if(realPath.contains(".eclips."))
+				realPath = "C:/Users/19467/git/FedericoProject/src/main/webapp/resources/uploadImage/menuImage/";
+			else {
+				realPath += "/resources/uploadImage/menuImage/";	
+			}
+			File f1 = new File(realPath);
+			if ( !f1.exists()) f1.mkdir();
+		// 전송된 file 처리 
+		
+		// 이미지 붙여넣기.
+			file1=realPath + uploadfilef.getOriginalFilename();
+			uploadfilef.transferTo(new File(file1));
+			
+			file2 = "/federico/resources/uploadImage/menuImage/"+ uploadfilef.getOriginalFilename();
+			vo.setMenuImage(file2);
+			System.out.println("Image =>"+vo.getMenuImage());
+			System.out.println("Image =>"+ uploadfilef.getOriginalFilename());
 		}
-		mv.setViewName("jsonView"); 
+			
+		String uri = null;
+			
+		if(menuService.menuUpdate(vo) > 0) {
+			rttr.addFlashAttribute("success","수정완료");
+//			request.getSession().setAttribute("loginName", vo.getName());
+			uri = "redirect:menuList";
+		} else { rttr.addFlashAttribute("success","수정실패");
+		uri = ""; // 실패시 이동페이지
+		
+		}
+		mv.setViewName(uri); 
 		return mv;
 		
 	} //mupdate
 	
+	@RequestMapping(value = "/menuDetail")
+	public ModelAndView menuDetail(ModelAndView mv, MenuVO vo) {
+		
+		vo = menuService.selectMenuOne(vo);
+		
+		if(vo != null) { 
+			mv.addObject("menuvo",vo);
+			mv.addObject("success","success");
+		
+		}else mv.addObject("success","Fail");
+		mv.setViewName("jsonView");
+			
+		return mv;
+	}
+	
+	
+
 	@RequestMapping(value = "/menuDelete")
 	public ModelAndView menuDelete(ModelAndView mv,MenuVO vo) {
-		
-		if(menuService.menuDelete(vo) > 0) {
-			mv.addObject("success", "success");
-		} else {
-			mv.addObject("success", "fail");
-		}
+					
+		if(menuService.menuDelete(vo) > 0) 
+     	     mv.addObject("success", "T");
+		else mv.addObject("success", "F");
 		mv.setViewName("jsonView"); 
 		return mv;
-		
 		
 	} //mupdate
 
