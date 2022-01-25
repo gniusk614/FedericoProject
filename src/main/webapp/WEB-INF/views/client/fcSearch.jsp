@@ -39,8 +39,6 @@
 	
 	<section style="width: auto; height: 100%;">
 	
-	
-	
 	<!-- 지도 표시 -->
 		<div id="map" style="width:100%;height:90%;position: relative;overflow: hidden;"></div>
 		
