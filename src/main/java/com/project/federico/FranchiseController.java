@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import lombok.extern.log4j.Log4j;
 import service.FranchiseService;
 import service.OrderService;
+import vo.FranchiseVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
 
@@ -39,7 +40,6 @@ public class FranchiseController {
 	public ModelAndView selectDetail(ModelAndView mv, OrderDetailListVO detailVo, @RequestParam("orderNumber") int orderNumber) {
 		List<OrderDetailListVO> detailList = new ArrayList<OrderDetailListVO>();
 		detailList = orderService.selectDetailbyOrderNumber(orderNumber);
-		log.info(detailList);
 		if(detailList.size() > 0 && detailList != null) {
 			mv.addObject("detailList",detailList);
 			mv.addObject("success", "success");
@@ -50,6 +50,21 @@ public class FranchiseController {
 		mv.setViewName("jsonView");
 		return mv;	
 	}
+	
+	// 배송소요시간 update
+	@RequestMapping(value = "/updatedeliverytime")
+	public ModelAndView updateDeliveryTime(ModelAndView mv, FranchiseVO vo) {
+		if (service.updateDeliveryTime(vo) > 1) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
 	
 	
 	// 프랜차이즈 home + 해당가맹점 주문내역 조회
@@ -64,8 +79,13 @@ public class FranchiseController {
 			orderListVo.setFcId((String)session.getAttribute("fcId"));
 			
 			list = orderService.selectFcOrderbyFcId(orderListVo);
-		    
+			
+			if(list.size()>0 && list != null) {
 			session.setAttribute("orderList", list);
+		    }
+			
+			session.setAttribute("deliveryTime", service.selectDeliveryTimebyFcId((String)session.getAttribute("fcId")));
+			
 		}
 		mv.setViewName("franchise/home");
 		return mv;

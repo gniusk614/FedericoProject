@@ -9,7 +9,7 @@
 
 
 
-// ============================= 가맹점 주문조회 관련 (현구) =======================================
+// ============================= 가맹점 홈화면 (현구) =======================================
 
 // 상세주문조회 닫힐시 모달 clear
 $(function() {
@@ -19,13 +19,35 @@ $(function() {
 })
 
 
-
-
 //콤마찍기
 function comma(str) {
 	str = String(str);
 	return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
 }
+
+
+// 배달소요시간 변경
+function updateDeliveryTime(){
+	
+	$.ajax({
+		type: 'get',
+		url : 'updatedeliverytime',
+		data: {
+			deliveryTime: $('#deliveryTime').val(),
+			fcId: $('#fcId').attr('data-fcid')
+		},
+		success: function(data){
+			if(data.success = 'success'){
+				location.reload;
+			}
+		},
+		error: function(){
+			alert('통신 에러입니다\n다시 시도해주세요.');
+			location.reload;
+		}
+	}) //ajax
+}
+
 
 
 // 상세주문정보 모달 열기
@@ -64,9 +86,6 @@ function showOrderDetail(orderNumber){
 			console.log('ajax실패');
 		}
 	})//ajax
-	
-	
-	
 }
 
 
@@ -80,10 +99,8 @@ function showOrderDetail(orderNumber){
 
 
 
+// ============================= 가맹점 홈화면 (현구) =======================================
 
-
-
-// ============================= 가맹점 주문조회 관련 (현구) =======================================
 
 
 

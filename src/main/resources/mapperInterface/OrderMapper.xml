@@ -20,9 +20,9 @@
 	
 	<!-- 가맹점별 주문정보 조회 - completeYN 필드 유무로 조건검. -->
 	<select id="selectFcOrderbyFcId" resultType="vo.OrderListVO">
-		SELECT o.ordernumber, o.clientid, o.fcid, o.completeyn, o.memo, o.orderdate, c.clientPhone, c.clientAddress
-		FROM orderlist o, client c
-		WHERE o.fcid = #{fcId} AND o.clientId = c.clientId
+		SELECT ordernumber, fcid, completeyn, memo, orderdate, clientPhone, clientAddress
+		FROM orderlist o
+		WHERE o.fcid = #{fcId}
 		<choose>
 			<when test="#{completeYN != null and completeYN != ''}">
 				AND completeyn = #{completeYN}
