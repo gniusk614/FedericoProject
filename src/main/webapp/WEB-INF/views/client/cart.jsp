@@ -24,7 +24,7 @@
 	
 	<!-- Section--> 
 	<section class="container" style="height: auto; min-height: 100%; padding-bottom: 168px;">
-		<br><div class="text-center fw-bold fst-italic fs-1">장바구니</div>	
+		<br><div class="text-center"><h1 class="display-6 lead">장바구니</h1></div>	
 		<!-- 장바구니 메뉴 -->
 		<div class="container-fluid">
 			<hr><div class="row" align="center">
@@ -34,14 +34,17 @@
 				<div class="col-1 fw-bold fs-6">변경</div>
 				<div class="col-1 fw-bold fs-6">삭제</div>
 			</div><hr>
-			
 			<div id="divdiv">
 				<c:if test="${empty list}">
-					<br><div class="fw-bold fs-5 fst-italic" align="center">장바구니가 <span class="fs-4">비어</span>있습니다.<br>메뉴를 선택해주세요.</div>
+					<br><div align="center" style="font-size: xx-large;">장바구니가 <b>비어</b>있습니다.<br></div>
+					<div align="center" style="color: gray; font-size: large;">메뉴를 선택해주세요.</div>
 					<div align="center" class="my-5">
-						<button type="button" class="btn btn-outline-danger btn-lg" onclick="location.href='menuList?menuFlag=pizza'" style="font-size: 2rem;">
-							메뉴 보러가기
+						<button type="button" class="btn btn-outline-danger btn-lg" onclick="location.href='menuList?menuFlag=pizza'" style="width:350px; border-radius: 50px">
+							메뉴 선택하기
 						</button>
+					</div>
+					<div align="center" class="my-5">
+					<img src="/federico/resources/Image/noCart2.png" style="opacity: 0.4; width: 500px;">
 					</div>
 				</c:if>
 				<c:if test="${! empty sessionScope.list}"> 
@@ -115,12 +118,12 @@
 					</div>
 					<div class="row mt-5">
 						<div class="col-6" align="left">
-							<button type="button" class="btn btn-outline-danger btn-lg" onclick="location.href='menuList?menuFlag=pizza'" style="font-size: 2rem;">
+							<button type="button" class="btn btn-outline-danger" onclick="location.href='menuList?menuFlag=pizza'">
 								메뉴 보러가기
 							</button>
 						</div>
 						<div align="right" class="col-6" >
-							<button type="button" class="btn btn-danger btn-lg" onclick="location.href='orderInfo'" style="font-size: 2rem; width: 237.25px;">
+							<button type="button" class="btn btn-danger" onclick="location.href='orderInfo'" >
 								결제하기
 							</button>
 						</div>

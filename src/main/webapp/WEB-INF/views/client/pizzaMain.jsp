@@ -38,60 +38,72 @@ a {
    height: 500px;
   }
 }
-
+@font-face {
+    font-family: 'Treegarden';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/naverfont_10@1.0/Treegarden.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
 
 </style>
 </head>
-<body>
+<body class="bg-danger">
 	<!-- Navigation-->
 	<%@include file="nav.jsp"%>
 	
 	
 	<!-- Header-->
-	<header class="bg-danger py-5">
-		<div class="row">
-			<div id="carouselExampleIndicators" class="carousel slide"
-				data-bs-ride="carousel">
-				<div class="carousel-indicators" style="z-index:3;">
-					<button type="button" data-bs-target="#carouselExampleIndicators"
-						data-bs-slide-to="0" class="active" aria-current="true"
-						aria-label="Slide 1"></button>
-					<button type="button" data-bs-target="#carouselExampleIndicators"
-						data-bs-slide-to="1" aria-label="Slide 2"></button>
-					<button type="button" data-bs-target="#carouselExampleIndicators"
-						data-bs-slide-to="2" aria-label="Slide 3"></button>
+	<header class="container bg-danger py-4">
+		<div class="row justify-content-md-center mb-3">
+			<div class="col-12 lead" align="center" style="font-size:x-large; height: 100px; color: white">
+			페데리코가 준비한 <b>깊은 풍미의 피자</b>를 즐겨보세요<br>
+			<p style="font-family: Treegarden; font-size: xx-large;">The uglier it is, the tastier it is .<p>
+			</div>
+		</div>
+		<div class="row justify-content-md-center">
+			<div class="col-12">
+				<div id="carouselExampleIndicators" class="carousel slide"
+					data-bs-ride="carousel" style="overflow: hidden;">
+					<div class="carousel-inner" style="z-index: 1;">
+						<div class="carousel-item active">
+							<img src="/federico/resources/Image/top_mv_notxt01.jpeg"
+								class="d-block w-100" alt="...">
+						</div>
+						<div class="carousel-item">
+							<img src="/federico/resources/Image/top_mv_notxt02.jpeg"
+								class="d-block w-100" alt="...">
+						</div>
+						<div class="carousel-item">
+							<img src="/federico/resources/Image/top_mv_notxt03.jpeg"
+								class="d-block w-100" alt="...">
+						</div>
+					</div>
+					<button class="carousel-control-prev" type="button"
+						data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Previous</span>
+					</button>
+					<button class="carousel-control-next" type="button"
+						data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Next</span>
+					</button>
 				</div>
-				<div class="carousel-inner" style="z-index: 1; position: relative;" >
-					<div class="carousel-item active">
-						<img src="/federico/resources/Image/top_mv_notxt01.jpeg"
-							class="d-block w-100" alt="...">
-					</div>
-					<div class="carousel-item">
-						<img src="/federico/resources/Image/top_mv_notxt02.jpeg"
-							class="d-block w-100" alt="...">
-					</div>
-					<div class="carousel-item">
-						<img src="/federico/resources/Image/top_mv_notxt03.jpeg"
-							class="d-block w-100" alt="...">
-					</div>
-				</div>
-				<button class="carousel-control-prev" type="button"
-					data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-					<span class="visually-hidden">Previous</span>
-				</button>
-				<button class="carousel-control-next" type="button"
-					data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-					<span class="carousel-control-next-icon" aria-hidden="true"></span>
-					<span class="visually-hidden">Next</span>
-				</button>
+			</div>
+			<div class="row justify-content-md-center" style="height: 100px;">
+				<div class="col-6 bg-light py-4" align="center" style="font-size: x-large; color: crimson; border-top: 1px solid crimson; border-right: 2px solid crimson; border-radius: 5px;">
+				<img src="/federico/resources/Image/delieveryLogo.png" alt="..." style="width: 50px;">
+				&nbsp;&nbsp;&nbsp;주문하기</div>
+				<div class="col-6 bg-light py-4" align="center" style="font-size: x-large; color: crimson; border-top: 1px solid crimson; border-radius: 5px;" >
+				<img src="/federico/resources/Image/mapLogo.png" alt="..." style="width: 40px;">
+				&nbsp;&nbsp;&nbsp;매장찾기</div>
 			</div>
 		</div>
 	</header>
 	<!-- Section-->
-	<section class="py-5 bg-danger" style="height: 300px; z-index: 3; position: relative; margin-bottom: 168px;">
-		<div id="result">&nbsp;&nbsp;각 메뉴 화면 ajax로 불러오기</div>
+	<section class="container py-5" style="height: 180px; z-index: 3; position: relative; margin-bottom: 168px;">
+		
 	</section>
 	
 	<!-- Footer-->

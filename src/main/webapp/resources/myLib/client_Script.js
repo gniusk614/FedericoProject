@@ -391,6 +391,17 @@ function deleteCartMenuM(index){
 
 // ============================= 로그인 회원관련 (광훈) =======================================
 var nameChecked = false
+
+
+
+
+var cidCheck=false; //아이디
+var cidDubCheck=false;//중복확인
+var cpCheck=false;//비밀번호확인
+var cprCheck=false;//비밀번호중복
+var cadCheck=false;//주소입력 확인
+var cemCheck=false;//이메일입력 확인
+var cemserverCheck=false;//이메일입력 확인
 $(function(){
 	//이름 체크
 	$('#nonClientName').focusout(function(){
@@ -412,6 +423,140 @@ $(function(){
 		$('#address').val('');
 		$('#addressDetail').val('');
 	})
+	
+	//가입시 핸드폰인증창 닫힐시
+	$('#phoneCheckModal').on('hidden.bs.modal', function() {
+		$('input[name=clientName]').val($('#nonClientName').val());
+		$('input[name=clientPhone]').val($('#inputPhoneNumber').val());
+		
+		$('#nonClientName').val('');
+		$('#inputPhoneNumber').val('');
+		$('#inputCertifiedNumber').val('');
+		
+		$('#nonClientName').removeClass('is-invalid');
+		$('#inputPhoneNumber').removeClass('is-invalid');
+	    $('#inputCertifiedNumber').removeClass('is-invalid');
+	    
+	    $('#nonClientName').removeClass('is-valid');
+	    $('#inputPhoneNumber').removeClass('is-valid');
+	    $('#inputCertifiedNumber').removeClass('is-valid');
+	})
+	
+	
+	//Email 직접입력
+	$("#selectServer").on("change", function(){
+	    if ($(this).val() == "etc") {
+	        $('#emailServer').val('');
+	        $('#emailServer').prop("readonly",false);
+
+	    } else {
+	    	 $('#emailServer').val($(this).val());
+	    	 $('#emailServer').prop("readonly",true);
+	    }
+	});
+	
+	
+
+	// 회원가입ID
+	$('#clientId').focusout(function() {
+		cidCheck = clientIdCheck();
+		if (cidCheck == false) {
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+		}
+	});// id_focusout
+
+	// 비밀번호
+	$('#clientPassword').focusout(function() {
+		cpCheck = clientPwCheck();
+		if (cpCheck == false) {
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+			$('#clientPasswordRepeat').attr("disabled", true)
+		} else {
+			// $(this).removeClass('is-invalid');
+			// $(this).addClass('is-valid');
+			$('#clientPasswordRepeat').attr("disabled", false)
+		}
+		$('#clientPasswordRepeat').focus();
+	});// password_focusout
+
+	// 비밀번호확인
+	$('#clientPasswordRepeat').focusout(function() {
+		cprCheck = clientPwrpCheck();
+		if (cprCheck == false) {
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+			$('#clientPassword').removeClass('is-valid');
+			$('#clientPassword').addClass('is-invalid');
+		} else {
+			$('#clientPassword').removeClass('is-invalid');
+			$('#clientPassword').addClass('is-valid');
+			$(this).removeClass('is-invalid');
+			$(this).addClass('is-valid');
+		}
+	})
+	//이메일확인
+	$('#inputEmail').focusout(function() {
+		cemCheck = clientEmailCheck();
+		cemserverCheck = clientEmailServerCheck();
+		if (cemCheck == false || cemserverCheck==false) {
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+			$('#emailServer').removeClass('is-valid');
+			$('#emailServer').addClass('is-invalid');
+			
+		} else {
+			$('#emailServer').removeClass('is-invalid');
+			$('#emailServer').addClass('is-valid');
+			$(this).removeClass('is-invalid');
+			$(this).addClass('is-valid');
+			email = $(this).val()+"@"+$('#emailServer').val();
+			$('#clientEmail').val(email)
+		}
+		
+	});// id_focusout
+	//email서버 포커스아웃시
+	$('#emailServer').focusout(function() {
+		cemCheck = clientEmailCheck();
+		cemserverCheck = clientEmailServerCheck();
+		if (cemCheck == false || cemserverCheck==false) {
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+			$('#inputEmail').removeClass('is-valid');
+			$('#inputEmail').addClass('is-invalid');
+			
+		} else {
+			$('#inputEmail').removeClass('is-invalid');
+			$('#inputEmail').addClass('is-valid');
+			$(this).removeClass('is-invalid');
+			$(this).addClass('is-valid');
+			email = $('#inputEmail').val()+"@"+$(this).val();
+			$('#clientEmail').val(email)
+		}
+	});// id_focusout
+	//주소창 포커스아웃시
+	$('#addressDetail').focusout(function() {
+		cadCheck = clientAddressCheck();
+		if (cadCheck == false) {
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+			$('#address').removeClass('is-valid');
+			$('#address').addClass('is-invalid');
+			
+		} else {
+			$('#address').removeClass('is-invalid');
+			$('#address').addClass('is-valid');
+			$(this).removeClass('is-invalid');
+			$(this).addClass('is-valid');
+			address = $('#address').val()+" "+$(this).val();
+			$('#clientAddress').val(address)
+		}
+	});// id_focusout
+	
+	
+	
+	
 
 })//ready
 
@@ -497,9 +642,16 @@ function sendSms(){
                     $('#inputPhoneNumber').attr('readonly',true).addClass('is-valid');
                     $('#inputCertifiedNumber').attr('readonly',true).addClass('is-valid');
                     $('#nonOrderBtn').attr('disabled',false);
+                    $('#phoneCheckModal').modal('hide');
+                    $('#button-addon2').attr('disabled',true)
+                    $('#checkBtn').attr('disabled',true)
+                    $('#joinPhoneCheckBtn').attr('onClick',false).css({
+                    	cursor: 'default'
+                    });
+                    $('#checkText').html('인증을 완료하였습니다.')
                     phoneChecked=true;
                 }else{
-                   alert('휴대폰 인증에 실패하였습니다. 인증번호를 확인해줴요.')
+                   alert('휴대폰 인증에 실패하였습니다. 인증번호를 확인해주세요.')
                    $('#inputPhoneNumber').removeClass('is-valid');
                    $('#inputCertifiedNumber').removeClass('is-valid');
                    $('#inputPhoneNumber').addClass('is-invalid');
@@ -554,7 +706,7 @@ function nonOrder(){
 function inputAddress(){
 	$('#nonAddress').html($('#address').val());
 	$('#nonAddressDetail').html($('#addressDetail').val());
-	$('input[name=nonAddress').val($('#address').val()+" "+$('#addressDetail').val());
+	$('input[name=nonAddress]').val($('#address').val()+" "+$('#addressDetail').val());
 	$('#addressModal').modal('hide');
 }
 
@@ -568,14 +720,212 @@ function moveOrder(flag){
 	$('#jumun').submit();
 }
 
+//주문페이지 조건에따른 동작제어
+function joinCheck(){
+	if(phoneChecked==true && checkboxChecked==true && nameChecked==true){
+		if (confirm('주문페이지로 이동하시겠습니까?')) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	if(nameChecked==false){
+		$('#nonClientName').addClass('is-invalid');
+		$('#failMessage').html('이름을 입력해주세요.');
+		return false;
+	}
+	if(phoneChecked==false){
+		$('#inputPhoneNumber').addClass('is-invalid');
+		alert('휴대폰인증을 진행해주세요.');
+		return false;
+	}
+	if(checkboxChecked==false){
+		alert('개인정보 수집/이용을 동의해야만 주문이 가능합니다.')
+		return false;
+	}
+	else{
+		return false
+	}
+}//nonOrder
+var AllCheckboxChecked = false;
+var serviceCheckboxChecked = false;
+var gpsCheckboxChecked = false;
+var smsCheckboxChecked = false;
+var emailCheckboxChecked = false;
+//가입약관 체크박스 동작제어
+function joinCheckboxCheck(flag) {
+	if(flag=='0'){
+		if(AllCheckboxChecked == false){
+			$('.bi-check-circle-fill').css('display','inline');
+			$('.bi-check-circle').css('display','none');
+			$('#smsCheck').val('Y');
+			$('#emailCheck').val('Y');
+			AllCheckboxChecked = true;
+			checkboxChecked = true;
+			serviceCheckboxChecked = true;
+			gpsCheckboxChecked = true;
+			smsCheckboxChecked = true;
+			emailCheckboxChecked = true;
+		}else{
+			$('.bi-check-circle').css('display','inline');
+			$('.bi-check-circle-fill').css('display','none');
+			$('#smsCheck').val('N');
+			$('#emailCheck').val('N');
+			AllCheckboxChecked = false;
+			checkboxChecked = false;
+			serviceCheckboxChecked = false;
+			gpsCheckboxChecked = false;
+			smsCheckboxChecked = false;
+			emailCheckboxChecked = false;
+		}
+	}// 모든약관에 동의
+	else if(flag=='1'){
+		if(serviceCheckboxChecked == false){
+			$('#checkbox_yes_1').css('display','inline');
+			$('#checkbox_no_1').css('display','none');
+			serviceCheckboxChecked = true
+		}else{
+			$('#checkbox_yes_1').css('display','none');
+			$('#checkbox_no_1').css('display','inline');
+			serviceCheckboxChecked = false;
+		}
+	}//서비스 이용약관 동의
+	else if(flag=='2'){
+		if(checkboxChecked == false){
+			$('#checkbox_yes_2').css('display','inline');
+			$('#checkbox_no_2').css('display','none');
+			checkboxChecked = true
+		}else{
+			$('#checkbox_yes_2').css('display','none');
+			$('#checkbox_no_2').css('display','inline');
+			checkboxChecked = false;
+		}
+	}//개인정보 수집/이용동의
+	else if(flag=='3'){
+		if(gpsCheckboxChecked == false){
+			$('#checkbox_yes_3').css('display','inline');
+			$('#checkbox_no_3').css('display','none');
+			gpsCheckboxChecked = true
+		}else{
+			$('#checkbox_yes_3').css('display','none');
+			$('#checkbox_no_3').css('display','inline');
+			gpsCheckboxChecked = false;
+		}
+	}//위치기반서비스 이용동의
+	else if(flag=='sms'){
+		if(smsCheckboxChecked == false){
+			$('#smsCheckbox_yes').css('display','inline');
+			$('#smsCheckbox_no').css('display','none');
+			$('#smsCheck').val('Y');
+			smsCheckboxChecked = true
+		}else{
+			$('#smsCheckbox_yes').css('display','none');
+			$('#smsCheckbox_no').css('display','inline');
+			$('#smsCheck').val('N');
+			smsCheckboxChecked = false;
+		}
+	}//문자서비스 이용동의
+	else if(flag=='email'){
+		if(emailCheckboxChecked == false){
+			$('#emailCheckbox_yes').css('display','inline');
+			$('#emailCheckbox_no').css('display','none');
+			$('#emailCheck').val('Y');
+			emailCheckboxChecked = true
+		}else{
+			$('#emailCheckbox_yes').css('display','none');
+			$('#emailCheckbox_no').css('display','inline');
+			$('#emailCheck').val('N');
+			emailCheckboxChecked = false;
+		}
+	}//이메일서비스 이용동의
+}//checkboxCheck
+
+//회원가입 약관 동의 후 버튼
+function joinAgreeBtn(){
+	if (serviceCheckboxChecked == true && checkboxChecked == true && 
+			gpsCheckboxChecked == true && phoneChecked == true){
+		if (confirm('회원가입 페이지로 이동하시겠습니까?')) {
+			return true;
+		} else {
+			return false;
+		}
+	}if (phoneChecked==false){
+		alert('휴대폰인증을 완료해주세요.');
+		return false;
+	}else{
+		alert('필수 약관에 모두 동의하셔야합니다.')
+		return false;
+	}
+}
+
+// 고객ID 중복체크
+function clientIdDubCheck(){
+		cidCheck = clientIdCheck();
+		if (cidCheck == true) {
+			$.ajax({
+				type : "post",
+				url : "clientSelectOne?clientId=" + $('#clientId').val(),
+				success : function(resultData) {
+					if (resultData.message != null) {
+						console.log(resultData.message)
+						$('#clientId').removeClass('is-invalid');
+						$('#clientId').addClass('is-valid');
+						$('#cidsuccessMessage').html('사용가능한 ID입니다.');
+						cidDubCheck = true;
+					} else {
+						$('#clientId').removeClass('is-valid');
+						$('#clientId').addClass('is-invalid');
+						$('#cidMessage').html('이미 등록된 ID입니다.');
+						cidDubCheck = false;
+					}
+				},
+				error : function() {
+					alert("Ajax 오류");
+					cidDubCheck = false;
+				}
+			});// ajax
+		}// if
+	}
+	
 
 
 
 
 
 
-
-
+//가입 입력조건확인
+function clientIncheck() {
+	if (cidCheck == false || cidDubCheck == false) {
+		$('#clientId').addClass('is-invalid');
+		$('#cidMessage').html('아이디를 확인하세요');
+	}
+	if (cpCheck == false) {
+		$('#clientPassword').addClass('is-invalid');
+		$('#cpMessage').html('password를 확인하세요');
+	}
+	if (cprCheck == false) {
+		$('#clientPasswordRepeat').addClass('is-invalid');
+		$('#cprMessage').html('password를 확인하세요');
+	}
+	if (cadCheck == false) {
+		$('#address').addClass('is-invalid');
+		$('#cadMessage').html('주소를 입력해주세요');
+	}
+	if (cemCheck == false || cemserverCheck==false) {
+		$('#inputEmail').addClass('is-invalid');
+		$('#emailServer').addClass('is-invalid');
+		$('#cemMessage').html('Email을 확인하세요');
+	}
+	if (cidCheck == true && cpCheck == true && cprCheck == true 
+			&& cadCheck == true && cemCheck == true && cemserverCheck==true) {
+		if(confirm('가입을 진행하시겠습니까?')==true) {
+			return true;
+		} else {
+			return false;
+		}
+	} else
+		return false;
+}// inCheck
 
 
 // ============================= 매장찾기 (민석) =======================================

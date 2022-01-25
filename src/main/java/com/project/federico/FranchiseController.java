@@ -127,7 +127,7 @@ public class FranchiseController {
 
 			System.out.println(vo.getFcId());
 			System.out.println(vo.getFcPassword());
-			
+			 
 			
 			// 프랜차이즈 정보 vo에 담기
 			vo=service.selectFcOne(vo);
