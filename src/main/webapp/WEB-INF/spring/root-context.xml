@@ -7,15 +7,10 @@
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 	
-	<!-- Root Context: defines shared resources visible to all other web components -->
-	
 	<!--스프링시큐리티 라이브러리 BcryptPasswordEncoder -->
-	<bean id="bCryptPasswordEncoder" 
+		<bean id="bCryptPasswordEncoder" 
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 		
-	<!--스프링시큐리티 Test1. 
-		=> JDBC Connection : DispatcherServlet 보다 앞서서 적용되므로 
-	-->
 	
 		<!--  JDBC Connection -->
  	<bean id="dataSource"

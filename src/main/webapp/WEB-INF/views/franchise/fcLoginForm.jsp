@@ -10,11 +10,11 @@
 	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <meta name="description" content="" />
 <meta name="author" content="" />
-<title>로그인 - Federico Company</title>
+<title>로그인 - Federico Franchise</title>
 <link href="/federico/resources/css/styles.css" rel="stylesheet" />
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script> -->
 </head>
-<body class="bg-primary">
+<body class="bg-success">
 	<div id="layoutAuthentication">
 		<div id="layoutAuthentication_content">
 			<main>
@@ -23,7 +23,7 @@
 					<!-- 로고 -->
 					<div class="row justify-content-center mt-1 py-1">
 						<div class="col-lg-5" align="center">
-							<img src="/federico/resources/Image/companyLogin.png" style="width:400px;">
+							<img src="/federico/resources/Image/franchiseLogin.png" style="width: 400px;">
 						</div>
 					</div>
 					<div class="row justify-content-center">
@@ -32,12 +32,12 @@
 								<div class="card-body">
 									<form action="login" method="post">
 										<div class="form-floating mb-3">
-											<input class="form-control" type="text" id="staffCode"
-												name="staffCode" placeholder="staffCode" /> <label
-												for="inputId">사원 번호(ID)</label>
+											<input class="form-control" type="text" id="fcId"
+												name="fcId" placeholder="staffCode" /> <label
+												for="inputId">가맹점 ID</label>
 										</div>
 										<div class="form-floating mb-3">
-											<input class="form-control" id="hopassword" name="hoPassword"
+											<input class="form-control" id="fcPassword" name="fcPassword"
 												type="password" placeholder="Password" /> <label
 												for="inputPassword">Password</label>
 										</div>
@@ -50,8 +50,8 @@
 												<a class="small" href="passwordReset">비밀번호 재설정</a>
 											</div>
 											<div class="col-xxl-4">
-												<a class="btn btn-primary" href="/federico/">메인으로</a> 
-												<input class="btn btn-primary" type="submit" value="Login">
+												<a class="btn btn-success" href="/federico/">메인으로</a> 
+												<input class="btn btn-success" type="submit" value="Login">
 												<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 											</div>
 										</div>

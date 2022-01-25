@@ -40,7 +40,10 @@
 	</select>
 
 
-	
+	<!-- 주문 완료처리 -->
+<!-- 	<update id="">
+		UPDATE orderlist SET completeyn = 'Y' WHERE 
+	</update> -->
 
 
 
