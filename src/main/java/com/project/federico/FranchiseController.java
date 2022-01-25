@@ -1,7 +1,9 @@
 package com.project.federico;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,10 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.log4j.Log4j;
+import paging.PageMaker;
+import paging.SearchCriteria;
 import service.FranchiseService;
 import service.OrderService;
 import vo.FranchiseVO;
 import vo.HeadOfficeVO;
+import vo.ItemInfoVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
 
@@ -45,7 +50,6 @@ public class FranchiseController {
 	public ModelAndView selectDetail(ModelAndView mv, OrderDetailListVO detailVo, @RequestParam("orderNumber") int orderNumber) {
 		List<OrderDetailListVO> detailList = new ArrayList<OrderDetailListVO>();
 		detailList = orderService.selectDetailbyOrderNumber(orderNumber);
-		log.info(detailList);
 		if(detailList.size() > 0 && detailList != null) {
 			mv.addObject("detailList",detailList);
 			mv.addObject("success", "success");
@@ -57,42 +61,62 @@ public class FranchiseController {
 		return mv;	
 	}
 	
+	// 배송소요시간 update
+	@RequestMapping(value = "/updatedeliverytime")
+	public ModelAndView updateDeliveryTime(ModelAndView mv, FranchiseVO vo) {
+		if (service.updateDeliveryTime(vo) > 1) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 주문 완료처리
+	@RequestMapping(value = "/ordercomplete")
+	public ModelAndView orderComplete(ModelAndView mv, OrderListVO vo) {
+		log.info("dfsfsfsdf"+vo.getOrderNumber());
+		if (orderService.orderComplete(vo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 완료주문 조회
+	@RequestMapping(value = "/completeOrder")
+	public ModelAndView completeOrder(ModelAndView mv, HttpSession session, SearchCriteria cri, PageMaker pageMaker, FranchiseVO fcVo) {
+		if (session.getAttribute("fcId") != null) {
+			Map<String, Object> parmas = new HashMap<String, Object>();
+			cri.setSnoEno();
+			fcVo.setFcId((String)session.getAttribute("fcId"));
+			parmas.put("vo", fcVo);
+			parmas.put("cri", cri);
+			List<OrderListVO> list = orderService.searchCompleteOrder(parmas);
+			
+			if (list != null && list.size() > 0) {
+				mv.addObject("completeList", list);
+			} else {
+				mv.addObject("message", "조회된 자료가 없습니다.");
+			}
+			
+			pageMaker.setCri(cri);
+			pageMaker.setTotalRowCount(orderService.searchCompleteOrderRows(parmas));
+			
+			mv.setViewName("franchise/searchOrderCompleteY");
+		} else {
+			mv.setViewName("franchise/loginf");
+		}
+		return mv;
+	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
@@ -121,13 +145,10 @@ public class FranchiseController {
 			// login 성공시 이동화면
 			 // 가맹점게시판 현재 : null
 			// login 비밀번호 저장
-			String id=vo.getFcId();
+			String fcId=vo.getFcId();
 			String password =vo.getFcPassword();
 			String uri="/franchise/fcLoginForm";
 
-			System.out.println(vo.getFcId());
-			System.out.println(vo.getFcPassword());
-			 
 			
 			// 프랜차이즈 정보 vo에 담기
 			vo=service.selectFcOne(vo);
@@ -137,20 +158,22 @@ public class FranchiseController {
 //				if(vo.getFcPassword().equals(password)) {
 					
 					mv.addObject("success","T");
-					request.getSession().setAttribute("fcId",vo.getFcId());
+					request.getSession().setAttribute("fcId",fcId);
 					request.getSession().setAttribute("fcloginName",vo.getFcName());
 					
-//					session.setAttribute("fcId", "#fc01");
 					
-					if ("fcId" != null) {
+					// 해당가맹점 주문정보 조회
+					if (fcId != null) {
 						List<OrderListVO> list = new ArrayList<OrderListVO>();
 						orderListVo.setCompleteYN("N"); //DB에서 default 처리해주기
 
-						orderListVo.setFcId((String)session.getAttribute("fcId"));
+						orderListVo.setFcId(fcId);
 						
 						list = orderService.selectFcOrderbyFcId(orderListVo);
 					    
 						session.setAttribute("orderList", list);
+						// 배달시간 불러오기
+						session.setAttribute("deliveryTime", service.selectDeliveryTimebyFcId(fcId));
 						uri="franchise/home";
 						
 					}
@@ -169,13 +192,7 @@ public class FranchiseController {
 					
 			return mv;
 			}
-			
-			
-			
-			
-			
-			
-			
-	
-}
-// class
+		
+		
+		
+}// class

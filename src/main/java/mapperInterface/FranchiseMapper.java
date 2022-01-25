@@ -10,6 +10,10 @@ import vo.StaffVO;
 
 public interface FranchiseMapper {
 	
+	String selectDeliveryTimebyFcId(String fcId);  // 배송소요시간 select
+	
+	int updateDeliveryTime(FranchiseVO vo); //배송소요시간 update
+	 
 	List<FranchiseVO> selectListbyArea(String area); //지역 가맹점 찾기. 
 	
 	List<FranchiseVO> selectFc(); //가맹점정보 모두 불러오기

@@ -13,7 +13,21 @@ public class FranchiseServiceImple implements FranchiseService {
 
 	@Autowired
 	FranchiseMapper dao;
-
+	
+	
+	// 배송소요시간 select
+	@Override
+	public String selectDeliveryTimebyFcId(String fcId) {
+		return dao.selectDeliveryTimebyFcId(fcId);
+	}
+	
+	//배송소요시간 update
+	@Override
+	public int updateDeliveryTime(FranchiseVO vo) {
+		return dao.updateDeliveryTime(vo);
+	}
+	
+	
 	//지역 가맹점 찾기. 
 	@Override
 	public List<FranchiseVO> selectListbyArea(String area) {
