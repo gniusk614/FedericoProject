@@ -57,27 +57,7 @@ public class FranchiseController {
 		return mv;	
 	}
 	
-	
-	// 프랜차이즈 home + 해당가맹점 주문내역 조회
-	@RequestMapping(value = "/home")
-	public ModelAndView home(ModelAndView mv, HttpSession session, OrderListVO orderListVo){
-			session.setAttribute("fcId", "#fc01");
-		
-		if (session.getAttribute("fcId") != null) {
-			List<OrderListVO> list = new ArrayList<OrderListVO>();
-			orderListVo.setCompleteYN("N"); //DB에서 default 처리해주기
 
-			orderListVo.setFcId((String)session.getAttribute("fcId"));
-			
-			list = orderService.selectFcOrderbyFcId(orderListVo);
-		    
-			session.setAttribute("orderList", list);
-		}
-		mv.setViewName("franchise/home");
-		return mv;
-	}
-	
-	
 	
 	
 	
@@ -135,7 +115,7 @@ public class FranchiseController {
 		
 		@RequestMapping(value ="/login")
 		public ModelAndView login(HttpServletRequest request,HttpServletResponse response,ModelAndView mv,			
-				HeadOfficeVO hvo, FranchiseVO vo) {
+				HeadOfficeVO hvo, FranchiseVO vo, HttpSession session, OrderListVO orderListVo) {
 
 			// 각정보 저장
 			// login 성공시 이동화면
@@ -159,7 +139,22 @@ public class FranchiseController {
 					mv.addObject("success","T");
 					request.getSession().setAttribute("fcId",vo.getFcId());
 					request.getSession().setAttribute("fcloginName",vo.getFcName());
-					uri="/franchise/home";
+					
+//					session.setAttribute("fcId", "#fc01");
+					
+					if ("fcId" != null) {
+						List<OrderListVO> list = new ArrayList<OrderListVO>();
+						orderListVo.setCompleteYN("N"); //DB에서 default 처리해주기
+
+						orderListVo.setFcId((String)session.getAttribute("fcId"));
+						
+						list = orderService.selectFcOrderbyFcId(orderListVo);
+					    
+						session.setAttribute("orderList", list);
+						uri="franchise/home";
+						
+					}
+					
 				}else {
 					//mv.addObject("success","Password Fail");
 					mv.addObject("message","Password가 일치하지 않습니다.");

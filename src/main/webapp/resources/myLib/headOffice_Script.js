@@ -1010,9 +1010,8 @@ function fcOrderFlagUpdate(flag) {
 				console.log("menuIntro =>"+data.menuvo.menuIntro);
 				console.log("menuFlag =>"+data.menuvo.menuFlag);
 				console.log("menuImg =>"+data.menuvo.menuImage);			
-		
-											
-								// when 절로 다시 고민해보자.
+			
+				// when 절로 update 할 것 
 				if(data.menuvo.menuFlag == 'pizza'){
 					$('#upmenuFlag option:eq(0)').prop('selected',true);
 				}if (data.menuvo.menuFlag == 'sets'){
@@ -1033,9 +1032,6 @@ function fcOrderFlagUpdate(flag) {
 	
 	}//menuUpdateForm
 		 
-	
-
-
 	// menuDelete
 	function menuDelete(menuIndex) {
 		if(confirm("해당 메뉴를 삭제하시겠습니까?"))
