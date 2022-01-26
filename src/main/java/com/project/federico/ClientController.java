@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ import vo.ClientVO;
 import vo.FranchiseVO;
 import vo.HeadOfficeVO;
 import vo.MenuVO;
+import vo.OrderDetailListVO;
+import vo.OrderListVO;
 import vo.StaffVO;
 
 @RequestMapping(value = "/client")
@@ -485,14 +488,16 @@ public class ClientController {
 		return mv;
 	}
 	
-	// 회원가입창 이동
+	
+	
+		// 회원가입창 이동
 		@RequestMapping(value = "clientJoinf")
 		public ModelAndView clientJoinf(ModelAndView mv) {
 			String uri = "client/clientJoinForm";
 			mv.setViewName(uri);
 			return mv;
 		}
-		// 회원가입창 이동
+		// 회원가입창 디테일 이동
 		@RequestMapping(value = "clientJoin2ndf")
 		public ModelAndView clientJoinf2ndf(ModelAndView mv, ClientVO vo) {
 			mv.addObject("clientName", vo.getClientName());
@@ -516,22 +521,63 @@ public class ClientController {
 				mv.addObject("message", "정보가 없습니다.");
 			mv.setViewName("jsonView");
 			return mv;
-		}// login	
+		}
 		
+		//회원가입
 		@RequestMapping(value = "clientJoin")
 		public ModelAndView clientJoin(ModelAndView mv, ClientVO vo , RedirectAttributes rttr) {
-
 			vo.setClientPassword(passwordEncoder.encode(vo.getClientPassword()));
-			
 			if (clientService.insertClient(vo) > 0) {
 				rttr.addAttribute("message", "계정생성이 완료되었습니다.");
 			} else {
 				rttr.addAttribute("message", "계정생성이 실패하였습니다");
 			}
-
 			mv.setViewName("redirect:clientLoginf");
 			return mv;
 		}// join
+		
+		//비회원주문조회
+		@RequestMapping(value = "nonOrderDetail")
+		public ModelAndView nonOrderDetail(ModelAndView mv,
+				@RequestParam("nonName") String nonName, @RequestParam("nonPhone") String nonPhone, 
+				OrderListVO ordervo, OrderDetailListVO orderDvo) throws IOException {
+			
+			log.info(nonName);
+			log.info(nonPhone);
+			
+			ordervo.setClientPhone(nonPhone);
+			ordervo = orderService.selectOrderbyPhone(ordervo);
+			if (ordervo == null) {
+				log.info("이프");
+				mv.addObject("alert", "주문내역이 없습니다.");
+			} else {
+				log.info("엘스");
+				List<OrderDetailListVO> list = orderService.selectDetailbyOrderNumber(ordervo.getOrderNumber());
+				if (list != null) {
+					mv.addObject("orderInfo", ordervo);
+					mv.addObject("list", list);
+				} else {
+					mv.addObject("alert", "주문내역이 없습니다.");
+				}
+			}
+			mv.setViewName("client/nonOrderDetail");
+			return mv;
+		}
+		
+		//주문취소
+		@RequestMapping(value = "orderCancel")
+		public ModelAndView orderCancel(ModelAndView mv, OrderListVO vo) {
+			
+			if(orderService.orderCancel(vo)>0) {
+				mv.addObject("success", "성공");
+			}else {
+				mv.addObject("success", null);
+			}
+			mv.setViewName("jsonView");
+			return mv;
+		}
+		
+		
 		
 		
 }// clientController

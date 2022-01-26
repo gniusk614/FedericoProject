@@ -143,8 +143,6 @@
 		
 		<!-- footer inlcud -->
 		<div><%@ include file="footer.jsp" %></div>
-	</div> 
-</div> <!-- layoutSidenav 끝 -->			
 
 
 

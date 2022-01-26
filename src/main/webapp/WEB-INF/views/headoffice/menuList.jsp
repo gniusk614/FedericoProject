@@ -92,9 +92,9 @@
 									<!-- data-bs-toggle="modal" data-bs-target="#menuUpdateModal" -->
 									<td>  
 										  <div class="d-grid gap-2 col-md-6">
-											<button type="button" class="btn btn-warning btn-sm" onclick="menuUpdateForm(${vo.menuIndex})">수정</button>
-											<button type="button" class="btn btn-info btn-sm" onclick="alert(' 메뉴카드미리보기 / 작업중입니다.')">미리보기</button>
-											<button type="button" class="btn btn-danger btn-sm" onclick="menuDelete(${vo.menuIndex})">삭제</button>
+											<button type="button" class="btn btn-primary btn-sm" onclick="menuUpdateForm(${vo.menuIndex})">수정</button>
+											<button type="button" class="btn btn-outline-primary btn-sm" onclick="alert(' 메뉴카드미리보기 / 작업중입니다.')">미리보기</button>
+											<button type="button" class="btn btn-outline-danger btn-sm" onclick="menuDelete(${vo.menuIndex})">삭제</button>
 										  </div>
 									</td>
 								</tr>

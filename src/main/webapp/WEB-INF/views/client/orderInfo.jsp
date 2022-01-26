@@ -162,8 +162,8 @@
 				</div>
 			</div>
 			<hr><br>				
-			<div align="center">
-				<button type="button" class="btn btn-danger btn-lg" id="payBtn" onclick="alert('결제수단을 선택해주세요.')" style="font-size: 2rem; width: 250px;" disabled="disabled">
+			<div class="mb-5" align="center">
+				<button type="button" class="btn btn-danger" id="payBtn" onclick="alert('결제수단을 선택해주세요.')" style=" width: 250px;" disabled="disabled">
 					결제 하기
 				</button>
 			</div>

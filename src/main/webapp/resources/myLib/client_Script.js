@@ -619,8 +619,13 @@ function clickEffect(id){
 	});
 }//clickEffect
 
+//개인정보수집동의 체크상태
+var checkboxChecked = false 
 //로그인,비회원주문,주문조회 화면 변경시켜주는
 function showdiv(id) {
+	checkboxChecked = false;
+	$('.checkbox_yes').css('display','none');
+	$('.checkbox_no').css('display','inline');
 	if (id == 'clientLogin') {
 		$('#outer_1').css('display', 'block');
 		$('#outer_2').css('display', 'none');
@@ -642,17 +647,16 @@ function showdiv(id) {
 
 }
 
-//개인정보수집동의 체크상태
-var checkboxChecked = false 
+
 //아이콘변경
 function checkboxCheck() {
 	if(checkboxChecked == false){
-		$('#checkbox_no').css('display','none');
-		$('#checkbox_yes').css('display','inline');
+		$('.checkbox_no').css('display','none');
+		$('.checkbox_yes').css('display','inline');
 		checkboxChecked = true;
 	}else{
-		$('#checkbox_yes').css('display','none');
-		$('#checkbox_no').css('display','inline');
+		$('.checkbox_yes').css('display','none');
+		$('.checkbox_no').css('display','inline');
 		checkboxChecked = false;
 	}
 }//checkboxCheck
@@ -972,6 +976,51 @@ function clientIncheck() {
 	} else
 		return false;
 }// inCheck
+
+//비회원주문조회 조건체크
+function nonOrderInfoCheck(){
+	if($('#orderNonName').val()<1){
+		$('#orderNonName').addClass('is-invalid');
+		alert('고객명을 입력해주세요');
+		return false
+	}
+	if($('#orderNonPhone').val()<1){
+		$('#orderNonPhone').addClass('is-invalid');
+		alert('핸드폰번호를 입력해주세요');
+		return false
+	}
+	if(checkboxChecked==false){
+		alert('개인정보 수집/이용에 동의하셔야합니다.');
+		return false
+	}else{
+		return true
+	}
+}
+
+function orderCancel(num){
+	$.ajax({
+		type: "get",
+		url: "orderCancel",
+		data:{
+			orderNumber : num
+		},
+		success: function(res){
+			if(res.success!=null){
+				alert('주문취소가 완료되었습니다. \n 결제취소는 카드사 사정으로 1~2시간 소요됩니다.');
+				location.reload();
+			}else{
+				alert('주문취소에 실패했습니다. 매장에 문의해주세요.');
+			}
+		},error : function(){
+			alret('통신장애입니다. 잠시후 다시 시도해주세요.')
+		}
+	})
+	
+}
+
+
+
+
 
 
 // ============================= 매장찾기 (민석) =======================================

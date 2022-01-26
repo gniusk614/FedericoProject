@@ -167,9 +167,9 @@ table, tr, td, th {
 													<div class="row">
 														<div class="col-8 align-self-center" align="left"
 															onclick="checkboxCheck()" style="cursor: pointer;">
-															<i id="checkbox_no" class="bi bi-check-circle danger"
-																style="color: crimson;"></i> <i id="checkbox_yes"
-																class="bi bi-check-circle-fill danger"
+															<i class="bi bi-check-circle danger checkbox_no"
+																style="color: crimson;"></i> 
+																<i class="bi bi-check-circle-fill danger checkbox_yes"
 																style="color: crimson; display: none;"></i> <span
 																class="align-middle" style="font-size: medium;">개인정보
 																수집/이용동의(필수)</span>
@@ -254,8 +254,53 @@ table, tr, td, th {
 				</div>
 				<!-- 비회원주문조회 -->
 				<div id="outer_2" class="container" style="display: none;">
-					<div class="row justify-content-md-center mt-5 mb-5"
-						style="font-size: x-large;">서어어어엉공?</div>
+					<div class="row justify-content-md-center mt-5 mb-5" style="font-size: x-large;">
+						<div class="col-5" align="center">
+							<form action="nonOrderDetail" method="post">
+								<div class="row justify-content-md-center mt-5"
+									style="height: 200px;">
+									<div class="col">
+										<div class="form-floating mb-3">
+											<input class="form-control" type="text" id="orderNonName"
+												name="nonName" placeholder="clientId" /> <label
+												for="clientId" style="font-size: large; color: gray;">고객명</label>
+										</div>
+										<div class="form-floating mb-3">
+											<input class="form-control" id="orderNonPhone"
+												oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"
+												name="nonPhone" type="text" placeholder="핸드폰번호" /><label
+												for="clientPassword" style="font-size: large; color: gray;">핸드폰번호</label>
+										</div>
+										<div style="font-size: small; color: red;">
+											<c:if test="${not empty message}">${message}</c:if>
+										</div>
+										<div class="row">
+											<div class="col-8 align-self-center" align="left"
+												onclick="checkboxCheck()" style="cursor: pointer;">
+												<i class="bi bi-check-circle danger checkbox_no"
+													style="color: crimson;"></i> 
+													<i class="bi bi-check-circle-fill danger checkbox_yes"
+													style="color: crimson; display: none;"></i> <span
+													class="align-middle" style="font-size: medium;">개인정보
+													수집/이용동의(필수)</span>
+											</div>
+											<div class="col-4" align="right">
+												<a class="small" href="#" onclick="showAgreeModal()"
+													style="color: Crimson; font-size: medium;">내용보기 ></a>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row" style="height: 100px;">
+									<div
+										class="d-flex align-items-center justify-content-between mb-0">
+										<button class="btn btn-danger" type="submit" onclick="return nonOrderInfoCheck()"
+											style="width: 100%; height: 60px; font-size: large;">조회하기</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
