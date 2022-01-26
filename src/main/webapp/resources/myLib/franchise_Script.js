@@ -178,28 +178,48 @@ var si=1;
 
 
 // 자재발주 등록
-function fcItemOrder(){
-	
+function fcItemOrder(fcId) {
+
 	var sendData = [];
-	for (var i = 0; i < si-1; i++) {
-		
-		
-		
-		
-		var iname = i;
-		var iname = {
-			itemIndex: $('#selectItemName' + (i+1)).attr('data-itemIndex'),
-			itemQty: $('#itemQty' + (i+1)).val()
-		}//for
-		sendData[i] = iname;
+	for (var i = 0; i < si - 1; i++) {
+		var itemQty = Number($('#itemQty' + (i + 1)).val());
+		if ($.isNumeric(itemQty) && itemQty != 0) {
+			var iInfo = {
+				itemIndex: $('#selectItemName' + (i + 1)).attr('data-itemIndex'),
+				itemQty: $('#itemQty' + (i + 1)).val()
+			}
+			sendData.push(iInfo);
+		} else {
+			alert('입력값이 올바르지 않습니다.\n다시 입력하세요.')
+			return;
 		}
-	console.log(sendData)	
-		
+	}//for
+	
+	console.log("1 => "+sendData);	
+	sendData = JSON.stringify(sendData);
+	console.log("2 => "+sendData);	
+	console.log("2 => "+fcId);	
+	
+	
+	$.ajax({
+		type: 'post',
+		url: 'insertfcorder',
+		traditional : true,
+		data: {
+			sendData: sendData,
+			fcId: fcId
+		},
+		success: function(){
+			alert('발주서가 전송되었습니다.')
+			location.reload();
+		},
+		fail: function(){
+			alert('통신 장애입니다.\n다시 시도해주세요.')
+			location.reload();
+		}
+	})
 	}//fcItemOrder
 	
-	
-	
-
 
 
 
@@ -213,14 +233,14 @@ function addSelect(){
 	} else{
 		$('#tbody').append(
 				'<tr><td>' + si + '</td>'+
-				'<td><select class="form-select" id="selectItemFlag' + si + '" onchange="selectItemFlag(' + si + '); calSumCol();">'+
-					'<option value="">- - -</option>'+
-						'<option value="식자재">식자재</option>'+
-						'<option value="부자재">부자재</option>'+
-					'</select></td>'+
-				'<td><select class="form-select" id="selectItemName' + si + '" onchange="changeItemInfo(' + si + '); calSumCol();">'+
-						'<option value="">- - -</option></select></td>'+	
-				'<td id="itemUnit' + si + '"></td>'+
+			'<td><select class="form-select" id="selectItemFlag' + si + '" onchange="selectItemFlag(' + si + '); calSumCol();">' +
+			'<option value="">- - -</option>' +
+			'<option value="식자재">식자재</option>' +
+			'<option value="부자재">부자재</option>' +
+			'</select></td>' +
+			'<td><select class="form-select" id="selectItemName' + si + '" onchange="changeItemInfo(' + si + '); calSumCol();">' +
+			'<option value="">- - -</option></select></td>' +
+			'<td id="itemUnit' + si + '"></td>'+
 				'<td id="itemPrice' + si + '"></td>'+
 				'<td><input type="text" id="itemQty' + si + '" class="form-control inputQty" onchange="itemQtyChange(' + si +'); calSumCol();"></td>'+
 				'<td class="itemSumRow" id="itemSumRow' + si +'"></td></tr>'
