@@ -20,6 +20,8 @@ import lombok.extern.log4j.Log4j;
 import paging.PageMaker;
 import paging.SearchCriteria;
 import service.FranchiseService;
+import service.HeadOfficeService;
+import service.HeadOfficeServiceImpl;
 import service.OrderService;
 import vo.FranchiseVO;
 import vo.HeadOfficeVO;
@@ -38,12 +40,53 @@ public class FranchiseController {
 	OrderService orderService;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-
+	@Autowired
+	HeadOfficeServiceImpl headOfficeService;
 
 	
 
 	
-
+	// 가맹점 자재발주 item고르면 정보조회
+	@RequestMapping(value = "/getiteminfo")
+	public ModelAndView getItemInfo(ModelAndView mv, ItemInfoVO vo) {
+		vo = headOfficeService.selectOneItem(vo);
+		if(vo != null) {
+			mv.addObject("vo", vo);
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
+	// 가맹점 자재발주 동적 select option
+	@RequestMapping(value = "/getitemlist")
+	public ModelAndView getItemList(ModelAndView mv, ItemInfoVO vo) {
+		List<ItemInfoVO> list = new ArrayList<ItemInfoVO>();
+		list = headOfficeService.selectItembyFlag(vo);
+		if(list != null && list.size() > 0) {
+			mv.addObject("itemList", list);
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 가맹점 자재발주 페이지 이동
+	@RequestMapping(value = "/itemorderf")
+	public ModelAndView itemOrderf(ModelAndView mv) {
+		
+		mv.setViewName("franchise/itemOrder");
+		return mv;
+	}
+	
+	
 	
 	// 주문내역 상세조회 by orderNumber
 	@RequestMapping(value = "/selectDetail")
@@ -90,15 +133,22 @@ public class FranchiseController {
 	}
 	
 	// 완료주문 조회
-	@RequestMapping(value = "/completeOrder")
-	public ModelAndView completeOrder(ModelAndView mv, HttpSession session, SearchCriteria cri, PageMaker pageMaker, FranchiseVO fcVo) {
+	@RequestMapping(value = "/completeorder")
+	public ModelAndView completeOrder(ModelAndView mv, HttpServletRequest request, HttpSession session, SearchCriteria cri, PageMaker pageMaker, FranchiseVO fcVo) {
 		if (session.getAttribute("fcId") != null) {
-			Map<String, Object> parmas = new HashMap<String, Object>();
+			Map<String, Object> params = new HashMap<String, Object>();
+			
+			if (request.getParameter("minDate") != null) {
+				params.put("minDate", request.getParameter("minDate").replaceAll("/", ""));
+				params.put("maxDate", request.getParameter("maxDate").replaceAll("/", ""));
+				log.info(request.getParameter("maxDate").replaceAll("/", ""));
+			}
+			
 			cri.setSnoEno();
 			fcVo.setFcId((String)session.getAttribute("fcId"));
-			parmas.put("vo", fcVo);
-			parmas.put("cri", cri);
-			List<OrderListVO> list = orderService.searchCompleteOrder(parmas);
+			params.put("vo", fcVo);
+			params.put("cri", cri);
+			List<OrderListVO> list = orderService.searchCompleteOrder(params);
 			
 			if (list != null && list.size() > 0) {
 				mv.addObject("completeList", list);
@@ -107,11 +157,16 @@ public class FranchiseController {
 			}
 			
 			pageMaker.setCri(cri);
-			pageMaker.setTotalRowCount(orderService.searchCompleteOrderRows(parmas));
+			pageMaker.setTotalRowCount(orderService.searchCompleteOrderRows(params));
+			
+			if(request.getParameter("minDate") != null) {
+				mv.addObject("minDate", request.getParameter("minDate"));
+				mv.addObject("maxDate", request.getParameter("maxDate"));
+			}
 			
 			mv.setViewName("franchise/searchOrderCompleteY");
 		} else {
-			mv.setViewName("franchise/loginf");
+			mv.setViewName("franchise/fcLoginForm");
 		}
 		return mv;
 	}
