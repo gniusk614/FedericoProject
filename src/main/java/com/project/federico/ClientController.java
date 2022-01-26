@@ -102,9 +102,9 @@ public class ClientController {
 			params.put("clientId", "NONE");
 			params.put("fcId", fcId);
 			params.put("memo", memo);
-			params.put("clientName", session.getAttribute("clientName"));
-			params.put("clientAddress", session.getAttribute("clientAddress"));
-			params.put("clientPhone", session.getAttribute("clientPhone"));
+			params.put("clientName", (String)session.getAttribute("nonName"));
+			params.put("clientAddress", (String)session.getAttribute("nonAddress"));
+			params.put("clientPhone", (String)session.getAttribute("nonPhone"));
 			params.put("memberYN", "N");
 			params.put("orderNumber", null);
 		}
