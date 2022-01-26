@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,11 +38,9 @@ import service.SendService;
 import vo.CartVO;
 import vo.ClientVO;
 import vo.FranchiseVO;
-import vo.HeadOfficeVO;
 import vo.MenuVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
-import vo.StaffVO;
 
 @RequestMapping(value = "/client")
 @Log4j
@@ -67,7 +63,7 @@ public class ClientController {
 // 매장찾기(카카오맵 API) 삽입 시작 ======<민석>=========================
 	@RequestMapping(value = "/fcSearch")
 	public ModelAndView fcSearch(ModelAndView mv) {
-		mv.setViewName("client/fcSearch");
+		mv.setViewName("client/cSearch");
 		return mv;
 	}// fcSearch
 	

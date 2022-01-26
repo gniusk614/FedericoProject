@@ -102,12 +102,12 @@ table, tr, td, th {
 												style="height: 200px;">
 												<div class="col">
 													<div class="form-floating mb-3">
-														<input class="form-control" type="text" id="clientId"
+														<input class="form-control" type="text" id="LoginclientId"
 															name="clientId" placeholder="clientId" /> <label
 															for="clientId" style="font-size: large; color: gray;">아이디</label>
 													</div>
 													<div class="form-floating mb-3">
-														<input class="form-control" id="clientPassword"
+														<input class="form-control" id="LoginclientPassword"
 															name="clientPassword" type="password"
 															placeholder="clientPassword" /> <label
 															for="clientPassword"
@@ -128,7 +128,7 @@ table, tr, td, th {
 											<div class="row" style="height: 100px;">
 												<div
 													class="d-flex align-items-center justify-content-between mb-0">
-													<button class="btn btn-danger" type="submit"
+													<button class="btn btn-danger" type="submit" onclick="return loginCheck()"
 														style="width: 100%; height: 60px; font-size: large;">로그인</button>
 												</div>
 											</div>
