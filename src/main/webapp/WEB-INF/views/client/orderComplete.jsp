@@ -37,16 +37,18 @@
 		<div class="container" style="width: 940px;">
 			<br><div class="text-center mt-5"><h1 class="display-4">주문이 완료되었습니다</h1></div>
 			<br><div class="text-center mt-5"><h1 class="display-6">배달완료 예정시간은 
-			<span class="display-5" style="color: crimson; font-weight: bold;">${now_HH}시${now_mm}분</span>입니다.</h1></div>
-			<div style="background-color: crimson; height: 500px; color: white; font-size: 50px;">이미지 넣으면 좋을거같아요 다만 뭘넣을지를 모르겠어여 ㅠㅠ</div> 
-		
+			<span class="display-5" style="color: crimson;">${now_HH}시${now_mm}분</span>입니다.</h1></div>
+		</div>
+		<div class="row justify-content-md-center">
+		<img src="/federico/resources/Image/delievery2.png"
+					style="width: 400px; opacity: 0.4">
+		</div>				
 			
 		
 		
 		<button>홈으로?</button>
 		<button>주문내역?</button>
 		
-		</div><!-- 본문 끝 -->
 	
 	
 	

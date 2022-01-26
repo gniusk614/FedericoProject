@@ -12,7 +12,7 @@ public class OrderListVO {
 	private String fcId;
 	private String completeYN;
 	private String memo;
-	private Date orderDate;
+	private String orderDate;
 	private String clientName;
 	private String clientAddress;
 	private String clientPhone;

@@ -31,6 +31,11 @@ public class OrderServiceImple implements OrderService {
 		return dao.searchCompleteOrder(params);
 	}
 	
+	// 주문취소처리
+	@Override
+	public int orderCancel(OrderListVO vo) {
+		return dao.orderCancel(vo);
+	}
 	
 	
 	// 주문완료처리
@@ -64,6 +69,11 @@ public class OrderServiceImple implements OrderService {
 		return dao.insertOrderList(params);
 	}
 	
+	// 주문정보 조회(by Phone)
+	@Override
+	public OrderListVO selectOrderbyPhone(OrderListVO vo) {
+		return dao.selectOrderbyPhone(vo);
+	}
 	
 	
 	
