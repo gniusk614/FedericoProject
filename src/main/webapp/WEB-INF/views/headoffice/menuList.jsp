@@ -13,10 +13,52 @@
 <script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
 <script src="/federico/resources/myLib/headOffice_Script.js"></script>
 <style type="text/css">
+.a:click #die{
+text-decoration: line-through;
+}
+
+
+
+
+@media (min-width: 992px) {
+  #carouselExampleIndicators {
+   height: 500px;
+  }
+} 
+
+.menu-card { height: 240px; width: 550px; display: inline-block; margin: 20px; z-index: 500; position: relative;} 
+
+.menu-hidden{ 
+			height: 100%; width: 100%; display: none; background-color: rgba(105, 105, 105, 0.5); 
+			position: absolute; left: 0; top: 0; z-index: 300;
+				}
+.menu-button{ margin: auto; display: none; position: absolute; right:20px; top:190px; z-index: 100;}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.menuIntro {
+  width: 260px;
+  
+  /* 특정 단위로 텍스트를 자르기 위한 구문 */
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* 텍스트를 자를 때 원하는 단위 ex) 3줄 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;  
+}
+
 .img{
 	width : 100px ;
 	height : 100px ;
 }
+td{
+	text-align: center;
+}
+
 </style>
 
 </head>
@@ -79,27 +121,61 @@
 							</tr>
 						</thead>
 						<!-- 값 표시 -->
-						<tbody align="center">
-							<c:forEach var="vo" items="${menuList}" varStatus="status">
-								<tr>
-									<th scope="row">${vo.menuIndex}</th>
-									<td>${vo.menuName}</td>
-									<td>${vo.menuIntro}</td>
-									<td><fmt:formatNumber value="${vo.menuPrice}"/></td>
-									<td><img src="${vo.menuImage}" class="img"></td>
-									<td>${vo.menuFlag}</td>
-									<!--모달창에 수정폼 띄우기  -->
-									<!-- data-bs-toggle="modal" data-bs-target="#menuUpdateModal" -->
-									<td>  
-										  <div class="d-grid gap-2 col-md-6">
-											<button type="button" class="btn btn-warning btn-sm" onclick="menuUpdateForm(${vo.menuIndex})">수정</button>
-											<button type="button" class="btn btn-info btn-sm" onclick="alert(' 메뉴카드미리보기 / 작업중입니다.')">미리보기</button>
-											<button type="button" class="btn btn-danger btn-sm" onclick="menuDelete(${vo.menuIndex})">삭제</button>
-										  </div>
-									</td>
-								</tr>
-							</c:forEach>
-						</tbody>
+						
+						 
+							<tbody align="center">
+								<c:forEach var="vo" items="${menuList}" varStatus="vs">
+										<c:if test="${vo.menuLive eq 'die'}">
+										<tr class="menuContent">
+										<th class="a${vs.index}" scope="row">${vo.menuIndex}</th>
+										<td class="a${vs.index}">${vo.menuName}</td>
+										<td class="a${vs.index}">${vo.menuIntro}</td>
+										<td class="a${vs.index}"><fmt:formatNumber value="${vo.menuPrice}"/></td>
+										<td class="a${vs.index}"><img src="${vo.menuImage}" class="img"></td>
+										<td class="a${vs.index}" height="">										
+										<c:choose>
+										<c:when test="${vo.menuFlag eq 'pizza'}">PIZZA</c:when>
+										<c:when test="${vo.menuFlag eq 'sets'}">SET MENU</c:when>
+										<c:when test="${vo.menuFlag eq 'side'}">SIDE</c:when>
+										</c:choose>
+										
+									
+										</c:if>
+										
+										<c:if test="${vo.menuLive ne 'die'}">
+										<tr class="menuContent">
+										<th class="a${vs.index}" scope="row">${vo.menuIndex}</th>
+										<td class="a${vs.index}">${vo.menuName}</td>
+										<td class="a${vs.index}">${vo.menuIntro}</td>
+										<td class="a${vs.index}"><fmt:formatNumber value="${vo.menuPrice}"/></td>
+										<td class="a${vs.index}"><img src="${vo.menuImage}" class="img"></td>
+										<td class="a${vs.index}" height="">									
+										<c:choose>
+										<c:when test="${vo.menuFlag eq 'pizza'}">PIZZA</c:when>
+										<c:when test="${vo.menuFlag eq 'sets'}">SET MENU</c:when>
+										<c:when test="${vo.menuFlag eq 'side'}">SIDE</c:when>
+										</c:choose>
+										</td>	
+										
+										</c:if>
+																		
+										<!--모달창에 수정폼 띄우기  -->
+										<!-- data-bs-toggle="modal" data-bs-target="#menuUpdateModal" -->
+										<td>  
+											  <div class="d-grid gap-2 col-md-6">
+												<button type="button" class="btn btn-primary btn-sm" onclick="menuUpdateForm(${vo.menuIndex})">수정</button>
+												<button type="button" class="btn btn-outline-secondary btn-sm" onclick="alret('현재 작업중입니다.')">미리보기</button>
+												<!-- 
+												<button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#menuPreviewModal" onclick="menuPreview(${vo.menuIndex})">
+												미리보기</button>
+												 -->
+												<button type="button" class="btn btn-outline-danger btn-sm" id="menulife${vs.index}" style="display: flex;" onclick="menuDie(${vs.index},${vo.menuIndex})">비활성화</button>
+											  </div>
+										</td>
+										</tr>
+									
+								</c:forEach>
+							</tbody>
 					</table>
 					<!-- 값 표시 -->
 			<!-- tabel bottom -->				
@@ -124,8 +200,11 @@
 					</div>
 				</div>
 			</div> 
-		</div> 
-		<!-- footer inlcud -->
+		</div>	
+		
+		
+		
+		<!-- footer inlcud -->		
 		<div><%@ include file="footer.jsp" %></div>
 	</div> <!-- 본문 끝 -->
 </div> <!-- layoutSidenav 끝 -->			
@@ -276,6 +355,71 @@
 </div>
 </form>
 <!-- 메뉴수정 modal -->
+
+<!-- 메뉴 미리보기 modal -->
+<div class="modal fade" id="menuPreviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">메뉴 미리보기</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="card menu-card">
+        	<div class="row no-gutters">
+						<!-- 이미지 들어가는 부분 -->
+						<div class="col-5" id="menuImage">
+							<img src="${vo.menuImage}" height="240px" />
+						</div>
+						<!-- 이미지 들어가는 부분 -->
+						<!-- 내용 들어가는 부분 -->
+						<div class="col-7">
+							<div class="card-body py-3 px-4">
+								<div class="fw-bold fs-4" id="upmenuName" style="text-align: left;">${data.menuvo.menuName }</div>
+								<p class="card-text menuIntro mt-1" id="upmenuIntro" style="color:gray; height: 100px;">${data.menuvo.menuIntro}</p>
+								<span class="mt-4 fw-bold fs-4" id="upmenuPrice"><fmt:formatNumber value="${data.menuvo.menuPrice}"/></span>
+							</div>
+						</div>
+							<!-- 내용 들어가는 부분 -->
+					</div>
+        
+        
+        
+        
+        
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 메뉴 미리보기 modal -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="/federico/resources/js/scripts.js"></script>
