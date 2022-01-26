@@ -31,7 +31,7 @@
 				</div>
 				<div class="col-2">
 					<div class="input-group mb-3">
-					  <input type="text" class="form-control" id="deliveryTime" value="${deliveryTime}">
+					  <input type="text" class="form-control" id="deliveryTime" value="${deliveryTime}" onchange="">
 					  <button class="btn btn-outline-success" type="button" id="deliveryTimeBtn" onclick="updateDeliveryTime()">변경</button>
 					</div>	
 				</div>
@@ -45,14 +45,22 @@
 					</div>
 					<!-- 주문정보 나오는 테이블 -->
 						<table class="table table-striped">
+							<colgroup>
+								<col style="width: 10%;">							
+								<col style="width: 30%;">							
+								<col style="width: 30%;">							
+								<col style="width: 10%;">							
+								<col style="width: 10%;">							
+								<col style="width: 10%;">							
+							</colgroup>
 							<thead>
 								<tr align="center">
-									<th style="width: 10%">주문번호</th>
-									<th style="width: 30%">배송지</th>
-									<th style="width: 30%">고객요청사항</th>
-									<th style="width: 10%">연락처</th>
-									<th style="width: 10%">상세보기</th>
-									<th style="width: 10%">주문일시</th>
+									<th>주문번호</th>
+									<th>배송지</th>
+									<th>고객요청사항</th>
+									<th>연락처</th>
+									<th>상세보기</th>
+									<th>주문일시</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -62,11 +70,11 @@
 								<c:forEach var="vo" items="${orderList}">
 
 									<tr align="center">
-										<td style="width: 10%">${vo.orderNumber}</td>
-										<td style="width: 30%">${vo.clientAddress}</td>
-										<td style="width: 30%">${vo.memo}</td>
-										<td style="width: 10%">${fn:substring(vo.clientPhone,0,3)}-${fn:substring(vo.clientPhone,3,7)}-${fn:substring(vo.clientPhone,7,10)}</td>
-										<td style="width: 10%; padding-top: 4px;">
+										<td>${vo.orderNumber}</td>
+										<td>${vo.clientAddress}</td>
+										<td>${vo.memo}</td>
+										<td>${fn:substring(vo.clientPhone,0,3)}-${fn:substring(vo.clientPhone,3,7)}-${fn:substring(vo.clientPhone,7,10)}</td>
+										<td style="padding-top: 4px;">
 											<span class="btn py-0" onclick="showOrderDetail(${vo.orderNumber}, '${vo.clientAddress}')" >
 											<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" >
 											  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -78,7 +86,8 @@
 						</table><!-- 주문정보 나오는 테이블 -->
 				</div>
 			</div><!-- 메인화면 주문현황 -->
-		<a href="completeOrder">완료주문조회 test경로</a>
+		<a href="completeorder">완료주문조회 test경로</a>
+		<a href="itemorderf">가맹점 자재발주</a>
 		
 		
 		
@@ -125,7 +134,7 @@
 						</div>
 						<!-- modal-body -->
 						<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" >닫기</button>&nbsp;&nbsp;
+										<button type="button" class="btn btn-secondary" onclick="hideOrderDetailModal()" >닫기</button>&nbsp;&nbsp;
 										<button type="button" class="btn btn-primary" >인쇄</button>&nbsp;&nbsp;
 										<button type="button" class="btn btn-danger" id="orderCompleteBtn">완료처리</button>
 								</div>

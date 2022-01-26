@@ -23,8 +23,10 @@
 <!-- resultMap 설정 ============================================================-->  
 
   
-
-	
+	<!-- itemflag에 따라 select item -->
+	<select id="selectItembyFlag" resultType="vo.ItemInfoVO">
+		SELECT * FROM iteminfo WHERE itemflag = #{itemFlag} ORDER BY itemname
+	</select>
 	
 	<!-- 가맹점 발주내역 처리완료로 변경 -->
 	<update id="fcOrderSeqUpdate" parameterType="hashmap">
