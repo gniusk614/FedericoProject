@@ -92,10 +92,14 @@ a {
 				</div>
 			</div>
 			<div class="row justify-content-md-center" style="height: 100px;">
-				<div class="col-6 bg-light py-4" align="center" style="font-size: x-large; color: crimson; border-top: 1px solid crimson; border-right: 2px solid crimson; border-radius: 5px;">
+				<div class="col-6 bg-light py-4" align="center" 
+				style="font-size: x-large; color: crimson; border-top: 1px solid crimson; border-right: 2px solid crimson; border-radius: 5px; cursor: pointer;"
+				onclick="javaScript:location.href='menuList?menuFlag=pizza'">
 				<img src="/federico/resources/Image/delieveryLogo.png" alt="..." style="width: 50px;">
 				&nbsp;&nbsp;&nbsp;주문하기</div>
-				<div class="col-6 bg-light py-4" align="center" style="font-size: x-large; color: crimson; border-top: 1px solid crimson; border-radius: 5px;" >
+				<div class="col-6 bg-light py-4" align="center" 
+				style="font-size: x-large; color: crimson; border-top: 1px solid crimson; border-radius: 5px; cursor: pointer;" 
+				onclick="javaScript: location.href='#'">
 				<img src="/federico/resources/Image/mapLogo.png" alt="..." style="width: 40px;">
 				&nbsp;&nbsp;&nbsp;매장찾기</div>
 			</div>

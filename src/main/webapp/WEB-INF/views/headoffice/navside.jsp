@@ -124,7 +124,7 @@
 					<div class="collapse" id="collapseLayouts5"
 						aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
-							<a class="nav-link" href="layout-static.html">각종 통계</a>
+							<a class="nav-link" href="chartf">각종 통계</a>
 						</nav>
 					</div>
 					<!-- 각종 통계 -->

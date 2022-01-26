@@ -39,7 +39,11 @@
 		FROM orderdetaillist o, menuinfo m WHERE o.ordernumber = #{orderNumber} ORDER BY o.orderdetailnumber
 	</select>
 
-
+	<!-- 주문취소처리 -->
+	<update id="orderCancel">
+		UPDATE orderlist SET completeyn = 'C' WHERE ordernumber = #{orderNumber}
+	</update>
+	
 	<!-- 주문 완료처리 -->
 	<update id="orderComplete">
 		UPDATE orderlist SET completeyn = 'Y' WHERE ordernumber = #{orderNumber}
@@ -77,7 +81,15 @@
 		</choose>
 	</sql>
 
-
+	<!-- 비회원주문조회용 -->
+	<select id="selectOrderbyPhone" resultType="vo.OrderListVO">
+		SELECT orderNumber, clientId, fcId, memo, TO_CHAR(orderDate,'yyyy-mm-dd am hh:mi:ss') as orderDate,clientName, clientAddress, clientPhone 
+		FROM ORDERLIST o 
+		WHERE CLIENTPHONE = #{clientPhone} AND COMPLETEYN = 'N'
+		ORDER BY orderdate DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
 
 
 <!-- ======================= 주문조회,수정 관련 ====================== -->

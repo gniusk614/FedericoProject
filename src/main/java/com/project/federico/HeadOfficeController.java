@@ -786,6 +786,12 @@ public class HeadOfficeController {
 		return "headoffice/headofficeMain";
 	} //headofficeMain
 	
+	//메인화면 보내기
+	@RequestMapping(value = "/chartf")
+	public String chartf(ModelAndView mv,MenuVO vo) {
+		return "headoffice/chart";
+	} //headofficeMain
+	
 	
 	
 }
