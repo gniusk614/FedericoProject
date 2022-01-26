@@ -180,13 +180,25 @@ var si=1;
 // 자재발주 등록
 function fcItemOrder(){
 	
-	for(var i=0; i<si; i++){
+	var sendData = [];
+	for (var i = 0; i < si-1; i++) {
 		
-	}
+		
+		
+		
+		var iname = i;
+		var iname = {
+			itemIndex: $('#selectItemName' + (i+1)).attr('data-itemIndex'),
+			itemQty: $('#itemQty' + (i+1)).val()
+		}//for
+		sendData[i] = iname;
+		}
+	console.log(sendData)	
+		
+	}//fcItemOrder
 	
 	
 	
-}
 
 
 
@@ -284,6 +296,7 @@ function changeItemInfo(index){
 					 var price = comma(data.vo.itemPrice); 
 					$('#itemUnit'+index).html(data.vo.itemUnit);
 					$('#itemPrice'+index).html(price);
+					$('#selectItemName'+index).attr('data-itemIndex',data.vo.itemIndex);
 				} else{
 					alert('통신 장애입니다.\n다시 시도해주세요.')	
 					location.reload();	
