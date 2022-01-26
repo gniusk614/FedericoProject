@@ -711,13 +711,13 @@ $(function() {
 	function inputNumberFormat(obj) {
 		obj.value = comma(uncomma(obj.value));
 	}
-	// 실행함수
-	// 콤마찍기
+
+
 
 });// ready
 
+// 콤마찍기
 function comma(str) {
-
 	str = String(str);
 	return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
 }
@@ -765,11 +765,6 @@ function changeSearchItemOption() {
 }
 
 // 자재등록
-
-
-
-
-
 function itemInsert() {
 	// 가격 콤마빼기
 	var itemprice = $('#itemprice').val();
@@ -927,7 +922,6 @@ function fcOrderDetailForm(fcOrderSeq) {
 				var itemQty = comma(vo.itemQty);
 				var sumRow = comma(vo.itemInfoVO.itemPrice * vo.itemQty);
 				sumCol = sumCol + (vo.itemInfoVO.itemPrice * vo.itemQty);
-				console.info('합계' + sumCol);
 				$('#fcOrderDeatilTableBody').append(
 						'<tr><th>' + vo.fcOrderDetailSeq + '</th><td>'
 								+ vo.itemInfoVO.itemFlag + '</td><td>'

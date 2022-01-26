@@ -23,6 +23,12 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 	@Autowired
 	HeadOfficeMapper dao;
 
+	// 분류로 자재 조회
+	@Override
+	public List<ItemInfoVO> selectItembyFlag(ItemInfoVO vo) {
+		return dao.selectItembyFlag(vo);
+	}
+	
 	// 가맹점 발주내역 처리완료로 변경
 	@Override
 	public int fcOrderSeqUpdate(Map<String, Object> params) {

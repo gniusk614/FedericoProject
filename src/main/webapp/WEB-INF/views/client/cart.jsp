@@ -20,7 +20,7 @@
 </head>
 <body>
 	<!-- Navigation-->
-	<%@include file="nav.jsp"%>
+	<%@include file="nav.jsp"%>				
 	
 	<!-- Section--> 
 	<section class="container" style="height: auto; min-height: 100%; padding-bottom: 168px;">

@@ -14,6 +14,9 @@ import vo.StaffVO;
 
 public interface HeadOfficeService {
 
+	List<ItemInfoVO> selectItembyFlag(ItemInfoVO vo); // 분류로 자재 조회
+
+	
 	int fcOrderSeqUpdate(Map<String, Object> params); // 가맹점 발주내역 처리완료로 변경
 	
 	List<FcOrderDetailVO> selectFcOrderDetailbyOrderNumber(FcOrderDetailVO vo);  // 가맹점 발주내역 상세보기(발주번호 별로)

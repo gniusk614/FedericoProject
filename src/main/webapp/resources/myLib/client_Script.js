@@ -758,12 +758,37 @@ function inputAddress(){
 
 //장바구니 유무에 따른 경로 다르게 주기
 function moveOrder(flag){
+	$.ajax({
+		type: 'get',
+		url: 'nonaddress',
+		data: {
+			nonAddress: $('input[name=nonAddress]').val()
+		},
+		success: function(data){
+			if(data.success == 'success'){
+				if (flag=='1'){
+					//$('#jumun').attr('action', 'orderInfo');
+					location.href='orderInfo';
+				}else{
+					//$('#jumun').attr('action','menuList?menuFlag=pizza');
+					location.href='menuList?menuFlag=pizza';
+				}
+				//$('#jumun').submit();
+			} else{
+			alert('통신 에러입니다.\n다시 시도해주세요.')
+			}
+		},
+		error: function(){
+			alert('통신 에러입니다.\n다시 시도해주세요.')
+		}	
+	})//ajax
+/*	
 	if (flag=='1'){
 		$('#jumun').attr('action', 'orderInfo');
 	}else{
 		$('#jumun').attr('action','menuList?menuFlag=pizza');
 	}
-	$('#jumun').submit();
+	$('#jumun').submit();*/
 }
 
 //주문페이지 조건에따른 동작제어

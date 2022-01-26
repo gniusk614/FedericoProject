@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,7 +68,7 @@ public class ClientController {
 		return mv;
 	}// fcSearch
 	
-	// 카카오페이 결제완료폼 이동 + 주문정보 인서트
+	// 결제완료폼 이동 + 주문정보 인서트
 	@RequestMapping(value = "/ordercomplete")
 	public ModelAndView ordercomplete(ModelAndView mv, HttpServletRequest request, HttpSession session, ClientVO clientVo) {
 		List<CartVO> list = (List<CartVO>)session.getAttribute("list");
@@ -213,10 +214,12 @@ public class ClientController {
 			mv.addObject("clientAddress", clientService.selectOne(vo).getClientAddress());
 			mv.addObject("clientPhone", clientPhone);
 			mv.addObject("clientName", clientService.selectOne(vo).getClientName());
-		} else if(request.getParameter("nonAddress") != null) {
-			session.setAttribute("clientName", request.getParameter("nonName"));
-			session.setAttribute("clientPhone", request.getParameter("nonPhone"));
-			session.setAttribute("clientAddress", request.getParameter("nonAddress"));
+		} else if(session.getAttribute("nonAddress") != null) {
+			mv.addObject("clientAddress", (String)session.getAttribute("nonAddress"));
+			mv.addObject("clientPhone", (String)session.getAttribute("nonPhone"));
+			mv.addObject("clientName", (String)session.getAttribute("nonName"));
+		} else if(session.getAttribute("nonName") != null) {
+			uri = "client/nonOrderAddress";
 		} else {
 			uri="client/clientLoginForm";
 		}
@@ -360,20 +363,22 @@ public class ClientController {
 			mv.addObject("flag", vo.getMenuFlag());
 			session.setAttribute("listsize", list.size());
 		}
-		// 비회원주문에서 넘어올떄 세션에 정보 담기
-		if(request.getParameter("nonName") != null) {
-			session.setAttribute("nonName", request.getParameter("nonName"));
-			session.setAttribute("nonPhone", request.getParameter("nonPhone"));
-			session.setAttribute("nonAddress", request.getParameter("nonAddress"));
-		}
 		
 		mv.setViewName("client/menu");
 		return mv;
 	}
 
 	@RequestMapping(value = { "/", "/home" })
-	public String clientHome() {
-		return "client/pizzaMain";
+	public ModelAndView clientHome(ModelAndView mv, HttpSession session) {
+		if(session.getAttribute("list") != null) {
+			List<CartVO> list = (List<CartVO>)session.getAttribute("list");
+			if(list.size() > 0) {
+				mv.addObject("listSize", list.size());
+			}
+		}
+		
+		mv.setViewName("client/pizzaMain");
+		return mv;
 	}
 
 	@RequestMapping(value = "clientLoginf")
@@ -471,15 +476,27 @@ public class ClientController {
 		return mv;
 	}
 
+	
+	// 비회원 주소 세션 저장
+	@RequestMapping(value = "/nonaddress")
+	public ModelAndView nonAddress(ModelAndView mv, HttpSession session, @RequestParam("nonAddress") String nonAddress) {
+		
+		session.setAttribute("nonAddress", nonAddress);
+		mv.addObject("success","success");
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
 	// 비회원주문 주소입력창 이동
 	@RequestMapping(value = "nonOrderf")
-	public ModelAndView nonOrderf(ModelAndView mv, @RequestParam("nonName") String nonName,
-			@RequestParam("nonPhone") String nonPhone) {
-
+	public ModelAndView nonOrderf(ModelAndView mv, HttpSession session, HttpServletRequest request) {
 		String uri = "client/nonOrderAddress";
-
-		mv.addObject("nonName", nonName);
-		mv.addObject("nonPhone", nonPhone);
+		if(session.getAttribute("nonName") == null) {
+			session.setAttribute("nonName", request.getParameter("nonName"));
+			session.setAttribute("nonPhone", request.getParameter("nonPhone"));
+		}
+		
 		mv.setViewName(uri);
 
 		return mv;

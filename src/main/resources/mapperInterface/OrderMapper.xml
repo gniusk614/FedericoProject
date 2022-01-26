@@ -63,15 +63,15 @@
 	</select>
 	
 	<sql id="completeOrderSearch">
-		<if test="cri.keyword != null">
-			<bind name="keyVal" value="'%'+cri.keyword+'%'"/>
-		</if>
 		<choose>
 			<when test="cri.searchType == 'orderNumber'.toString()">
-				WHERE fcId like #{keyVal}
-			</when>
+				<if test="cri.keyword != null">
+					<bind name="keyVal" value="'%'+cri.keyword+'%'"/>
+				</if>
+				WHERE orderNumber like #{keyVal}
+			</when>	
 			<when test="cri.searchType == 'orderDate'.toString()">
-				WHERE fcId like #{keyVal}
+				<![CDATA[ WHERE orderDate <= TO_DATE(#{maxDate},'YY/MM/DD')+INTERVAL '1' DAY AND orderDate >= TO_DATE(#{minDate},'YY/MM/DD') ]]>
 			</when>
 			<otherwise>WHERE 1=1</otherwise>
 		</choose>
