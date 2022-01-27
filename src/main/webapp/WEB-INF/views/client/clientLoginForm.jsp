@@ -87,7 +87,7 @@ table, tr, td, th {
 						<div class="col-md-2" align="center"></div>
 						<div class="col-md-4" align="center">
 							<div>
-								페데리코의 가족이 되시면<br> 특별한 혜택을 드립니다.
+								페데리코의 가족이 되시면<br> 특별한 혜택을 드립니다.		
 							</div>
 						</div>
 

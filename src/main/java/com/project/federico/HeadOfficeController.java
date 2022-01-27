@@ -39,7 +39,6 @@ import paging.SearchCriteria;
 import service.FranchiseService;
 import service.HeadOfficeService;
 import service.MenuService;
-import service.MenuServiceImpl;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -582,16 +581,21 @@ public class HeadOfficeController {
 	
 	//============================Menu=======================
 	@RequestMapping(value = "/menuList")
-	public ModelAndView menuList(ModelAndView mv,MenuVO vo) {
-
+	public ModelAndView menuList(ModelAndView mv,MenuVO vo,
+			SearchCriteria cri,PageMaker pageMaker) {
 		
-		List<MenuVO> list = menuService.selectMenuList();
+		cri.setSnoEno();
+		List<MenuVO> list = menuService.searchMenuList(cri);
 		if(list != null) {
 			mv.addObject("menuList",list);
+			mv.setViewName("headoffice/menuList");
 		} else {
+			mv.setViewName("headoffice/menuList");
 			mv.addObject("message","출력자료 없음.");
 		}
-		mv.setViewName("headoffice/menuList");
+		pageMaker.setCri(cri);
+		pageMaker.setTotalRowCount(menuService.searchMenuRows(cri));
+
 		return mv;
 	}// menuList end
 	
@@ -775,8 +779,8 @@ public class HeadOfficeController {
 	@RequestMapping(value = "/menuDie")
 	public ModelAndView menuDie(ModelAndView mv,MenuVO vo) {
 		
-		System.out.println("sysout : "+vo.getMenuLive());
-		log.info("log info : "+vo.getMenuLive());
+
+		log.info("menuLife(/menuDie) : "+vo.getMenuLive());
 		
 		if(menuService.menuLive(vo)>0) {			
 			mv.addObject("success","success");			

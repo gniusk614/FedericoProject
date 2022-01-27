@@ -13,10 +13,6 @@
 <script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
 <script src="/federico/resources/myLib/headOffice_Script.js"></script>
 <style type="text/css">
-.a:click #die{
-text-decoration: line-through;
-}
-
 
 
 
@@ -55,12 +51,39 @@ input::-webkit-inner-spin-button {
 	width : 100px ;
 	height : 100px ;
 }
+.img_die{
+	filter:grayscale(100%);
+	width : 100px ;
+	height : 100px ;
+}
+
 td{
 	text-align: center;
 }
 
 </style>
-
+<script type="text/javascript">
+$(function() {	
+	// SearchType 이 '---' 면 keyword 클리어
+	$('#searchType').change(function() {
+		if ($(this).val()=='n') $('#keyword').val('');
+		console.log(1);
+	}); //change
+	// 검색후 요청
+ 	$('#searchBtn').on("click", function() {
+ 		console.log(2);
+		self.location="menuselect"
+			+"${pageMaker.makeQuery(1)}"
+			+"&searchType="
+			+$('#searchType').val()
+			+'&keyword='
+			+$('#keyword').val()
+			
+	}); //on_click 
+	
+	
+}) //ready 
+</script>
 </head>
 <body>
 <!-- navtop inlcud -->
@@ -85,18 +108,37 @@ td{
 						<div class="container-fluid">
 							<div class="row">
 								<div class="col-sm-2">
-									<select class="form-select" aria-label="Default select example" >
+									<select id="searchType" class="form-select" onchange="changeSearchItemOption()" aria-label="Default select example" >
 										<option value="none" <c:out value="${pageMaker.cri.searchType==null ? 'selected':''}"/>>일  반</option>
 										<option value="name" <c:out value="${pageMaker.cri.searchType=='name' ? 'selected':''}"/>>메뉴명</option>
 										<option value="flag" <c:out value="${pageMaker.cri.searchType=='flag' ? 'selected':''}"/>>분 류<option>
 									</select>
 								</div>
-								<div class="col-sm-2">
-										<input class="form-control me-2" type="search"
-											placeholder="Search" value="${pageMaker.cri.keyword}" aria-label="Search">
+								
+								<div class="col-sm-2" id="changeSearchFinder">
+										<c:if test="${pageMaker.cri.searchType!='flag'}">
+											<input class="form-control me-2" type="search" id="keyword"
+												placeholder="Search" value="${pageMaker.cri.keyword}" >
+											<select class="form-select" id="keywordHide" style="display: none;">
+												<option value="pizza">피자</option>
+												<option value="side">사이드</option>
+												<option value="set">세트</option>
+											</select>
+										</c:if>
+										<c:if test="${pageMaker.cri.searchType=='flag'}">
+											<input class="form-control me-2" type="search" id="keywordHide"
+												placeholder="Search" value="${pageMaker.cri.keyword}" style="display: none;">
+											<select class="form-select" id="keyword" >
+												<option selected="selected" >선택하세요</option>
+												<option value="pizza" <c:out value="${pageMaker.cri.keyword=='pizza' ? 'selected':''}"/>>피자</option>
+												<option value="side"  <c:out value="${pageMaker.cri.keyword=='side' ? 'selected':''}"/>>사이드</option>
+												<option value="set"   <c:out value="${pageMaker.cri.keyword=='set' ? 'selected':''}"/>>세트</option>
+											</select>
+										</c:if>
 								</div>
+															
 								<div class="col-sm-2">
-									<button id="menusearchbtn" class="btn btn-outline-primary">검색</button>
+									<button id="searchBtn" class="btn btn-outline-primary">검색</button>
 								</div>
 								<div class="col-sm-4"></div>
 								<div class="col-sm-2" align="right">
@@ -120,48 +162,49 @@ td{
 								<th scope="col" width="20%">수정/삭제</th>
 							</tr>
 						</thead>
-						<!-- 값 표시 -->
-						
-						 
+						<!-- Table 값 표시 -->						 
 							<tbody align="center">
+							<!-- 메뉴 life = die Start -->
 								<c:forEach var="vo" items="${menuList}" varStatus="vs">
 										<c:if test="${vo.menuLive eq 'die'}">
 										<tr class="menuContent">
-										<th class="a${vs.index}" scope="row">${vo.menuIndex}</th>
-										<td class="a${vs.index}">${vo.menuName}</td>
-										<td class="a${vs.index}">${vo.menuIntro}</td>
-										<td class="a${vs.index}"><fmt:formatNumber value="${vo.menuPrice}"/></td>
-										<td class="a${vs.index}"><img src="${vo.menuImage}" class="img"></td>
-										<td class="a${vs.index}" height="">										
-										<c:choose>
-										<c:when test="${vo.menuFlag eq 'pizza'}">PIZZA</c:when>
-										<c:when test="${vo.menuFlag eq 'sets'}">SET MENU</c:when>
-										<c:when test="${vo.menuFlag eq 'side'}">SIDE</c:when>
-										</c:choose>
-										
-									
+											<th class="a${vs.index}" scope="row" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red; ">${vo.menuIndex}</th>
+											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;">${vo.menuName}</td>
+											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;">${vo.menuIntro}</td>
+											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;"><fmt:formatNumber value="${vo.menuPrice}"/></td>
+											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;"><img src="${vo.menuImage}" class="img_die" ></td>
+											<td class="a${vs.index}" height="" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;">										
+											<c:choose>
+											<c:when test="${vo.menuFlag eq 'pizza'}">PIZZA</c:when>
+											<c:when test="${vo.menuFlag eq 'set'}">SET MENU</c:when>
+											<c:when test="${vo.menuFlag eq 'side'}">SIDE</c:when>
+											</c:choose>
+											<td>  
+											  <div class="d-grid gap-2 col-md-6">
+												<button type="button" class="btn btn-danger btn-sm" onclick="menuUpdateForm(${vo.menuIndex})">판매중지</button>
+												<button type="button" class="btn btn-danger btn-sm" onclick="alret('현재 작업중입니다.')">메뉴입니다.</button>
+												<button type="button" class="btn btn-outline-primary btn-sm " id="menulife${vs.index}" style="display:block;" onclick="menuDie(${vs.index},${vo.menuIndex})">활성화</button>
+											  </div>
+										</td>
 										</c:if>
-										
+			<!-- 메뉴 life = die End -->
+					
+			<!-- 메뉴 life = live Start -->
 										<c:if test="${vo.menuLive ne 'die'}">
 										<tr class="menuContent">
-										<th class="a${vs.index}" scope="row">${vo.menuIndex}</th>
-										<td class="a${vs.index}">${vo.menuName}</td>
-										<td class="a${vs.index}">${vo.menuIntro}</td>
-										<td class="a${vs.index}"><fmt:formatNumber value="${vo.menuPrice}"/></td>
-										<td class="a${vs.index}"><img src="${vo.menuImage}" class="img"></td>
-										<td class="a${vs.index}" height="">									
-										<c:choose>
-										<c:when test="${vo.menuFlag eq 'pizza'}">PIZZA</c:when>
-										<c:when test="${vo.menuFlag eq 'sets'}">SET MENU</c:when>
-										<c:when test="${vo.menuFlag eq 'side'}">SIDE</c:when>
-										</c:choose>
-										</td>	
-										
-										</c:if>
-																		
-										<!--모달창에 수정폼 띄우기  -->
-										<!-- data-bs-toggle="modal" data-bs-target="#menuUpdateModal" -->
-										<td>  
+											<th class="a${vs.index}" scope="row">${vo.menuIndex}</th>
+											<td class="a${vs.index}">${vo.menuName}</td>
+											<td class="a${vs.index}">${vo.menuIntro}</td>
+											<td class="a${vs.index}"><fmt:formatNumber value="${vo.menuPrice}"/></td>
+											<td class="a${vs.index}"><img src="${vo.menuImage}" class="img"></td>
+											<td class="a${vs.index}" height="">									
+											<c:choose>
+											<c:when test="${vo.menuFlag eq 'pizza'}">PIZZA</c:when>
+											<c:when test="${vo.menuFlag eq 'set'}">SET MENU</c:when>
+											<c:when test="${vo.menuFlag eq 'side'}">SIDE</c:when>
+											</c:choose>
+											</td>																	
+											<td>  
 											  <div class="d-grid gap-2 col-md-6">
 												<button type="button" class="btn btn-primary btn-sm" onclick="menuUpdateForm(${vo.menuIndex})">수정</button>
 												<button type="button" class="btn btn-outline-secondary btn-sm" onclick="alret('현재 작업중입니다.')">미리보기</button>
@@ -169,48 +212,65 @@ td{
 												<button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#menuPreviewModal" onclick="menuPreview(${vo.menuIndex})">
 												미리보기</button>
 												 -->
-												<button type="button" class="btn btn-outline-danger btn-sm" id="menulife${vs.index}" style="display: flex;" onclick="menuDie(${vs.index},${vo.menuIndex})">비활성화</button>
+												<button type="button" class="btn btn-outline-danger btn-sm" id="menulife${vs.index}" style="display:block;" onclick="menuDie(${vs.index},${vo.menuIndex})">비활성화</button>
 											  </div>
-										</td>
+											</td>
 										</tr>
-									
+										</c:if>								
 								</c:forEach>
+			<!-- 메뉴 life = live End -->		
 							</tbody>
 					</table>
-					<!-- 값 표시 -->
-			<!-- tabel bottom -->				
+					<!-- Table 표시 End -->
+					
+			<!-- Paging Block 통쨰로 떠가서 써도 잘 먹힐거에요 by 현구!! -->				
 					<div class="dataTable-bottom">
 						<nav class="dataTable-pagination">
 							<ul class="pagination">
-								<li class="page-item"><a class="page-link" href="#"
-									aria-label="Previous"> <span aria-hidden=true>&laquo;</span>
-								</a></li>
+								<c:if test="${pageMaker.prev}">
+									<li class="page-menu"><a class="page-link" href="itemselect${pageMaker.searchQuery(pageMaker.spageNo-1)}"
+										aria-label="Previous"> <span aria-hidden=true>&laquo;</span>
+									</a></li>
+								</c:if>	
+								<c:if test="${! pageMaker.prev}">
+									<li class="page-menu disabled"><a class="page-link"
+										aria-label="Previous"> <span aria-hidden=true>&laquo;</span>
+									</a></li>
+								</c:if>	
 									<c:forEach var="i" begin="${pageMaker.spageNo}" end="${pageMaker.epageNo}">
 										<c:if test="${i==pageMaker.cri.currPage}">
-										<li class="page-item active" aria-current="page"><a class="page-link">${i}</a></li>
+										<li class="page-menu active" aria-current="page"><a class="page-link">${i}</a></li>
 										</c:if>
+										
 										<c:if test="${i!=pageMaker.cri.currPage}">
-										<li class="page-item"><a href="menuselect${pageMaker.searchQuery(i)}">${i}</a></li>
+										<li class="page-menu"><a href="itemselect${pageMaker.searchQuery(i)}">${i}</a></li>
 										</c:if>
 									</c:forEach>
-									<li class="page-item"><a class="page-link" href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-								</a></li>
+									
+									
+									<c:if test="${pageMaker.next}">
+										<li class="page-menu"><a class="page-link" href="itemselect${pageMaker.searchQuery(pageMaker.epageNo+1)}" 
+										aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+									</a></li>
+									</c:if>
+									<c:if test="${! pageMaker.next}">
+										<li class="page-menu disabled"><a class="page-link" 
+										aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+									</a></li>
+									</c:if>
 							</ul>
 						</nav>
-					</div>
+					</div><!-- Paging Block 통쨰로 떠가서 써도 잘 먹힐거에요 !! -->
 				</div>
 			</div> 
 		</div>	
-		
-		
-		
 		<!-- footer inlcud -->		
 		<div><%@ include file="footer.jsp" %></div>
 	</div> <!-- 본문 끝 -->
 </div> <!-- layoutSidenav 끝 -->			
 
 
-<!-- 메뉴등록 modal -->
+<!-- 메뉴등록 modal START -->
 <form action="menuInsert" name="menuInsert" method="post" enctype="multipart/form-data">
 	<div class="modal fade" id="menuInsertModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 	  <div class="modal-dialog">
@@ -262,10 +322,10 @@ td{
 	  </div>
 	</div>
 </form>
-<!-- 메뉴등록 modal -->
+<!-- 메뉴등록 modal END -->
 
 
-<!-- 메뉴수정 modal -->
+<!-- 메뉴수정 modal START-->
 <form action="menuUpdate" name="menuUpdate" method="post" enctype="multipart/form-data" id="menuUpdate" >
 <div class="modal fade" id="menuUpdatef" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -354,9 +414,9 @@ td{
 </div>
 </div>
 </form>
-<!-- 메뉴수정 modal -->
+<!-- 메뉴수정 modal END-->
 
-<!-- 메뉴 미리보기 modal -->
+<!-- 메뉴 미리보기 modal START-->
 <div class="modal fade" id="menuPreviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -395,31 +455,7 @@ td{
     </div>
   </div>
 </div>
-<!-- 메뉴 미리보기 modal -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!-- 메뉴 미리보기 modal END-->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="/federico/resources/js/scripts.js"></script>

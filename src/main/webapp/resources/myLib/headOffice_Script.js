@@ -980,7 +980,7 @@ function fcOrderFlagUpdate(flag) {
 
 
 
-//===< 메뉴관련(민석) >========!!시작!!====================================
+//===< 메뉴CRUD(민석) >========!!시작!!====================================
 
 
 
@@ -1033,6 +1033,7 @@ function fcOrderFlagUpdate(flag) {
 
 	
 	function menuDie(vsindex,menuIndex) {
+		/*
 		console.log($('#menulife'+vsindex).text());
 		console.log($('#menulife'+vsindex).html());
 		console.log($('#menulife'+vsindex).val());
@@ -1044,33 +1045,39 @@ function fcOrderFlagUpdate(flag) {
 		// 반복문 안에 있는 건 어떻게 처리하지? 
 		// varstatus => 가 index 값을 가진다.
 		// 그 index 로 반복문 내에 있는 것을 수정할 수 있다.
-		
+		*/
+		if(confirm(" 통계자료를 확인해보세요.\n 비활성화 또는 활성화 하시겠습니까?  ")){
+			
 		$.ajax({
 			url:'menuDie',
-			type:'get',
+			type:'post',
 			data:{
 				menuIndex: menuIndex,
-				menuLive : $('#menulife'+vsindex).text()=='비활성화'? 'die' : 'live'						
+				menuLive : $('#menulife'+vsindex).text()=='비활성화'? 'Die' : 'Live'						
 			},
 			
 			success:function(data){ // 성공하면 아래 작업을 실행한다.
+				
+			
 				console.log('비활성화 받아오기 성공1');	
 				$('.a'+vsindex).val(data.success);
 				
 				
 				if(data.success == 'success'){
+					
 					console.log('비활성화 받아오기 성공2');					
 					if($('#menulife'+vsindex).text()=='비활성화'){
 						
 						$('#menulife'+vsindex).text('활성화');
-						$('.a'+vsindex).css('text-decoration','line-through');
+						$('.a'+vsindex).css('text-decoration-line','line-through');
+							location.reload();
 						//$('#menulife'+vsindex).removeAttr('onclick');
 						//$('#menulife'+vsindex).attr('onclick','menuLive(${vs.index},${vo.menuIndex})');
 				   }else{
 						
 						$('#menulife'+vsindex).text('비활성화');
 						$('.a'+vsindex).css('text-decoration','none');
-					
+						location.reload()
 						 }
 				}
 			},error:function(){
@@ -1079,8 +1086,8 @@ function fcOrderFlagUpdate(flag) {
 				alert("비활성화 전송에 실패하였습니다.");
 			}
 		
-		})//ajax
-		
+			})//ajax
+		}//confirm
 	}//.click		
 	
 	

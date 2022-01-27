@@ -6,7 +6,7 @@
 
 
 	<select id="selectMenuListbyFlag" resultType="vo.MenuVO">
-		SELECT * FROM menuinfo WHERE menuflag = #{menuFlag}
+		SELECT * FROM menuinfo WHERE menuflag = #{menuFlag} and menulive = #{menulive}
 	</select>
 
 
@@ -27,6 +27,49 @@
 		SELECT * FROM MENUINFO order by menuIndex asc
 
 	</select>
+	<!--<<  searchMenuList  >>-->
+	<select id="searchMenuList" resultType="vo.MenuVO">
+		SELECT * FROM menuinfo
+		<include refid="menuSearch"></include> 
+		ORDER BY menuindex
+		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY	
+	</select>
+	
+	<!--<<  searchMenuRows  >>-->
+	<select id="searchMenuRows" resultType="int">
+		SELECT COUNT(*) FROM menuinfo <include refid="menuSearch"></include>	
+	</select>
+	
+	<!--<<  menuSearch  >>-->
+	<sql id="menuSearch" >
+		<if test="keyword != null">
+			<bind name="keyVal" value="'%'+keyword+'%'"/>
+		</if>
+		<choose>
+			<when test="searchType == 'name'.toString()">
+				where menuname LIKE #{keyVal} 
+				 <!-- and title Like  CONCAT('%',CONCAT(#{keyword},'%')) 
+                 and title Like  '%' || #{keyword} || '%' ) -->
+			</when>
+			<when test="searchType == 'flag'.toString()">
+				where menuflag LIKE #{keyVal} 
+			</when>			
+			<otherwise></otherwise>						
+		</choose>
+	</sql>
+	
+	<!--<<  menuSearch  >>-->
+	<select id="selectAllMenu" resultType="vo.MenuVO">
+		SELECT * FROM menuinfo order by menuindex
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
      					<!--<<  read_one  >>-->
 	<select id="selectMenuOne" resultType="vo.MenuVO">
 		SELECT * FROM MENUINFO
@@ -55,7 +98,7 @@
 	<update id="menuDie">
 		UPDATE MENUINFO SET
 		menuLive = #{menuDie}
-		where menuIndex =#{menuIndex}
+		where menuIndex = #{menuIndex}
 	</update>
 					
 						
