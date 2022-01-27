@@ -23,9 +23,15 @@
 	<!-- Navigation-->
 	<%@include file="nav.jsp"%>
 	
-	<c:if test="${not empty alert}">
+	<c:if test="${not empty message}">
 	<script>
 		alert('주문내역이 없습니다.');
+		location.href='clientLoginf';
+	</script>
+	</c:if>
+	<c:if test="${not empty selectOne}">
+	<script>
+		alert('가입회원입니다. 로그인 후 이용해주세요.');
 		location.href='clientLoginf';
 	</script>
 	</c:if>

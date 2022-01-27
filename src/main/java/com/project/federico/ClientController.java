@@ -553,28 +553,30 @@ public class ClientController {
 		@RequestMapping(value = "nonOrderDetail")
 		public ModelAndView nonOrderDetail(ModelAndView mv,
 				@RequestParam("nonName") String nonName, @RequestParam("nonPhone") String nonPhone, 
-				OrderListVO ordervo, OrderDetailListVO orderDvo) throws IOException {
+				OrderListVO ordervo, OrderDetailListVO orderDvom , ClientVO vo) throws IOException {
+			mv.setViewName("client/nonOrderDetail");
+			vo.setClientPhone(nonPhone);
+			vo = clientService.selectOnePhone(vo);
 			
-			log.info(nonName);
-			log.info(nonPhone);
-			
-			ordervo.setClientPhone(nonPhone);
-			ordervo = orderService.selectOrderbyPhone(ordervo);
-			if (ordervo == null) {
-				log.info("이프");
-				mv.addObject("alert", "주문내역이 없습니다.");
+			if (vo != null) {
+				mv.addObject("selectOne", "가입회원입니다. 로그인 후 이용해주세요.");
 			} else {
-				log.info("엘스");
-				List<OrderDetailListVO> list = orderService.selectDetailbyOrderNumber(ordervo.getOrderNumber());
-				if (list != null) {
-					mv.addObject("orderInfo", ordervo);
-					mv.addObject("list", list);
+				ordervo.setClientPhone(nonPhone);
+				ordervo = orderService.selectOrderbyPhone(ordervo);
+				if (ordervo == null) {
+					mv.addObject("message", "주문내역이 없습니다.");
 				} else {
-					mv.addObject("alert", "주문내역이 없습니다.");
+					List<OrderDetailListVO> list = orderService.selectDetailbyOrderNumber(ordervo.getOrderNumber());
+					if (list != null) {
+						mv.addObject("orderInfo", ordervo);
+						mv.addObject("list", list);
+					} else {
+						mv.addObject("message", "주문내역이 없습니다.");
+					}
 				}
 			}
-			mv.setViewName("client/nonOrderDetail");
 			return mv;
+
 		}
 		
 		//주문취소

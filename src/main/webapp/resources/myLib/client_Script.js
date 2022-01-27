@@ -1017,7 +1017,12 @@ function nonOrderInfoCheck(){
 	if(checkboxChecked==false){
 		alert('개인정보 수집/이용에 동의하셔야합니다.');
 		return false
-	}else{
+	}
+	
+	
+	
+	
+	else{
 		return true
 	}
 }
