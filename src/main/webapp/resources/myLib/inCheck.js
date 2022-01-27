@@ -116,6 +116,9 @@ function clientIdCheck(){
 	if (cid.length<6) {
 		$('#cidMessage').html('6~12자리 길이로 입력하세요');
 		return false;
+	}else if ( cid.replace(/[a-z.0-9]/gi ,'').length > 0 ) {
+		$('#cidMessage').html('영문자, 숫자로만 입력하세요');
+		return false;
 	}else {
 		$('#cidMessage').html('');
 		return true;

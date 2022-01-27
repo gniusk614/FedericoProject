@@ -71,17 +71,9 @@ public class FranchiseController {
 			mv.addObject("success", "fail");
 		}
 		
-		
-		
-		
-		
-		
-		
-		
 		mv.setViewName("jsonView");
 		return mv;
 	}	
-	
 	
 	
 	// 가맹점 자재발주 item고르면 정보조회
@@ -209,17 +201,6 @@ public class FranchiseController {
 		return mv;
 	}
 
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

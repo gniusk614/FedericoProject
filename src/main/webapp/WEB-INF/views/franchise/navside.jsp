@@ -25,14 +25,14 @@
 					</a>
 					<!-- 메인 대쉬보드 -->
 
-
+					<!-- 주문관리 -->
 					<hr class="dropdown-divider" />
 					<a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
 						data-bs-target="#collapseLayouts1" aria-expanded="false"
 						aria-controls="collapseLayouts1">
 						<div class="sb-nav-link-icon">
 							<i class="fas fa-columns"></i>
-						</div> 직원계정관리
+						</div> 주문관리
 						<div class="sb-sidenav-collapse-arrow">
 							<i class="fas fa-angle-down"></i>
 						</div>
@@ -40,18 +40,18 @@
 					<div class="collapse" id="collapseLayouts1"
 						aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
-							<a class="nav-link" href="staffList">직원계정 조회</a>
+							<a class="nav-link" href="staffList">완료주문조회</a>
 						</nav>
 					</div>
-					<!-- 직원계정조회 -->
+					
 
-					<!-- 가맹점관리 -->
+					<!-- 자재,발주관리 -->
 					<a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
 						data-bs-target="#collapseLayouts2" aria-expanded="false"
 						aria-controls="collapseLayouts2">
 						<div class="sb-nav-link-icon">
 							<i class="fas fa-columns"></i>
-						</div> 가맹점관리
+						</div> 자재 • 발주관리
 						<div class="sb-sidenav-collapse-arrow">
 							<i class="fas fa-angle-down"></i>
 						</div>
@@ -60,21 +60,20 @@
 					<div class="collapse" id="collapseLayouts2"
 						aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
-							<a class="nav-link" href="fclist">가맹점 정보</a> 
-							<c:if test="${loginID == 'admin' }">
-							<a class="nav-link" href="fcinsertf">가맹점 등록</a> 
-							</c:if>
+							<a class="nav-link" href="fclist">발주내역조회</a> 
+							<a class="nav-link" href="fclist">발주신청</a> 
+							<a class="nav-link" href="fclist">재고확인</a> 
 						</nav>
 					</div>
-					<!-- 가맹점관리 -->
+					
 
-					<!-- 자재,발주관리 -->
+					<!-- 정산하기 -->
 					<a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
 						data-bs-target="#collapseLayouts3" aria-expanded="false"
 						aria-controls="collapseLayouts3">
 						<div class="sb-nav-link-icon">
 							<i class="fas fa-columns"></i>
-						</div> 자재 • 발주관리
+						</div> 정산하기
 						<div class="sb-sidenav-collapse-arrow">
 							<i class="fas fa-angle-down"></i>
 						</div>
@@ -82,20 +81,17 @@
 					<div class="collapse" id="collapseLayouts3"
 						aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
-							<a class="nav-link" href="fcorder?flag=N">미처리 발주내역</a> <a
-								class="nav-link" href="fcorder?flag=Y">처리완료 발주내역</a>
-							<a class="nav-link" href="itemselect">자재조회 및 등록</a>
+							<a class="nav-link" href="fcorder?flag=N">매출내역조회</a>
 						</nav>
 					</div>
-					<!-- 자재,발주관리 -->
 
-					<!-- 소비자 페이지관리 -->
+					<!-- 고객관리 -->
 					<a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
 						data-bs-target="#collapseLayouts4" aria-expanded="false"
 						aria-controls="collapseLayouts4">
 						<div class="sb-nav-link-icon">
 							<i class="fas fa-columns"></i>
-						</div> 소비자 페이지관리
+						</div> 고객관리
 						<div class="sb-sidenav-collapse-arrow">
 							<i class="fas fa-angle-down"></i>
 						</div>
@@ -103,32 +99,9 @@
 					<div class="collapse" id="collapseLayouts4"
 						aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
-							<a class="nav-link" href="menuList">메뉴조회</a> <a
-								class="nav-link" href="layout-sidenav-light.html">메뉴등록</a> <a
-								class="nav-link" href="layout-sidenav-light.html">이벤트게시판</a> <a
-								class="nav-link" href="layout-sidenav-light.html">고객의 소리</a>
+							<a class="nav-link" href="menuList">고객리스트</a>
 						</nav>
 					</div>
-					<!-- 소비자 페이지관리 -->
-
-					<!-- 각종 통계 -->
-					<a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-						data-bs-target="#collapseLayouts5" aria-expanded="false"
-						aria-controls="collapseLayouts5">
-						<div class="sb-nav-link-icon">
-							<i class="fas fa-columns"></i>
-						</div> 통계
-						<div class="sb-sidenav-collapse-arrow">
-							<i class="fas fa-angle-down"></i>
-						</div>
-					</a>
-					<div class="collapse" id="collapseLayouts5"
-						aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
-						<nav class="sb-sidenav-menu-nested nav">
-							<a class="nav-link" href="layout-static.html">각종 통계</a>
-						</nav>
-					</div>
-					<!-- 각종 통계 -->
 				</div>
 			</div>
 
