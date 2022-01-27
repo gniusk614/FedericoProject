@@ -88,6 +88,7 @@
 			</div><!-- 메인화면 주문현황 -->
 		<a href="completeorder">완료주문조회 test경로</a>
 		<a href="itemorderf">가맹점 자재발주</a>
+		<a href="selectfcorder">가맹점 발주내역 조회</a>
 		
 		
 		

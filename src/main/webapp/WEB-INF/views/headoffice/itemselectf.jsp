@@ -48,7 +48,7 @@ $(function() {
 					<h4><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-collection" viewBox="0 0 16 16">
 					  <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
 					</svg>
-				자재조회 및 등록</h4>
+				자재발주내역 조회</h4>
 				</div>
 				<div class="card-body">
 					<div class="dataTable-top">
@@ -174,52 +174,6 @@ $(function() {
 		<div><%@ include file="footer.jsp" %></div>
 	</div> <!-- 본문 끝 -->
 </div> <!-- layoutSidenav 끝 -->			
-
-
-<!-- 자재등록 modal -->
-<div class="modal fade" id="itemInsertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="itemInsertModalLable">자재 등록</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-		<!-- 입력, inputform -->
-		<div class="container">
-				<!-- 분류 -->	
-				<div class="input-group mb-3">
-				  <label class="input-group-text" for="inputGroupSelect01">분류</label>
-				  <select class="form-select itemselect" id="itemflag">
-				    <option selected value="식자재">식자재</option>
-				    <option value="부자재">부자재</option>
-				  </select>
-				</div>			
-				<!-- 품명 -->		
-				<div class="input-group mb-3">
-				  <span class="input-group-text" id="basic-addon1">품명</span>
-				  <input type="text" class="form-control w-50"  id="itemname">
-				</div>
-				<!-- 단위 -->		
-				<div class="input-group mb-3">
-				  <span class="input-group-text" id="basic-addon1">단위</span>
-				  <input type="text" class="form-control"  id="itemunit">
-				</div>
-				<!-- 단가 -->
-				<div class="input-group mb-3">
-				  <span class="input-group-text" id="basic-addon1">가격</span>
-				  <input type="text" class="form-control"  id="itemprice">
-				</div>		
-    			<span id="m_iteminput"></span><br>
-		</div> <!-- 입력, inputform -->		
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-        <button type="button" class="btn btn-primary" onclick="itemInsertCheck()">등록</button>
-      </div>
-    </div>
-  </div>
-</div><!-- 자재등록 modal -->
 
 
 <!-- 자재 수정 modal -->

@@ -48,6 +48,18 @@ public class FranchiseController {
 	
 
 	
+	//가맹점 자재발주 조회 flag로 구분
+	@RequestMapping(value = "/selectfcorder")
+	public ModelAndView selectFcOrder(ModelAndView mv) {
+		
+		
+		
+		mv.setViewName("franchise/itemOrderList");
+		return mv;
+	}
+	
+	
+	
 	//가맹점 자재발주등록
 	@RequestMapping(value = "/insertfcorder")
 	public ModelAndView insertfcorder(ModelAndView mv, HttpServletRequest request, FcOrderVO orderVo,
@@ -71,17 +83,9 @@ public class FranchiseController {
 			mv.addObject("success", "fail");
 		}
 		
-		
-		
-		
-		
-		
-		
-		
 		mv.setViewName("jsonView");
 		return mv;
 	}	
-	
 	
 	
 	// 가맹점 자재발주 item고르면 정보조회
