@@ -49,6 +49,9 @@ public class HeadOfficeController {
 	PasswordEncoder passwordEncoder;
 	@Autowired
 	MenuService menuService;
+	
+	
+	
 
 	// 가맹점 발주내역 상세보기(발주번호 별로) return json
 	@RequestMapping(value = "/fcorderdetail")
@@ -757,16 +760,40 @@ public class HeadOfficeController {
 	
 	
 
-	@RequestMapping(value = "/menuDelete")
-	public ModelAndView menuDelete(ModelAndView mv,MenuVO vo) {
-					
-		if(menuService.menuDelete(vo) > 0) 
-     	     mv.addObject("success", "T");
-		else mv.addObject("success", "F");
+	@RequestMapping(value = "/menuDie")
+	public ModelAndView menuDie(ModelAndView mv,MenuVO vo) {
+		
+		System.out.println("sysout : "+vo.getMenuLive());
+		log.info("log info : "+vo.getMenuLive());
+		
+		if(menuService.menuLive(vo)>0) {			
+			mv.addObject("success","success");			
+		}else {			
+			mv.addObject("success","fail");
+		}
+				
 		mv.setViewName("jsonView"); 
 		return mv;
 		
-	} //mupdate
+	} //menuDie
+	/*
+	@RequestMapping(value = "/menuLive")
+	public ModelAndView menuLive(ModelAndView mv,MenuVO vo) {
+		
+		System.out.println("sysout : "+vo.getMenuLive());
+		log.info("log info : "+vo.getMenuLive());
+		
+		if(menuService.menuLive(vo)>0) {			
+			mv.addObject("success","success");			
+		}else {			
+			mv.addObject("success","fail");
+		}
+				
+		mv.setViewName("jsonView"); 
+		return mv;
+		
+	} //menuLive
+	*/
 
 	
 	//메인화면 보내기
@@ -794,9 +821,6 @@ public class HeadOfficeController {
 //		case "age" :   list = service.ageChart(); break;
 //		case "area" : list = service.areaChart(); break;
 		}
-		
-		
-		
 		if(list !=null) {
 			mv.addObject("list", list);
 		}else {
