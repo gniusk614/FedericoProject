@@ -10,5 +10,4 @@ public class FcOrderDetailVO {
 	private int itemIndex;
 	private int itemQty;
 	private ItemInfoVO itemInfoVO;
-	
 }

@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.log4j.Log4j;
-import net.sf.json.JSONObject;
+import net.sf.json.JSONArray;
 import paging.PageMaker;
 import paging.SearchCriteria;
 import service.FranchiseService;
-import service.HeadOfficeService;
 import service.HeadOfficeServiceImpl;
 import service.OrderService;
+import vo.FcOrderDetailVO;
+import vo.FcOrderVO;
 import vo.FranchiseVO;
 import vo.HeadOfficeVO;
 import vo.ItemInfoVO;
@@ -46,6 +47,42 @@ public class FranchiseController {
 
 	
 
+	
+	//가맹점 자재발주등록
+	@RequestMapping(value = "/insertfcorder")
+	public ModelAndView insertfcorder(ModelAndView mv, HttpServletRequest request, FcOrderVO orderVo,
+			@RequestParam("sendData") String sendData, FcOrderDetailVO detailVo) {
+		
+		
+		if(headOfficeService.insertFcOrder(orderVo) > 0) {
+			List<FcOrderDetailVO> list = new ArrayList<FcOrderDetailVO>();
+			
+			JSONArray jsonArray = JSONArray.fromObject(sendData);
+			for(int i=0; i<jsonArray.size(); i++) {
+				net.sf.json.JSONObject obj = jsonArray.getJSONObject(i); 
+				detailVo.setItemIndex(Integer.parseInt(obj.get("itemIndex").toString()));
+				detailVo.setItemQty(Integer.parseInt(obj.get("itemQty").toString()));
+				detailVo.setFcOrderSeq(orderVo.getFcOrderSeq());
+				list.add(detailVo);
+			}
+			if(headOfficeService.insertFcOrderDetail(list)> 0) {
+				mv.addObject("success", "success");
+			}
+			mv.addObject("success", "fail");
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}	
+	
+	
 	
 	// 가맹점 자재발주 item고르면 정보조회
 	@RequestMapping(value = "/getiteminfo")
