@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j;
 import mapperInterface.HeadOfficeMapper;
 import paging.SearchCriteria;
+import vo.ChartVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -23,6 +24,26 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 	@Autowired
 	HeadOfficeMapper dao;
 
+	
+	//가맹점 자재발주 상세내역 등록
+	@Override
+	public int insertFcOrderDetail(List<FcOrderDetailVO> vo) {
+		return dao.insertFcOrderDetail(vo);
+	}
+	
+	
+	// 가맹점 발주 등록
+	@Override
+	public int insertFcOrder(FcOrderVO vo) {
+		return dao.insertFcOrder(vo);
+	}
+	
+	// 분류로 자재 조회
+	@Override
+	public List<ItemInfoVO> selectItembyFlag(ItemInfoVO vo) {
+		return dao.selectItembyFlag(vo);
+	}
+	
 	// 가맹점 발주내역 처리완료로 변경
 	@Override
 	public int fcOrderSeqUpdate(Map<String, Object> params) {
@@ -173,7 +194,15 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 		return dao.searchFcRows(cri);
 	}
 	
-	
-	
+	//월별차트
+	@Override
+	public List<ChartVO> monthChart() {
+		return dao.monthChart();
+	}
+	//요일별차트
+	@Override
+	public List<ChartVO> dayChart() {
+		return dao.dayChart();
+	}
 
 }

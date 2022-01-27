@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import paging.SearchCriteria;
+import vo.ChartVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -14,6 +15,13 @@ import vo.StaffVO;
 
 public interface HeadOfficeService {
 
+	int insertFcOrderDetail(List<FcOrderDetailVO> vo); //가맹점 자재발주 상세내역 등록
+
+	
+	int insertFcOrder(FcOrderVO vo); // 가맹점 발주 등록
+	
+	List<ItemInfoVO> selectItembyFlag(ItemInfoVO vo); // 분류로 자재 조회
+	
 	int fcOrderSeqUpdate(Map<String, Object> params); // 가맹점 발주내역 처리완료로 변경
 	
 	List<FcOrderDetailVO> selectFcOrderDetailbyOrderNumber(FcOrderDetailVO vo);  // 가맹점 발주내역 상세보기(발주번호 별로)
@@ -63,10 +71,10 @@ public interface HeadOfficeService {
 	List<FranchiseVO> searchFcList(SearchCriteria cri); // 가맹점정보 Search
 	
 	int searchFcRows(SearchCriteria cri); // 가맹점정보 Search 결과 Rows 조회
+
+	List<ChartVO> monthChart();//월별통계
 	
-	
-	
-	
+	List<ChartVO> dayChart(); //요일별통계
 	
 	
 	

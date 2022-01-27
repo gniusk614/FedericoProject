@@ -6,7 +6,7 @@
 
 
 	<select id="selectMenuListbyFlag" resultType="vo.MenuVO">
-		SELECT * FROM menuinfo WHERE menuflag = #{menuFlag} and menulive = #{menulive}
+		SELECT * FROM menuinfo WHERE menuflag = #{menuFlag} and menulive = 'live'
 	</select>
 
 
@@ -57,6 +57,18 @@
 			<otherwise></otherwise>						
 		</choose>
 	</sql>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	<!--<<  menuSearch  >>-->
 	<select id="selectAllMenu" resultType="vo.MenuVO">

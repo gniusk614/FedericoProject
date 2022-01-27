@@ -22,9 +22,34 @@
 	</resultMap>
 <!-- resultMap 설정 ============================================================-->  
 
-  
+	<!-- 가맹점 자재발주 등록(발주먼저등록), return fcOrderSeq -->
+	
+	<insert id="insertFcOrder" parameterType="vo.FcOrderVO">
+		<selectKey keyProperty="fcOrderSeq" resultType="int" order="BEFORE">
+			SELECT nvl(max(fcorderseq),0)+1 FROM fcorder
+		</selectKey>
+		INSERT INTO fcorder (fcorderseq, fcid, fcorderdate, fcorderflag)
+		VALUES (#{fcOrderSeq}, #{fcId}, sysdate, 'N')
+	</insert>
+	
+	<!-- 가맹점 자재발주 상세내역 등록 -->
+	<insert id="insertFcOrderDetail">
+		<selectKey keyProperty="fcOrderDetailSeq" resultType="int" order="BEFORE">
+			SELECT nvl(max(fcorderdetailseq),0) FROM fcorderdetail
+		</selectKey>
+		INSERT INTO fcorderdetail(fcorderdetailseq, fcOrderSeq, Itemindex, Itemqty)
+		<foreach collection="list" item="vo" separator="UNION" index="index">
+			SELECT #{fcOrderDetailSeq}+1+#{index}, #{vo.fcOrderSeq}, #{vo.itemIndex}, #{vo.itemQty} FROM DUAL
+		</foreach>
+	</insert>
+	
 
 	
+  
+	<!-- itemflag에 따라 select item -->
+	<select id="selectItembyFlag" resultType="vo.ItemInfoVO">
+		SELECT * FROM iteminfo WHERE itemflag = #{itemFlag} ORDER BY itemname
+	</select>
 	
 	<!-- 가맹점 발주내역 처리완료로 변경 -->
 	<update id="fcOrderSeqUpdate" parameterType="hashmap">
@@ -271,9 +296,34 @@
 
 
 
+	<!-- ============================={ 통계 }================================ -->
+	<!-- 최근 1년 월별 통계 -->
+	<select id="monthChart" resultType="vo.ChartVO">
+	SELECT TO_CHAR(orderdate, 'YYYYMM') AS chartLabel , count(*) AS chartCount
+	FROM orderlist 
+	WHERE TO_CHAR(orderdate, 'YYYYMM')
+	BETWEEN to_char(ADD_MONTHS(sysdate,-12),'YYYYMMDD') AND to_char(sysdate,'YYYYMMDD') 
+	GROUP BY to_char(ORDERDATE , 'YYYYMM')
+	ORDER BY chartLabel
+	</select>
+	
+	<!-- 요일별 통계 -->
+	<select id="dayChart" resultType="vo.ChartVO">
+	SELECT case to_char(orderdate,'d') 
+	   when '1' then '일요일'
+       when '2' then '월요일'
+       when '3' then '화요일'
+       when '4' then '수요일'
+       when '5' then '목요일'
+       when '6' then '금요일'
+       when '7' then '토요일'
+       END "chartLabel"
+	, count(*) AS chartCount FROM ORDERLIST o 
+	GROUP BY to_char(orderdate,'d')
+	ORDER BY to_char(orderdate,'d') ASC
+	</select>
 
-
-
+	
 
 
 

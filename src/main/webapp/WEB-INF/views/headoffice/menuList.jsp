@@ -72,7 +72,7 @@ $(function() {
 	// 검색후 요청
  	$('#searchBtn').on("click", function() {
  		console.log(2);
-		self.location="menuselect"
+		self.location="menuList"
 			+"${pageMaker.makeQuery(1)}"
 			+"&searchType="
 			+$('#searchType').val()
@@ -162,7 +162,14 @@ $(function() {
 								<th scope="col" width="20%">수정/삭제</th>
 							</tr>
 						</thead>
+
 						<!-- Table 값 표시 -->						 
+
+						<!-- 값 표시 -->
+
+						
+						 
+
 							<tbody align="center">
 							<!-- 메뉴 life = die Start -->
 								<c:forEach var="vo" items="${menuList}" varStatus="vs">
@@ -220,6 +227,7 @@ $(function() {
 								</c:forEach>
 			<!-- 메뉴 life = live End -->		
 							</tbody>
+
 					</table>
 					<!-- Table 표시 End -->
 					
@@ -228,7 +236,7 @@ $(function() {
 						<nav class="dataTable-pagination">
 							<ul class="pagination">
 								<c:if test="${pageMaker.prev}">
-									<li class="page-menu"><a class="page-link" href="itemselect${pageMaker.searchQuery(pageMaker.spageNo-1)}"
+									<li class="page-menu"><a class="page-link" href="menuList${pageMaker.searchQuery(pageMaker.spageNo-1)}"
 										aria-label="Previous"> <span aria-hidden=true>&laquo;</span>
 									</a></li>
 								</c:if>	
@@ -243,13 +251,13 @@ $(function() {
 										</c:if>
 										
 										<c:if test="${i!=pageMaker.cri.currPage}">
-										<li class="page-menu"><a href="itemselect${pageMaker.searchQuery(i)}">${i}</a></li>
+										<li class="page-menu"><a href="menuList${pageMaker.searchQuery(i)}">${i}</a></li>
 										</c:if>
 									</c:forEach>
 									
 									
 									<c:if test="${pageMaker.next}">
-										<li class="page-menu"><a class="page-link" href="itemselect${pageMaker.searchQuery(pageMaker.epageNo+1)}" 
+										<li class="page-menu"><a class="page-link" href="menuList${pageMaker.searchQuery(pageMaker.epageNo+1)}" 
 										aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 									</a></li>
 									</c:if>
@@ -285,7 +293,7 @@ $(function() {
 							<div class="container" id="modalcontrol">
 										<div class="input-group mb-3">
 										  <label class="input-group-text" for="inputGroupSelect01">분류</label>
-										  <select class="form-select itemselect" id="menuFlag" name="menuFlag">
+										  <select class="form-select menuList" id="menuFlag" name="menuFlag">
 										    <option selected value="pizza">피자</option>
 										    <option value="sets">세트메뉴</option>
 										    <option value="side">사이드</option>

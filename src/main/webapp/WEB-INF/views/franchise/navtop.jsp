@@ -34,5 +34,8 @@
                 </li>   
             </ul>
         </nav>
+        <c:if test="${! empty fcId }">
+        	<input type="hidden" id="fcId" value="${fcId}">
+        </c:if>
 </body>
 </html>

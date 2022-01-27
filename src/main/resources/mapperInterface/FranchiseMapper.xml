@@ -8,13 +8,15 @@
 
 
 
+	<!-- 배송소요시간 select -->
+	<select id="selectDeliveryTimebyFcId" resultType="String">
+		SELECT deliverytime FROM franchise WHERE fcid = #{value}
+	</select>
 
-
-
-
-
-
-
+	<!-- 배송소요시간 update -->
+	<update id="updateDeliveryTime">
+		UPDATE franchise SET deliverytime = #{deliveryTime} WHERE fcid = #{fcId}
+	</update>
 
 
 	

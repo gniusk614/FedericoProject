@@ -174,7 +174,7 @@ align-self: center;
 	<!-- 현위치 -->
 	<div class="row" id="outer_3" style="display:none; margin-top:50px;">
 		<div class="col" style=" height: 80px; padding-bottom:100px;">
-		<input id="a2" type="text" readonly="readonly" placeholder="                                    페데리코가 먼저 도착할 매장을 찾아드립니다."  style="border:0;  align-content:center; background-color: #F78181;  width: 100%; height: 80px; font-size: 30px;" 
+		<input id="a2" type="text" readonly="readonly" placeholder="                              페데리코가 가장 가까운 곳에서 고객님을 찾아갑니다."  style="border:0;  align-content:center; background-color: #F78181;  width: 100%; height: 80px; font-size: 30px;" 
 		>	
 		pending Item : 클릭시 테두리 색상변경(#DC3545), img 변경=> '현재위치검색', 실시간 현재위치API 연동, 지도연동
 		</div>		
@@ -186,16 +186,7 @@ align-self: center;
 		<!-- 지도본체 -->
 		<div id="map" style="width:100%;height:100%;"></div>	
 		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=63fe094a0bad5ef07be77c4f00959da2"></script>
-		<script>
-		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-		    mapOption = { 
-		        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-		        level: 3 // 지도의 확대 레벨
-		    };
 		
-		// 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-		var map = new kakao.maps.Map(mapContainer, mapOption); 
-		</script>
 		
 		</div>		
 	</div>
@@ -236,7 +227,7 @@ function showdiv(id) {
 	}
 }// function showdiv(id)
 
-// 2. 지도 표기
+//2. 지도 표기
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = { 
