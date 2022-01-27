@@ -20,9 +20,9 @@
 	
 	<!-- 가맹점별 주문정보 조회 - completeYN 필드 유무로 조건검. -->
 	<select id="selectFcOrderbyFcId" resultType="vo.OrderListVO">
-		SELECT o.ordernumber, o.clientid, o.fcid, o.completeyn, o.memo, o.orderdate, c.clientPhone, c.clientAddress
-		FROM orderlist o, client c
-		WHERE o.fcid = #{fcId} AND o.clientId = c.clientId
+		SELECT ordernumber, fcid, completeyn, memo, orderdate, clientPhone, clientAddress
+		FROM orderlist o
+		WHERE o.fcid = #{fcId}
 		<choose>
 			<when test="#{completeYN != null and completeYN != ''}">
 				AND completeyn = #{completeYN}
@@ -39,13 +39,57 @@
 		FROM orderdetaillist o, menuinfo m WHERE o.ordernumber = #{orderNumber} ORDER BY o.orderdetailnumber
 	</select>
 
-
+	<!-- 주문취소처리 -->
+	<update id="orderCancel">
+		UPDATE orderlist SET completeyn = 'C' WHERE ordernumber = #{orderNumber}
+	</update>
 	
+	<!-- 주문 완료처리 -->
+	<update id="orderComplete">
+		UPDATE orderlist SET completeyn = 'Y' WHERE ordernumber = #{orderNumber}
+	</update>
 
 
+	<!-- 완료주문 searchOrderRows -->
+	<select id="searchCompleteOrderRows" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) FROM orderlist 
+		<include refid="completeOrderSearch"></include>
+			AND completeyn = 'Y' AND fcid = #{vo.fcId}
+	</select>  
+	
+	<!-- 완료주문 서치,페이징 -->
+	<select id="searchCompleteOrder" parameterType="hashmap" resultType="vo.OrderListVO" >
+		SELECT * FROM orderlist
+		 <include refid="completeOrderSearch"></include>
+		AND completeyn = 'Y' AND fcid = #{vo.fcId}
+		ORDER BY ordernumber desc
+		OFFSET #{cri.sno}-1 ROWS FETCH NEXT #{cri.rowsPerPage} ROWS ONLY 
+	</select>
+	
+	<sql id="completeOrderSearch">
+		<choose>
+			<when test="cri.searchType == 'orderNumber'.toString()">
+				<if test="cri.keyword != null">
+					<bind name="keyVal" value="'%'+cri.keyword+'%'"/>
+				</if>
+				WHERE orderNumber like #{keyVal}
+			</when>	
+			<when test="cri.searchType == 'orderDate'.toString()">
+				<![CDATA[ WHERE orderDate <= TO_DATE(#{maxDate},'YY/MM/DD')+INTERVAL '1' DAY AND orderDate >= TO_DATE(#{minDate},'YY/MM/DD') ]]>
+			</when>
+			<otherwise>WHERE 1=1</otherwise>
+		</choose>
+	</sql>
 
-
-
+	<!-- 비회원주문조회용 -->
+	<select id="selectOrderbyPhone" resultType="vo.OrderListVO">
+		SELECT orderNumber, clientId, fcId, memo, TO_CHAR(orderDate,'yyyy-mm-dd am hh:mi:ss') as orderDate,clientName, clientAddress, clientPhone 
+		FROM ORDERLIST o 
+		WHERE CLIENTPHONE = #{clientPhone} AND COMPLETEYN = 'N'
+		ORDER BY orderdate DESC
+		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
 
 
 <!-- ======================= 주문조회,수정 관련 ====================== -->

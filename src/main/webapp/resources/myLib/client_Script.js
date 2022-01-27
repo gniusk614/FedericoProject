@@ -14,20 +14,66 @@ $(function(){
 	// 가맹점 선택해야 주문결제클릭 가능하도록.
 	$('#selectFranchise').change(function(){
 		if($('#selectFranchise').val() != "null" && $('#selectFranchise').val() != "default"){
-			$('#kakaoPayBtn').attr('disabled',false);
+			$('#payBtn').attr('disabled',false);
 		} else {
-			$('#kakaoPayBtn').attr('disabled',true);
+			$('#payBtn').attr('disabled',true);
 		}
 	})//kakaoPayBtn change
 	
-	
-	
+	// 카드결제,카카페이 라디오버튼에 따라 onclick 메서드 바꿔주기
+	$('#radioCard').click(function(){
+		$('#payBtn').attr('onclick','iamPort()')
+		
+	})
+	$('#radioKakao').click(function(){
+		$('#payBtn').attr('onclick','kakaoPay()')
+	})
 	
 }) //ready
 
 
+// iamPort 결제 
+function iamPort(){
+	var today =  new Date();
+	var hour = today.getHours();
+	var minute = today.getMinutes();
+		
+	
+	$('#iamfcId').val($('#selectFranchise').val());
+	$('#iamMemo').val($('#clientMemo').val());	
+	
+	console.log("fcid => "+$('#iamfcId').val());
+	console.log("memo => "+$('#iamMemo').val());
+	
+	var itemQty = $('#save').attr('data-totalQty');
+	var menuName = $('#menuName0').html();
+	if($('#menuName1').html() != null){
+		menuName = $('#menuName0').html() + ' 외';
+	} 			
+	
+	IMP.init('imp15641198'); 	
+	IMP.request_pay({ 
+	    pg: "inicis",
+	    pay_method: "card",
+	    merchant_uid: $('#client_Name').html()+hour+minute,
+	    name: menuName,
+	    amount: 100,
+	    buyer_name: $('#client_Name').html(),
+	    buyer_tel: $('#client_Phone').html(),
+	    buyer_addr: $('#client_address').html(),
+	    buyer_postcode: "01181"
+	}, function (rsp) { 
+	    if (rsp.success) {
+	        $('#iamForm').submit();
+	    } else {
+	    	alert('결제가 실패되었습니다.\n다시 시도해주세요.')
+	    }
+	});
+}
 
-// 주문결제버튼 -> 카카오페이 결제진행
+
+
+// 카카오페이 결제
 function kakaoPay(){
 	
 	var menuName = $('#menuName0').html();
@@ -573,8 +619,13 @@ function clickEffect(id){
 	});
 }//clickEffect
 
+//개인정보수집동의 체크상태
+var checkboxChecked = false 
 //로그인,비회원주문,주문조회 화면 변경시켜주는
 function showdiv(id) {
+	checkboxChecked = false;
+	$('.checkbox_yes').css('display','none');
+	$('.checkbox_no').css('display','inline');
 	if (id == 'clientLogin') {
 		$('#outer_1').css('display', 'block');
 		$('#outer_2').css('display', 'none');
@@ -596,17 +647,16 @@ function showdiv(id) {
 
 }
 
-//개인정보수집동의 체크상태
-var checkboxChecked = false 
+
 //아이콘변경
 function checkboxCheck() {
 	if(checkboxChecked == false){
-		$('#checkbox_no').css('display','none');
-		$('#checkbox_yes').css('display','inline');
+		$('.checkbox_no').css('display','none');
+		$('.checkbox_yes').css('display','inline');
 		checkboxChecked = true;
 	}else{
-		$('#checkbox_yes').css('display','none');
-		$('#checkbox_no').css('display','inline');
+		$('.checkbox_yes').css('display','none');
+		$('.checkbox_no').css('display','inline');
 		checkboxChecked = false;
 	}
 }//checkboxCheck
@@ -712,12 +762,37 @@ function inputAddress(){
 
 //장바구니 유무에 따른 경로 다르게 주기
 function moveOrder(flag){
+	$.ajax({
+		type: 'get',
+		url: 'nonaddress',
+		data: {
+			nonAddress: $('input[name=nonAddress]').val()
+		},
+		success: function(data){
+			if(data.success == 'success'){
+				if (flag=='1'){
+					//$('#jumun').attr('action', 'orderInfo');
+					location.href='orderInfo';
+				}else{
+					//$('#jumun').attr('action','menuList?menuFlag=pizza');
+					location.href='menuList?menuFlag=pizza';
+				}
+				//$('#jumun').submit();
+			} else{
+			alert('통신 에러입니다.\n다시 시도해주세요.')
+			}
+		},
+		error: function(){
+			alert('통신 에러입니다.\n다시 시도해주세요.')
+		}	
+	})//ajax
+/*	
 	if (flag=='1'){
 		$('#jumun').attr('action', 'orderInfo');
 	}else{
 		$('#jumun').attr('action','menuList?menuFlag=pizza');
 	}
-	$('#jumun').submit();
+	$('#jumun').submit();*/
 }
 
 //주문페이지 조건에따른 동작제어
@@ -926,6 +1001,64 @@ function clientIncheck() {
 	} else
 		return false;
 }// inCheck
+
+//비회원주문조회 조건체크
+function nonOrderInfoCheck(){
+	if($('#orderNonName').val()<1){
+		$('#orderNonName').addClass('is-invalid');
+		alert('고객명을 입력해주세요');
+		return false
+	}
+	if($('#orderNonPhone').val()<1){
+		$('#orderNonPhone').addClass('is-invalid');
+		alert('핸드폰번호를 입력해주세요');
+		return false
+	}
+	if(checkboxChecked==false){
+		alert('개인정보 수집/이용에 동의하셔야합니다.');
+		return false
+	}else{
+		return true
+	}
+}
+
+function orderCancel(num){
+	$.ajax({
+		type: "get",
+		url: "orderCancel",
+		data:{
+			orderNumber : num
+		},
+		success: function(res){
+			if(res.success!=null){
+				alert('주문취소가 완료되었습니다. \n 결제취소는 카드사 사정으로 1~2시간 소요됩니다.');
+				location.reload();
+			}else{
+				alert('주문취소에 실패했습니다. 매장에 문의해주세요.');
+			}
+		},error : function(){
+			alret('통신장애입니다. 잠시후 다시 시도해주세요.')
+		}
+	})
+	
+}
+//로그인시 제약사항 체크
+function loginCheck(){
+	if($('#LoginclientId').val()<1){
+		alert('아이디를 입력해주세요.');
+		$('#LoginclientId').focus();
+		return false;
+	}else if($('#LoginclientPassword').val()<1){
+		alert('비밀번호를 입력해주세요.')
+		$('#LoginclientPassword').focus();
+		return false;
+	}else{
+		return true;
+	}
+	
+}
+
+
 
 
 // ============================= 매장찾기 (민석) =======================================

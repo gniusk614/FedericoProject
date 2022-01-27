@@ -38,9 +38,9 @@ import service.SendService;
 import vo.CartVO;
 import vo.ClientVO;
 import vo.FranchiseVO;
-import vo.HeadOfficeVO;
 import vo.MenuVO;
-import vo.StaffVO;
+import vo.OrderDetailListVO;
+import vo.OrderListVO;
 
 @RequestMapping(value = "/client")
 @Log4j
@@ -63,17 +63,28 @@ public class ClientController {
 // 매장찾기(카카오맵 API) 삽입 시작 ======<민석>=========================
 	@RequestMapping(value = "/fcSearch")
 	public ModelAndView fcSearch(ModelAndView mv) {
-		mv.setViewName("client/fcSearch");
+		mv.setViewName("client/cSearch");
 		return mv;
 	}// fcSearch
 	
-	// 카카오페이 결제완료폼 이동 + 주문정보 인서트
+	// 결제완료폼 이동 + 주문정보 인서트
 	@RequestMapping(value = "/ordercomplete")
-	public ModelAndView ordercomplete(ModelAndView mv, HttpSession session, ClientVO clientVo) {
+	public ModelAndView ordercomplete(ModelAndView mv, HttpServletRequest request, HttpSession session, ClientVO clientVo) {
 		List<CartVO> list = (List<CartVO>)session.getAttribute("list");
 		Map<String, Object> params = new HashMap<String, Object>();
-		String fcId = (String)session.getAttribute("fcId");
-		String memo = (String)session.getAttribute("memo");
+		String fcId;
+		String memo;
+		
+		
+		// iampay 일 경우
+		if("iam".equals(request.getParameter("iam"))){
+			fcId = request.getParameter("fcId");
+			memo = request.getParameter("memo");
+		}else {
+			fcId = (String)session.getAttribute("fcId");
+			memo = (String)session.getAttribute("memo");
+		}
+		
 		
 		// map에 인서트할 값 세팅
 		if(session.getAttribute("clientLoginID") != null) {
@@ -91,9 +102,9 @@ public class ClientController {
 			params.put("clientId", "NONE");
 			params.put("fcId", fcId);
 			params.put("memo", memo);
-			params.put("clientName", session.getAttribute("clientName"));
-			params.put("clientAddress", session.getAttribute("clientAddress"));
-			params.put("clientPhone", session.getAttribute("clientPhone"));
+			params.put("clientName", (String)session.getAttribute("nonName"));
+			params.put("clientAddress", (String)session.getAttribute("nonAddress"));
+			params.put("clientPhone", (String)session.getAttribute("nonPhone"));
 			params.put("memberYN", "N");
 			params.put("orderNumber", null);
 		}
@@ -114,6 +125,10 @@ public class ClientController {
 				}
 				session.removeAttribute("listSize");
 			}
+			
+			//해당가맹점 배달소요시간 조회
+			String deliveryTime = fcService.selectDeliveryTimebyFcId(fcId);
+			mv.addObject("deliveryTime", deliveryTime);
 		}
 		mv.setViewName("client/orderComplete");
 		return mv;
@@ -124,11 +139,6 @@ public class ClientController {
 	  @RequestMapping(value = "/kakaoPay") 
 	  @ResponseBody
 	  public String kakaoPay(HttpServletRequest request) { 
-		  log.info("123"+request.getParameter("partner_order_id"));
-		  log.info("123"+request.getParameter("partner_user_id"));
-		  log.info("123"+request.getParameter("item_name"));
-		  log.info("123"+request.getParameter("quantity"));
-		  log.info("123"+request.getParameter("total_amount"));
 		  if(request.getSession(false) != null) {
 			  request.getSession(false).setAttribute("fcId", request.getParameter("fcId"));
 			  request.getSession(false).setAttribute("memo", request.getParameter("memo"));
@@ -162,7 +172,7 @@ public class ClientController {
 			} else {
 				input = connection.getErrorStream();
 			}
-			InputStreamReader reader = new InputStreamReader(input);
+			InputStreamReader reader = new InputStreamReader(input, "UTF-8");
 			BufferedReader bReader = new BufferedReader(reader);
 			return bReader.readLine();
 			
@@ -203,10 +213,12 @@ public class ClientController {
 			mv.addObject("clientAddress", clientService.selectOne(vo).getClientAddress());
 			mv.addObject("clientPhone", clientPhone);
 			mv.addObject("clientName", clientService.selectOne(vo).getClientName());
-		} else if(request.getParameter("nonAddress") != null) {
-			session.setAttribute("clientName", request.getParameter("nonName"));
-			session.setAttribute("clientPhone", request.getParameter("nonPhone"));
-			session.setAttribute("clientAddress", request.getParameter("nonAddress"));
+		} else if(session.getAttribute("nonAddress") != null) {
+			mv.addObject("clientAddress", (String)session.getAttribute("nonAddress"));
+			mv.addObject("clientPhone", (String)session.getAttribute("nonPhone"));
+			mv.addObject("clientName", (String)session.getAttribute("nonName"));
+		} else if(session.getAttribute("nonName") != null) {
+			uri = "client/nonOrderAddress";
 		} else {
 			uri="client/clientLoginForm";
 		}
@@ -350,20 +362,22 @@ public class ClientController {
 			mv.addObject("flag", vo.getMenuFlag());
 			session.setAttribute("listsize", list.size());
 		}
-		// 비회원주문에서 넘어올떄 세션에 정보 담기
-		if(request.getParameter("nonName") != null) {
-			session.setAttribute("nonName", request.getParameter("nonName"));
-			session.setAttribute("nonPhone", request.getParameter("nonPhone"));
-			session.setAttribute("nonAddress", request.getParameter("nonAddress"));
-		}
 		
 		mv.setViewName("client/menu");
 		return mv;
 	}
 
 	@RequestMapping(value = { "/", "/home" })
-	public String clientHome() {
-		return "client/pizzaMain";
+	public ModelAndView clientHome(ModelAndView mv, HttpSession session) {
+		if(session.getAttribute("list") != null) {
+			List<CartVO> list = (List<CartVO>)session.getAttribute("list");
+			if(list.size() > 0) {
+				mv.addObject("listSize", list.size());
+			}
+		}
+		
+		mv.setViewName("client/pizzaMain");
+		return mv;
 	}
 
 	@RequestMapping(value = "clientLoginf")
@@ -461,28 +475,42 @@ public class ClientController {
 		return mv;
 	}
 
+	
+	// 비회원 주소 세션 저장
+	@RequestMapping(value = "/nonaddress")
+	public ModelAndView nonAddress(ModelAndView mv, HttpSession session, @RequestParam("nonAddress") String nonAddress) {
+		
+		session.setAttribute("nonAddress", nonAddress);
+		mv.addObject("success","success");
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
 	// 비회원주문 주소입력창 이동
 	@RequestMapping(value = "nonOrderf")
-	public ModelAndView nonOrderf(ModelAndView mv, @RequestParam("nonName") String nonName,
-			@RequestParam("nonPhone") String nonPhone) {
-
+	public ModelAndView nonOrderf(ModelAndView mv, HttpSession session, HttpServletRequest request) {
 		String uri = "client/nonOrderAddress";
-
-		mv.addObject("nonName", nonName);
-		mv.addObject("nonPhone", nonPhone);
+		if(session.getAttribute("nonName") == null) {
+			session.setAttribute("nonName", request.getParameter("nonName"));
+			session.setAttribute("nonPhone", request.getParameter("nonPhone"));
+		}
+		
 		mv.setViewName(uri);
 
 		return mv;
 	}
 	
-	// 회원가입창 이동
+	
+	
+		// 회원가입창 이동
 		@RequestMapping(value = "clientJoinf")
 		public ModelAndView clientJoinf(ModelAndView mv) {
 			String uri = "client/clientJoinForm";
 			mv.setViewName(uri);
 			return mv;
 		}
-		// 회원가입창 이동
+		// 회원가입창 디테일 이동
 		@RequestMapping(value = "clientJoin2ndf")
 		public ModelAndView clientJoinf2ndf(ModelAndView mv, ClientVO vo) {
 			mv.addObject("clientName", vo.getClientName());
@@ -506,22 +534,63 @@ public class ClientController {
 				mv.addObject("message", "정보가 없습니다.");
 			mv.setViewName("jsonView");
 			return mv;
-		}// login	
+		}
 		
+		//회원가입
 		@RequestMapping(value = "clientJoin")
 		public ModelAndView clientJoin(ModelAndView mv, ClientVO vo , RedirectAttributes rttr) {
-
 			vo.setClientPassword(passwordEncoder.encode(vo.getClientPassword()));
-			
 			if (clientService.insertClient(vo) > 0) {
 				rttr.addAttribute("message", "계정생성이 완료되었습니다.");
 			} else {
 				rttr.addAttribute("message", "계정생성이 실패하였습니다");
 			}
-
 			mv.setViewName("redirect:clientLoginf");
 			return mv;
 		}// join
+		
+		//비회원주문조회
+		@RequestMapping(value = "nonOrderDetail")
+		public ModelAndView nonOrderDetail(ModelAndView mv,
+				@RequestParam("nonName") String nonName, @RequestParam("nonPhone") String nonPhone, 
+				OrderListVO ordervo, OrderDetailListVO orderDvo) throws IOException {
+			
+			log.info(nonName);
+			log.info(nonPhone);
+			
+			ordervo.setClientPhone(nonPhone);
+			ordervo = orderService.selectOrderbyPhone(ordervo);
+			if (ordervo == null) {
+				log.info("이프");
+				mv.addObject("alert", "주문내역이 없습니다.");
+			} else {
+				log.info("엘스");
+				List<OrderDetailListVO> list = orderService.selectDetailbyOrderNumber(ordervo.getOrderNumber());
+				if (list != null) {
+					mv.addObject("orderInfo", ordervo);
+					mv.addObject("list", list);
+				} else {
+					mv.addObject("alert", "주문내역이 없습니다.");
+				}
+			}
+			mv.setViewName("client/nonOrderDetail");
+			return mv;
+		}
+		
+		//주문취소
+		@RequestMapping(value = "orderCancel")
+		public ModelAndView orderCancel(ModelAndView mv, OrderListVO vo) {
+			
+			if(orderService.orderCancel(vo)>0) {
+				mv.addObject("success", "성공");
+			}else {
+				mv.addObject("success", null);
+			}
+			mv.setViewName("jsonView");
+			return mv;
+		}
+		
+		
 		
 		
 }// clientController

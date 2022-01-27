@@ -121,6 +121,7 @@ td{
 							</tr>
 						</thead>
 						<!-- 값 표시 -->
+
 						
 						 
 							<tbody align="center">
@@ -176,6 +177,7 @@ td{
 									
 								</c:forEach>
 							</tbody>
+
 					</table>
 					<!-- 값 표시 -->
 			<!-- tabel bottom -->				
