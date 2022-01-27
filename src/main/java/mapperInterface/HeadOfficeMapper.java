@@ -14,6 +14,10 @@ import vo.StaffVO;
 
 public interface HeadOfficeMapper {
 
+	int insertFcOrderDetail(List<FcOrderDetailVO> vo); //가맹점 자재발주 상세내역 등록
+	
+	int insertFcOrder(FcOrderVO vo); // 가맹점 발주 등록 
+	
 	List<ItemInfoVO> selectItembyFlag(ItemInfoVO vo); // 분류로 자재 조회
 	
 	int fcOrderSeqUpdate(Map<String, Object> param); // 가맹점 발주내역 처리완료로 변경

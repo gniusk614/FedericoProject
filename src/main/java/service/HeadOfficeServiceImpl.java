@@ -24,6 +24,20 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 	@Autowired
 	HeadOfficeMapper dao;
 
+	
+	//가맹점 자재발주 상세내역 등록
+	@Override
+	public int insertFcOrderDetail(List<FcOrderDetailVO> vo) {
+		return dao.insertFcOrderDetail(vo);
+	}
+	
+	
+	// 가맹점 발주 등록
+	@Override
+	public int insertFcOrder(FcOrderVO vo) {
+		return dao.insertFcOrder(vo);
+	}
+	
 	// 분류로 자재 조회
 	@Override
 	public List<ItemInfoVO> selectItembyFlag(ItemInfoVO vo) {

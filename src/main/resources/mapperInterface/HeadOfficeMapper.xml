@@ -22,6 +22,29 @@
 	</resultMap>
 <!-- resultMap 설정 ============================================================-->  
 
+	<!-- 가맹점 자재발주 등록(발주먼저등록), return fcOrderSeq -->
+	
+	<insert id="insertFcOrder" parameterType="vo.FcOrderVO">
+		<selectKey keyProperty="fcOrderSeq" resultType="int" order="BEFORE">
+			SELECT nvl(max(fcorderseq),0)+1 FROM fcorder
+		</selectKey>
+		INSERT INTO fcorder (fcorderseq, fcid, fcorderdate, fcorderflag)
+		VALUES (#{fcOrderSeq}, #{fcId}, sysdate, 'N')
+	</insert>
+	
+	<!-- 가맹점 자재발주 상세내역 등록 -->
+	<insert id="insertFcOrderDetail">
+		<selectKey keyProperty="fcOrderDetailSeq" resultType="int" order="BEFORE">
+			SELECT nvl(max(fcorderdetailseq),0) FROM fcorderdetail
+		</selectKey>
+		INSERT INTO fcorderdetail(fcorderdetailseq, fcOrderSeq, Itemindex, Itemqty)
+		<foreach collection="list" item="vo" separator="UNION" index="index">
+			SELECT #{fcOrderDetailSeq}+1+#{index}, #{vo.fcOrderSeq}, #{vo.itemIndex}, #{vo.itemQty} FROM DUAL
+		</foreach>
+	</insert>
+	
+
+	
   
 	<!-- itemflag에 따라 select item -->
 	<select id="selectItembyFlag" resultType="vo.ItemInfoVO">
