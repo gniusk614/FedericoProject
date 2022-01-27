@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j;
 import mapperInterface.HeadOfficeMapper;
 import paging.SearchCriteria;
+import vo.ChartVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -179,7 +180,15 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 		return dao.searchFcRows(cri);
 	}
 	
-	
-	
+	//월별차트
+	@Override
+	public List<ChartVO> monthChart() {
+		return dao.monthChart();
+	}
+	//요일별차트
+	@Override
+	public List<ChartVO> dayChart() {
+		return dao.dayChart();
+	}
 
 }

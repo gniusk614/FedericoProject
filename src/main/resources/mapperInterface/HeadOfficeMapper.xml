@@ -273,9 +273,33 @@
 
 
 
+	<!-- ============================={ 통계 }================================ -->
+	<!-- 최근 1년 월별 통계 -->
+	<select id="monthChart" resultType="vo.ChartVO">
+	SELECT TO_CHAR(orderdate, 'YYYYMM') AS chartLabel , count(*) AS chartCount
+	FROM orderlist 
+	WHERE TO_CHAR(orderdate, 'YYYYMM')
+	BETWEEN to_char(ADD_MONTHS(sysdate,-12),'YYYYMMDD') AND to_char(sysdate,'YYYYMMDD') 
+	GROUP BY to_char(ORDERDATE , 'YYYYMM')
+	ORDER BY chartLabel
+	</select>
+	<!-- 요일별 통계 -->
+	<select id="dayChart" resultType="vo.ChartVO">
+	SELECT case to_char(orderdate,'d') 
+	   when '1' then '일요일'
+       when '2' then '월요일'
+       when '3' then '화요일'
+       when '4' then '수요일'
+       when '5' then '목요일'
+       when '6' then '금요일'
+       when '7' then '토요일'
+       END "chartLabel"
+	, count(*) AS chartCount FROM ORDERLIST o 
+	GROUP BY to_char(orderdate,'d')
+	ORDER BY to_char(orderdate,'d') ASC
+	</select>
 
-
-
+	
 
 
 
