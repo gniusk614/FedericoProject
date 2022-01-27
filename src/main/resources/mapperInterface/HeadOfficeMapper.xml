@@ -283,6 +283,7 @@
 	GROUP BY to_char(ORDERDATE , 'YYYYMM')
 	ORDER BY chartLabel
 	</select>
+	
 	<!-- 요일별 통계 -->
 	<select id="dayChart" resultType="vo.ChartVO">
 	SELECT case to_char(orderdate,'d') 
