@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import paging.SearchCriteria;
+import vo.ChartVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -70,10 +71,10 @@ public interface HeadOfficeService {
 	List<FranchiseVO> searchFcList(SearchCriteria cri); // 가맹점정보 Search
 	
 	int searchFcRows(SearchCriteria cri); // 가맹점정보 Search 결과 Rows 조회
+
+	List<ChartVO> monthChart();//월별통계
 	
-	
-	
-	
+	List<ChartVO> dayChart(); //요일별통계
 	
 	
 	

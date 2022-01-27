@@ -111,6 +111,87 @@ $(function() {
 	})
 })//ready
 
+//=============================(통계)====================================
+
+function showChart(flag) {
+			let chartLabels = [];
+			let chartData = [];
+			let chartColor = [];
+			let labelcontent ="차트";
+			let chartID ="";
+			$.ajax({
+				type : 'get',
+				url : 'chart?flag='+flag,
+				dataType : "json",
+				success : function(res) {
+					let list = res.list
+					for (let i = 0; i < list.length; i++) {
+						chartLabels.push(list[i].chartLabel);
+						chartData.push(list[i].chartCount);
+						var RGB_1 = Math.floor(Math.random() * (255 + 1));
+						var RGB_2 = Math.floor(Math.random() * (255 + 1));
+						var RGB_3 = Math.floor(Math.random() * (255 + 1));
+						var strRGBA = 'rgb(' + RGB_1 + ',' + RGB_2 + ','
+								+ RGB_3 + ')'
+						chartColor.push(strRGBA);
+					}
+					
+					$('.chartCanvas').attr('hidden',true);
+					switch(flag) {
+					case "month" : chartID=$('#monthChart'); labelcontent="최근 1년간 월벌 매출현황"; break;
+					case "day" :   chartID=$('#dayChart'); labelcontent="요일별 판매현황"; break;
+					}
+					chartID.attr('hidden',false);
+					new Chart(chartID, {
+						type : 'bar',
+						data : {
+							labels : chartLabels,
+							datasets : [ {
+								data : chartData,
+								label : labelcontent,
+								backgroundColor : chartColor,
+								fill : false
+							} ]
+						},
+						options : {
+							titles : {
+								responsive: false,
+								display : true,
+								text : "월별 매출현황",
+							},
+							scales: {
+								yAxes: [{
+									ticks: {
+										beginAtZero: true,
+										callback: function (value) {
+		                                    if (0 === value % 1) {
+		                                        return value;
+		                                    }
+										}
+									}
+								}]
+							}
+						}
+					});//그래프
+				},
+				error : function() {
+					alert('에러')
+				}
+			})
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
 var fcidCheck = false; // => 사원번호
 var fclpCheck = false; // =>로그인비번
 var fcpCheck = false; // ->비번

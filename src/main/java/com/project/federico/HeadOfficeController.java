@@ -2,33 +2,21 @@ package com.project.federico;
 
 import java.io.File;
 import java.io.IOException;
-
-import java.net.URI;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import java.security.Principal;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.jstl.core.Config;
 
-import org.apache.jasper.tagplugins.jstl.core.Url;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -39,7 +27,7 @@ import paging.SearchCriteria;
 import service.FranchiseService;
 import service.HeadOfficeService;
 import service.MenuService;
-import service.MenuServiceImpl;
+import vo.ChartVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -814,12 +802,33 @@ public class HeadOfficeController {
 		return "headoffice/headofficeMain";
 	} //headofficeMain
 	
-	//메인화면 보내기
+	//차트화면 보내기
 	@RequestMapping(value = "/chartf")
 	public String chartf(ModelAndView mv,MenuVO vo) {
 		return "headoffice/chart";
 	} //headofficeMain
 	
+	
+	// 차트화면 띄우기
+	@RequestMapping(value = "/chart")
+	public ModelAndView chart(ModelAndView mv, ChartVO vo, @RequestParam("flag") String flag) {
+		List<ChartVO> list = new ArrayList<ChartVO>();
+		
+		switch(flag) {
+		case "month" : list =service.monthChart(); break;
+		case "day" :   list = service.dayChart(); break;
+//		case "menu" :  list = service.menuChart(); break;
+//		case "age" :   list = service.ageChart(); break;
+//		case "area" : list = service.areaChart(); break;
+		}
+		if(list !=null) {
+			mv.addObject("list", list);
+		}else {
+			mv.addObject("message", "통계자료가 없습니다.");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	} // chart	
 	
 	
 }
