@@ -1024,21 +1024,64 @@ function fcOrderFlagUpdate(flag) {
 		})//ajax
 	
 	}//menuUpdateForm
-		 
-	// menuDelete
-	function menuDelete(menuIndex) {
-		if(confirm("해당 메뉴를 삭제하시겠습니까?"))
+
+	
+	function menuDie(vsindex,menuIndex) {
+		console.log($('#menulife'+vsindex).text());
+		console.log($('#menulife'+vsindex).html());
+		console.log($('#menulife'+vsindex).val());
 		
-	$.ajax({
-		type:'post',
-		url:'menuDelete?menuIndex='+menuIndex,
-		datatype:'json',
-		success:function (data) { 
-			// location.reload();	
-		    $('#t_menuselect').load('menuList #t_menuselect');		
-		},error:function() {
-			alert("삭제 실패")
-		}	
+		console.log(vsindex);
+		console.log(menuIndex);
+		console.log($('#menulife'+vsindex).text()=='비활성화'); // true false
+		console.log($('#menulife'+vsindex).text()=='활성화'); // true false		
+		// 반복문 안에 있는 건 어떻게 처리하지? 
+		// varstatus => 가 index 값을 가진다.
+		// 그 index 로 반복문 내에 있는 것을 수정할 수 있다.
 		
-		})// ajax
-	}//menuDelete(menuIndex)	
+		$.ajax({
+			url:'menuDie',
+			type:'get',
+			data:{
+				menuIndex: menuIndex,
+				menuLive : $('#menulife'+vsindex).text()=='비활성화'? 'die' : 'live'						
+			},
+			
+			success:function(data){ // 성공하면 아래 작업을 실행한다.
+				console.log('비활성화 받아오기 성공1');	
+				$('.a'+vsindex).val(data.success);
+				
+				
+				if(data.success == 'success'){
+					console.log('비활성화 받아오기 성공2');					
+					if($('#menulife'+vsindex).text()=='비활성화'){
+						
+						$('#menulife'+vsindex).text('활성화');
+						$('.a'+vsindex).css('text-decoration','line-through');
+						//$('#menulife'+vsindex).removeAttr('onclick');
+						//$('#menulife'+vsindex).attr('onclick','menuLive(${vs.index},${vo.menuIndex})');
+				   }else{
+						
+						$('#menulife'+vsindex).text('비활성화');
+						$('.a'+vsindex).css('text-decoration','none');
+					
+						 }
+				}
+			},error:function(){
+				
+				console.log("비활성화 받아오기 실패");
+				alert("비활성화 전송에 실패하였습니다.");
+			}
+		
+		})//ajax
+		
+	}//.click		
+	
+	
+	
+			
+	
+	
+	
+	
+	

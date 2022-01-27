@@ -33,115 +33,138 @@
 </head>
 <body>
 	<!-- Navigation-->
-	<%@include file="nav.jsp"%>
-	
+	<%@include file="nav.jsp"%>	
 	<!-- Section--> 
+	<section  class="comntainer" style="width: 100%; min-height: 100%; background-color: light; padding-bottom: 168px; padding-right:40px; padding-left:40px">
 	
-	<section style="width: auto; height: 100%;">
+	<div class="row">
+		<div class="col"></div>
+			<div class="col-10 d-flex justify-content-center m-5">
+				<h1 class="display-6">
+				<a href="fcSearch">매장찾기</a></h1>
+			</div>
+		<div class="col"></div>
+	</div>
+	<div class="row justify-content-md-center" style="height: 50px;">
+				<div id="franchiselocation" class="col-sm-3 checked" align="center"
+					style="font-size: large; color: black; border-bottom: 2px solid black; cursor: pointer;"
+					onclick="clickEffect('franchiselocation'); showdiv('franchiselocation');">
+					지역명</div>
+				<div id="franchiseName" class="col-sm-3 checked" align="center"
+					style="font-size: large; color: gray; border-bottom: 1px solid lightgray; cursor: pointer;"
+					onclick="clickEffect('franchiseName'); showdiv('franchiseName');">
+					가맹점명</div>
+				<div id="clientCurrnetLocation" class="col-sm-3 checked" align="center"
+					style="font-size: large; color: gray; border-bottom: 1px solid lightgray; cursor: pointer;"
+					onclick="clickEffect('clientCurrnetLocation'); showdiv('clientCurrnetLocation');">
+					현위치</div>
+			</div>
 	
-	
-	
-	<!-- 지도 표시 -->
-		<div id="map" style="width:100%;height:90%;position: relative;overflow: hidden;"></div>
-		
-		<div class="container">
-			<input class="form-control me-2" type="search" id="keyword" placeholder="Search" value="">
-		
+	<!-- 지역명선택시 -->
+	<div class="row " id="outer_1" style=" margin-top:50px;">
+	    <!-- 지역명 OO시 -->
+		<div class="col">
+			<select class="form-select" aria-label="Default select example">
+			  <option selected>서울특별시</option>
+			  <option value="ggd">경기도</option>
+			  <option value="ccbd">충청북도</option>
+			  <option value="ccnd">충청남도</option>
+			  <option value="gwd">강원도</option>
+			  <option value="gsbd">경상북도</option>
+			  <option value="gsnd">경상남도</option>
+			  <option value="jjd">제주도</option>			  
+			</select>
 		</div>
-		
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=63fe094a0bad5ef07be77c4f00959da2"></script>
-<script>
-var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-    mapOption = { 
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
-    };
-
-// 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-var map = new kakao.maps.Map(mapContainer, mapOption); 
-//일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
-var mapTypeControl = new kakao.maps.MapTypeControl();
-// 지도 타입 컨트롤을 지도에 표시합니다
-map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-
-var ps = new kakao.maps.services.Places();
-
-ps.keywordSearch($('#keyword'),placeSearchCB);
-
-function placesSearchCB(data, status, pagination){
-	if(status === kakao.maps.services.Status.OK) {
-		//검색된 장소 위치를 기준으로 지도범위를 재설정하기 위해
-		// Lat(위도),Lng(경도)Bounds 객체에 좌표를 추가합니다.
-		var bounds = new kakao.maps.LatLngBounds();
-		
-		for (var i=0; i<data.length; i++) {
-			displayMarker(data[i]);
-			bounds.extend(new kakao.maps.LatLng(data[i].y,data[i].x));
-			
-		}// for
-		
-		// 검색된 장소위치를 기준으로 지도 범위를 재설정함.		
-		map.setBounds(bounds);
-		
-	}// if(status === ...)
-}// function
-
-//마커표시
-function displayMarker(place) {
+		<div class="col">
+			<select class="form-select" aria-label="Default select example">
+			  <option selected>서울특별시</option>
+			  <option value="ggd">경기도</option>
+			  <option value="ccbd">충청북도</option>
+			  <option value="ccnd">충청남도</option>
+			  <option value="gwd">강원도</option>
+			  <option value="gsbd">경상북도</option>
+			  <option value="gsnd">경상남도</option>
+			  <option value="jjd">제주도</option>			  
+			</select>
+		</div>	
+	</div>
+	<!-- 매장명 -->	
+	<div class="row" id="outer_2" style="display:none; margin-top:50px;">
+		<div class="col " style="background-color: #c8707e; height: 80px; padding-bottom:100px;">
+		매장명 선택시 표시</div>		
+	</div>	
+	<!-- 현위치 -->
+	<div class="row" id="outer_3" style="display:none; margin-top:50px;">
+		<div class="col" style="background-color: #9900ff; height: 80px; padding-bottom:100px;">
+		현위치 선택시 표시</div>		
+	</div>	
+	<!-- 지도표시 -->
+	<div class="row map" style="display:block; margin-top:50px;">
+		<div class="col" style="background-color: #ffffdd; height: 800px; padding-bottom:100px;">
+		지도표시</div>		
+	</div>
+	<div class="row fcLocalName">
+		<div class="col" style="background-color: green; height: 800px; padding-bottom:50px;">
+		가맹점카드 표시구간</div>		
+	</div>
 	
-	var marker = new kakao.maps.Marker({
-		map: map,
-		position : new kakao.maps.LatLng(place.y, place.x)
 	
-	}) // var marker
 	
-	// 마커 클릭이벤트
-	kakao.maps.addListener(marker,'click', function(){
-	// 마커를 클릭하면 장소명이 infoWindow에 표시 됨.
-	infowindow.setcontent('<div style="padding:5px; font-size:12px;">'+place.place_name+'</div>');
-	infowindow.open(map,marker);
-		
-	}) // 
 	
-}// function
-
-
-
-
-
-function getInfo() {
-    // 지도의 현재 중심좌표를 얻어옵니다 
-    var center = map.getCenter(); 
-    
-    // 지도의 현재 레벨을 얻어옵니다
-    var level = map.getLevel();
-    
-    // 지도타입을 얻어옵니다
-    var mapTypeId = map.getMapTypeId(); 
-    
-    // 지도의 현재 영역을 얻어옵니다 
-    var bounds = map.getBounds();
-    
-    // 영역의 남서쪽 좌표를 얻어옵니다 
-    var swLatLng = bounds.getSouthWest(); 
-    
-    // 영역의 북동쪽 좌표를 얻어옵니다 
-    var neLatLng = bounds.getNorthEast(); 
-    
-    // 영역정보를 문자열로 얻어옵니다. ((남,서), (북,동)) 형식입니다
-    var boundsStr = bounds.toString();
-
-}
-
-</script>
-		
+	
+	
+	
+	
+	
+	
+	
 	</section>
+	
+	<script type="text/javascript">
+
+	
+function showdiv(id) {	
+	if (id=='franchiselocation'){
+		$('#outer_1').css('display','flex');
+		$('#outer_2').css('display','none');
+		$('#outer_3').css('display','none');
+	} else if (id=='franchiseName'){
+		$('#outer_1').css('display','none');
+		$('#outer_2').css('display','block');
+		$('#outer_3').css('display','none');
+	}else {
+		$('#outer_1').css('display','none');
+		$('#outer_2').css('display','none');
+		$('#outer_3').css('display','block');
+	}
+}// function showdiv(id)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	</script>
 	
 
 	<!-- Footer-->
 	<%@include file="footer.jsp"%>
 	
-	
+	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=63fe094a0bad5ef07be77c4f00959da2"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 	<!-- Core theme JS-->

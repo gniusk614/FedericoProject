@@ -14,8 +14,7 @@ import vo.MenuVO;
 public class MenuServiceImpl implements MenuService {
 	
 	@Autowired
-	MenuMapper dao;
-	
+	MenuMapper dao;	
 	
 	@Override
 	public List<MenuVO> selectMenuListbyFlag(MenuVO vo) {
@@ -41,4 +40,14 @@ public class MenuServiceImpl implements MenuService {
 	public int menuDelete(MenuVO vo) {
 		return dao.menuDelete(vo);
 	}
+	@Override
+	public int menuLive(MenuVO vo) {
+		return dao.menuLive(vo);
+	}
+	@Override
+	public int menuDie(MenuVO vo) {
+		return dao.menuDie(vo);
+	}
+	
+		
 }

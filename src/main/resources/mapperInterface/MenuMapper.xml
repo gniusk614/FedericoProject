@@ -14,8 +14,9 @@
 	
 	<insert id="menuInsert">
 		
-		INSERT INTO MENUINFO (MENUINDEX, MENUNAME, MENUFLAG, MENUINTRO, MENUPRICE, MENUIMAGE)
-		VALUES((select nvl(max(menuIndex),0)+1 from menuinfo), #{menuName}, #{menuFlag}, #{menuIntro}, #{menuPrice},#{menuImage})
+		INSERT INTO MENUINFO (MENUINDEX, MENUNAME, MENUFLAG, MENUINTRO, MENUPRICE, MENUIMAGE,MENULIVE)
+		VALUES((select nvl(max(menuIndex),0)+1 from menuinfo), #{menuName}, #{menuFlag}, #{menuIntro}, #{menuPrice},#{menuImage},
+		#{menuLive})
 		
 	</insert>
 	
@@ -45,10 +46,25 @@
 		where MENUINDEX=#{menuIndex}
 	</update>
 						
+	<update id="menuLive">
+		UPDATE MENUINFO SET
+		menuLive = #{menuLive}
+		where menuIndex =#{menuIndex}
+	</update>
+	
+	<update id="menuDie">
+		UPDATE MENUINFO SET
+		menuLive = #{menuDie}
+		where menuIndex =#{menuIndex}
+	</update>
+					
+						
 						<!--<<  DELETE  >>-->	
 	<delete id="menuDelete">
 		delete from menuinfo where MENUINDEX = #{menuIndex}	
 	</delete>
+	
+	
 	
 		
 	
