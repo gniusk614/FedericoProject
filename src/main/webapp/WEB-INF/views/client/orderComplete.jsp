@@ -23,7 +23,7 @@
 	<!-- Navigation-->
 	<%@include file="nav.jsp"%>
 	
-	<!-- 현재시간 + 45분 계산 -->
+	<!-- 현재시간 + 가맹점별 deliveryTime 계산 -->
 	<jsp:useBean id="now" class="java.util.Date"/>
 	<fmt:formatDate value="${now}" pattern="HH" var="now_hour"/>
 	<fmt:formatDate value="${now}" pattern="mm" var="now_minute"/>

@@ -73,7 +73,7 @@
 										<td>${vo.orderNumber}</td>
 										<td>${vo.clientAddress}</td>
 										<td>${vo.memo}</td>
-										<td>${fn:substring(vo.clientPhone,0,3)}-${fn:substring(vo.clientPhone,3,7)}-${fn:substring(vo.clientPhone,7,10)}</td>
+										<td>${fn:substring(vo.clientPhone,0,3)}-${fn:substring(vo.clientPhone,3,7)}-${fn:substring(vo.clientPhone,7,11)}</td>
 										<td style="padding-top: 4px;">
 											<span class="btn py-0" onclick="showOrderDetail(${vo.orderNumber}, '${vo.clientAddress}')" >
 											<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" >

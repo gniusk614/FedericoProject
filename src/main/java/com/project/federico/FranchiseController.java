@@ -292,6 +292,9 @@ public class FranchiseController {
 				mv.setViewName("franchise/home");
 				
 			} else {
+			
+				
+				
 				// 각정보 저장
 				// login 성공시 이동화면
 				// 가맹점게시판 현재 : null
@@ -299,6 +302,12 @@ public class FranchiseController {
 				fcId=vo.getFcId();
 				String password =vo.getFcPassword();
 				String uri="/franchise/fcLoginForm";
+				
+				// 세션종료시 로그인페이지로 보내기
+				if(vo.getFcId() == null) {
+					mv.setViewName(uri);
+					return mv;
+				}
 				
 				// 프랜차이즈 정보 vo에 담기
 				vo=service.selectFcOne(vo);
