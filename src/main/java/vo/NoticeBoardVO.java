@@ -10,6 +10,8 @@ public class NoticeBoardVO {
 	private String id;
 	private String content;
 	private String regdate;
+	private String uploadFile;
+	private String noticeFlag;
 	private int cnt;
 	
 }

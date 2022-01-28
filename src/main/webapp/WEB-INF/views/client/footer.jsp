@@ -32,7 +32,7 @@
 					<i class="bi bi-telephone-fill"></i>&nbsp;가맹문의 0000-0000
 				</div>
 				<c:if test="${not empty fcId}">
-				<div class="col-sm-1 py-3" align="center" onclick="javaScript:location.href='/federico/franchise/home'"
+				<div class="col-sm-1 py-3" align="center" onclick="javaScript:location.href='/federico/franchise/login'"
 				style="color: gray; border-right: 1px solid gray; width: 100px; cursor: pointer;">
 					<i class="bi bi-shop"></i>&nbsp;가맹점공간
 				</div>

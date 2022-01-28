@@ -76,6 +76,12 @@ public class ClientServiceImpl implements ClientService {
 	public int insertClient(ClientVO vo) {
 		return dao.insertClient(vo);
 	}
+
+	//공지사항게시판 공지체크만 전체출력
+	@Override
+	public List<NoticeBoardVO> selectNoticeBoard() {
+		return dao.selectNoticeBoard();
+	}
 	
 	//공지사항
 	@Override
@@ -88,6 +94,7 @@ public class ClientServiceImpl implements ClientService {
 	public int searchNoticeBoardRows(SearchCriteria cri) {
 		return dao.searchNoticeBoardRows(cri);
 	}
+
 	
 	
 }
