@@ -85,13 +85,24 @@
 		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY
 	</select>
 	
-		<!-- 공지사항 공지만 출력 -->
+		<!-- 공지사항 noticeFlag='Y'만 출력 -->
 	<select id="selectNoticeBoard" resultType="vo.NoticeBoardVO">
 		SELECT seq,title,id,content,TO_CHAR(regdate,'YYYY-MM-DD') regdate, cnt, uploadfile,noticeFlag
 		FROM noticeBoard
 		WHERE noticeFlag='Y'
 		ORDER BY seq desc
 	</select>
+	
+		<!-- 공지사항 클릭시 Detail 출력 -->
+	<select id="selectDetailNoticeBoard" resultType="vo.NoticeBoardVO">
+		SELECT seq,title,id,content,TO_CHAR(regdate,'YYYY-MM-DD') regdate, cnt, uploadfile
+		FROM noticeBoard
+		WHERE seq=#{seq}
+	</select>
+	<!-- 공지사항 조회수증가 -->
+	<update id="countUpNoticeBoard">
+		update noticeBoard set cnt=cnt+1 where seq=#{seq}
+	</update>
 
 	<sql id="noticeSearch" >
 		<if test="keyword != null">
