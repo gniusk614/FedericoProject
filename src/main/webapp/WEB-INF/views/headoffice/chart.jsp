@@ -50,7 +50,7 @@ a {
 
 		<div id="layoutSidenav_content">
 			<div class="container-fluid px-4" style="margin-top: 20px;">
-				<div class="col-10">
+				<div style="width: 700px;">
 					<div class="card">
 						<div class="card-header">
 							<button class="btn btn-primary" onclick="showChart('month')">
@@ -64,11 +64,11 @@ a {
 							<button class="btn btn-primary" onclick="">
 								지역별 선호메뉴</button>
 						</div>
-						<div class="card-body">
+						<div class="card-body" style=" height: 600px;">
 							<div class="container-fluid px-4">
 								<div class="row">
-									<canvas id="monthChart" class="chartCanvas" width="500" height="400"></canvas>
-									<canvas id="dayChart" class="chartCanvas" width="500" height="400"></canvas>
+									<canvas id="monthChart" class="chartCanvas" width="500" height="400" hidden="hidden"></canvas>
+									<canvas id="dayChart" class="chartCanvas" width="500" height="400" hidden="hidden"></canvas>
 								</div>
 							</div>
 						</div>

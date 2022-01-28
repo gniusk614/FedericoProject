@@ -267,6 +267,10 @@ public class FranchiseController {
 			return mv;
 			}
 		
-		
+		@RequestMapping(value = "/home")
+		public ModelAndView home(ModelAndView mv) {
+			mv.setViewName("franchise/home");
+			return mv;
+		}// 
 		
 }// class

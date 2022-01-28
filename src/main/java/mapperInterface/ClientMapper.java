@@ -6,6 +6,7 @@ import java.util.Map;
 import paging.SearchCriteria;
 import vo.CartVO;
 import vo.ClientVO;
+import vo.NoticeBoardVO;
 
 public interface ClientMapper {
 
@@ -20,5 +21,7 @@ public interface ClientMapper {
 	ClientVO selectOnePhone(ClientVO vo); //고객 정보 핸드폰으로 찾기 1건 출력
 	List<ClientVO> searchClientList(SearchCriteria cri); //고객정보 search
 	int insertClient(ClientVO vo); //회원가입
-	
+
+	List<NoticeBoardVO> searchNoticeBoard(SearchCriteria cri);//공지사항게시판 출력
+	int searchNoticeBoardRows(SearchCriteria cri); //공지사항 search 결과 rows 조회
 }

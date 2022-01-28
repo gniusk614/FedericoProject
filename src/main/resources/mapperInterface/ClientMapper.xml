@@ -70,6 +70,36 @@
 
 
 
+<!-- ============================(공지사항게시판)==================== -->
+	<!-- searchNoticeBoardRow -->
+	<select id="searchNoticeBoardRows" resultType="int">
+		SELECT COUNT(*) FROM noticeboard <include refid="noticeSearch"></include>
+	</select>
+
+		<!-- searchStaff 서치,페이징 -->
+	<select id="searchNoticeBoard" resultType="vo.NoticeBoardVO">
+		SELECT * FROM noticeBoard <include refid="noticeSearch"></include> 
+		ORDER BY seq desc
+		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY
+	</select>
+
+	<sql id="noticeSearch" >
+		<if test="keyword != null">
+			<bind name="keyVal" value="'%'+keyword+'%'"/>
+		</if>
+	<choose>
+		<when test="searchType == 'title'.toString()">
+			where title LIKE #{keyVal}
+		</when>
+		<when test="searchType == 'content'.toString()">
+			where content LIKE #{keyVal}
+		</when>
+		<when test="searchType == 'titleContent'.toString()">
+			where title LIKE #{keyVal} OR title LIKE #{keyVal}
+		</when>
+	</choose>
+	</sql>
+
 
 </mapper>
 

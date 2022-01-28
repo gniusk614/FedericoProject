@@ -113,7 +113,7 @@ table, tr, td, th {
 															for="clientPassword"
 															style="font-size: large; color: gray;">비밀번호</label>
 													</div>
-													<div style="font-size: small; color: red;">
+													<div style="font-size: small; color: red;" align="left">
 														<c:if test="${not empty message}">${message}</c:if>
 													</div>
 													<div class="row">

@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,14 +31,30 @@
 				<div class="col-sm-1 py-3" align="center"  style="color: gray; border-right: 1px solid gray; width: 180px;">
 					<i class="bi bi-telephone-fill"></i>&nbsp;가맹문의 0000-0000
 				</div>
+				<c:if test="${not empty fcId}">
+				<div class="col-sm-1 py-3" align="center" onclick="javaScript:location.href='/federico/franchise/home'"
+				style="color: gray; border-right: 1px solid gray; width: 100px; cursor: pointer;">
+					<i class="bi bi-shop"></i>&nbsp;가맹점공간
+				</div>
+				</c:if>
+				<c:if test="${empty fcId}">
 				<div class="col-sm-1 py-3" align="center" onclick="javaScript:location.href='/federico/franchise/loginf'"
 				style="color: gray; border-right: 1px solid gray; width: 100px; cursor: pointer;">
 					<i class="bi bi-shop"></i>&nbsp;가맹점공간
 				</div>
+				</c:if>
+				<c:if test="${not empty loginID}">
+				<div class="col-sm-1 py-3" align="center" onclick="javaScript:location.href='/federico/headoffice/headofficeMain'"
+				style="color: gray; width: 100px; cursor: pointer;">
+					<i class="bi bi-building"></i>&nbsp;본사공간
+				</div>
+				</c:if>
+				<c:if test="${empty loginID}">
 				<div class="col-sm-1 py-3" align="center" onclick="javaScript:location.href='/federico/headoffice/loginf'"
 				style="color: gray; width: 100px; cursor: pointer;">
 					<i class="bi bi-building"></i>&nbsp;본사공간
 				</div>
+				</c:if>
 			
 			</div>
 
