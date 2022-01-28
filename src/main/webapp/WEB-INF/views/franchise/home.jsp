@@ -111,18 +111,16 @@
 					</div>
 					<!-- 하단 우측 -->
 					<div class="col-6" style="background-color: blue;">
-						1
+						<div class="card-body" style=" height: 600px;">
+							<div class="container-fluid px-4">
+								<div class="row">
+									<canvas id="monthChart" class="chartCanvas" width="500" height="400" hidden="hidden"></canvas>
+									<canvas id="dayChart" class="chartCanvas" width="500" height="400" hidden="hidden"></canvas>
+								</div>
+							</div>
+						</div>						
 					</div>
 			</div>
-			<%-- 			<div class="row" >
-							<span>금월 매출 누계: <b><fmt:formatNumber value="${fcThisMonthSales}" pattern="#,###"/></b></span>
-						</div>
-						<div class="row">
-							<span>금일 매출 누계: <b><fmt:formatNumber value="${fcTodaySales}" pattern="#,###"/></b></span>
-						</div>
-						<div class="row">
-							<span>금월 발주 누계: <b><fmt:formatNumber value="${fcThisMonthOrderSum}" pattern="#,###"/></b></span>
-						</div>		 --%>	
 		
 		
 		

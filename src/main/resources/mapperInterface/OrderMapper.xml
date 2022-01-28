@@ -36,7 +36,8 @@
 	<!-- 주문번호별 주문상세내역 조회 -->
 	<select id="selectDetailbyOrderNumber" resultMap="OrderDetailListVO">
 		SELECT o.*, m.menuName, m.menuPrice
-		FROM orderdetaillist o, menuinfo m WHERE o.ordernumber = #{orderNumber} ORDER BY o.orderdetailnumber
+		FROM orderdetaillist o, menuinfo m WHERE o.ordernumber = #{orderNumber} And m.menuindex = o.menuindex 
+		ORDER BY o.orderdetailnumber
 	</select>
 
 	<!-- 주문취소처리 -->
