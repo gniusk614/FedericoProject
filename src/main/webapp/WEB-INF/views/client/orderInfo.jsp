@@ -154,7 +154,7 @@
 				<div class="container" style="width: 800px;">
 					<div id="client_Name">${clientName}</div>
 					<hr>
-					<div id="client_Phone">${fn:substring(clientPhone,0,3)}-${fn:substring(clientPhone,3,7)}-${fn:substring(clientPhone,7,10)}</div>
+					<div id="client_Phone">${fn:substring(clientPhone,0,3)}-${fn:substring(clientPhone,3,7)}-${fn:substring(clientPhone,7,11)}</div>
 					<hr>
 					<div class="input-group mb-3">
 						<input type="text" id="clientMemo" class="form-control" size="80" placeholder="주문 시 요청사항 (40자 까지 입력가능)">

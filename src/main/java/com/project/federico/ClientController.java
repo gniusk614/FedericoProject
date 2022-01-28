@@ -124,6 +124,7 @@ public class ClientController {
 					session.removeAttribute("list");
 				}
 				session.removeAttribute("listSize");
+				
 			}
 			
 			//해당가맹점 배달소요시간 조회

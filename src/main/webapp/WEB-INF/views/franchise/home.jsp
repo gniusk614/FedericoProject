@@ -86,10 +86,43 @@
 						</table><!-- 주문정보 나오는 테이블 -->
 				</div>
 			</div><!-- 메인화면 주문현황 -->
-		<a href="completeorder">완료주문조회 test경로</a>
-		<a href="itemorderf">가맹점 자재발주</a>
-		<a href="selectfcorder">가맹점 발주내역 조회</a>
-		
+			
+			<!-- 메인화면 하단 - 매출현황 등 -->
+			<div class="row m-1" style=" border: 1px solid lightgray; height: 400px; overflow: auto;">
+					<!-- 하단 좌측 -->
+					<div class="col-6 fs-5" align="center">
+						<div class="row m-1" style="height: 190px; border: 1px solid lightgray;">
+							<div class="col-6">
+								<br><span>전일 매출</span><br><b class="fs-2"><fmt:formatNumber value="${fcYesterdaySales}" pattern="#,###"/></b> 원
+							</div>
+							<div class="col-6">
+								<br><span>당일 매출</span><br><b class="fs-2"><fmt:formatNumber value="${fcTodaySales}" pattern="#,###"/></b> 원
+							</div>
+						</div>
+						<div class="row m-1" style="height: 190px; border: 1px solid lightgray;">
+							<div class="col-6">
+									<br><span>당월 매출</span><br><b class="fs-2"><fmt:formatNumber value="${fcThisMonthSales}" pattern="#,###"/></b> 원
+								</div>
+								<div class="col-6">
+									<br><span>당월 발주금액</span><br><b class="fs-2"><fmt:formatNumber value="${fcThisMonthOrderSum}" pattern="#,###"/></b> 원
+								</div>
+							</div>
+
+					</div>
+					<!-- 하단 우측 -->
+					<div class="col-6" style="background-color: blue;">
+						1
+					</div>
+			</div>
+			<%-- 			<div class="row" >
+							<span>금월 매출 누계: <b><fmt:formatNumber value="${fcThisMonthSales}" pattern="#,###"/></b></span>
+						</div>
+						<div class="row">
+							<span>금일 매출 누계: <b><fmt:formatNumber value="${fcTodaySales}" pattern="#,###"/></b></span>
+						</div>
+						<div class="row">
+							<span>금월 발주 누계: <b><fmt:formatNumber value="${fcThisMonthOrderSum}" pattern="#,###"/></b></span>
+						</div>		 --%>	
 		
 		
 		
