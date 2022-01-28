@@ -58,7 +58,6 @@ public class HeadOfficeController {
 	public ModelAndView fcorderdetail(ModelAndView mv, FcOrderDetailVO vo, ItemInfoVO ivo) {
 		vo.setItemInfoVO(ivo);
 		List<FcOrderDetailVO> list = service.selectFcOrderDetailbyOrderNumber(vo);
-
 		if (list.size() > 0) {
 			mv.addObject("list", list);
 		} else {
