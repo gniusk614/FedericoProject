@@ -615,13 +615,15 @@ public class ClientController {
 		//고객센터이동
 		@RequestMapping(value = "cscenterf")
 		public ModelAndView cscenterf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
-			
 			cri.setSnoEno();
-
-			List<NoticeBoardVO> list = clientService.searchNoticeBoard(cri);
-
-			if (list != null && list.size() > 0) {
-				mv.addObject("boardList", list);
+			
+			List<NoticeBoardVO> selectList = clientService.selectNoticeBoard();
+			List<NoticeBoardVO> searchList = clientService.searchNoticeBoard(cri);
+			if (searchList != null && searchList.size() > 0) {
+				if(selectList !=null && selectList.size()>0) {
+					mv.addObject("noticeList",selectList);
+				}
+				mv.addObject("boardList", searchList);
 			} else {
 				mv.addObject("message", "출력할 자료가 없습니다.");
 			}
@@ -629,6 +631,14 @@ public class ClientController {
 			pageMaker.setTotalRowCount(clientService.searchNoticeBoardRows(cri));
 			
 			mv.setViewName("client/csCenter");
+			return mv;
+		}
+		
+		
+		@RequestMapping(value ="/csNoticeDetail")
+		public ModelAndView csNoticeDetail (ModelAndView mv ,NoticeBoardVO vo) {					
+			
+			mv.setViewName("client/csNoticeDetail");
 			return mv;
 		}
 		
