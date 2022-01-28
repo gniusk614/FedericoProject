@@ -24,4 +24,6 @@ public interface ClientService {
 	List<NoticeBoardVO> selectNoticeBoard();//공지사항게시판 공지체크만 전체출력
 	List<NoticeBoardVO> searchNoticeBoard(SearchCriteria cri);//공지사항search
 	int searchNoticeBoardRows(SearchCriteria cri); //공지사항 search 결과 rows 조회
+	NoticeBoardVO selectDetailNoticeBoard(NoticeBoardVO vo);//공지사항 Detail조회
+	int countUpNoticeBoard(NoticeBoardVO vo); //공지사항 
 }

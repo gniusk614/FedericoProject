@@ -94,7 +94,21 @@ public class ClientServiceImpl implements ClientService {
 	public int searchNoticeBoardRows(SearchCriteria cri) {
 		return dao.searchNoticeBoardRows(cri);
 	}
-
+	
+	
+	//공지사항 Detail조회
+	@Override
+	public NoticeBoardVO selectDetailNoticeBoard(NoticeBoardVO vo) {
+		return dao.selectDetailNoticeBoard(vo);
+	}
+	
+	//공지사항 조회수증가
+	@Override
+	public int countUpNoticeBoard(NoticeBoardVO vo) {
+		return dao.countUpNoticeBoard(vo);
+	}
+	
+	
 	
 	
 }
