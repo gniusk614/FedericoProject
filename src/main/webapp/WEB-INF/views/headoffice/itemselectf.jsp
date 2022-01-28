@@ -48,7 +48,7 @@ $(function() {
 					<h4><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-collection" viewBox="0 0 16 16">
 					  <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
 					</svg>
-				자재조회 및 등록</h4>
+				자재발주내역 조회</h4>
 				</div>
 				<div class="card-body">
 					<div class="dataTable-top">
@@ -175,7 +175,6 @@ $(function() {
 	</div> <!-- 본문 끝 -->
 </div> <!-- layoutSidenav 끝 -->			
 
-
 <!-- 자재등록 modal -->
 <div class="modal fade" id="itemInsertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -220,7 +219,6 @@ $(function() {
     </div>
   </div>
 </div><!-- 자재등록 modal -->
-
 
 <!-- 자재 수정 modal -->
 <div class="modal fade" id="itemUpdateModal" tabindex="-1" aria-labelledby="itemUpdateModal" aria-hidden="true">

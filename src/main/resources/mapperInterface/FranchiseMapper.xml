@@ -3,7 +3,104 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapperInterface.FranchiseMapper">
 
+	<!-- 가맹점 전일 매출 -->
+	<select id="fcYesterdaySales" resultType="vo.ChartVO">
+		SELECT sum(d.menuqty * m.menuprice) chartCount
+		FROM franchise f
+		JOIN orderlist o ON f.fcid = o.fcid
+		JOIN orderdetaillist d ON d.ordernumber = o.ordernumber
+		JOIN menuinfo m ON d.menuindex = m.menuindex
+		WHERE o.orderdate BETWEEN TRUNC(sysdate, 'dd')-1  AND TRUNC(sysdate, 'dd')
+		AND f.fcid = #{value}
+		AND o.completeyn = 'Y'
+		GROUP BY o.fcid
+	</select>
 
+	<!-- 가맹점 당월 매출 -->
+	<select id="fcThisMonthSales" resultType="vo.ChartVO">
+		SELECT sum(d.menuqty * m.menuprice) chartCount
+		FROM franchise f
+		JOIN orderlist o ON f.fcid = o.fcid
+		JOIN orderdetaillist d ON d.ordernumber = o.ordernumber
+		JOIN menuinfo m on d.menuindex = m.menuindex
+		WHERE o.orderdate BETWEEN trunc(sysdate, 'MM')  AND add_months(trunc(sysdate, 'MM'),1)
+		AND f.fcid = #{value}
+		AND o.completeyn = 'Y'
+		GROUP BY o.fcid
+	</select>
+
+	<!-- 가맹점 당일 매출 -->
+	<select id="fcTodaySales" resultType="vo.ChartVO">
+		SELECT sum(d.menuqty * m.menuprice) chartCount
+		FROM franchise f
+		JOIN orderlist o ON f.fcid = o.fcid
+		JOIN orderdetaillist d ON d.ordernumber = o.ordernumber
+		JOIN menuinfo m ON d.menuindex = m.menuindex
+		WHERE o.orderdate BETWEEN TRUNC(sysdate, 'dd')  AND TRUNC(sysdate, 'dd')+1
+		AND f.fcid = #{value}
+		AND o.completeyn = 'Y'
+		GROUP BY o.fcid
+	</select>
+
+	<!-- 가맹점 당월 발주금액 -->
+	<select id="fcThisMonthOrderSum" resultType="vo.ChartVO">
+		SELECT sum(i.itemprice * d.itemqty) chartCount
+		FROM fcorder o
+		JOIN fcorderdetail d ON o.fcorderseq = d.fcorderseq
+		JOIN iteminfo i ON d.itemindex = i.itemindex
+		WHERE o.fcid = #{value}
+		AND o.fcorderdate BETWEEN TRUNC(sysdate, 'MM')  AND add_months(TRUNC(sysdate, 'MM'),1)
+	</select>
+
+	<!-- 가맹점 발주내역 searchOrderRows -->
+	<select id="searchItemOrderListRows" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) FROM fcorder o
+		<include refid="fcItemOrderSearch"></include>
+		<include refid="fcItemOrderSearchFlag"></include>	
+		AND o.fcid = #{vo.fcId}
+	</select>  
+	
+	<!-- 가맹점 발주내역 서치,페이징 -->
+	<select id="searchItemOrderListFc" parameterType="hashmap" resultType="vo.FcOrderVO" >
+		
+		SELECT o.fcorderseq, o.fcid, o.fcorderdate, o.fcorderflag, sum(i.itemprice*d.itemqty) sumPrice
+		FROM fcorder o 
+		LEFT JOIN fcorderdetail d ON o.fcorderseq = d.fcorderseq 
+		LEFT JOIN iteminfo i ON d.itemindex = i.itemindex
+		<include refid="fcItemOrderSearch"></include>
+		<include refid="fcItemOrderSearchFlag"></include>
+		AND o.fcid = #{vo.fcId}
+		GROUP BY o.fcorderseq, o.fcid, o.fcorderdate, o.fcorderflag
+		ORDER BY fcorderseq desc
+		OFFSET #{cri.sno}-1 ROWS FETCH NEXT #{cri.rowsPerPage} ROWS ONLY 
+	</select>
+	
+	<sql id="fcItemOrderSearch">
+		<choose>
+			<when test="cri.searchType == 'orderNumber'.toString()">
+				<if test="cri.keyword != '' and cri.keyword != null">
+					<bind name="keyVal" value="'%'+cri.keyword+'%'"/>
+					WHERE o.fcorderseq like #{keyVal}
+				</if>
+				<if test="cri.keyword == '' or cri.keyword == null">
+					WHERE 1=1
+				</if>
+			</when>	
+			<when test="cri.searchType == 'orderDate'.toString()">
+				<![CDATA[ WHERE fcorderdate <= TO_DATE(#{maxDate},'YY/MM/DD')+INTERVAL '1' DAY AND fcorderDate >= TO_DATE(#{minDate},'YY/MM/DD') ]]>
+			</when>
+			<otherwise>WHERE 1=1</otherwise>
+		</choose>
+	</sql>
+	
+	<sql id="fcItemOrderSearchFlag">
+		<choose>
+			<when test="vo.fcOrderFlag != '' and vo.fcOrderFlag != null">
+				AND o.fcorderflag = #{vo.fcOrderFlag}
+			</when>
+			<otherwise></otherwise>
+		</choose>
+	</sql>
 
 
 

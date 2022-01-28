@@ -11,5 +11,6 @@ public class FcOrderVO {
 	private String fcId;
 	private Date fcOrderDate;
 	private String fcOrderFlag;
+	private int sumPrice;
 	
 }

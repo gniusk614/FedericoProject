@@ -1,14 +1,25 @@
 package mapperInterface;
 
 import java.util.List;
+import java.util.Map;
 
+import vo.ChartVO;
+import vo.FcOrderVO;
 import vo.FranchiseVO;
-import vo.HeadOfficeVO;
-
-import vo.ItemInfoVO;
-import vo.StaffVO;
 
 public interface FranchiseMapper {
+	
+	ChartVO fcYesterdaySales(String fcId); //가맹점 전일 매출
+	
+	ChartVO fcThisMonthSales(String fcId); //가맹점 당월 매출
+	
+	ChartVO fcTodaySales(String fcId); //가맹점 당일 매출
+	
+	ChartVO fcThisMonthOrderSum(String fcId); //가맹점 당월 발주금액
+	
+	int searchItemOrderListRows(Map<String, Object> params); // 가맹점 발주내역 Rows
+	
+	List<FcOrderVO> searchItemOrderListFc(Map<String, Object> params); // 가맹점 발주내역 조회
 	
 	String selectDeliveryTimebyFcId(String fcId);  // 배송소요시간 select
 	

@@ -986,8 +986,6 @@ $(function() {
 
 // 자재 상세조회 modal 열기
 function fcOrderDetailForm(fcOrderSeq) {
-	console.log("세션 => " + window.sessionStorage);
-	console.log("세션 => " + window.sessionStorage.getItem('loginID'));
 
 	$.ajax({
 		type : 'get',
