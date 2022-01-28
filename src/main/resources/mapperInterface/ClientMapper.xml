@@ -77,11 +77,20 @@
 		SELECT COUNT(*) FROM noticeboard <include refid="noticeSearch"></include>
 	</select>
 
-		<!-- searchStaff 서치,페이징 -->
+		<!-- searchNotice 서치,페이징 -->
 	<select id="searchNoticeBoard" resultType="vo.NoticeBoardVO">
-		SELECT * FROM noticeBoard <include refid="noticeSearch"></include> 
+		SELECT seq,title,id,content,TO_CHAR(regdate,'YYYY-MM-DD') regdate, cnt, uploadfile,noticeFlag
+		FROM noticeBoard <include refid="noticeSearch"></include> 
 		ORDER BY seq desc
 		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY
+	</select>
+	
+		<!-- 공지사항 공지만 출력 -->
+	<select id="selectNoticeBoard" resultType="vo.NoticeBoardVO">
+		SELECT seq,title,id,content,TO_CHAR(regdate,'YYYY-MM-DD') regdate, cnt, uploadfile,noticeFlag
+		FROM noticeBoard
+		WHERE noticeFlag='Y'
+		ORDER BY seq desc
 	</select>
 
 	<sql id="noticeSearch" >
