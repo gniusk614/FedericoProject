@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ChartVO {
-	String chartLabel;
-	int chartCount;
+	private String chartLabel;
+	private int chartCount;
 }

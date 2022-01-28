@@ -6,9 +6,9 @@ import lombok.Data;
 
 @Data
 public class HeadOfficeVO {
-	String hoId;
-	String hoPassword;
-	StaffVO staffVo;
+	private String hoId;
+	private String hoPassword;
+	private StaffVO staffVo;
 
 	// ** Spring Security 사용 컬럼
 	private boolean enabled;

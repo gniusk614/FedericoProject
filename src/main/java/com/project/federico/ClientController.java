@@ -30,6 +30,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j;
+import paging.PageMaker;
+import paging.SearchCriteria;
 import service.ClientServiceImpl;
 import service.FranchiseService;
 import service.MenuServiceImpl;
@@ -39,8 +41,10 @@ import vo.CartVO;
 import vo.ClientVO;
 import vo.FranchiseVO;
 import vo.MenuVO;
+import vo.NoticeBoardVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
+import vo.StaffVO;
 
 @RequestMapping(value = "/client")
 @Log4j
@@ -113,9 +117,25 @@ public class ClientController {
 		if (orderService.insertOrderList(params) > 0) {
 			params.put("orderNumber", (int)params.get("orderNumber"));
 			params.put("list", list);
-		
+			
+			//해당가맹점 배달소요시간 조회
+			String deliveryTime = fcService.selectDeliveryTimebyFcId(fcId);
+			mv.addObject("deliveryTime", deliveryTime);
+			
+			
 			// 주문상세정보 인서트
 			if(orderService.insertOrderDetailList(params) > 0) {
+				
+				//결제완료 문자전송 추가
+				String phone = "";
+				if(session.getAttribute("clientLoginID") != null) {
+					phone = clientVo.getClientPhone();
+				}else {
+					phone = (String)session.getAttribute("nonPhone");
+				}
+				sendService.orderCompeleteSmsSend(phone, deliveryTime, fcId);
+				
+				
 				// 장바구니 비우기
 				if ("Y".equals(params.get("memberYN"))) {
 					clientService.deleteCartbyClientId(clientVo.getClientId());
@@ -127,9 +147,6 @@ public class ClientController {
 				
 			}
 			
-			//해당가맹점 배달소요시간 조회
-			String deliveryTime = fcService.selectDeliveryTimebyFcId(fcId);
-			mv.addObject("deliveryTime", deliveryTime);
 		}
 		mv.setViewName("client/orderComplete");
 		return mv;
@@ -469,7 +486,7 @@ public class ClientController {
 			}
 			System.out.println("수신자 번호 : " + phoneNumber);
 			System.out.println("인증번호 : " + numStr);
-//			sendService.certifiedPhoneNumber(phoneNumber, numStr);
+			sendService.certifiedPhoneNumber(phoneNumber, numStr);
 			mv.addObject("numStr", numStr);
 		}
 		mv.setViewName("jsonView");
@@ -583,8 +600,8 @@ public class ClientController {
 		//주문취소
 		@RequestMapping(value = "orderCancel")
 		public ModelAndView orderCancel(ModelAndView mv, OrderListVO vo) {
-			
 			if(orderService.orderCancel(vo)>0) {
+				sendService.orderCancelSmsSend(vo.getClientPhone());
 				mv.addObject("success", "성공");
 			}else {
 				mv.addObject("success", null);
@@ -592,6 +609,28 @@ public class ClientController {
 			mv.setViewName("jsonView");
 			return mv;
 		}
+		
+		
+		//고객센터이동
+		@RequestMapping(value = "cscenterf")
+		public ModelAndView cscenterf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+			
+			cri.setSnoEno();
+
+			List<NoticeBoardVO> list = clientService.searchNoticeBoard(cri);
+
+			if (list != null && list.size() > 0) {
+				mv.addObject("boardList", list);
+			} else {
+				mv.addObject("message", "출력할 자료가 없습니다.");
+			}
+			pageMaker.setCri(cri);
+			pageMaker.setTotalRowCount(clientService.searchNoticeBoardRows(cri));
+			
+			mv.setViewName("client/csCenter");
+			return mv;
+		}
+		
 		
 		
 		
