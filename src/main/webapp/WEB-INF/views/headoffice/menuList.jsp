@@ -214,7 +214,7 @@ $(function() {
 											<td>  
 											  <div class="d-grid gap-2 col-md-6">
 												<button type="button" class="btn btn-primary btn-sm" onclick="menuUpdateForm(${vo.menuIndex})">수정</button>
-												<button type="button" class="btn btn-outline-secondary btn-sm" onclick="alret('현재 작업중입니다.')">미리보기</button>
+												<button type="button" class="btn btn-outline-secondary btn-sm" onclick="">미리보기</button>
 												<!-- 
 												<button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#menuPreviewModal" onclick="menuPreview(${vo.menuIndex})">
 												미리보기</button>
@@ -425,43 +425,29 @@ $(function() {
 <!-- 메뉴수정 modal END-->
 
 <!-- 메뉴 미리보기 modal START-->
-<div class="modal fade" id="menuPreviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">메뉴 미리보기</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="card menu-card">
-        	<div class="row no-gutters">
-						<!-- 이미지 들어가는 부분 -->
-						<div class="col-5" id="menuImage">
-							<img src="${vo.menuImage}" height="240px" />
-						</div>
-						<!-- 이미지 들어가는 부분 -->
-						<!-- 내용 들어가는 부분 -->
-						<div class="col-7">
-							<div class="card-body py-3 px-4">
-								<div class="fw-bold fs-4" id="upmenuName" style="text-align: left;">${data.menuvo.menuName }</div>
-								<p class="card-text menuIntro mt-1" id="upmenuIntro" style="color:gray; height: 100px;">${data.menuvo.menuIntro}</p>
-								<span class="mt-4 fw-bold fs-4" id="upmenuPrice"><fmt:formatNumber value="${data.menuvo.menuPrice}"/></span>
-							</div>
-						</div>
-							<!-- 내용 들어가는 부분 -->
+<div class="container">
+	<!-- 메뉴조회 카드 시작 -->
+		<div class="card menu-card" id="card${vs.index}"
+			onmouseover="btnShow(${vs.index})"
+			onmouseleave="btnHide(${vs.index})">
+			<div class="row no-gutters">
+				<!-- 이미지 들어가는 부분 -->
+				<div class="col-5">
+					<img src="${data.menuvo.menuImage}" height="240px" />
+				</div>
+				<!-- 이미지 들어가는 부분 -->
+				<!-- 내용 들어가는 부분 -->
+				<div class="col-7">
+					<div class="card-body py-3 px-4">
+						<div class="fw-bold fs-4" style="text-align: left;">${data.menuvo.menuName}</div>
+						<p class="card-text menuIntro mt-1" style="color:gray; height: 100px;">${data.menuvo.menuIntro}</p>
+						<span class="mt-4 fw-bold fs-4"><fmt:formatNumber value="${data.menuvo.menuPrice}"/></span>
 					</div>
-        
-        
-        
-        
-        
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
+				</div>
+					<!-- 내용 들어가는 부분 -->
+			</div>
+			
+		</div>
 </div>
 <!-- 메뉴 미리보기 modal END-->
 

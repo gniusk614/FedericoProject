@@ -1164,9 +1164,7 @@ function fcOrderFlagUpdate(flag) {
 			})//ajax
 		}//confirm
 	}//.click		
-	
-	
-	
+
 			
 	
 	
