@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<jsp:useBean id="now" class="java.util.Date" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,7 +44,9 @@
   background: crimson;
   border-color: crimson;
 }
-
+tbody tr {
+    cursor: pointer;
+}
 
 
 </style>
@@ -70,13 +73,14 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
 	rel="stylesheet" />
 <body>
-
-
 	<!-- Navigation-->
 	<%@include file="nav.jsp"%>
 	<!-- 본문 시작 -->
 	<section class="container py-5"
 		style="height: auto; min-height: 100%; padding-bottom: 168px;">
+		<fmt:formatDate value="${now}" pattern="yyyyMMdd" var="now" />
+
+		
 		<div class="container-fluid">
 			<div class="row mb-5">
 				<div class="col-md-3"></div>
@@ -99,7 +103,7 @@
 			<div id="content">
 				<!-- 공지사항 -->
 				<div id="csNoticeBoard" class="container" style="display: block;">
-					<div class="row justify-content-md-center mt-5 py-5">
+					<div class="row justify-content-md-center mt-1 py-5">
 					
 						<div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
 							<div class="dataTable-top">
@@ -149,17 +153,32 @@
 										</c:if>
 										
 										<c:forEach var="noticeList" items="${noticeList}">
-											<tr onclick="" style="vertical-align:middle; height: 50px; background-color:Gainsboro; cursor: point;" align="left">
+											<tr onclick="javascript:location.href='csNoticeDetail?seq=${noticeList.seq}'" style="vertical-align:middle; height: 50px; background-color:Gainsboro;" align="left">
 												<td align="center"><b style="color: crimson;">공지</b></td>
-												<td>${noticeList.title}</td>
+												
+												<fmt:parseDate var="regdate" value="${noticeList.regdate}" pattern="yyyy-MM-dd" />
+												<fmt:formatDate var="regdate" value="${regdate}" pattern="yyyyMMdd"/>
+												
+												<td>${noticeList.title}
+												<c:if test="${now-regdate<7}">
+												<b style="font-size:small; color:crimson;">NEW</b></c:if>
+												</td>
 												<td align="center">${noticeList.regdate}</td>
 												<td align="center">${noticeList.cnt}</td>
 											</tr>
 										</c:forEach>
 										<c:forEach var="list" items="${boardList}">
-											<tr onclick="" style="vertical-align:middle; height: 50px; cursor: point;">
+											<tr onclick="javascript:location.href='csNoticeDetail?seq=${list.seq}'" style="vertical-align:middle; height: 50px;">
 												<td align="center">${list.seq}</td>
-												<td>${list.title}</td>
+												
+												<fmt:parseDate var="regdate" value="${list.regdate}" pattern="yyyy-MM-dd" />
+												<fmt:formatDate var="regdate" value="${regdate}" pattern="yyyyMMdd"/>
+												
+												<td>${list.title}
+												<c:if test="${now-regdate<7}">
+												<b style="font-size:small; color: crimson;">NEW</b></c:if>
+												</td> 
+
 												<td align="center">${list.regdate}</td>
 												<td align="center">${list.cnt}</td>
 											</tr>

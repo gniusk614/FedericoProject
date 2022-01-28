@@ -89,40 +89,50 @@
 				<!-- 공지사항 -->
 				<div id="csNoticeBoard" class="container" style="display: block;">
 					<div class="row justify-content-md-center mt-5 py-5">
-					
-						<div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
-							<div class="dataTable-container" style="border-top: 1px solid black;">
-								<table id="table_id" class="table table-striped table-hover">
+						<div class="dataTable-wrapper dataTable-loading no-footer">
+							<div class="dataTable-container"
+								style="border-top: 1px solid black;">
+								<table id="table_id" class="table">
 									<thead>
-										<tr>
-											<th scope="col" style="width: 500px;">제목</th>
-											<th scope="col" style="width: 200px;">날짜</th>
-											<th scope="col" style="width: 100px;">조회수</th>
+										<tr class="lead"
+											style="font-size: medium; height: 70px; vertical-align: middle;">
+											<td scope="col" style="width: 700px; font-size: x-large; font-weight: bold;">${noticeDetail.title}
+											</td>
+											<td scope="col" style="width: 100px; color: gray;">
+												<div style="border-right: 1px solid lightgray;">
+													${noticeDetail.regdate}</div>
+											</td>
+											<td scope="col" style="width: 100px; color: gray;">조회수&nbsp;${noticeDetail.cnt}</td>
 										</tr>
 									</thead>
-									<tbody>
-											<tr>
-												<td colspan="3">글 내용</td>
-											</tr>
-									</tbody>
 								</table>
-							</div>
-							<div class="dataTable-bottom">
-								<div class="row">
+								<div class="row py-3 px-5" style="min-height: 500px; border-bottom: 1px solid black;">
+									<div><pre style="font-size: medium;">${noticeDetail.content}</pre></div>
+								</div>
+								<div class="row mt-4 px-3">
 									<div class="col-6" align="left">
-										<button class="btn btn-outline-danger">목록</button>
+									<button class="btn btn-outline-danger" style="width: 100px;"
+									onclick="javascript:location.href='cscenterf'">목록</button>
 									</div>
 									<div class="col-6" align="right">
-										<button class="btn btn-outline-danger">이전글</button>
-										<button class="btn btn-outline-danger">다음글</button>
+									<button class="btn btn-outline-danger" style="width: 100px;"
+									onclick="javascript:location.href='csNoticeDetail?seq=${noticeDetail.seq-1}'">
+										<i class="bi bi-caret-left-fill"></i>
+										이전글
+									</button>
+									<button class="btn btn-outline-danger" style="width: 100px;"
+									onclick="javascript:location.href='csNoticeDetail?seq=${noticeDetail.seq+1}'">
+										다음글
+										<i class="bi bi-caret-right-fill"></i>
+									</button>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-					</div>
-				</div>
+			</div>
+		</div>
 
 				<!-- 고객의 소리 -->
 				<div id="csCompForm" class="container" style="display: none;">

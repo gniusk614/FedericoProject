@@ -1,5 +1,9 @@
 package vo;
 
+import java.sql.Date;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 @Data
@@ -13,5 +17,7 @@ public class NoticeBoardVO {
 	private String uploadFile;
 	private String noticeFlag;
 	private int cnt;
+	
+	private MultipartFile noticeUploadfilef; 
 	
 }
