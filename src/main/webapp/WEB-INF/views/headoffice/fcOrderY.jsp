@@ -180,6 +180,7 @@ $(function() {
 		</div> <!-- modal-body -->		
 		<div class="modal-footer">
 		  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+		  <button type="button" class="btn btn-primary">출력</button>
 		  <button type="button" class="btn btn-warning" onclick="fcOrderFlagUpdate('N')">미처리전환</button>
 		</div>
       </div>
