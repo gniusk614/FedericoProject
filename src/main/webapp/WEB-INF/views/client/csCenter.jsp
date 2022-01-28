@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -102,7 +103,7 @@
 					
 						<div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
 							<div class="dataTable-top">
-								<div class="container-fluid">
+								<div class="container-fluid px-0">
 									<div class="row">
 										<div class="col-sm-2">
 											<select name="searchType" id="searchType" class="form-select">
@@ -125,14 +126,19 @@
 									</div>
 								</div>
 							</div>
-							<div class="dataTable-container" style="border-top: 1px solid black;">
+							<div class="row mb-3">
+							<div class="col lead px-3" style="font-size: medium;">
+							검색결과 <b style="color: crimson;">${pageMaker.totalRowCount}</b>개
+							</div>
+							</div>
+							<div class="dataTable-container" style="font-size:medium; border-top: 1px solid black;">
 								<table id="table_id" class="table table-striped table-hover">
 									<thead>
-										<tr>
-											<th scope="col">번호</th>
-											<th scope="col">제목</th>
-											<th scope="col">날짜</th>
-											<th scope="col">조회수</th>
+										<tr align="center" style="height: 50px; vertical-align:middle;">
+											<th scope="col" style="width: 100px;">번호</th>
+											<th scope="col" style="width: 500px;">제목</th>
+											<th scope="col" style="width: 200px;">날짜</th>
+											<th scope="col" style="width: 100px;">조회수</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -141,12 +147,21 @@
 												<td colspan="6" class="fw-bold fs-5">${message}</td>
 											</tr>
 										</c:if>
+										
+										<c:forEach var="noticeList" items="${noticeList}">
+											<tr onclick="" style="vertical-align:middle; height: 50px; background-color:Gainsboro; cursor: point;" align="left">
+												<td align="center"><b style="color: crimson;">공지</b></td>
+												<td>${noticeList.title}</td>
+												<td align="center">${noticeList.regdate}</td>
+												<td align="center">${noticeList.cnt}</td>
+											</tr>
+										</c:forEach>
 										<c:forEach var="list" items="${boardList}">
-											<tr>
-												<td>${list.seq}</td>
+											<tr onclick="" style="vertical-align:middle; height: 50px; cursor: point;">
+												<td align="center">${list.seq}</td>
 												<td>${list.title}</td>
-												<td>${list.regdate}</td>
-												<td>${list.cnt}</td>
+												<td align="center">${list.regdate}</td>
+												<td align="center">${list.cnt}</td>
 											</tr>
 										</c:forEach>
 									</tbody>
