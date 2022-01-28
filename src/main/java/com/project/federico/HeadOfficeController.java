@@ -60,7 +60,6 @@ public class HeadOfficeController {
 	public ModelAndView fcorderdetail(ModelAndView mv, FcOrderDetailVO vo, ItemInfoVO ivo) {
 		vo.setItemInfoVO(ivo);
 		List<FcOrderDetailVO> list = service.selectFcOrderDetailbyOrderNumber(vo);
-
 		if (list.size() > 0) {
 			mv.addObject("list", list);
 		} else {
@@ -770,15 +769,12 @@ public class HeadOfficeController {
 	@RequestMapping(value = "/menuDie")
 	public ModelAndView menuDie(ModelAndView mv,MenuVO vo) {
 		
-
-		log.info("menuLife(/menuDie) : "+vo.getMenuLive());
+		log.info("menuLife/menuDie) : "+vo.getMenuLive());
 		
-		if(menuService.menuLive(vo)>0) {			
+		if(menuService.menuLive(vo)>0) 			
 			mv.addObject("success","success");			
-		}else {			
-			mv.addObject("success","fail");
-		}
-				
+		else
+			mv.addObject("success","fail");				
 		mv.setViewName("jsonView"); 
 		return mv;
 		
