@@ -137,7 +137,7 @@ align-self: center;
 	    <!-- 지역명 OO시 -->
 	   
 		<div class="col" style="height: 64px;">
-			<select class="form-select form-select-lg" id="majorCity" name="majorCity" aria-label="Default select example">
+			<select class="form-select form-select-lg" id="Depth1" name="Depth1" aria-label="Default select example" onchange="changeDepth1()">
 			  <option  value="서울">서울시</option>
 			  <option selected="selected" value="경기">경기도</option>
 			</select>
@@ -146,29 +146,13 @@ align-self: center;
 		</div>
 		
 		<div class="col" style="height: 64px;">
-		 <!-- 
-			<select class="form-select form-select-lg" id="minorCity" name="minorCity" onchange="changeMinorCity()" aria-label="Default select example">
-			  
-			  	  <option value="종로구" selected="selected">종로구</option>
-				  <option value="성북구">성북구</option>
-				  <option value="동대문구">동대문구</option>
-				  <option value="용산구">용산구</option>
-				  <option value="강남구">강남구</option>
-				  <option value="강동구">강동구</option>
-				  <option value="동작구">동작구</option>
-				  <option value="영등포구">영등포구</option>
-		  	   
-			</select>
-			 -->
-			<select class="form-select form-select-lg" id="minorCity" name="minorCity" onchange="changeMinorCity()" aria-label="Default select example">
-			  
-			  	  <option value="성남" selected="selected">성남시</option>
-				  <option value="용인">용인시</option>
-				  <option value="화성">화성시</option>
-				  <option value="수원">수원시</option>
-				  <option value="광주">광주시</option>
 
-		  	   
+			<select class="form-select form-select-lg" id="Depth2_1" name="Depth2_1" aria-label="Default select example">
+			  
+			</select>
+		
+			<select class="form-select form-select-lg" id="Depth2_2" name="Depth2_2" aria-label="Default select example">
+			  
 			</select>
 			
 			
@@ -271,7 +255,7 @@ function showdiv(id) {
 // 지도의 주소를 가져오라는 요청을 지시할 요청자.
 // 1. 지역명 
 /*
-function changeMinorCity() {
+function changeGugun() {
 	console.log("minorcity IO Onchange Success");
 	var minorCity = $('#minorCity').val();
 	var majorCity = $('#majorCity').val();
