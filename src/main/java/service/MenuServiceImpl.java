@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j;
 import mapperInterface.MenuMapper;
+import paging.SearchCriteria;
 import vo.MenuVO;
 
 @Log4j
@@ -48,6 +49,23 @@ public class MenuServiceImpl implements MenuService {
 	public int menuDie(MenuVO vo) {
 		return dao.menuDie(vo);
 	}
+
+	// 메뉴정보 검색
+	@Override
+	public List<MenuVO> searchMenuList(SearchCriteria cri){
+		return dao.searchMenuList(cri);
+	}
 	
+	// // 메뉴정보 search 결과 Rows 조회
+	@Override
+	public int searchMenuRows(SearchCriteria cri) {
+		return dao.searchMenuRows(cri);		
+	}
 		
+	@Override
+	public List<MenuVO> searchAllMenu(){
+		return dao.searchAllMenu();
+	}
+	
+	
 }

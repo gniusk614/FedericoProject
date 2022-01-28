@@ -34,6 +34,7 @@
 		<result property="menuFlag" column="menuFlag"/>
 		<result property="menuPrice" column="menuPrice"/>
 		<result property="menuImage" column="menuImage"/>
+		<result property="menuLive" column="menuLive"/>
 	</resultMap>
 	
 	

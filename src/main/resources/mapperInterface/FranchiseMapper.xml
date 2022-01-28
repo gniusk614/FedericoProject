@@ -104,7 +104,6 @@
 
 
 
-
 	<!-- 배송소요시간 select -->
 	<select id="selectDeliveryTimebyFcId" resultType="String">
 		SELECT deliverytime FROM franchise WHERE fcid = #{value}
@@ -125,6 +124,35 @@
 	<select id="selectListbyArea" resultType="vo.FranchiseVO">
 		SELECT * FROM franchise where fcarea = #{value} ORDER BY fcid
 	</select>
+	
+	<!-- ======================= 프랜차이즈 주소 관련 ====================== 
+	
+	<resultMap type="vo.FranchiseVO" id="FranchiseVO">
+		<result property="fcId" column="fcId"/>
+		<result property="fcPassword" column="fcPassword"/>
+		<result property="fcName" column="fcName"/>
+		<result property="fcAddress" column="fcAddress"/>
+		<result property="fcArea" column="fcArea"/>
+		<result property="fcPhone" column="fcPhone"/>
+		<result property="hoId" column="hoId"/>
+		<result property="fcClose" column="fcClose"/>
+		<result property="deliveryTime" column="deliveryTime"/>
+		<result property="fcminoraddress" column="fcminoraddress"/>	
+		
+		<collection property="menuVo" resultMap="MenuVO"></collection>
+	</resultMap>
+	
+	
+	<select id="selectListbyMinorAddress" resultType="vo.FranchiseVO">
+		select FCID, FCADDRESS from franchise 
+		where fcarea = #{majorCity} and 
+		      (select substr(fcaddress,instr( FCADDRESS,' ',3,1)+1,INSTR(fcaddress,' ',1,1)) AS fcminoraddress
+			  from franchise) fcminoraddress = #{minorCity}
+		order by fcid	
+	</select>
+	
+ ======================= 프랜차이즈 주소 관련 ====================== -->
+	
 	
 	
 	<select id="selectFcOne" resultType="vo.FranchiseVO">

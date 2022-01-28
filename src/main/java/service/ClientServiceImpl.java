@@ -76,7 +76,7 @@ public class ClientServiceImpl implements ClientService {
 	public int insertClient(ClientVO vo) {
 		return dao.insertClient(vo);
 	}
-	
+
 	//공지사항
 	@Override
 	public List<NoticeBoardVO> searchNoticeBoard(SearchCriteria cri) {
@@ -88,6 +88,7 @@ public class ClientServiceImpl implements ClientService {
 	public int searchNoticeBoardRows(SearchCriteria cri) {
 		return dao.searchNoticeBoardRows(cri);
 	}
+
 	
 	
 }
