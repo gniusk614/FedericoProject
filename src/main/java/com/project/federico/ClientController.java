@@ -634,10 +634,16 @@ public class ClientController {
 			return mv;
 		}
 		
-		
+		//공지사항 디테일
 		@RequestMapping(value ="/csNoticeDetail")
 		public ModelAndView csNoticeDetail (ModelAndView mv ,NoticeBoardVO vo) {					
-			
+			vo = clientService.selectDetailNoticeBoard(vo);
+			if(vo!=null) {
+				clientService.countUpNoticeBoard(vo);
+				mv.addObject("noticeDetail", vo);
+			}else {
+				mv.addObject("message", "출력할 글이 없습니다.");
+			}
 			mv.setViewName("client/csNoticeDetail");
 			return mv;
 		}
