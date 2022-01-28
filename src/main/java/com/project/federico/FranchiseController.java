@@ -47,7 +47,20 @@ public class FranchiseController {
 	HeadOfficeServiceImpl headOfficeService;
 
 	
+	// 가맹점 발주내역 상세보기(발주번호 별로) return json
+	@RequestMapping(value = "/fcorderdetail")
+	public ModelAndView fcorderdetail(ModelAndView mv, FcOrderDetailVO vo, ItemInfoVO ivo) {
+		vo.setItemInfoVO(ivo);
+		List<FcOrderDetailVO> list = headOfficeService.selectFcOrderDetailbyOrderNumber(vo);
+		if (list.size() > 0) {
+			mv.addObject("list", list);
+		} else {
+			mv.addObject("message", "조회할 자료가 없습니다.");
+		}
 
+		mv.setViewName("jsonView");
+		return mv;
+	}
 	
 	//가맹점 자재발주 검색 및 조회
 	@RequestMapping(value = "/selectfcorder")

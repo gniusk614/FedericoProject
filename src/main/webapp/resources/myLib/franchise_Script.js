@@ -408,10 +408,9 @@ function selectALLYN(imsi){
 
 // 발주조회 상세보기 모달open
 function fcOrderDetailForm(fcOrderSeq) {
-
 	$.ajax({
 		type : 'get',
-		url : '/federico/headoffice/fcorderdetail',
+		url : 'fcorderdetail',
 		data : {
 			fcOrderSeq : fcOrderSeq
 		},
@@ -441,6 +440,7 @@ function fcOrderDetailForm(fcOrderSeq) {
 			$('#fcOrderDetailModal').modal('show');
 		},
 		error : function() {
+			alert('통신장애입니다.\n다시 시도해주세요.')
 		}
 	})
 }// fcOrderDetailForm
