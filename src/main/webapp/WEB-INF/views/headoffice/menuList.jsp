@@ -170,17 +170,19 @@ $(function() {
 						
 						 
 
-							<tbody align="center">
+							<tbody align="center" id="t_menulife">
 							<!-- 메뉴 life = die Start -->
 								<c:forEach var="vo" items="${menuList}" varStatus="vs">
-										<c:if test="${vo.menuLive eq 'die'}">
+										<c:if test="${vo.menuLive eq 'die'}" >
+										
 										<tr class="menuContent">
-											<th class="a${vs.index}" scope="row" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red; ">${vo.menuIndex}</th>
-											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;">${vo.menuName}</td>
-											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;">${vo.menuIntro}</td>
-											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;"><fmt:formatNumber value="${vo.menuPrice}"/></td>
-											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;"><img src="${vo.menuImage}" class="img_die" ></td>
-											<td class="a${vs.index}" height="" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;">										
+											<th class="a${vs.index}" scope="row"
+																	 style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;" >${vo.menuIndex}</th>
+											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;" >${vo.menuName}</td>
+											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;" >${vo.menuIntro}</td>
+											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;" ><fmt:formatNumber value="${vo.menuPrice}"/></td>
+											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;" ><img src="${vo.menuImage}" class="img_die" ></td>
+											<td class="a${vs.index}" style="text-decoration: line-through; text-decoration-style : double; text-decoration-color: red;" >										
 											<c:choose>
 											<c:when test="${vo.menuFlag eq 'pizza'}">PIZZA</c:when>
 											<c:when test="${vo.menuFlag eq 'set'}">SET MENU</c:when>
@@ -190,7 +192,7 @@ $(function() {
 											  <div class="d-grid gap-2 col-md-6">
 												<button type="button" class="btn btn-danger btn-sm" onclick="menuUpdateForm(${vo.menuIndex})">판매중지</button>
 												<button type="button" class="btn btn-danger btn-sm" onclick="alret('현재 작업중입니다.')">메뉴입니다.</button>
-												<button type="button" class="btn btn-outline-primary btn-sm " id="menulife${vs.index}" style="display:block;" onclick="menuDie(${vs.index},${vo.menuIndex})">활성화</button>
+												<button type="button" class="btn btn-outline-primary btn-sm " id="menulife-btn${vs.index}" style="display:block;" onclick="menuDie(${vs.index},${vo.menuIndex})">활성화</button>
 											  </div>
 										</td>
 										</c:if>
@@ -219,7 +221,7 @@ $(function() {
 												<button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#menuPreviewModal" onclick="menuPreview(${vo.menuIndex})">
 												미리보기</button>
 												 -->
-												<button type="button" class="btn btn-outline-danger btn-sm" id="menulife${vs.index}" style="display:block;" onclick="menuDie(${vs.index},${vo.menuIndex})">비활성화</button>
+												<button type="button" class="btn btn-outline-danger btn-sm" id="menulife-btn${vs.index}" style="display:block;" onclick="menuDie(${vs.index},${vo.menuIndex})">비활성화</button>
 											  </div>
 											</td>
 										</tr>
