@@ -144,6 +144,7 @@ public class ClientController {
 					session.removeAttribute("list");
 				}
 				session.removeAttribute("listSize");
+				
 			}
 			
 		}

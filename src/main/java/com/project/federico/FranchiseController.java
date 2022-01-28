@@ -23,6 +23,7 @@ import paging.SearchCriteria;
 import service.FranchiseService;
 import service.HeadOfficeServiceImpl;
 import service.OrderService;
+import vo.ChartVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -48,10 +49,44 @@ public class FranchiseController {
 	
 
 	
+	//가맹점 자재발주 검색 및 조회
+	@RequestMapping(value = "/selectfcorder")
+	public ModelAndView selectFcOrder(ModelAndView mv, HttpServletRequest request, HttpSession session , PageMaker pageMaker, SearchCriteria cri, FcOrderVO vo) {
+		if(session.getAttribute("fcId") != null) {	
+			vo.setFcId((String)session.getAttribute("fcId"));
+			Map<String, Object> params = new HashMap<String, Object>();
+			
+			if (request.getParameter("minDate") != null) {
+				params.put("minDate", request.getParameter("minDate").replaceAll("/", ""));
+				params.put("maxDate", request.getParameter("maxDate").replaceAll("/", ""));
+			}
+			
+			cri.setSnoEno();
+	
+			params.put("cri", cri);
+			params.put("vo", vo);
+			List<FcOrderVO> list = service.searchItemOrderListFc(params);
+	
+			if (list != null && list.size() > 0) {
+				mv.addObject("fcOrderList", list);
+			} 
+			pageMaker.setCri(cri);
+			pageMaker.setTotalRowCount(service.searchItemOrderListRows(params));
+			
+			mv.addObject("flaG", vo.getFcOrderFlag());
+			mv.setViewName("franchise/itemOrderList");
+		} else {
+			mv.setViewName("franchise/fcLoginForm");
+		}
+		return mv;
+	}
+	
+	
+	
 	//가맹점 자재발주등록
 	@RequestMapping(value = "/insertfcorder")
 	public ModelAndView insertfcorder(ModelAndView mv, HttpServletRequest request, FcOrderVO orderVo,
-			@RequestParam("sendData") String sendData, FcOrderDetailVO detailVo) {
+			@RequestParam("sendData") String sendData) {
 		
 		
 		if(headOfficeService.insertFcOrder(orderVo) > 0) {
@@ -60,6 +95,7 @@ public class FranchiseController {
 			JSONArray jsonArray = JSONArray.fromObject(sendData);
 			for(int i=0; i<jsonArray.size(); i++) {
 				net.sf.json.JSONObject obj = jsonArray.getJSONObject(i); 
+				FcOrderDetailVO detailVo = new FcOrderDetailVO();
 				detailVo.setItemIndex(Integer.parseInt(obj.get("itemIndex").toString()));
 				detailVo.setItemQty(Integer.parseInt(obj.get("itemQty").toString()));
 				detailVo.setFcOrderSeq(orderVo.getFcOrderSeq());
@@ -171,7 +207,6 @@ public class FranchiseController {
 			if (request.getParameter("minDate") != null) {
 				params.put("minDate", request.getParameter("minDate").replaceAll("/", ""));
 				params.put("maxDate", request.getParameter("maxDate").replaceAll("/", ""));
-				log.info(request.getParameter("maxDate").replaceAll("/", ""));
 			}
 			
 			cri.setSnoEno();
@@ -204,66 +239,102 @@ public class FranchiseController {
 	
 	
 	
-	// 로그인폼이동 (김민석)
+		// 로그인폼이동 (김민석)
 		@RequestMapping(value = "/loginf") // client/footer -> 가맹점 전용 페이지 
 		public ModelAndView loginf(ModelAndView mv) {
 			mv.setViewName("franchise/fcLoginForm");
 			return mv;
 		}// loginf-> 폼으로 이동시켜줌
 		
+		// 로그인 및 프랜차이즈 홈 이동
 		@RequestMapping(value ="/login")
 		public ModelAndView login(HttpServletRequest request,HttpServletResponse response,ModelAndView mv,			
-				HeadOfficeVO hvo, FranchiseVO vo, HttpSession session, OrderListVO orderListVo) {
-
-			// 각정보 저장
-			// login 성공시 이동화면
-			 // 가맹점게시판 현재 : null
-			// login 비밀번호 저장
-			String fcId=vo.getFcId();
-			String password =vo.getFcPassword();
-			String uri="/franchise/fcLoginForm";
-
+				HeadOfficeVO hvo, FranchiseVO vo, HttpSession session, OrderListVO orderListVo, ChartVO cVo) {
+			String fcId;
 			
-			// 프랜차이즈 정보 vo에 담기
-			vo=service.selectFcOne(vo);
-			
-			if(vo!=null) { // vo가 null이 아니면 = login이 성공하면 session에 보관			
-				if (passwordEncoder.matches(password, vo.getFcPassword())) {
+			// franchise 페이지 내에서 메인대쉬보드 클릭 (fcid 세션있어야함) OR fcid세션가지고 들어옴
+			if("home".equals(request.getParameter("home")) && session.getAttribute("fcId") != null || session.getAttribute("fcId") != null) {
+				fcId = (String)session.getAttribute("fcId");
+				List<OrderListVO> list = new ArrayList<OrderListVO>();
+				orderListVo.setCompleteYN("N"); //DB에서 default 처리해주기
+				
+				orderListVo.setFcId(fcId);
+				
+				list = orderService.selectFcOrderbyFcId(orderListVo);
+				
+				session.setAttribute("orderList", list);
+				// 배달시간 불러오기
+				session.setAttribute("deliveryTime", service.selectDeliveryTimebyFcId(fcId));
+				
+				// 홈화면 통계자료
+				cVo = service.fcThisMonthSales(fcId);
+				mv.addObject("fcThisMonthSales", cVo==null ? 0 : cVo.getChartCount());
+				cVo = service.fcTodaySales(fcId);
+				mv.addObject("fcTodaySales", cVo==null ? 0 : cVo.getChartCount());
+				cVo = service.fcYesterdaySales(fcId);
+				mv.addObject("fcYesterdaySales", cVo==null ? 0 : cVo.getChartCount());
+				cVo = service.fcThisMonthOrderSum(fcId);
+				mv.addObject("fcThisMonthOrderSum", cVo==null ? 0 : cVo.getChartCount());
+				
+				mv.setViewName("franchise/home");
+				
+			} else {
+				// 각정보 저장
+				// login 성공시 이동화면
+				// 가맹점게시판 현재 : null
+				// login 비밀번호 저장
+				fcId=vo.getFcId();
+				String password =vo.getFcPassword();
+				String uri="/franchise/fcLoginForm";
+				
+				// 프랜차이즈 정보 vo에 담기
+				vo=service.selectFcOne(vo);
+				
+				if(vo!=null) { // vo가 null이 아니면 = login이 성공하면 session에 보관			
+					if (passwordEncoder.matches(password, vo.getFcPassword())) {
 //				if(vo.getFcPassword().equals(password)) {
-					
-					mv.addObject("success","T");
-					request.getSession().setAttribute("fcId",fcId);
-					request.getSession().setAttribute("fcloginName",vo.getFcName());
-					
-					
-					// 해당가맹점 주문정보 조회
-					if (fcId != null) {
-						List<OrderListVO> list = new ArrayList<OrderListVO>();
-						orderListVo.setCompleteYN("N"); //DB에서 default 처리해주기
-
-						orderListVo.setFcId(fcId);
 						
-						list = orderService.selectFcOrderbyFcId(orderListVo);
-					    
-						session.setAttribute("orderList", list);
-						// 배달시간 불러오기
-						session.setAttribute("deliveryTime", service.selectDeliveryTimebyFcId(fcId));
-						uri="franchise/home";
+						mv.addObject("success","T");
+						request.getSession().setAttribute("fcId",fcId);
+						request.getSession().setAttribute("fcloginName",vo.getFcName());
 						
+						
+						// 해당가맹점 주문정보 조회
+						if (fcId != null) {
+							List<OrderListVO> list = new ArrayList<OrderListVO>();
+							orderListVo.setCompleteYN("N"); //DB에서 default 처리해주기
+							
+							orderListVo.setFcId(fcId);
+							
+							list = orderService.selectFcOrderbyFcId(orderListVo);
+							
+							session.setAttribute("orderList", list);
+							// 배달시간 불러오기
+							session.setAttribute("deliveryTime", service.selectDeliveryTimebyFcId(fcId));
+							uri="franchise/home";
+							
+							// 홈화면 통계자료
+							cVo = service.fcThisMonthSales(fcId);
+							mv.addObject("fcThisMonthSales", cVo==null ? 0 : cVo.getChartCount());
+							cVo = service.fcTodaySales(fcId);
+							mv.addObject("fcTodaySales", cVo==null ? 0 : cVo.getChartCount());
+							cVo = service.fcYesterdaySales(fcId);
+							mv.addObject("fcYesterdaySales", cVo==null ? 0 : cVo.getChartCount());
+							cVo = service.fcThisMonthOrderSum(fcId);
+							mv.addObject("fcThisMonthOrderSum", cVo==null ? 0 : cVo.getChartCount());
+						}
+						
+					}else {
+						//mv.addObject("success","Password Fail");
+						mv.addObject("message","Password가 일치하지 않습니다.");
 					}
 					
-				}else {
-					//mv.addObject("success","Password Fail");
-					mv.addObject("message","Password가 일치하지 않습니다.");
+				}else {// id오류
+					//mv.addObject("success","ID Fail");
+					mv.addObject("message","회원정보가 없습니다. ID를 확인해주세요.");
 				}
-				
-			}else {// id오류
-				//mv.addObject("success","ID Fail");
-				mv.addObject("message","회원정보가 없습니다. ID를 확인해주세요.");
+				mv.setViewName(uri);
 			}
-			
-			mv.setViewName(uri);
-					
 			return mv;
 			}
 		
@@ -272,5 +343,6 @@ public class FranchiseController {
 			mv.setViewName("franchise/home");
 			return mv;
 		}// 
+		
 		
 }// class

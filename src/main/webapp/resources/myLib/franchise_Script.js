@@ -56,17 +56,33 @@ function completeOrderSearchChange(){
 	if($('#completeOrderSearchType').val() == 'orderDate'){
 		$('#searchInput').css('display','none');
 		$('#datePicker').css('display','block');
-		$('#divPlace').css('class','col-sm-3');
+		$('#flagYN').attr('class','col-sm-3');
 	} else {
 		$('#searchInput').css('display','block');
 		$('#datePicker').css('display','none');
-		$('#divPlace').css('class','col-sm-6');
+		$('#flagYN').attr('class','col-sm-6');
 		if($('#completeOrderSearchType').val() == 'none'){
 			$('#keyword').val('');
 		}
 	}	
 }
 
+
+//발주 검색 select 동적변경
+function fcOrderSearchChange(){
+	if($('#completeOrderSearchType').val() == 'orderDate'){
+		$('#searchInput').css('display','none');
+		$('#datePicker').css('display','block');
+		$('#blank').attr('class','col-sm-3');
+	} else {
+		$('#searchInput').css('display','block');
+		$('#datePicker').css('display','none');
+		$('#blank').attr('class','col-sm-6');
+		if($('#completeOrderSearchType').val() == 'none'){
+			$('#keyword').val('');
+		}
+	}	
+}
 
 // 배달소요시간 변경
 function updateDeliveryTime(){
@@ -195,10 +211,7 @@ function fcItemOrder(fcId) {
 		}
 	}//for
 	
-	console.log("1 => "+sendData);	
 	sendData = JSON.stringify(sendData);
-	console.log("2 => "+sendData);	
-	console.log("2 => "+fcId);	
 	
 	
 	$.ajax({
@@ -365,9 +378,80 @@ function calSumCol(){
 }
 
 
-
-
 // ============================= 가맹점 자재발주 (현구) =======================================
+
+// ============================= 가맹점 자재발주조회 (현구) =======================================
+
+
+$(function() {
+
+	// 자재상세조회 modal 닫힐 시 내용 clear
+	$('#fcOrderDetailModal').on('hidden.bs.modal', function() {
+		$('#fcOrderDeatilTableBody').html('');
+	})
+
+})// ready
+
+
+// 발주조회 전체,미확인,확인완료
+function selectALLYN(imsi){
+	if(imsi == 'A'){
+		$('#flag').val('');
+	} else if(imsi =='N'){
+		$('#flag').val('N');
+	} else {
+		$('#flag').val('Y');
+	}
+	
+	move();
+}
+
+// 발주조회 상세보기 모달open
+function fcOrderDetailForm(fcOrderSeq) {
+
+	$.ajax({
+		type : 'get',
+		url : '/federico/headoffice/fcorderdetail',
+		data : {
+			fcOrderSeq : fcOrderSeq
+		},
+		success : function(data) {
+			var list = data.list;
+			var sumCol = 0;
+			$.each(list, function(index, vo) {
+				var itemPrice = comma(vo.itemInfoVO.itemPrice);
+				var itemQty = comma(vo.itemQty);
+				var sumRow = comma(vo.itemInfoVO.itemPrice * vo.itemQty);
+				sumCol = sumCol + (vo.itemInfoVO.itemPrice * vo.itemQty);
+				$('#fcOrderDeatilTableBody').append(
+						'<tr><th>' + vo.fcOrderDetailSeq + '</th><td>'
+								+ vo.itemInfoVO.itemFlag + '</td><td>'
+								+ vo.itemInfoVO.itemName + '</td><td>'
+								+ itemQty + '</td><td>'
+								+ vo.itemInfoVO.itemUnit + '</td><td>'
+								+ itemPrice + '</td><td>' + sumRow
+								+ '</td></tr>');// append
+			}) // each
+
+			sumCol = comma(sumCol);
+			$('#fcOrderDetailModalSumCol').html('합계 : ' + sumCol);
+			$('#fcOrderNumber').attr('ordernumber', fcOrderSeq);
+			$('#fcOrderNumber').html('  &nbsp;발주번호 : ' + fcOrderSeq);
+			$('#fcOrderCancel').attr('onclick',"fcOrderCancel(" + fcOrderSeq + ")")
+			$('#fcOrderDetailModal').modal('show');
+		},
+		error : function() {
+		}
+	})
+}// fcOrderDetailForm
+
+	
+
+
+
+
+
+// ============================= 가맹점 자재발주조회 (현구) =======================================
 
 
 
