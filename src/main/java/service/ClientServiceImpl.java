@@ -76,4 +76,8 @@ public class ClientServiceImpl implements ClientService {
 		return dao.insertClient(vo);
 	}
 	
+	
+	
+	
+	
 }

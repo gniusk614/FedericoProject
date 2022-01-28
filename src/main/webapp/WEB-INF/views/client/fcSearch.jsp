@@ -135,28 +135,42 @@ align-self: center;
 	<!-- 지역명선택시 -->
 	<div class="row " id="outer_1" style=" margin-top:50px;">
 	    <!-- 지역명 OO시 -->
-	    
+	   
 		<div class="col" style="height: 64px;">
-			<select class="form-select form-select-lg" name="name" aria-label="Default select example">
-			  <option selected value="서울시">서울시</option>
-			  <option value="경기도">경기도</option>
+			<select class="form-select form-select-lg" id="majorCity" name="majorCity" aria-label="Default select example">
+			  <option selected value="서울">서울시</option>
+			  <option value="경기">경기도</option>
 			</select>
 			pending Item : 좌표찍기
 		</div>
-	
+		
 		<div class="col" style="height: 64px;">
-			<select class="form-select form-select-lg" aria-label="Default select example">
+		 <c:if test="${'#majorCity' eq 서울}">
+			<select class="form-select form-select-lg" id="minorCity" name="minorCity" onchange="changeMinorCity()" aria-label="Default select example">
 			  
-			  	  <option selected>종로구</option>
-				  <option value="s1">성북구</option>
-				  <option value="s2">동대문구</option>
-				  <option value="s3">용산구</option>
-				  <option value="s4">강남구</option>
-				  <option value="s5">강동구</option>
-				  <option value="s6">동작구</option>
-				  <option value="s7">영등포구</option>
+			  	  <option value="종로구" selected="selected">종로구</option>
+				  <option value="성북구">성북구</option>
+				  <option value="동대문구">동대문구</option>
+				  <option value="용산구">용산구</option>
+				  <option value="강남구">강남구</option>
+				  <option value="강동구">강동구</option>
+				  <option value="동작구">동작구</option>
+				  <option value="영등포구">영등포구</option>
 		  	   
 			</select>
+			</c:if>
+			<c:if test="${'#majorCity' eq 경기}">
+			<select class="form-select form-select-lg" id="minorCity" name="minorCity" onchange="changeMinorCity()" aria-label="Default select example">
+			  
+			  	  <option value="성남" selected="selected">성남시</option>
+				  <option value="용인">용인시</option>
+				  <option value="화성">화성시</option>
+				  <option value="수원">수원시</option>
+				  <option value="광주">광주시</option>
+
+		  	   
+			</select>
+			</c:if>
 		</div>		
 	</div>
 	
@@ -231,14 +245,55 @@ function showdiv(id) {
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = { 
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표 (위도/lnt,경도/lng)
+        center: new kakao.maps.LatLng(lat, lng), // 지도의 중심좌표 (위도/lnt,경도/lng)
         level: 3 // 지도의 확대 레벨
 			    };
 
 // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 var map = new kakao.maps.Map(mapContainer, mapOption); 
 	
+// 지도의 주소를 가져오라는 요청을 지시할 요청자.
+// 1. 지역명 
+
+function changeMinorCity() {
+	console.log("minorcity IO Onchange Success");
+	var minorCity = $('#minorCity').val();
+	var majorCity = $('#majorCity').val();
+	console.log($('#majorCity').val());
+	console.log($('#minorCity').val());
 	
+	$.ajax({
+		
+		url :'fcSearch',
+		type:'get',
+		data:{ // to clientcontroller
+			minorCity:minorCity
+			majorCity:majorCity
+		},
+		success:function(resultData){
+			if(resultData.success == 'success'){
+				console.log("지도 불러오기 성공!")
+			}
+			var mnlist = resultData.mnlist;
+			$.each(mnlist,function(FranchiseVO, index){
+				$('#selectFranchise').append(
+						
+				)
+			})
+			
+			
+			
+		},
+		error:function(errorData){
+			if(resultData.success == 'success'){
+				console.log("지도 불러오기 실패")
+			}
+		}
+		
+	})// ajax
+	
+	
+}// changeMinorCity()
 	
 	
 	
