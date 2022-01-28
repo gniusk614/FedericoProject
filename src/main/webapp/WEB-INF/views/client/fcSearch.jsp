@@ -138,14 +138,15 @@ align-self: center;
 	   
 		<div class="col" style="height: 64px;">
 			<select class="form-select form-select-lg" id="majorCity" name="majorCity" aria-label="Default select example">
-			  <option selected value="서울">서울시</option>
-			  <option value="경기">경기도</option>
+			  <option  value="서울">서울시</option>
+			  <option selected="selected" value="경기">경기도</option>
 			</select>
 			pending Item : 좌표찍기
+			
 		</div>
 		
 		<div class="col" style="height: 64px;">
-		 <c:if test="${'#majorCity' eq 서울}">
+		 <!-- 
 			<select class="form-select form-select-lg" id="minorCity" name="minorCity" onchange="changeMinorCity()" aria-label="Default select example">
 			  
 			  	  <option value="종로구" selected="selected">종로구</option>
@@ -158,8 +159,7 @@ align-self: center;
 				  <option value="영등포구">영등포구</option>
 		  	   
 			</select>
-			</c:if>
-			<c:if test="${'#majorCity' eq 경기}">
+			 -->
 			<select class="form-select form-select-lg" id="minorCity" name="minorCity" onchange="changeMinorCity()" aria-label="Default select example">
 			  
 			  	  <option value="성남" selected="selected">성남시</option>
@@ -170,7 +170,8 @@ align-self: center;
 
 		  	   
 			</select>
-			</c:if>
+			
+			
 		</div>		
 	</div>
 	
@@ -201,6 +202,35 @@ align-self: center;
 		<div id="map" style="width:100%;height:100%;"></div>	
 		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=63fe094a0bad5ef07be77c4f00959da2"></script>
 		
+		<script type="text/javascript">
+		var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+	    mapOption = { 
+	        center: new kakao.maps.LatLng(37.350358002530584, 127.10722241497729), // 지도의 중심좌표 (위도/lnt,경도/lng)
+	        level: 3 // 지도의 확대 레벨
+				    };
+
+	// 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+	var map = new kakao.maps.Map(mapContainer, mapOption); 
+	var markerPosition  = new kakao.maps.LatLng(37.350358002530584, 127.10722241497729); 
+
+	// 마커를 생성합니다
+	var marker = new kakao.maps.Marker({
+	    position: markerPosition
+	});
+
+	// 마커가 지도 위에 표시되도록 설정합니다
+		marker.setMap(map);
+		var iwContent = '<div style="padding:5px;">미금 1호점 <br><a href="https://map.kakao.com/link/map/Hello World!,33.450701,126.570667" style="color:blue" target="_blank">큰지도보기</a> <a href="https://map.kakao.com/link/to/Hello World!,33.450701,126.570667" style="color:blue" target="_blank">길찾기</a></div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+	    iwPosition = new kakao.maps.LatLng(37.350358002530584, 127.10722241497729); //인포윈도우 표시 위치입니다
+
+	// 인포윈도우를 생성합니다
+	var infowindow = new kakao.maps.InfoWindow({
+	    position : iwPosition, 
+	    content : iwContent 
+	});
+	
+	
+		</script>
 		
 		</div>		
 	</div>
@@ -232,14 +262,11 @@ function showdiv(id) {
 
 //2. 지도 표기
 
-var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-    mapOption = { 
-        center: new kakao.maps.LatLng(37.210020, 127.063212), // 지도의 중심좌표 (위도/lnt,경도/lng)
-        level: 3 // 지도의 확대 레벨
-			    };
 
-// 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-var map = new kakao.maps.Map(mapContainer, mapOption); 
+//2.1 지도에 마커표시
+
+
+
 	
 // 지도의 주소를 가져오라는 요청을 지시할 요청자.
 // 1. 지역명 
@@ -250,6 +277,9 @@ function changeMinorCity() {
 	var majorCity = $('#majorCity').val();
 	console.log($('#majorCity').val());
 	console.log($('#minorCity').val());
+	var minorCityArr = [];
+	var majorCityArr = [];
+	
 	
 	$.ajax({
 		
@@ -265,7 +295,7 @@ function changeMinorCity() {
 			}
 			var mnlist = resultData.mnlist;
 			$.each(mnlist,function(FranchiseVO, index){
-				$('#selectFranchise').append(
+				minorCityArr.push(mnlist.minorCity)
 						
 				)
 			})

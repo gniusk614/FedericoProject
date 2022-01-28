@@ -125,7 +125,7 @@
 		SELECT * FROM franchise where fcarea = #{value} ORDER BY fcid
 	</select>
 	
-	<!-- ======================= 프랜차이즈 주소 관련 ====================== -->
+	<!-- ======================= 프랜차이즈 주소 관련 ====================== 
 	
 	<resultMap type="vo.FranchiseVO" id="FranchiseVO">
 		<result property="fcId" column="fcId"/>
@@ -139,7 +139,7 @@
 		<result property="deliveryTime" column="deliveryTime"/>
 		<result property="fcminoraddress" column="fcminoraddress"/>	
 		
-		<collection property="menuVo" resultMap="MenuVO"></collection> <!-- 이건 어떤역할? -->
+		<collection property="menuVo" resultMap="MenuVO"></collection>
 	</resultMap>
 	
 	
@@ -151,8 +151,7 @@
 		order by fcid	
 	</select>
 	
-	<!-- ======================= 프랜차이즈 주소 관련 ====================== -->
-	
+ ======================= 프랜차이즈 주소 관련 ====================== -->
 	
 	
 	
