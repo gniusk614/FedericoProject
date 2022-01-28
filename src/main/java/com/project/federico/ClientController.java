@@ -59,13 +59,6 @@ public class ClientController {
 	FranchiseService fcService;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-
-// 매장찾기(카카오맵 API) 삽입 시작 ======<민석>=========================
-	@RequestMapping(value = "/fcSearch")
-	public ModelAndView fcSearch(ModelAndView mv) {
-		mv.setViewName("client/fcSearch");
-		return mv;
-	}// fcSearch
 	
 	// 결제완료폼 이동 + 주문정보 인서트
 	@RequestMapping(value = "/ordercomplete")
@@ -592,6 +585,8 @@ public class ClientController {
 			mv.setViewName("jsonView");
 			return mv;
 		}
+
+		
 		
 		
 }// clientController
