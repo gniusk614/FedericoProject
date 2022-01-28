@@ -207,18 +207,7 @@ align-self: center;
 	<div class="row fcLocalName">
 		<div class="col" style="background-color: green; height: 800px; padding-bottom:50px;">
 		가맹점카드 표시구간</div>		
-	</div>
-	
-	
-        
-	
-	
-	
-	
-	
-	
-	
-	
+	</div>	
 	
 	</section>
 		
@@ -245,7 +234,7 @@ function showdiv(id) {
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = { 
-        center: new kakao.maps.LatLng(lat, lng), // 지도의 중심좌표 (위도/lnt,경도/lng)
+        center: new kakao.maps.LatLng(37.210020, 127.063212), // 지도의 중심좌표 (위도/lnt,경도/lng)
         level: 3 // 지도의 확대 레벨
 			    };
 
@@ -254,7 +243,7 @@ var map = new kakao.maps.Map(mapContainer, mapOption);
 	
 // 지도의 주소를 가져오라는 요청을 지시할 요청자.
 // 1. 지역명 
-
+/*
 function changeMinorCity() {
 	console.log("minorcity IO Onchange Success");
 	var minorCity = $('#minorCity').val();
@@ -292,7 +281,7 @@ function changeMinorCity() {
 		
 	})// ajax
 	
-	
+	*/
 }// changeMinorCity()
 	
 	

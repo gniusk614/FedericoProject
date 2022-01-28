@@ -586,7 +586,14 @@ public class ClientController {
 			mv.setViewName("jsonView");
 			return mv;
 		}
-
+		
+		@RequestMapping(value ="/fcSearch")
+		public ModelAndView fcsearch (ModelAndView mv, FranchiseVO vo) {					
+			
+			mv.setViewName("client/fcSearch");
+			return mv;
+		}
+		
 		
 		
 		
