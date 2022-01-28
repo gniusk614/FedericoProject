@@ -5,6 +5,7 @@ import java.util.List;
 import paging.SearchCriteria;
 import vo.CartVO;
 import vo.ClientVO;
+import vo.NoticeBoardVO;
 
 public interface ClientService {
 	
@@ -20,4 +21,6 @@ public interface ClientService {
 	List<ClientVO> searchClientList(SearchCriteria cri); //고객정보 search
 	int insertClient(ClientVO vo); //회원가입
 	
+	List<NoticeBoardVO> searchNoticeBoard(SearchCriteria cri);//공지사항search
+	int searchNoticeBoardRows(SearchCriteria cri); //공지사항 search 결과 rows 조회
 }

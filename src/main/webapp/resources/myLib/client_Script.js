@@ -644,11 +644,24 @@ function showdiv(id) {
 		$('#outer_1').css('display', 'none');
 		$('#outer_2').css('display', 'block');
 	}
-
 }
 
 
-//아이콘변경
+function showCsDiv(id){
+	if(id=='csNotice'){
+		$('#csNoticeBoard').css('display','block');
+		$('#csCompForm').css('display','none');
+	}else{
+		$('#csNoticeBoard').css('display','none');
+		$('#csCompForm').css('display','block');
+	}
+}
+
+
+
+
+
+//체크박스아이콘변경
 function checkboxCheck() {
 	if(checkboxChecked == false){
 		$('.checkbox_no').css('display','none');

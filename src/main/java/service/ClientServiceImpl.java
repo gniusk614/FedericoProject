@@ -11,6 +11,7 @@ import mapperInterface.ClientMapper;
 import paging.SearchCriteria;
 import vo.CartVO;
 import vo.ClientVO;
+import vo.NoticeBoardVO;
 
 @Log4j
 @Service
@@ -75,9 +76,19 @@ public class ClientServiceImpl implements ClientService {
 	public int insertClient(ClientVO vo) {
 		return dao.insertClient(vo);
 	}
+
+	//공지사항
+	@Override
+	public List<NoticeBoardVO> searchNoticeBoard(SearchCriteria cri) {
+		return dao.searchNoticeBoard(cri);
+	}
 	
-	
-	
+	//공지사항 출력 결과 rows 조회
+	@Override
+	public int searchNoticeBoardRows(SearchCriteria cri) {
+		return dao.searchNoticeBoardRows(cri);
+	}
+
 	
 	
 }
