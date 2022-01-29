@@ -95,7 +95,7 @@
 						aria-controls="collapseLayouts4">
 						<div class="sb-nav-link-icon">
 							<i class="fas fa-columns"></i>
-						</div> 소비자 페이지관리
+						</div> 고객 페이지관리
 						<div class="sb-sidenav-collapse-arrow">
 							<i class="fas fa-angle-down"></i>
 						</div>
@@ -105,7 +105,8 @@
 						<nav class="sb-sidenav-menu-nested nav">
 							<a class="nav-link" href="menuList">메뉴관리</a>
 							<a class="nav-link" href="layout-sidenav-light.html">이벤트게시판</a> 
-							<a class="nav-link" href="layout-sidenav-light.html">고객의 소리</a>
+							<a class="nav-link" href="noticeBoardf">고객공지사항</a>
+							<a class="nav-link" href="#">고객의소리</a>
 						</nav>
 					</div>
 					<!-- 소비자 페이지관리 -->

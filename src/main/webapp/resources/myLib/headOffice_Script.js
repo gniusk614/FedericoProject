@@ -356,7 +356,112 @@ function fcincheck() {
 	} else
 		return false;
 }// inCheck
-// ====================================================================
+// ==========================< 게시판 글 업로드 >==========================================
+
+
+function boardUpload(){
+	var title = $('#title').val();
+	var contents = CKEDITOR.instances['content'].getData();
+	var noticeFlag = 'N';
+	if($('#noticeFlag').is(":checked")==true){
+		noticeFlag = 'Y';
+	}
+	if(title.length<1){
+		alert('제목을 입력해주세요.');
+		return false;
+	}
+	
+	if(contents.length<1){
+		alert('글 내용을 입력해주세요.');
+		return false;
+	}
+	if (confirm("공지사항을 수정하시겠습니까?") == true) {
+		$.ajax({
+			type : "post",
+			url : "noticeInsert",
+			data : {
+				title : title,
+				content : contents,
+				noticeFlag : noticeFlag
+			},
+			success : function(data) {
+				if (data.success != null) {
+					alert('공지사항 등록에 성공했습니다.');
+					location.href = 'noticeBoardf';
+				} else {
+					alert('공지사항 등록에 실패했습니다.');
+				}
+
+			},
+			error : function() {
+				alert('서버장애입니다. 잠시후 다시 이용해주세요.');
+			}
+		})
+	}
+}
+function noticeDelete(seq){
+	if(confirm("삭제하시겠습니까?")==true){
+		$.ajax({
+			type:"get",
+			url:"noticeDelete?seq="+seq,
+			success: function(data){
+				if(data.success!=null){
+					alert('삭제에 성공했습니다.');
+					location.href= 'noticeBoardf';
+				}else{
+					alert('삭제에 실패했습니다.');
+				}
+				
+			},error : function(){
+				alert('서버장애입니다. 잠시후 다시 이용해주세요.');
+			}		
+		})
+	}
+}
+function boardUpdate(){
+	var seq = $('#seq').val();
+	var title = $('#title').val();
+	var contents = CKEDITOR.instances['content'].getData();
+	var noticeFlag = 'N';
+	if($('#noticeFlag').is(":checked")==true){
+		noticeFlag = 'Y';
+	}
+	if(title.length<1){
+		alert('제목을 입력해주세요.');
+		$('#title').focus();
+		return false;
+	}
+	if(contents.length<1){
+		alert('글 내용을 입력해주세요.');
+		CKEDITOR.instances['content'].focus();
+		return false;
+	}
+	if (confirm("공지사항을 수정하시겠습니까?") == true) {
+		$.ajax({
+			type : "post",
+			url : "noticeUpdate",
+			data : {
+				seq : seq,
+				title : title,
+				content : contents,
+				noticeFlag : noticeFlag
+			},
+			success : function(data) {
+				if (data.success != null) {
+					alert('공지사항 수정에 성공했습니다.');
+					location.href = 'noticeDetail?seq='+seq;
+				} else {
+					alert('공지사항 수정에 실패했습니다.');
+				}
+			},
+			error : function() {
+				alert('서버장애입니다. 잠시후 다시 이용해주세요.');
+			}
+		})
+	}
+}
+
+
 
 // ===============< 사원계정생성 스크립트(광훈) >============================
 $(function() {
