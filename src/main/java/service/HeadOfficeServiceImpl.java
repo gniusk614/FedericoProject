@@ -15,6 +15,7 @@ import vo.FcOrderVO;
 import vo.FranchiseVO;
 import vo.HeadOfficeVO;
 import vo.ItemInfoVO;
+import vo.NoticeBoardVO;
 import vo.StaffVO;
 
 @Log4j
@@ -193,6 +194,26 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 	public int searchFcRows(SearchCriteria cri) {
 		return dao.searchFcRows(cri);
 	}
+	
+	//공지사항 등록
+	@Override
+	public int noticeInsert(NoticeBoardVO vo) {
+		return dao.noticeInsert(vo);
+	}
+	//공지사항 수정
+	@Override
+	public int noticeUpdate(NoticeBoardVO vo) {
+		return dao.noticeUpdate(vo);
+	}
+	//공지사항 삭제
+	@Override
+	public int noticeDelete(NoticeBoardVO vo) {
+		return dao.noticeDelete(vo);
+	}
+	
+	
+	
+	
 	
 	//월별차트
 	@Override

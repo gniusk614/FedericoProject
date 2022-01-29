@@ -295,6 +295,29 @@
 	</sql>
 
 
+	 <!-- notice 글등록 -->
+	<insert id="noticeInsert">
+	INSERT INTO NOTICEBOARD VALUES((select nvl(max(seq),0)+1 from NOTICEBOARD n),
+		#{title}, #{id}, #{content}, sysdate, 0, #{noticeFlag})
+	</insert>
+	
+	
+	<!-- notice 삭제 -->
+	<delete id="noticeDelete">
+	DELETE FROM NOTICEBOARD where seq = #{seq}
+	</delete>
+	
+	
+	<!-- notice 업데이트 -->
+	<insert id="noticeUpdate">
+		UPDATE NOTICEBOARD 
+		SET title = #{title}, content=#{content}, noticeFlag=#{noticeFlag} , id=#{id}
+		WHERE seq = #{seq}
+	</insert>
+
+
+
+
 
 	<!-- ============================={ 통계 }================================ -->
 	<!-- 최근 1년 월별 통계 -->
