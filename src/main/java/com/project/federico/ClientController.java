@@ -136,7 +136,7 @@ public class ClientController {
 					session.removeAttribute("list");
 				}
 				session.removeAttribute("listSize");
-				
+				session.removeAttribute("fcId");
 			}
 			
 		}
@@ -218,10 +218,8 @@ public class ClientController {
 		
 		if (session.getAttribute("clientLoginID") != null) {
 			vo.setClientId(session.getAttribute("clientLoginID").toString());
-			String clientPhone = clientService.selectOne(vo).getClientPhone();
-			clientPhone = clientPhone.substring(0, 3) + "-" + clientPhone.substring(3, 7) + "-" + clientPhone.substring(7);
 			mv.addObject("clientAddress", clientService.selectOne(vo).getClientAddress());
-			mv.addObject("clientPhone", clientPhone);
+			mv.addObject("clientPhone", clientService.selectOne(vo).getClientPhone());
 			mv.addObject("clientName", clientService.selectOne(vo).getClientName());
 		} else if(session.getAttribute("nonAddress") != null) {
 			mv.addObject("clientAddress", (String)session.getAttribute("nonAddress"));
