@@ -137,8 +137,8 @@ align-self: center;
 	    <!-- 지역명 OO시 -->
 	   
 		<div class="col" style="height: 64px;">
-			<select class="form-select form-select-lg" id="Depth1" name="Depth1" aria-label="Default select example" onchange="changeDepth1()">
-			  <option  value="서울">서울시</option>
+			<select class="form-select form-select-lg" id="Depth1" name="Depth1" aria-label="Default select example" onchange="changeDepth1(${value})">
+			  <option id="ODepth1" value="서울">서울시</option>
 			  <option selected="selected" value="경기">경기도</option>
 			</select>
 			pending Item : 좌표찍기
@@ -148,11 +148,11 @@ align-self: center;
 		<div class="col" style="height: 64px;">
 
 			<select class="form-select form-select-lg" id="Depth2_1" name="Depth2_1" aria-label="Default select example">
-			  
+				<option id="Depth2_1">
 			</select>
 		
 			<select class="form-select form-select-lg" id="Depth2_2" name="Depth2_2" aria-label="Default select example">
-			  
+				<option id="Depth2_2">
 			</select>
 			
 			
@@ -295,9 +295,9 @@ function changeGugun() {
 		
 	})// ajax
 	
-	*/
-}// changeMinorCity()
 	
+}// changeMinorCity()
+*/	
 	
 	
 	

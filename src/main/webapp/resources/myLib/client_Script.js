@@ -1077,7 +1077,22 @@ function loginCheck(){
 	
 }
 
+function changeDepth1(){
+	
+	var Si = ['서울','경기','대구','전북'];
+	var Depth2_1 =['강남구','강동구','강서구','강북구'];
+	var Depth2_1 =['강남구','강동구','강서구','강북구'];
+	
+	for(var i = 0 ; i < Si.length ; i++ ) {
+		if(Si==0){
+			$('#Depth2_1').push(Depth2_1);
+		}else {
+			
+		}
+	}
+	console.log(Depth2_1);
 
+}
 
 
 
