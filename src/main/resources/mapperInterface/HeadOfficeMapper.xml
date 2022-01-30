@@ -74,7 +74,7 @@
 	
 	<!-- 가맹점 발주정보 서치,페이징 -->
 	<select id="searchFcOrder" parameterType="hashmap" resultType="vo.FcOrderVO" >
-		SELECT * FROM fcorder
+		SELECT fcorderseq, fcid, to_char(fcorderdate,'yy/mm/dd hh24:mi') as fcorderdate, fcorderflag FROM fcorder
 		 <include refid="fcOrderSearch"></include>
 		<if test="flag != null and value != '' ">
 			and fcorderflag = #{flag}
