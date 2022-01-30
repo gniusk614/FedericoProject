@@ -779,6 +779,7 @@ public class HeadOfficeController {
 			mv.addObject("success","success");			
 		else
 			mv.addObject("success","fail");				
+		
 		mv.setViewName("jsonView"); 
 		return mv;
 		

@@ -44,7 +44,6 @@ import vo.MenuVO;
 import vo.NoticeBoardVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
-import vo.StaffVO;
 
 @RequestMapping(value = "/client")
 @Log4j
@@ -606,8 +605,21 @@ public class ClientController {
 		
 		@RequestMapping(value ="/fcSearch")
 		public ModelAndView fcsearch (ModelAndView mv, FranchiseVO vo) {					
+			/*
+			vo = fcService.selectFcOne(vo);
 			
-			mv.setViewName("client/fcSearch");
+			if(vo.getFcAddress()!=null) {
+				mv.addObject("fcaddress", vo);
+				mv.addObject("success","success");				
+				}
+			else {			
+				mv.addObject("success","fail");
+			}
+						
+			mv.setViewName("jsonView");
+			*/
+			mv.setViewName("/client/fcSearch");
+			
 			return mv;
 		}
 		

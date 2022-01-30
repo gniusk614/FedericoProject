@@ -1181,12 +1181,7 @@ function fcOrderFlagUpdate(flag) {
 				$('#upmenuPrice').val(data.menuvo.menuPrice);
 				$('#upbeforemenuImage').attr("src",data.menuvo.menuImage);
 				$('#menuImage').val(data.menuvo.menuImage);
-				console.log("data throw test");
-				console.log("menuIndex =>"+data.menuvo.menuIndex);
-				console.log("menuName =>"+data.menuvo.menuName);
-				console.log("menuIntro =>"+data.menuvo.menuIntro);
-				console.log("menuFlag =>"+data.menuvo.menuFlag);
-				console.log("menuImg =>"+data.menuvo.menuImage);			
+		
 			
 				// when 절로 update 할 것 
 				if(data.menuvo.menuFlag == 'pizza'){
@@ -1224,8 +1219,7 @@ function fcOrderFlagUpdate(flag) {
 			success:function(data){ // 성공하면 아래 작업을 실행한다.
 				if(data.success == 'success'){
 						
-					$('.a'+vsindex).val(data.success);
-														
+					$('.a'+vsindex).val(data.success);														
 					
 					if($('#menulife-btn'+vsindex).text()=='비활성화'){					
 						$('#menulife-btn'+vsindex).text('활성화');
@@ -1234,15 +1228,13 @@ function fcOrderFlagUpdate(flag) {
 						$('#t_menuselect').load('menuList #t_menuselect');
 						
 				   }else{
-						console.log('activity success DB=menuLive : live');
-						
+						console.log('activity success DB=menuLive : live');						
 						$('#menulife-btn'+vsindex).text('비활성화');
 						$('.a'+vsindex).css('text-decoration','none');
 						$('#t_menuselect').load('menuList #t_menuselect');
 						 }
 				}
 			},error:function(){
-				
 				console.log("비활성화 받아오기 실패");
 				alert("비활성화 전송에 실패하였습니다.");
 			}
