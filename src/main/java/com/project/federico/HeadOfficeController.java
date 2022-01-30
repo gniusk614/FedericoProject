@@ -1,41 +1,51 @@
 package com.project.federico;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j;
 import paging.PageMaker;
 import paging.SearchCriteria;
+import service.ClientService;
 import service.FranchiseService;
 import service.HeadOfficeService;
 import service.MenuService;
-
 import vo.ChartVO;
-
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
 import vo.HeadOfficeVO;
 import vo.ItemInfoVO;
 import vo.MenuVO;
+import vo.NoticeBoardVO;
 import vo.StaffVO;
 
 @RequestMapping(value = "/headoffice")
@@ -51,6 +61,8 @@ public class HeadOfficeController {
 	PasswordEncoder passwordEncoder;
 	@Autowired
 	MenuService menuService;
+	@Autowired
+	ClientService cservice;
 	
 	
 	
@@ -493,14 +505,6 @@ public class HeadOfficeController {
 		
 		
 		vo.setFcPassword(passwordEncoder.encode(vo.getFcPassword()));
-		System.out.println(vo.getFcId());
-		System.out.println(vo.getFcName());
-		System.out.println(vo.getFcPassword());
-		System.out.println(vo.getFcArea());
-		System.out.println(vo.getFcAddress());
-		System.out.println(vo.getFcPhone());
-		System.out.println(vo.getHoId());
-		System.out.println(vo.getFcClose());
 		if (fservice.fcInsert(vo) > 0) {
 			mv.addObject("message", "계정생성이 완료되었습니다.");
 			mv.addObject("success", "success");
@@ -837,33 +841,213 @@ public class HeadOfficeController {
 	
 	
 	
+	//고객공지사항 이동
+	@RequestMapping(value = "noticeBoardf")
+	public ModelAndView noticeBoardf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		cri.setSnoEno();
+		
+		List<NoticeBoardVO> selectList = cservice.selectNoticeBoard();
+		List<NoticeBoardVO> searchList = cservice.searchNoticeBoard(cri);
+		if (searchList != null && searchList.size() > 0) {
+			if(selectList !=null && selectList.size()>0) {
+				mv.addObject("noticeList",selectList);
+			}
+			mv.addObject("boardList", searchList);
+		} else {
+			mv.addObject("message", "출력할 자료가 없습니다.");
+		}
+		pageMaker.setCri(cri);
+		pageMaker.setTotalRowCount(cservice.searchNoticeBoardRows(cri));
+		
+		mv.setViewName("headoffice/noticeBoard");
+		return mv;
+	}
+	
+	
+	//공지사항 디테일
+	@RequestMapping(value ="/noticeDetail")
+	public ModelAndView csNoticeDetail (ModelAndView mv ,NoticeBoardVO vo) {					
+		vo = cservice.selectDetailNoticeBoard(vo);
+		if(vo!=null) {
+			mv.addObject("noticeDetail", vo);
+		}else {
+			mv.addObject("message", "출력할 글이 없습니다.");
+		}
+		mv.setViewName("headoffice/noticeBoardDetail");
+		return mv;
+	}
+	
+	//공지사항 글쓰기이동
+	@RequestMapping(value ="/noticeInsertf")
+	public ModelAndView noticeInsertf (ModelAndView mv ,NoticeBoardVO vo) {					
+		mv.setViewName("headoffice/noticeBoardInsert");
+		return mv;
+	}
 	
 	
 	
+	//ckeditor이미지업로드
+	@RequestMapping(value="/boardImageUpload", method = RequestMethod.POST)
+    public void boardImageUpload(HttpServletRequest request,
+    		HttpServletResponse response, MultipartHttpServletRequest multiFile
+    		, @RequestParam MultipartFile upload) throws Exception{
+    	// 랜덤 문자 생성
+    	UUID uid = UUID.randomUUID();
+    	
+    	OutputStream out = null;
+    	PrintWriter printWriter = null;
+    	
+    	//인코딩
+    	response.setCharacterEncoding("utf-8");
+    	response.setContentType("text/html;charset=utf-8");
+    	try{
+    		//파일 이름 가져오기
+			String fileName = upload.getOriginalFilename();
+			byte[] bytes = upload.getBytes();
+
+			// 이미지 경로 생성
+			String path = "/Users/gniusk614/Documents/WEBDEVELOP/MTest/TeamProject/FedericoProject/src/main/webapp/resources/uploadImage/boardImage/"; 
+			// 이미지 경로 설정(폴더 자동 생성)
+			String ckUploadPath = path + uid + "_" + fileName;
+			File folder = new File(path);
+			System.out.println("1path:" + path); // 이미지 저장경로 console에 확인
+			// 해당 디렉토리 확인
+			if (!folder.exists()) {
+				try {
+					folder.mkdirs(); // 폴더 생성
+				} catch (Exception e) {
+					e.getStackTrace();
+				}
+			}
+    	
+    	out = new FileOutputStream(new File(ckUploadPath));
+    	out.write(bytes);
+    	out.flush(); // outputStram에 저장된 데이터를 전송하고 초기화
+    	
+    	String callback = request.getParameter("CKEditorFuncNum");
+    	printWriter = response.getWriter();
+    	String fileUrl = "/federico/headoffice/ckImgSubmit.do?uid=" + uid + "&fileName=" + fileName; // 작성화면
+    	
+    	// 업로드시 메시지 출력
+    	printWriter.println("{\"filename\" : \""+fileName+"\", \"uploaded\" : 1, \"url\":\""+fileUrl+"\"}");
+    	printWriter.flush();
+    	
+    	}catch(IOException e){
+    		e.printStackTrace();
+    	} finally {
+    		try {
+    		if(out != null) { out.close(); }
+    		if(printWriter != null) { printWriter.close(); }
+    	} catch(IOException e) { e.printStackTrace(); }
+    	}
+    	return;
+    }
 	
 	
+	// 서버로 전송된 이미지 뿌려주기
+	@RequestMapping(value = "/ckImgSubmit.do")
+	public void ckSubmit(@RequestParam(value = "uid") String uid, @RequestParam(value = "fileName") String fileName,
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		// 서버에 저장된 이미지 경로
+		String path = "/Users/gniusk614/Documents/WEBDEVELOP/MTest/TeamProject/FedericoProject/src/main/webapp/resources/uploadImage/boardImage/"; // 저장된 이미지 경로
+		System.out.println("2path:" + path);
+		String sDirPath = path + uid + "_" + fileName;
+
+		File imgFile = new File(sDirPath);
+
+		// 사진 이미지 찾지 못하는 경우 예외처리로 빈 이미지 파일을 설정한다.
+		if (imgFile.isFile()) {
+			byte[] buf = new byte[1024];
+			int readByte = 0;
+			int length = 0;
+			byte[] imgBuf = null;
+
+			FileInputStream fileInputStream = null;
+			ByteArrayOutputStream outputStream = null;
+			ServletOutputStream out = null;
+
+			try {
+				fileInputStream = new FileInputStream(imgFile);
+				outputStream = new ByteArrayOutputStream();
+				out = response.getOutputStream();
+
+				while ((readByte = fileInputStream.read(buf)) != -1) {
+					outputStream.write(buf, 0, readByte);
+				}
+
+				imgBuf = outputStream.toByteArray();
+				length = imgBuf.length;
+				out.write(imgBuf, 0, length);
+				out.flush();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				outputStream.close();
+				fileInputStream.close();
+				out.close();
+			}
+		}
+	}
+	
+	//공지사항 글등록
+	@RequestMapping(value ="/noticeInsert")
+	public ModelAndView noticeInsert (HttpServletRequest request, ModelAndView mv ,NoticeBoardVO vo) {	
+		String id = (String) request.getSession().getAttribute("loginID");
+		vo.setId(id);
+		if(service.noticeInsert(vo)>0) {
+			mv.addObject("success", "성공");
+		}else {
+			mv.addObject("message", "실패");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+
+	// 공지사항 글수정 폼이동
+	@RequestMapping(value = "/noticeUpdatef")
+	public ModelAndView noticeUpdatef(ModelAndView mv, NoticeBoardVO vo) {
+		vo = cservice.selectDetailNoticeBoard(vo);
+		if (vo != null) {
+			mv.addObject("noticeDetail", vo);
+		} else {
+			mv.addObject("message", "출력할 글이 없습니다.");
+		}
+		mv.setViewName("headoffice/noticeBoardUpdate");
+		return mv;
+	}
+	
+	//공지사항 글 수정(수정자 ID로 작성자 변경됨)
+	@RequestMapping(value ="/noticeUpdate")
+	public ModelAndView noticeUpdate (HttpServletRequest request, ModelAndView mv ,NoticeBoardVO vo) {	
+		String id = (String) request.getSession().getAttribute("loginID");
+		vo.setId(id);
+		if(service.noticeUpdate(vo)>0) {
+			mv.addObject("success", "성공");
+		}else {
+			mv.addObject("message", "실패");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
 	
 	
-	
-	
-	
-	
-	
-	
+	// 공지사항 글 삭제
+	@RequestMapping(value = "/noticeDelete")
+	public ModelAndView noticeDelete(ModelAndView mv, NoticeBoardVO vo) {
+		
+		if (service.noticeDelete(vo)>0) {
+			mv.addObject("success", "성공");
+		}else {
+			mv.addObject("message", "실패");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
 	
 	
 
-	
-	
-	
-	
-		
-	
-	
-	
-	
-	
-	
 	
 }
 // class
