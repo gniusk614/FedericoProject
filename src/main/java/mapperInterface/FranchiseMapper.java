@@ -1,5 +1,6 @@
 package mapperInterface;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,9 @@ import vo.FranchiseVO;
 
 public interface FranchiseMapper {
 	
+	int selectFcClientRowsCount(Map<String, Object> params); //가맹점 단골고객 조회 rowsCount
 	
+	List<FcClientRegVO> selectFcClientAll(Map<String, Object> params); //가맹점 단골고객 조회 All
 	
 	int deleteFcClientReg(FcClientRegVO vo); //가맹점 단골고객 삭제
 	

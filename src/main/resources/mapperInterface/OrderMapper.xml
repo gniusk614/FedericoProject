@@ -60,7 +60,9 @@
 	
 	<!-- 완료주문 서치,페이징 -->
 	<select id="searchCompleteOrder" parameterType="hashmap" resultType="vo.OrderListVO" >
-		SELECT * FROM orderlist
+		SELECT ordernumber, clientid, fcid, completeyn, memo, to_char(orderDate,'YY/MM/DD HH24:MI') orderDate,
+		clientname, clientaddress, clientphone, memberyn		
+		FROM orderlist
 		 <include refid="completeOrderSearch"></include>
 		AND completeyn = 'Y' AND fcid = #{vo.fcId}
 		ORDER BY ordernumber desc

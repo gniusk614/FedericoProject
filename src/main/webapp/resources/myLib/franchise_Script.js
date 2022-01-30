@@ -334,7 +334,99 @@ function deleteRegClient(){
 }
 
 
+// 가맹점 고객관리 선택이벤트
+function selectALLGB(imsi){
+	if(imsi == 'A'){
+		$('#flag').val('');
+	} else if(imsi =='G'){
+		$('#flag').val('G');
+	} else {
+		$('#flag').val('B');
+	}
+	move();
+}
 
+// 가맹점 고객관리 수정창 모달
+function fcClientListModalShow(seq){
+	$.ajax({
+		url: 'fcclientregone',
+		data:{seq: seq},
+		success: function(data){
+			if(data.success = 'success'){
+				$('#selectRegClientMemo').val(data.fcClientVo.memo);
+				if(data.fcClientVo.gbFlag == 'B'){
+					$('.selectFlagParent').children('input:checkbox').eq(1).prop("checked", true);
+				} else{
+					$('.selectFlagParent').children('input:checkbox:eq(0)').prop("checked", true);
+				}
+				$('#fcClientUpdate').attr('onclick','fcClientListModalUpdate(' + seq + ')')
+				$('#fcClientDelete').attr('onclick','fcClientListModalDelete(' + seq + ')')
+				$('#selectRegClientModal').modal('show');
+			} else{
+				alert('통신장애입니다.\n다시 시도해주세요.')			
+			}
+		},
+		error: function(){
+			alert('통신장애입니다.\n다시 시도해주세요.')				
+		}
+	})//ajax
+}
+
+
+// 가맹점 고객관리 수정창 수정
+function fcClientListModalUpdate(seq){
+	var memo = $('#selectRegClientMemo').val();
+	if(memo != null && memo.length>0){	
+		if($('.selectFlag:checked').length == 1){
+			var gbFlag = $('.selectFlag:checked').val();
+		$.ajax({
+			url: 'fcclientregupdate',
+			data: {
+				seq: seq,
+				memo: memo,
+				gbFlag: gbFlag
+				},
+			success: function(data){
+				if(data.success = 'success'){
+					alert('수정되었습니다.')
+					location.reload();
+				} else{
+					alert('통신장애입니다.\n다시 시도해주세요.')			
+				}
+			},
+			error: function(){
+				alert('통신장애입니다.\n다시 시도해주세요.')				
+			}
+		}) //ajax
+		} else {
+			alert('단골/블랙리스트 여부를 체크해주세요.')
+		}
+	} else{
+		alert('내용을 입력해주세요.');
+	}
+}
+
+// 가맹점 고객관리 수정창 삭제
+function fcClientListModalDelete(seq){
+	$.ajax({
+		url: 'fcclientregdelete',
+		data: {seq: seq},
+		success: function(data){
+			if(data.success = 'success'){
+				alert('삭제되었습니다.')
+				location.reload();
+			} else{
+				alert('통신장애입니다.\n다시 시도해주세요.')				
+			}
+		},
+		error: function(){
+			alert('통신장애입니다.\n다시 시도해주세요.')				
+		}
+	}) //ajax
+}
+	
+		
+	
 
 
 

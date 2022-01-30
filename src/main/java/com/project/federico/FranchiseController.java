@@ -23,7 +23,6 @@ import paging.SearchCriteria;
 import service.FranchiseService;
 import service.HeadOfficeServiceImpl;
 import service.OrderService;
-import vo.CartVO;
 import vo.ChartVO;
 import vo.FcClientRegVO;
 import vo.FcOrderDetailVO;
@@ -48,6 +47,50 @@ public class FranchiseController {
 	@Autowired
 	HeadOfficeServiceImpl headOfficeService;
 
+	
+	// 가맹점 고객관리 조회페이지
+	@RequestMapping(value = "/fcclientregf")
+	public ModelAndView fcClientRegF (ModelAndView mv, FcClientRegVO vo, HttpSession session, PageMaker pageMaker, SearchCriteria cri) {
+		String uri = "franchise/fcClientReg";
+		if(session.getAttribute("fcId") != null) {
+			Map<String, Object> params = new HashMap<String, Object>();
+			
+			vo.setFcId((String)session.getAttribute("fcId"));
+			cri.setSnoEno();
+			params.put("vo", vo);
+			params.put("cri", cri);
+			
+			List<FcClientRegVO> list = new ArrayList<FcClientRegVO>();
+			list = service.selectFcClientAll(params);
+			
+			if(list != null && list.size() > 0) {
+				mv.addObject("fcClientList", list);
+			} 
+			
+			mv.addObject("gbFlag", vo.getGbFlag());
+			pageMaker.setCri(cri);
+			pageMaker.setTotalRowCount(service.selectFcClientRowsCount(params));
+			
+			mv.setViewName(uri);
+		} else {
+			uri = "franchise/fcLoginForm";
+		}
+		return mv;
+	}
+	
+	// 가맹점 고객관리 조회 by seq
+	@RequestMapping(value = "/fcclientregone")
+	public ModelAndView fcClientRegOne(ModelAndView mv, FcClientRegVO vo) {
+		
+		vo = service.selectFcClientOne(vo);
+		if(vo != null) {
+			mv.addObject("fcClientVo",vo);
+			mv.addObject("success","success");
+		} 
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
 	
 	
 	// 가맹점 고객관리 삭제
@@ -98,8 +141,6 @@ public class FranchiseController {
 			List<ChartVO> chartList = service.fcLastSevenDaysSalesPerDay(fcId);
 			mv.addObject("charData", chartList);
 			for (ChartVO cvo: chartList){
-				log.info(cvo.getChartCount());
-				log.info(cvo.getChartLabel());
 			};
 		}
 		mv.setViewName("jsonView");
@@ -129,10 +170,15 @@ public class FranchiseController {
 			vo.setFcId((String)session.getAttribute("fcId"));
 			Map<String, Object> params = new HashMap<String, Object>();
 			
-			if (request.getParameter("minDate") != null) {
+			if (! "".equals(request.getParameter("maxDate")) && request.getParameter("maxDate") != null) {
 				params.put("minDate", request.getParameter("minDate").replaceAll("/", ""));
 				params.put("maxDate", request.getParameter("maxDate").replaceAll("/", ""));
-			}
+				mv.addObject("minDate", request.getParameter("minDate").replaceAll("/", ""));
+				mv.addObject("maxDate", request.getParameter("maxDate").replaceAll("/", ""));
+			} else {
+				params.put("minDate", "");
+				params.put("maxDate", "");
+			}	
 			
 			cri.setSnoEno();
 	
@@ -146,6 +192,7 @@ public class FranchiseController {
 			pageMaker.setCri(cri);
 			pageMaker.setTotalRowCount(service.searchItemOrderListRows(params));
 			
+	
 			mv.addObject("flaG", vo.getFcOrderFlag());
 			mv.setViewName("franchise/itemOrderList");
 		} else {
@@ -268,7 +315,6 @@ public class FranchiseController {
 	// 주문 완료처리
 	@RequestMapping(value = "/ordercomplete")
 	public ModelAndView orderComplete(ModelAndView mv, OrderListVO vo) {
-		log.info("dfsfsfsdf"+vo.getOrderNumber());
 		if (orderService.orderComplete(vo) > 0) {
 			mv.addObject("success", "success");
 		} else {

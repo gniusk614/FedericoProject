@@ -9,7 +9,7 @@ public class FcOrderVO {
 
 	private int fcOrderSeq;
 	private String fcId;
-	private Date fcOrderDate;
+	private String fcOrderDate;
 	private String fcOrderFlag;
 	private int sumPrice;
 	

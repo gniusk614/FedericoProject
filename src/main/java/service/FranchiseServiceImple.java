@@ -18,6 +18,17 @@ public class FranchiseServiceImple implements FranchiseService {
 	@Autowired
 	FranchiseMapper dao;
 
+	//가맹점 단골고객 조회 rowsCount
+	@Override
+	public int selectFcClientRowsCount(Map<String, Object> params) {
+		return dao.selectFcClientRowsCount(params);
+	}
+	
+	//가맹점 단골고객 조회 All
+	@Override
+	public List<FcClientRegVO> selectFcClientAll(Map<String, Object> params) {
+		return dao.selectFcClientAll(params);
+	}
 	
 	//가맹점 단골고객 삭제
 	@Override
