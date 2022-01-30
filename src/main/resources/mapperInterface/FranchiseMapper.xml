@@ -3,6 +3,46 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapperInterface.FranchiseMapper">
 
+
+	<!-- 가맹점 단골고객 삭제 -->
+	<delete id="deleteFcClientReg">
+		DELETE FROM FCCLIENTREG WHERE seq = #{seq}
+	</delete>
+
+	<!-- 가맹점 단골고객 수정 -->
+	<update id="updateFcClientReg">
+		UPDATE FCCLIENTREG SET MEMO = #{memo}, gbflag = #{gbFlag} WHERE seq = #{seq}
+	</update>
+
+	<!-- 가맹점 단골고객 조회 - One -->
+	<select id="selectFcClientOne" resultType="vo.FcClientRegVO">
+		SELECT * FROM FCCLIENTREG WHERE FCID = #{fcId} AND CLIENTPHONE = #{clientPhone}
+	</select>
+
+	<!-- 가맹점 단골고객등록 -->
+	<insert id="insertFcClient">
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT NVL(MAX(SEQ),0)+1 FROM FCCLIENTREG
+		</selectKey>
+		INSERT INTO FCCLIENTREG 
+		VALUES(#{seq}, #{fcId}, #{clientPhone}, #{memo}, #{gbFlag})
+	</insert>
+
+
+	<!-- 가맹점 오늘포함 이전 7일간 일별 매출 -->
+	<select id="fcLastSevenDaysSalesPerDay" resultType="vo.ChartVO">
+		SELECT to_char(i.orderdate, 'MM/DD') as chartLabel, SUM(d.menuqty * m.menuprice) as chartCount
+		FROM (SELECT TRUNC(SYSDATE-6 + LEVEL -1) orderdate
+		            FROM dual
+      				<![CDATA[  CONNECT BY LEVEL < 8) i  ]]>
+		LEFT JOIN orderlist o ON o.fcid = #{value} AND o.completeyn = 'Y'
+		    AND to_char(o.orderdate,'yymmdd') = to_char(i.orderdate,'yymmdd')
+		LEFT JOIN orderdetaillist d ON o.ordernumber = d.ordernumber
+		LEFT JOIN menuinfo m ON m.menuindex = d.menuindex
+		GROUP BY i.orderdate
+		ORDER BY i.orderdate
+	</select>
+
 	<!-- 가맹점 전일 매출 -->
 	<select id="fcYesterdaySales" resultType="vo.ChartVO">
 		SELECT sum(d.menuqty * m.menuprice) chartCount

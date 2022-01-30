@@ -4,10 +4,23 @@ import java.util.List;
 import java.util.Map;
 
 import vo.ChartVO;
+import vo.FcClientRegVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
 
 public interface FranchiseMapper {
+	
+	
+	
+	int deleteFcClientReg(FcClientRegVO vo); //가맹점 단골고객 삭제
+	
+	int updateFcClientReg(FcClientRegVO vo); //가맹점 단골고객 수정
+	
+	FcClientRegVO selectFcClientOne(FcClientRegVO vo); // 가맹점 단골고객 조회 - One
+	
+	int insertFcClient(FcClientRegVO vo); //가맹점 단골고객등록
+	
+	List<ChartVO> fcLastSevenDaysSalesPerDay(String fcId); //가맹점 오늘포함 이전 7일간 일별 매출
 	
 	ChartVO fcYesterdaySales(String fcId); //가맹점 전일 매출
 	

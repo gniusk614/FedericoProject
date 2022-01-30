@@ -20,7 +20,7 @@
 	
 	<!-- 가맹점별 주문정보 조회 - completeYN 필드 유무로 조건검. -->
 	<select id="selectFcOrderbyFcId" resultType="vo.OrderListVO">
-		SELECT ordernumber, fcid, completeyn, memo, orderdate, clientPhone, clientAddress
+		SELECT ordernumber, fcid, completeyn, memo, to_char(orderdate,'yy/mm/dd hh24:mi') orderdate, clientPhone, clientAddress
 		FROM orderlist o
 		WHERE o.fcid = #{fcId}
 		<choose>

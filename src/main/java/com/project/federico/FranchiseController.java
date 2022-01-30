@@ -23,7 +23,9 @@ import paging.SearchCriteria;
 import service.FranchiseService;
 import service.HeadOfficeServiceImpl;
 import service.OrderService;
+import vo.CartVO;
 import vo.ChartVO;
+import vo.FcClientRegVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -46,6 +48,64 @@ public class FranchiseController {
 	@Autowired
 	HeadOfficeServiceImpl headOfficeService;
 
+	
+	
+	// 가맹점 고객관리 삭제
+	@RequestMapping(value = "/fcclientregdelete")
+	public ModelAndView fcClientRegSDelete (ModelAndView mv, FcClientRegVO vo) {
+		
+		if(service.deleteFcClientReg(vo) > 0) {
+			mv.addObject("success","success");
+		} else {
+			mv.addObject("success","fail");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}	
+	
+	// 가맹점 고객관리 수정
+	@RequestMapping(value = "/fcclientregupdate")
+	public ModelAndView fcClientRegUpdate (ModelAndView mv, FcClientRegVO vo) {
+		
+		if(service.updateFcClientReg(vo) > 0) {
+			mv.addObject("success","success");
+		} else {
+			mv.addObject("success","fail");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 가맹점 고객관리 등록 by 전화번호, 주소
+	@RequestMapping(value = "/fcclientreg")
+	public ModelAndView fcClientReg (ModelAndView mv, FcClientRegVO vo) {
+		
+		if(service.insertFcClient(vo) > 0) {
+			mv.addObject("success","success");
+			mv.addObject("vo",vo);
+		} else {
+			mv.addObject("success","fail");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 홈화면 우하단 차트용 통계자료
+	@RequestMapping(value = "/fcchartsevenday")
+	public ModelAndView fcChartSevenDay(ModelAndView mv, HttpSession session) {
+		if(session.getAttribute("fcId") != null) {
+			String fcId = (String)session.getAttribute("fcId");
+			List<ChartVO> chartList = service.fcLastSevenDaysSalesPerDay(fcId);
+			mv.addObject("charData", chartList);
+			for (ChartVO cvo: chartList){
+				log.info(cvo.getChartCount());
+				log.info(cvo.getChartLabel());
+			};
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
 	
 	// 가맹점 발주내역 상세보기(발주번호 별로) return json
 	@RequestMapping(value = "/fcorderdetail")
@@ -169,10 +229,18 @@ public class FranchiseController {
 	
 	// 주문내역 상세조회 by orderNumber
 	@RequestMapping(value = "/selectDetail")
-	public ModelAndView selectDetail(ModelAndView mv, OrderDetailListVO detailVo, @RequestParam("orderNumber") int orderNumber) {
+	public ModelAndView selectDetail(ModelAndView mv, OrderDetailListVO detailVo, @RequestParam("orderNumber") int orderNumber, FcClientRegVO fcClientVo) {
 		List<OrderDetailListVO> detailList = new ArrayList<OrderDetailListVO>();
 		detailList = orderService.selectDetailbyOrderNumber(orderNumber);
 		if(detailList.size() > 0 && detailList != null) {
+			//단골고객 관련
+			fcClientVo = service.selectFcClientOne(fcClientVo);
+			if(fcClientVo != null) {
+				mv.addObject("fcClient","T");
+				mv.addObject("fcClientVo",fcClientVo);
+			} else {
+				mv.addObject("fcClient","F");
+			}
 			mv.addObject("detailList",detailList);
 			mv.addObject("success", "success");
 		}else {
@@ -289,6 +357,7 @@ public class FranchiseController {
 				cVo = service.fcThisMonthOrderSum(fcId);
 				mv.addObject("fcThisMonthOrderSum", cVo==null ? 0 : cVo.getChartCount());
 				
+				
 				mv.setViewName("franchise/home");
 				
 			} else {
@@ -335,7 +404,7 @@ public class FranchiseController {
 							session.setAttribute("deliveryTime", service.selectDeliveryTimebyFcId(fcId));
 							uri="franchise/home";
 							
-							// 홈화면 통계자료
+							// 홈화면 좌하단 통계자료
 							cVo = service.fcThisMonthSales(fcId);
 							mv.addObject("fcThisMonthSales", cVo==null ? 0 : cVo.getChartCount());
 							cVo = service.fcTodaySales(fcId);
@@ -344,6 +413,9 @@ public class FranchiseController {
 							mv.addObject("fcYesterdaySales", cVo==null ? 0 : cVo.getChartCount());
 							cVo = service.fcThisMonthOrderSum(fcId);
 							mv.addObject("fcThisMonthOrderSum", cVo==null ? 0 : cVo.getChartCount());
+							
+
+							
 						}
 						
 					}else {

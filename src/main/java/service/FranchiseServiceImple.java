@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import mapperInterface.FranchiseMapper;
 import vo.ChartVO;
+import vo.FcClientRegVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
 
@@ -17,6 +18,37 @@ public class FranchiseServiceImple implements FranchiseService {
 	@Autowired
 	FranchiseMapper dao;
 
+	
+	//가맹점 단골고객 삭제
+	@Override
+	public int deleteFcClientReg(FcClientRegVO vo) {
+		return dao.deleteFcClientReg(vo);
+	}
+	
+	//가맹점 단골고객 수정
+	@Override
+	public int updateFcClientReg(FcClientRegVO vo) {
+		return dao.updateFcClientReg(vo);
+	}
+	
+	// 가맹점 단골고객 조회 - One
+	@Override
+	public FcClientRegVO selectFcClientOne(FcClientRegVO vo) {
+		return dao.selectFcClientOne(vo);
+	}
+	
+	//가맹점 단골고객등록
+	@Override
+	public int insertFcClient(FcClientRegVO vo) {
+		return dao.insertFcClient(vo);
+	}
+	
+	//가맹점 오늘포함 이전 7일간 일별 매출
+	@Override
+	public List<ChartVO> fcLastSevenDaysSalesPerDay(String fcId) {
+		return dao.fcLastSevenDaysSalesPerDay(fcId);
+	}
+	
 	//가맹점 전일 매출
 	@Override
 	public ChartVO fcYesterdaySales(String fcId) {

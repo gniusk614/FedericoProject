@@ -12,10 +12,23 @@
 // ============================= 가맹점 홈화면 (현구) =======================================
 
 $(function() {
-// 상세주문조회 닫힐시 모달 clear
+	// 상세주문조회 닫힐시 모달 clear
 	$('#orderDetailModal').on('hidden.bs.modal', function() {
 		$('#orderDetailBody').html('');
+		$('#clientPhone').css('color','black');
+		$('#insertRegClientMemo').val('');	
+		$('#selectRegClientMemo').val('');	
+		$('.modal-body').children('input[type=checkbox]').prop('checked',false);
 	})
+	
+	// 단골,블랙 체크박스 이벤트
+	$('.modal-body').children('input[type=checkbox]').change(function(){
+		if($(this).is(':checked')){
+			$('.modal-body').children('input[type=checkbox]').not($(this))
+			.prop('checked',false);
+		}
+	})
+	
 	
 	//달력
 	$('#datetimepicker1').datetimepicker({
@@ -108,13 +121,15 @@ function updateDeliveryTime(){
 
 
 // 상세주문정보 모달 열기
-function showOrderDetail(orderNumber, clientAdrress){
-	
+function showOrderDetail(orderNumber, clientAdrress, clientPhone, memo){
+
 	$.ajax({
 		type: 'get',
 		url: 'selectDetail',
 		data: {
-			orderNumber: orderNumber
+			orderNumber: orderNumber,
+			fcId: $('#fcId').val(),
+			clientPhone: clientPhone
 		},
 		success: function(data){
 			if(data.success == 'success'){
@@ -130,20 +145,41 @@ function showOrderDetail(orderNumber, clientAdrress){
 								+ vo.menuQty + '</td><td>'
 								+ menuPrice + '</td><td>'
 								+ sumRow + '</td></tr>');// append
-			}) // each
-			sumCol = comma(sumCol);
-			$('#clientAdrress').html(clientAdrress);
-			$('#detailNumber').html(orderNumber);
-			$('#orderCompleteBtn').attr('onclick','orderComplete(' + orderNumber + ')');
-			$('#orderDetailFooter').html('합계 : ' + sumCol);
+				}) // each
+				$('#clientPhone').attr('data-clientPhone', clientPhone);
+				clientPhone = clientPhone.substring(0,3)+'-'+clientPhone.substring(3,7)+'-'+clientPhone.substring(7,11)
+				sumCol = comma(sumCol);
+				$('#clientAdrress').html(clientAdrress);
+				$('#memo').html(memo);
+				$('#detailNumber').html(orderNumber);
+				$('#clientPhone').html(clientPhone);
+				$('#orderCompleteBtn').attr('onclick','orderComplete(' + orderNumber + ')');
+				$('#orderDetailFooter').html('합계 : ' + sumCol);
 				
-			$('#orderDetailModal').modal('show');
+				// 단골고객 관련
+				if(data.fcClient == 'T'){
+					$('#clientPhone').attr('onclick','javascript: $("#selectRegClientModal").modal("show");')
+					.attr('data-memoseq',data.fcClientVo.seq);
+					$('#selectRegClientMemo').val(data.fcClientVo.memo);
+					if(data.fcClientVo.gbFlag == 'B'){
+						$('#clientPhone').css('color','red');
+						$('.selectFlagParent').children('input:checkbox').eq(1).prop("checked", true);
+					} else{
+						$('#clientPhone').css('color','green');
+						$('.selectFlagParent').children('input:checkbox:eq(0)').prop("checked", true);
+					}
+				} else{
+					$('#clientPhone').attr('onclick','javascript: $("#insertRegClientModal").modal("show");')
+					$('selectRegClientMemo').val('');	
+				}
+					
+				$('#orderDetailModal').modal('show');
 			} else{
-				console.log('실패');
+				alert('통신 장애로 요청이 실패했습니다.\n잠시후 다시 시도해주세요.')
 			}
 		},
 		error: function(){
-			console.log('ajax실패');
+			alert('통신 장애로 요청이 실패했습니다.\n잠시후 다시 시도해주세요.')
 		}
 	})//ajax
 }
@@ -175,6 +211,134 @@ function orderComplete(orderNumber){
 function hideOrderDetailModal(){
 	$('#orderDetailModal').modal('hide');
 }
+
+
+// 상세주문정보 모달에서 단골고객등록
+function insertRegClient(){
+	var memo = $('#insertRegClientMemo').val();
+	
+	if(memo != null && memo.length>0){
+		if($('.insertFlag:checked').length == 1){
+			var gbFlag = $('.insertFlag:checked').val();
+			$.ajax({
+				type: 'get',
+				url: 'fcclientreg',
+				data: {
+					fcId: $('#fcId').val(),
+					clientPhone: $('#clientPhone').attr('data-clientPhone'),
+					memo: memo,
+					gbFlag: gbFlag
+				},
+				success: function(data){
+					if(data.success = "success"){
+					alert('등록되었습니다.')
+					$('#insertRegClientModal').modal('hide');
+					if(gbFlag == 'G'){
+					$('#clientPhone').css('color','green')
+					.attr({
+						'onclick': 'javascript: $("#selectRegClientModal").modal("show");',
+						'data-memoseq': data.vo.seq
+						})
+					} else {
+					$('#clientPhone').css('color','red')
+					.attr({
+						'onclick': 'javascript: $("#selectRegClientModal").modal("show");',
+						'data-memoseq': data.vo.seq
+						})
+					}
+					$('#selectRegClientMemo').val(memo);
+					
+					} else{
+						alert('통신장애입니다.\n다시 시도해주세요.')		
+						$('#insertRegClientModal').modal('hide');		
+					}
+				},
+				error: function(){
+					alert('통신장애입니다.\n다시 시도해주세요.')				
+				}
+			}) //ajax
+		} else {
+			alert('단골/블랙리스트 여부를 체크해주세요.')
+		} 
+	} else{
+		alert('내용을 입력해주세요.');
+	}
+	
+} 
+
+// 상세주문정보 모달에서 단골고객수정
+function updateRegClient(){
+	var memo = $('#selectRegClientMemo').val();
+	if(memo != null && memo.length>0){	
+		if($('.selectFlag:checked').length == 1){
+			var gbFlag = $('.selectFlag:checked').val();
+	$.ajax({
+			type: 'get',
+			url: 'fcclientregupdate',
+			data: {
+				memo: memo,
+				seq: $('#clientPhone').attr('data-memoseq'),
+				gbFlag: gbFlag
+			},
+			success: function(data){
+				if(data.success = "success"){
+				alert('수정이 완료되었습니다.');
+				if(gbFlag == 'G'){
+				$('#clientPhone').css('color','green')
+				} else {
+				$('#clientPhone').css('color','red')
+				}				
+				$('#selectRegClientModal').modal('hide');
+				} else{
+					alert('통신장애입니다.\n다시 시도해주세요.')		
+					$('#selectRegClientModal').modal('hide');	
+				}
+			},
+			error: function(){
+				alert('통신장애입니다.\n다시 시도해주세요.')				
+			}
+		}) //ajax
+		} else {
+			alert('단골/블랙리스트 여부를 체크해주세요.')
+		}
+	} else{
+		alert('내용을 입력해주세요.');
+	}
+}
+
+	
+// 상세주문정보 모달에서 단골고객삭제
+function deleteRegClient(){
+	$.ajax({
+			type: 'get',
+			url: 'fcclientregdelete',
+			data: {
+				seq: $('#clientPhone').attr('data-memoseq')
+			},
+			success: function(data){
+				if(data.success = "success"){
+				alert('삭제가 완료되었습니다.');
+				$('#clientPhone').attr('onclick','javascript: $("#insertRegClientModal").modal("show");')
+				.css('color','black');
+				$('#insertRegClientMemo').val('');	
+				$('#selectRegClientModal').modal('hide');
+				} else{
+					alert('통신장애입니다.\n다시 시도해주세요.')		
+					$('#selectRegClientModal').modal('hide');	
+				}
+			},
+			error: function(){
+				alert('통신장애입니다.\n다시 시도해주세요.')				
+			}
+		}) //ajax	
+}
+
+
+
+
+
+
+
 
 // ============================= 가맹점 홈화면 (현구) =======================================
 

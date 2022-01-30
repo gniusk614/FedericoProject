@@ -13,6 +13,91 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 <script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
 <script src="/federico/resources/myLib/franchise_Script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+<script>
+$(function(){
+	
+	$.ajax({
+		type: 'get',
+		url: 'fcchartsevenday',
+		success: function(data){
+			var chartLabel =[];
+			var chartData =[];
+			var chartColor = [];
+			var borderColor = [];
+			var chartID ="fcLastSevenDaysChart";
+			
+			
+			var data = data.charData;
+			$.each(data, function(index, element){
+				chartLabel.push(element.chartLabel);
+				chartData.push(element.chartCount);
+				var strRGBA = 'rgba(154, 205, 50, 0.3)';
+				var borderRGBA = 'rgb(50, 205, 89)';
+				chartColor.push(strRGBA);
+				borderColor.push(borderRGBA);
+				
+				console.log(element.chartCount);
+				console.log(element.chartLabel);
+			}) //each
+			
+			new Chart(chartID, {
+				type : 'horizontalBar',
+				data : {
+					labels : chartLabel,
+					datasets : [ {
+						label: '매출액',
+						data : chartData,
+						backgroundColor : chartColor,
+						borderColor : borderColor,
+						fill : false,
+						borderWidth: 1
+					} ]
+				},
+				options : {
+					title: {
+						display: true,
+						text: '주간 매출 현황',
+						fontSize: 20,
+						fontStyle: 'bold'
+					},
+					scales: {
+						yAxes:[{
+							barPercentage:0.4
+						}]
+					}
+				}
+			});//그래프				
+				
+			
+			
+			
+			
+			
+			
+		},
+		error: function(){
+			
+			
+			
+		}
+		
+		
+		
+	})//ajax
+	
+
+	
+	
+	
+	
+	
+	
+})//ready
+</script>
+
+
 </head>
 <body>
 <!-- navtop inlcud -->
@@ -75,11 +160,11 @@
 										<td>${vo.memo}</td>
 										<td>${fn:substring(vo.clientPhone,0,3)}-${fn:substring(vo.clientPhone,3,7)}-${fn:substring(vo.clientPhone,7,11)}</td>
 										<td style="padding-top: 4px;">
-											<span class="btn py-0" onclick="showOrderDetail(${vo.orderNumber}, '${vo.clientAddress}')" >
+											<span class="btn py-0" onclick="showOrderDetail(${vo.orderNumber}, '${vo.clientAddress}', '${vo.clientPhone}', '${vo.memo}')">
 											<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" >
 											  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
 											</svg></span></td>																		
-										<td style="width: 10%">${vo.orderDate}</td>
+										<td>${vo.orderDate}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -110,15 +195,10 @@
 
 					</div>
 					<!-- 하단 우측 -->
-					<div class="col-6" style="background-color: blue;">
-						<div class="card-body" style=" height: 600px;">
+					<div class="col-6">
 							<div class="container-fluid px-4">
-								<div class="row">
-									<canvas id="monthChart" class="chartCanvas" width="500" height="400" hidden="hidden"></canvas>
-									<canvas id="dayChart" class="chartCanvas" width="500" height="400" hidden="hidden"></canvas>
-								</div>
+								<canvas id="fcLastSevenDaysChart" class="chartCanvas" ></canvas>
 							</div>
-						</div>						
 					</div>
 			</div>
 		
@@ -136,13 +216,23 @@
 						<!-- "modal-body" -->
 						<div class="modal-body">
 							<!-- table head -->
-							<div class="mb-2">
-								<span class="fw-bold">배송지</span><br>
-								<span id="clientAdrress"></span>
-							</div>
-							<div>
-								<span class="fw-bold">고객 요청사항</span><br>
-								<span id="memo"></span>
+							<div class="row">
+								<div class="col-8">
+									<div class="mb-2">
+										<span class="fw-bold">배송지</span><br>
+										<span id="clientAdrress"></span>
+									</div>
+									<div>
+										<span class="fw-bold">고객 요청사항</span><br>
+										<span id="memo"></span>
+									</div>
+								</div>
+								<div class="col-4">
+									<span class="fw-bold">고객 연락처</span><br>
+									<a href="#" style="text-decoration: none; color: black;">
+										<span id="clientPhone" ></span>
+									</a>
+								</div>
 							</div>
 							<hr>
 							<table class="table">
@@ -176,6 +266,55 @@
 				</div>
 			</div>
 			<!-- 주문상세정보 모달 -->
+		
+			<!-- 고객관리 등록 모달 -->
+			<div class="modal fade " id="insertRegClientModal" tabindex="-1">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">단골,블랙고객 등록</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<!-- "modal-body" -->
+						<div class="modal-body">
+							<input type="checkbox" class="insertFlag" id="insertGood" value="G"><label for="insertGood" style="color: green;">단골</label> &nbsp;&nbsp;
+							<input type="checkbox" class="insertFlag" id="insertBad" value="B"><label for="insertBad" style="color: red;">블랙리스트</label><br>
+							<input type="text" class="input-group" id="insertRegClientMemo" placeholder="메모를 작성하세요.">							
+						</div>
+						<!-- modal-body -->
+						<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" onclick="javascropt: $('#insertRegClientModal').modal('hide')" >닫기</button>&nbsp;&nbsp;
+										<button type="button" class="btn btn-success"  onclick="insertRegClient()">등록</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 고객관리 등록 모달 -->		
+		
+			<!-- 고객관리 조회/수정/삭제 모달 -->
+			<div class="modal fade " id="selectRegClientModal" tabindex="-1">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">단골,블랙고객 조회/수정/삭제</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<!-- "modal-body" -->
+						<div class="modal-body selectFlagParent">
+							<input type="checkbox" class="selectFlag" id="selectGood" value="G"><label for="selectGood" style="color: green;">단골</label> &nbsp;&nbsp;
+							<input type="checkbox" class="selectFlag" id="selectBad" value="B"><label for="selectBad" style="color: red;">블랙리스트</label><br>
+							<input type="text" class="input-group" id="selectRegClientMemo" value="">							
+						</div>
+						<!-- modal-body -->
+						<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" onclick="javascropt: $('#selectRegClientModal').modal('hide')" >닫기</button>&nbsp;&nbsp;
+										<button type="button" class="btn btn-danger"  onclick="deleteRegClient()">삭제</button>&nbsp;&nbsp;
+										<button type="button" class="btn btn-success"  onclick="updateRegClient()">수정</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 고객관리 조회/수정/삭제 모달 -->
 		
 		
 		

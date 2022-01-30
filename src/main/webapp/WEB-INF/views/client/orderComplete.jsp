@@ -28,8 +28,7 @@
 	<fmt:formatDate value="${now}" pattern="HH" var="now_hour"/>
 	<fmt:formatDate value="${now}" pattern="mm" var="now_minute"/>
 	<fmt:parseNumber var="delivery_ms" value="${now_hour*60*60*1000 + now_minute*60*1000 + deliveryTime*60*1000}" />
-	<fmt:formatNumber var="now_HH" value="${delivery_ms/1000/60/60}" pattern="00" />
-	<fmt:parseNumber var="now_hh" value="${now_HH}" integerOnly="true"/>
+	<fmt:parseNumber var="now_hh" value="${delivery_ms/1000/60/60}" integerOnly="true" />
 	<fmt:formatNumber var="now_mm" value="${delivery_ms/1000/60%60}" pattern="00" />
 	<div>
 	</div>
