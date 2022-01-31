@@ -10,6 +10,7 @@ import vo.FcOrderVO;
 import vo.FranchiseVO;
 import vo.HeadOfficeVO;
 import vo.ItemInfoVO;
+import vo.NoticeBoardVO;
 import vo.StaffVO;
 
 public interface HeadOfficeMapper {
@@ -70,6 +71,9 @@ public interface HeadOfficeMapper {
 	
 	int searchFcRows(SearchCriteria cri); // 가맹점정보 Search 결과 Rows 조회
 	
+	int noticeInsert(NoticeBoardVO vo); //공지사항 등록
+	int noticeUpdate(NoticeBoardVO vo); //공지사항 수정
+	int noticeDelete(NoticeBoardVO vo); //공지사항 삭제
 	
 	//=======< 통계 >========
 	//월별통계

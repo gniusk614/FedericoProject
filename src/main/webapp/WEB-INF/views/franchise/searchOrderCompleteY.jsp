@@ -182,9 +182,9 @@ $(function() {
 									<td style="width: 10%">${vo.orderNumber}</td>
 									<td style="width: 30%">${vo.clientAddress}</td>
 									<td style="width: 30%">${vo.memo}</td>
-									<td style="width: 10%">${fn:substring(vo.clientPhone,0,3)}-${fn:substring(vo.clientPhone,3,7)}-${fn:substring(vo.clientPhone,7,10)}</td>
+									<td style="width: 10%">${fn:substring(vo.clientPhone,0,3)}-${fn:substring(vo.clientPhone,3,7)}-${fn:substring(vo.clientPhone,7,11)}</td>
 									<td style="width: 10%; padding-top: 4px;">
-										<span class="btn py-0" onclick="showOrderDetail(${vo.orderNumber},'${vo.clientAddress}')" >
+										<span class="btn py-0" onclick="showOrderDetail(${vo.orderNumber},'${vo.clientAddress}', '${vo.clientPhone}', '${vo.memo}')" >
 										<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16" >
 										  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
 										</svg></span></td>																		

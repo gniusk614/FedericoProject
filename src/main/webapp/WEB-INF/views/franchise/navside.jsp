@@ -98,7 +98,7 @@
 					<div class="collapse" id="collapseLayouts4"
 						aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
-							<a class="nav-link" href="menuList">고객리스트</a>
+							<a class="nav-link" href="fcclientregf">고객리스트</a>
 						</nav>
 					</div>
 				</div>

@@ -3,6 +3,78 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapperInterface.FranchiseMapper">
 
+
+	<!-- 가맹점 단골고객 삭제 -->
+	<delete id="deleteFcClientReg">
+		DELETE FROM FCCLIENTREG WHERE seq = #{seq}
+	</delete>
+
+	<!-- 가맹점 단골고객 수정 -->
+	<update id="updateFcClientReg">
+		UPDATE FCCLIENTREG SET MEMO = #{memo}, gbflag = #{gbFlag} WHERE seq = #{seq}
+	</update>
+
+	<!-- 가맹점 단골고객 조회 - One -->
+	<select id="selectFcClientOne" resultType="vo.FcClientRegVO">
+		SELECT * FROM FCCLIENTREG WHERE 1=1
+		<if test="fcId != null and fcId != ''">
+			AND FCID = #{fcId}
+		</if>
+		<if test="clientPhone != null and clientPhoe != ''">
+			AND CLIENTPHONE = #{clientPhone}
+		</if>
+		<if test="seq != null and seq != ''">
+			AND SEQ = #{seq}
+		</if>
+	</select>
+
+	<!-- 가맹점 단골고객 조회 rowsCount -->
+	<select id="selectFcClientRowsCount" parameterType="vo.FcClientRegVO" resultType="int">
+		SELECT COUNT(*) FROM FCCLIENTREG WHERE FCID = #{vo.fcId}
+		<include refid="fcClientRowsCount"></include>
+	</select>
+
+	<!-- 가맹점 단골고객 조회 Paging -->
+	<select id="selectFcClientAll" resultType="vo.FcClientRegVO">
+		SELECT * FROM FCCLIENTREG WHERE FCID = #{vo.fcId}
+		<include refid="fcClientRowsCount"></include>
+		ORDER BY SEQ DESC
+		OFFSET #{cri.sno}-1 ROWS FETCH NEXT #{cri.rowsPerPage} ROWS ONLY 
+	</select>
+
+	<sql id="fcClientRowsCount" >
+		<if test="cri.keyword != null and cri.keyword != ''">
+			AND MEMO LIKE ('%'||#{cri.keyword}||'%')
+		</if>
+		<if test="vo.gbFlag != null and vo.gbFlag != ''">
+			AND GBFLAG = #{vo.gbFlag}
+		</if>
+	</sql>
+
+	<!-- 가맹점 단골고객등록 -->
+	<insert id="insertFcClient">
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT NVL(MAX(SEQ),0)+1 FROM FCCLIENTREG
+		</selectKey>
+		INSERT INTO FCCLIENTREG 
+		VALUES(#{seq}, #{fcId}, #{clientPhone}, #{memo}, #{gbFlag})
+	</insert>
+
+
+	<!-- 가맹점 오늘포함 이전 7일간 일별 매출 -->
+	<select id="fcLastSevenDaysSalesPerDay" resultType="vo.ChartVO">
+		SELECT to_char(i.orderdate, 'MM/DD') as chartLabel, SUM(d.menuqty * m.menuprice) as chartCount
+		FROM (SELECT TRUNC(SYSDATE-6 + LEVEL -1) orderdate
+		            FROM dual
+      				<![CDATA[  CONNECT BY LEVEL < 8) i  ]]>
+		LEFT JOIN orderlist o ON o.fcid = #{value} AND o.completeyn = 'Y'
+		    AND to_char(o.orderdate,'yymmdd') = to_char(i.orderdate,'yymmdd')
+		LEFT JOIN orderdetaillist d ON o.ordernumber = d.ordernumber
+		LEFT JOIN menuinfo m ON m.menuindex = d.menuindex
+		GROUP BY i.orderdate
+		ORDER BY i.orderdate
+	</select>
+
 	<!-- 가맹점 전일 매출 -->
 	<select id="fcYesterdaySales" resultType="vo.ChartVO">
 		SELECT sum(d.menuqty * m.menuprice) chartCount
@@ -62,9 +134,8 @@
 	
 	<!-- 가맹점 발주내역 서치,페이징 -->
 	<select id="searchItemOrderListFc" parameterType="hashmap" resultType="vo.FcOrderVO" >
-		
-		SELECT o.fcorderseq, o.fcid, o.fcorderdate, o.fcorderflag, sum(i.itemprice*d.itemqty) sumPrice
-		FROM fcorder o 
+		SELECT o.fcorderseq, o.fcid, to_char(o.fcorderdate, 'YY/MM/DD hh24:mi') as fcorderdate, o.fcorderflag, sum(i.itemprice*d.itemqty) sumPrice
+		FROM fcorder o 	
 		LEFT JOIN fcorderdetail d ON o.fcorderseq = d.fcorderseq 
 		LEFT JOIN iteminfo i ON d.itemindex = i.itemindex
 		<include refid="fcItemOrderSearch"></include>
@@ -86,7 +157,7 @@
 					WHERE 1=1
 				</if>
 			</when>	
-			<when test="cri.searchType == 'orderDate'.toString()">
+			<when test="cri.searchType == 'orderDate'.toString() and minDate != '' and maxDate != ''">
 				<![CDATA[ WHERE fcorderdate <= TO_DATE(#{maxDate},'YY/MM/DD')+INTERVAL '1' DAY AND fcorderDate >= TO_DATE(#{minDate},'YY/MM/DD') ]]>
 			</when>
 			<otherwise>WHERE 1=1</otherwise>
