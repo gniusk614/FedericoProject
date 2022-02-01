@@ -358,7 +358,7 @@ function fcincheck() {
 }// inCheck
 // ==========================< 게시판 글 업로드 >==========================================
 
-
+//글 업로드
 function boardUpload(){
 	var title = $('#title').val();
 	var contents = CKEDITOR.instances['content'].getData();
@@ -375,7 +375,7 @@ function boardUpload(){
 		alert('글 내용을 입력해주세요.');
 		return false;
 	}
-	if (confirm("공지사항을 수정하시겠습니까?") == true) {
+	if (confirm("공지사항을 등록하시겠습니까?") == true) {
 		$.ajax({
 			type : "post",
 			url : "noticeInsert",
@@ -399,6 +399,8 @@ function boardUpload(){
 		})
 	}
 }
+
+//글 삭제
 function noticeDelete(seq){
 	if(confirm("삭제하시겠습니까?")==true){
 		$.ajax({
@@ -418,6 +420,8 @@ function noticeDelete(seq){
 		})
 	}
 }
+
+//글 수정
 function boardUpdate(){
 	var seq = $('#seq').val();
 	var title = $('#title').val();
