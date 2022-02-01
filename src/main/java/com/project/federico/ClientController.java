@@ -64,6 +64,9 @@ public class ClientController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
+	
+
+	
 	// 결제완료폼 이동 + 주문정보 인서트
 	@RequestMapping(value = "/ordercomplete")
 	public ModelAndView ordercomplete(ModelAndView mv, HttpServletRequest request, HttpSession session, ClientVO clientVo) {

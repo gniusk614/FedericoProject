@@ -2,6 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapperInterface.FranchiseMapper">
+	
+	<!-- 시간대별 매출 where orderdate and fcid and 전체 -->
+	<select id="selectFCStatsTimeSales" resultType="vo.ChartVO">
+		SELECT I.ORDERTIME chartLabel, SUM(M.MENUPRICE*D.MENUQTY) chartCount
+		<![CDATA[FROM (SELECT LEVEL-1 ORDERTIME FROM DUAL CONNECT BY LEVEL <25) I]]>
+		LEFT JOIN ORDERLIST O ON TO_CHAR(O.ORDERDATE,'HH24') = I.ORDERTIME 
+		<if test="selectDate != null and selectDate != ''">
+			AND TO_CHAR(O.ORDERDATE, 'YYMMDD') = #{selectDate} 
+		</if>
+		<if test="fcId != null and fcId != ''">
+			AND FCID=#{fcId}
+		</if>
+		LEFT JOIN ORDERDETAILLIST D ON O.ORDERNUMBER = D.ORDERNUMBER
+		LEFT JOIN MENUINFO M ON M.MENUINDEX = D.MENUINDEX
+		GROUP BY I.ORDERTIME
+		ORDER BY I.ORDERTIME	
+	</select>
+	
+	
+	
+	<!-- 특정 월의 일자별 매출 WHERE FCID -->
+	<select id="selectFcStatsMonthlySales" resultType="vo.ChartVO">
+		SELECT I.ORDERDATE as chartLabel, SUM(M.MENUPRICE*D.MENUQTY) as chartCount
+		FROM (SELECT TO_CHAR(TRUNC(TO_DATE(#{baseDay}),'MM'),'YYYYMMDD')+LEVEL-1 ORDERDATE
+		        FROM DUAL
+		<![CDATA[CONNECT BY LEVEL < TO_NUMBER(TO_CHAR(LAST_DAY(TO_DATE(#{baseDay})),'DD'))+1) I]]>       
+		LEFT JOIN ORDERLIST O ON TO_CHAR(O.ORDERDATE,'YYYYMMDD') = I.ORDERDATE 
+		<if test="fcId != null and fcId != ''">
+			AND FCID = #{fcId}
+		</if>
+		LEFT JOIN ORDERDETAILLIST D ON O.ORDERNUMBER = D.ORDERNUMBER
+		LEFT JOIN MENUINFO M ON M.MENUINDEX = D.MENUINDEX
+		GROUP BY I.ORDERDATE
+		ORDER BY I.ORDERDATE
+	</select>
 
 
 	<!-- 가맹점 단골고객 삭제 -->
@@ -20,7 +55,7 @@
 		<if test="fcId != null and fcId != ''">
 			AND FCID = #{fcId}
 		</if>
-		<if test="clientPhone != null and clientPhoe != ''">
+		<if test="clientPhone != null and clientPhone != ''">
 			AND CLIENTPHONE = #{clientPhone}
 		</if>
 		<if test="seq != null and seq != ''">
@@ -76,7 +111,7 @@
 	</select>
 
 	<!-- 가맹점 전일 매출 -->
-	<select id="fcYesterdaySales" resultType="vo.ChartVO">
+	<select id="fcYesterdaySales" parameterType="string" resultType="vo.ChartVO">
 		SELECT sum(d.menuqty * m.menuprice) chartCount
 		FROM franchise f
 		JOIN orderlist o ON f.fcid = o.fcid

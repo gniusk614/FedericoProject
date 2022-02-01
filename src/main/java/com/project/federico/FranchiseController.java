@@ -1,6 +1,8 @@
 package com.project.federico;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +49,93 @@ public class FranchiseController {
 	@Autowired
 	HeadOfficeServiceImpl headOfficeService;
 
+	
+	//시간대별 매출 where orderdate and fcid and 전체
+	@RequestMapping(value = "/statstimesales")
+	public ModelAndView statsTimeSales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
+		if(session.getAttribute("fcId") != null) {
+			List<ChartVO> list = new ArrayList<ChartVO>();
+			Map<String, Object> params = new HashMap<String, Object>();
+			String fcId = (String)session.getAttribute("fcId");
+		
+			log.info(request.getParameter("selectDate"));
+			String selectDate;
+			if("".equals(request.getParameter("selectDate"))) {
+				selectDate = null;
+			} else {
+				selectDate = request.getParameter("selectDate");
+				selectDate = selectDate.replaceAll("/", "");
+				log.info(selectDate);
+			}
+			
+			params.put("fcId", fcId);
+			params.put("selectDate", selectDate);
+			list = service.selectFCStatsTimeSales(params);
+			if(list != null && list.size()>0) {
+				if(selectDate != null) {
+					selectDate = selectDate.substring(0,2)+"/"+selectDate.substring(2,4)+"/"+selectDate.substring(4);
+				}
+				mv.addObject("chartData",list);
+				mv.addObject("selectDate", selectDate);
+				mv.addObject("success","success");
+			} 
+			
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
+	// 가맹점별 월별 매출 조회 - parameter로 전체조회도 가능
+	@RequestMapping(value = "/statsmonthlysales")
+	public ModelAndView statsMonthlySales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
+		if(session.getAttribute("fcId") != null) {
+			List<ChartVO> list = new ArrayList<ChartVO>();
+			Map<String, Object> params = new HashMap<String, Object>();
+			String fcId = (String)session.getAttribute("fcId");
+			
+			//기준일구하기
+			String baseDay;
+			if(request.getParameter("baseDay") == null) {
+				SimpleDateFormat format = new SimpleDateFormat("YYYYMMdd");
+				Date today = new Date();
+				baseDay = format.format(today);
+			} else {
+				baseDay = request.getParameter("baseDay");
+			}
+			
+			params.put("fcId", fcId);
+			params.put("baseDay", baseDay);
+			list = service.selectFcStatsMonthlySales(params);
+			if(list != null && list.size()>0) {
+				mv.addObject("chartData",list);
+				mv.addObject("success","success");
+			} 
+			
+			mv.setViewName("jsonView");
+		} 
+		return mv;
+	}
+	
+	
+	
+	// 매출조회페이지 이동
+	@RequestMapping(value = "/stats")
+	public ModelAndView stats(ModelAndView mv, HttpSession session, HttpServletRequest request) {
+		if(session.getAttribute("fcId") != null) {
+			mv.setViewName("franchise/stats");
+			
+			if(request.getParameter("key") == null) {
+				mv.addObject("key", null);
+			} else if("2".equals(request.getParameter("key"))) {
+				mv.addObject("key", "2");
+			}
+		} else {
+			mv.setViewName("franchise/fcLoginForm");
+		}
+		
+		return mv;
+	}
 	
 	// 가맹점 고객관리 조회페이지
 	@RequestMapping(value = "/fcclientregf")
