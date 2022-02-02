@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j;
 import mapperInterface.HeadOfficeMapper;
 import paging.SearchCriteria;
 import vo.ChartVO;
+import vo.EventBoardVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -225,5 +226,20 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 	public List<ChartVO> dayChart() {
 		return dao.dayChart();
 	}
-
+	
+	@Override
+	public int eventInsert(EventBoardVO vo) {
+		return dao.eventInsert(vo);
+	}
+	
+	@Override
+	public int eventUpdate(EventBoardVO vo) {
+		return dao.eventUpdate(vo);
+	}
+	
+	@Override
+	public int eventDelete(EventBoardVO vo) {
+		return dao.eventDelete(vo);
+	}
+	
 }

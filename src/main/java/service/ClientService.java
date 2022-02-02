@@ -5,6 +5,7 @@ import java.util.List;
 import paging.SearchCriteria;
 import vo.CartVO;
 import vo.ClientVO;
+import vo.EventBoardVO;
 import vo.NoticeBoardVO;
 import vo.ComplainBoardVO;
 import vo.ComplainCommentVO;
@@ -29,6 +30,10 @@ public interface ClientService {
 	NoticeBoardVO selectDetailNoticeBoard(NoticeBoardVO vo);//공지사항 Detail조회
 	int countUpNoticeBoard(NoticeBoardVO vo); //공지사항 
 	
+
+	
+	
+
 	int complainInsert(ComplainBoardVO vo); //컴플레인 등록
 	List<ComplainBoardVO> searchComplainBoard(SearchCriteria cri); //컴플레인 리스트 출력
 	int searchComplainBoardRows(SearchCriteria cri);//row조회
@@ -37,4 +42,9 @@ public interface ClientService {
 	int complainCommentInsert(ComplainCommentVO vo); //컴플레인 댓글입력
 	List<ComplainCommentVO> selectListComplainComment(ComplainCommentVO vo); //컴플레인 댓글출력
 	int deleteComplainComment(ComplainCommentVO vo); //컴플레인 댓글삭제
+	
+	/* ============================={ 이벤트 페이지 }================================ */
+	List<EventBoardVO> searchEventBoard(SearchCriteria cri);// 이벤트 게시판 출력
+	int searchEventBoardRows(SearchCriteria cri); //이벤트 게시판 search 결과 rows 조회
+	EventBoardVO selectDetailEventBoard(EventBoardVO vo);// 이벤트 게시판 Detail조회
 }

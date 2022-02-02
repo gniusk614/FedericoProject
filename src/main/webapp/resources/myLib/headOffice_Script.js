@@ -1333,6 +1333,107 @@ function fcOrderFlagUpdate(flag) {
 		}//confirm
 	}//.click		
 
+// ==========================< 이벤트 게시판 글 등록/수정/삭제 >=================================
+
+// 이벤트 등록
+function eventUpload(){
+	console.log('안녕');
+	var title = $('#title').val();
+	var contents = CKEDITOR.instances['content'].getData();
+	if(title.length<1){
+		alert('제목을 입력해주세요.');
+		return false;
+	}
+	
+	if(contents.length<1){
+		alert('글 내용을 입력해주세요.');
+		return false;
+	}
+	if (confirm("이벤트를 등록하시겠습니까?") == true) {
+		$.ajax({
+			type : "post",
+			url : "eventInsert",
+			data : {
+				title : title,
+				content : contents
+			},
+			success : function(data) {
+				if (data.success != null) {
+					alert('이벤트 등록에 성공했습니다.');
+					location.href = 'eventBoardf';
+				} else {
+					alert('이벤트 등록에 실패했습니다.');
+				}
+			},
+			error : function() {
+				alert('서버장애입니다. 잠시후 다시 이용해주세요.');
+			}
+		})
+	}
+}
+
+// 이벤트 수정
+function eventUpdate(){
+	var eventSeq = $('#eventSeq').val();
+	var title = $('#title').val();
+	var contents = CKEDITOR.instances['content'].getData();
+	if(title.length<1){
+		alert('제목을 입력해주세요.');
+		$('#title').focus();
+		return false;
+	}
+	if(contents.length<1){
+		alert('글 내용을 입력해주세요.');
+		CKEDITOR.instances['content'].focus();
+		return false;
+	}
+	if (confirm("이벤트를 수정하시겠습니까?") == true) {
+		$.ajax({
+			type : "post",
+			url : "eventUpdate",
+			data : {
+				seq : evnetSeq,
+				title : title,
+				content : contents
+			},
+			success : function(data) {
+				if (data.success != null) {
+					alert('이벤트 수정에 성공했습니다.');
+					location.href = 'eventDetail?eventSeq='+eventSeq;
+				} else {
+					alert('이벤트 수정에 실패했습니다.');
+				}
+			},
+			error : function() {
+				alert('서버장애입니다. 잠시후 다시 이용해주세요.');
+			}
+		})
+	}
+}
+
+// 이벤트 삭제
+function eventDelete(eventSeq){
+	if(confirm("삭제하시겠습니까?")==true){
+		$.ajax({
+			type:"get",
+			url:"eventDelete?eventSeq="+eventSeq,
+			success: function(data){
+				if(data.success!=null){
+					alert('삭제에 성공했습니다.');
+					location.href= 'eventBoardf';
+				}else{
+					alert('삭제에 실패했습니다.');
+				}
+				
+			},error : function(){
+				alert('서버장애입니다. 잠시후 다시 이용해주세요.');
+			}		
+		})
+	}
+}
+
+
+
 			
 	
 	

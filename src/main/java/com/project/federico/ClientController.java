@@ -2,7 +2,6 @@ package com.project.federico;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,6 +39,7 @@ import service.OrderService;
 import service.SendService;
 import vo.CartVO;
 import vo.ClientVO;
+import vo.EventBoardVO;
 import vo.FranchiseVO;
 import vo.MenuVO;
 import vo.NoticeBoardVO;
@@ -673,7 +673,9 @@ public class ClientController {
 			mv.setViewName("client/csNoticeDetail");
 			return mv;
 		}
-		
+	
+
+
 		//고객의소리 글등록
 		@RequestMapping(value ="/complainInsert")
 		public ModelAndView complainInsert (HttpServletRequest request, ModelAndView mv ,ComplainBoardVO vo) throws IllegalStateException, IOException {	
@@ -686,10 +688,47 @@ public class ClientController {
 				mv.addObject("message", "실패");
 			}
 			mv.setViewName("client/complainInsertComplete");
+
 			return mv;
 		}
 		
+		/* ============================={ 이벤트 페이지 }================================ */
 		
+
+		// 이벤트 게시판 이동
+		@RequestMapping(value = "csEventf")
+		public ModelAndView csEventf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+			cri.setSnoEno();
+			
+			
+			List<EventBoardVO> searchList = clientService.searchEventBoard(cri);			
+			if (searchList != null && searchList.size() > 0) {
+				mv.addObject("eventList", searchList);
+			} else {
+				mv.addObject("message", "출력할 자료가 없습니다.");
+			}
+			
+			
+			
+			pageMaker.setCri(cri);
+			pageMaker.setTotalRowCount(clientService.searchEventBoardRows(cri));
+			
+			mv.setViewName("client/csEvent");
+			return mv;
+		}
 		
+		// 이벤트 게시판 디테일
+		@RequestMapping(value ="/csEventDetail")
+		public ModelAndView csEventDetail (ModelAndView mv, EventBoardVO vo) {					
+			vo = clientService.selectDetailEventBoard(vo);
+			if(vo!=null) {
+				mv.addObject("eventDetail", vo);
+			}else {
+				mv.addObject("message", "출력할 글이 없습니다.");
+			}
+			mv.setViewName("client/csEventDetail");
+			return mv;
+		}
+
 		
 }// clientController

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import paging.SearchCriteria;
 import vo.ChartVO;
+import vo.EventBoardVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -80,6 +81,12 @@ public interface HeadOfficeService {
 	List<ChartVO> monthChart();//월별통계
 	
 	List<ChartVO> dayChart(); //요일별통계
+
+
+	int eventInsert(EventBoardVO vo); // 이벤트 게시판 등록
+	int eventUpdate(EventBoardVO vo); // 이벤트 게시판 수정
+	int eventDelete(EventBoardVO vo); // 이벤트 게시판 삭제
+
 	
 	
 	
