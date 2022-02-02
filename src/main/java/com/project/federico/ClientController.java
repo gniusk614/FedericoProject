@@ -39,6 +39,7 @@ import service.OrderService;
 import service.SendService;
 import vo.CartVO;
 import vo.ClientVO;
+import vo.EventBoardVO;
 import vo.FranchiseVO;
 import vo.MenuVO;
 import vo.NoticeBoardVO;
@@ -645,7 +646,35 @@ public class ClientController {
 			mv.setViewName("client/csNoticeDetail");
 			return mv;
 		}
+	
+		/* ============================={ 이벤트 페이지 }================================ */
 		
+		// 이벤트 게시판 이동
+		@RequestMapping(value = "csEventf")
+		public ModelAndView csEventf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+			cri.setSnoEno();
+			
+			
+			List<EventBoardVO> searchList = clientService.searchEventBoard(cri);			
+			pageMaker.setCri(cri);
+			pageMaker.setTotalRowCount(clientService.searchEventBoardRows(cri));
+			
+			mv.setViewName("client/csEvent");
+			return mv;
+		}
+		
+		// 이벤트 게시판 디테일
+		@RequestMapping(value ="/csEventDetail")
+		public ModelAndView csEventDetail (ModelAndView mv ,EventBoardVO vo) {					
+			vo = clientService.selectDetailEventBoard(vo);
+			if(vo!=null) {
+				mv.addObject("eventDetail", vo);
+			}else {
+				mv.addObject("message", "출력할 글이 없습니다.");
+			}
+			mv.setViewName("client/csEventDetail");
+			return mv;
+		}
 		
 		
 		

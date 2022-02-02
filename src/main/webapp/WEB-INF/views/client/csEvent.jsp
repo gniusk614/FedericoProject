@@ -60,7 +60,7 @@ tbody tr {
 				}); //change
 				// 검색후 요청
 				$('#searchBtn').on( "click", function() {
-							self.location = "cscenterf"
+							self.location = "csEventf"
 									+ "${pageMaker.makeQuery(1)}"
 									+ "&searchType=" + $('#searchType').val()
 									+ '&keyword=' + $('#keyword').val()
@@ -84,24 +84,24 @@ tbody tr {
 			<div class="row mb-5">
 				<div class="col-md-3"></div>
 				<div class="col-md-6" align="center">
-					<h1 class="display-6">고객센터</h1>
+					<h1 class="display-6">이벤트 게시판</h1>
 				</div>
 				<div class="col-md-3"></div>
 			</div>
 			<div class="row justify-content-md-center" style="height: 50px;">
-				<div id="csNotice" class="col-sm-4 checked" align="center"
+				<div id="csEvent" class="col-sm-4 checked" align="center"
 					style="font-size: large; color: black; border-bottom: 2px solid black; cursor: pointer;"
-					onclick="clickEffect('csNotice'); showCsDiv('csNotice');">
-					공지사항</div>
+					onclick="clickEffect('csEvent'); showCsDiv('csEvent');">
+					이벤트 게시판</div>
 				<div id="csComp" class="col-sm-4 checked" align="center"
 					style="font-size: large; color: gray; border-bottom: 1px solid lightgray; cursor: pointer;"
 					onclick="clickEffect('csComp'); showCsDiv('csComp');">
-					고객의소리</div>
+					지난 이벤트 게시판</div>
 			</div>
 			<!-- 컨텐츠 -->
 			<div id="content">
-				<!-- 공지사항 -->
-				<div id="csNoticeBoard" class="container" style="display: block;">
+				<!-- 이벤트 게시판 -->
+				<div id="csEventBoard" class="container" style="display: block;">
 					<div class="row justify-content-md-center mt-1 py-5">
 					
 						<div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
@@ -140,8 +140,6 @@ tbody tr {
 										<tr align="center" style="height: 50px; vertical-align:middle;">
 											<th scope="col" style="width: 100px;">번호</th>
 											<th scope="col" style="width: 500px;">제목</th>
-											<th scope="col" style="width: 200px;">날짜</th>
-											<th scope="col" style="width: 100px;">조회수</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -151,37 +149,13 @@ tbody tr {
 											</tr>
 										</c:if>
 										
-										<c:forEach var="noticeList" items="${noticeList}">
-											<tr onclick="javascript:location.href='csNoticeDetail?seq=${noticeList.seq}'" style="vertical-align:middle; height: 50px; background-color:Gainsboro;" align="left">
-												<td align="center"><b style="color: crimson;">공지</b></td>
-												
-												<fmt:parseDate var="regdate" value="${noticeList.regdate}" pattern="yyyy-MM-dd HH:mm:ss" />
-												<fmt:parseNumber value="${regdate.time/(1000*60*60*24)}" integerOnly="true" var="regdate"></fmt:parseNumber>
-												
-												<td>${noticeList.title}
-												<c:if test="${now-regdate<7}">
-												<b style="font-size:small; color:crimson;">NEW </b></c:if>
-												</td>
-												<td align="center">${noticeList.regdate} </td>
-												<td align="center">${noticeList.cnt}</td>
+										<c:forEach var="eventList" items="${eventList}">
+											<tr onclick="javascript:location.href='csEventDetail?eventSeq=${eventList.eventSeq}'" style="vertical-align:middle; height: 50px; background-color:Gainsboro;" align="left">
+												<td align="center"><b style="color: crimson;">이벤트</b></td>
+												<td>${eventList.title}												
 											</tr>
 										</c:forEach>
-										<c:forEach var="list" items="${boardList}">
-											<tr onclick="javascript:location.href='csNoticeDetail?seq=${list.seq}'" style="vertical-align:middle; height: 50px;">
-												<td align="center">${list.seq}</td>
-												
-												<fmt:parseDate var="regdate" value="${list.regdate}" pattern="yyyy-MM-dd HH:mm:ss" />
-												<fmt:parseNumber value="${regdate.time/(1000*60*60*24)}" integerOnly="true" var="regdate"></fmt:parseNumber>
-												
-												<td>${list.title}
-												<c:if test="${now-regdate<7}">
-												<b style="font-size:small; color: crimson;">NEW</b></c:if>
-												</td> 
-
-												<td align="center">${list.regdate}</td>
-												<td align="center">${list.cnt}</td>
-											</tr>
-										</c:forEach>
+										
 									</tbody>
 								</table>
 							</div>
@@ -190,7 +164,7 @@ tbody tr {
 									<ul class="pagination my">
 										<c:if test="${pageMaker.prev}">
 											<li class="page-item"><a class="page-link"
-												href="cscenterf${pageMaker.searchQuery(pageMaker.spageNo-1)}"
+												href="csEvent${pageMaker.searchQuery(pageMaker.spageNo-1)}"
 												aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 											</a></li>
 										</c:if>
@@ -205,12 +179,12 @@ tbody tr {
 													class="page-link">${i}</a></li>
 											</c:if>
 											<c:if test="${i!=pageMaker.cri.currPage}">
-												<li class="page-item"><a href="cscenterf${pageMaker.searchQuery(i)}">${i}</a></li>
+												<li class="page-item"><a href="csEventf${pageMaker.searchQuery(i)}">${i}</a></li>
 											</c:if>
 										</c:forEach>
 										<c:if test="${pageMaker.next}">
 											<li class="page-item"><a class="page-link"
-												href="cscenterf${pageMaker.searchQuery(pageMaker.epageNo+1)}"
+												href="csEventf${pageMaker.searchQuery(pageMaker.epageNo+1)}"
 												aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 											</a></li>
 										</c:if>
@@ -228,10 +202,10 @@ tbody tr {
 					</div>
 				</div>
 
-				<!-- 고객의 소리 -->
+				<!-- 지난 이벤트 게시판 -->
 				<div id="csCompForm" class="container" style="display: none;">
 					<div class="row justify-content-md-center">
-					고객의 소리입니다.
+					지난 이벤트입니다.
 					</div>
 				</div>
 	</section>

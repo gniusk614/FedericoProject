@@ -120,7 +120,44 @@
 		</when>
 	</choose>
 	</sql>
+	
+	<!-- ============================={ 이벤트 페이지 }================================ -->
+	<!-- searchEventBoardRow -->
+	<select id="searchEventBoardRows" resultType="int">
+		SELECT COUNT(*) FROM EVENTBOARD <include refid="eventSearch"></include>
+	</select>
 
+		<!-- searchEventBoard 서치,페이징 -->
+	<select id="searchEventBoard" resultType="vo.EventBoardVO">
+		SELECT eventSeq, title, hoId, content, startDate, endDate
+		FROM eventBoard <include refid="eventSearch"></include> 
+		ORDER BY eventSeq desc
+		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY
+	</select>
+		
+		<!-- 이벤트 게시판 클릭시 Detail 출력 -->
+	<select id="selectDetailEventBoard" resultType="vo.EventBoardVO">
+		SELECT eventSeq, title, hoId, content, startDate, endDate
+		FROM eventBoard
+		WHERE eventSeq=#{eventSeq}
+	</select>
+	
+	<sql id="eventSearch" >
+		<if test="keyword != null">
+			<bind name="keyVal" value="'%'+keyword+'%'"/>
+		</if>
+	<choose>
+		<when test="searchType == 'title'.toString()">
+			where title LIKE #{keyVal}
+		</when>
+		<when test="searchType == 'content'.toString()">
+			where content LIKE #{keyVal}
+		</when>
+		<when test="searchType == 'titleContent'.toString()">
+			where title LIKE #{keyVal} OR title LIKE #{keyVal}
+		</when>
+	</choose>
+	</sql>
 
 </mapper>
 

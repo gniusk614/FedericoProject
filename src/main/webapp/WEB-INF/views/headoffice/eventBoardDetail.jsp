@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<jsp:useBean id="now" class="java.util.Date" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,18 +35,9 @@
 	color: gray;
 }
 
-.my.pagination > .active > a, 
-.my.pagination > .active > span, 
-.my.pagination > .active > a:hover, 
-.my.pagination > .active > span:hover, 
-.my.pagination > .active > a:focus, 
-.my.pagination > .active > span:focus {
-  background: crimson;
-  border-color: crimson;
+tbody tr {
+	cursor: pointer;
 }
-
-
-
 </style>
 </head>
 <link
@@ -57,25 +50,25 @@
 			location.href = history.go(-1);
 		</script>
 	</c:if>
+	<!-- navtop include -->
+	<%@ include file="navtop.jsp"%>
 
-	<!-- Navigation-->
-	<%@include file="nav.jsp"%>
-	<!-- 본문 시작 -->
-	<section class="container py-5"
-		style="height: auto; min-height: 100%; padding-bottom: 168px;">
+	<!-- layoutSidenav 시작 -->
+	<div id="layoutSidenav">
+		<%@ include file="navside.jsp"%>
 		<div class="container-fluid">
-			<div class="row mb-5">
+			<div class="row mt-5 mb-1">
 				<div class="col-md-3"></div>
 				<div class="col-md-6" align="center">
-					<h1 class="display-6">고객센터</h1>
+					<h1 class="display-6">이벤트 게시판</h1>
 				</div>
 				<div class="col-md-3"></div>
 			</div>
 			<!-- 컨텐츠 -->
 			<div id="content">
-				<!-- 공지사항 -->
-				<div id="csNoticeBoard" class="container" style="display: block;">
-					<div class="row justify-content-md-center mt-5 py-5">
+				<!-- 이벤트 게시판 -->
+				<div id="csEventBoard" class="container" style="display: block;">
+					<div class="row justify-content-md-center py-5">
 						<div class="dataTable-wrapper dataTable-loading no-footer">
 							<div class="dataTable-container"
 								style="border-top: 1px solid black;">
@@ -83,35 +76,33 @@
 									<thead>
 										<tr class="lead"
 											style="font-size: medium; height: 70px; vertical-align: middle;">
-											<td scope="col" style="width: 700px; font-size: x-large; font-weight: bold;">${noticeDetail.title}
+											<td scope="col"
+												style="width: 700px; font-size: x-large; font-weight: bold;">${eventDetail.title}
 											</td>
-											<td scope="col" style="width: 100px; color: gray;">
-												<div style="border-right: 1px solid lightgray;">
-													${noticeDetail.regdate}</div>
-											</td>
-											<td scope="col" style="width: 100px; color: gray;">조회수&nbsp;${noticeDetail.cnt}</td>
+											<td scope="col" style="width: 100px; color: gray;">작성자&nbsp;<b>${eventDetail.hoId}</b></td>
 										</tr>
 									</thead>
 								</table>
-								<div class="row py-3 px-5" style="min-height: 500px; border-bottom: 1px solid black;">
-									<div align="justify"><pre style="font-size: medium;">${noticeDetail.content}</pre></div>
+								<div class="row py-3 px-5"
+									style="min-height: 500px; border-bottom: 1px solid black;" align="justify">
+									<div>
+										<pre style="font-size: medium;">${eventDetail.content}</pre>
+									</div>
 								</div>
 								<div class="row mt-4 px-3">
 									<div class="col-6" align="left">
-									<button class="btn btn-outline-danger" style="width: 100px;"
-									onclick="javascript:location.href='cscenterf'">목록</button>
+										<button class="btn btn-outline-primary" style="width: 100px;"
+											onclick="javascript:location.href='eventBoardf'">목록</button>
 									</div>
 									<div class="col-6" align="right">
-									<button class="btn btn-outline-danger" style="width: 100px;"
-									onclick="javascript:location.href='csNoticeDetail?seq=${noticeDetail.seq-1}'">
-										<i class="bi bi-caret-left-fill"></i>
-										이전글
-									</button>
-									<button class="btn btn-outline-danger" style="width: 100px;"
-									onclick="javascript:location.href='csNoticeDetail?seq=${noticeDetail.seq+1}'">
-										다음글
-										<i class="bi bi-caret-right-fill"></i>
-									</button>
+										<button class="btn btn-outline-primary" style="width: 100px;"
+											onclick="javascript:location.href='eventUpdatef?eventSeq=${eventDetail.eventSeq}'">
+											수정
+										</button>
+										<button class="btn btn-outline-primary" style="width: 100px;"
+											onclick="eventDelete('${eventDetail.eventSeq}')">
+											삭제
+										</button>
 									</div>
 								</div>
 							</div>
@@ -119,28 +110,18 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- footer include -->
+			<div><%@ include file="footer.jsp"%></div>
 		</div>
-
-				<!-- 고객의 소리 -->
-				<div id="csCompForm" class="container" style="display: none;">
-					<div class="row justify-content-md-center">
-					고객의 소리입니다.
-					</div>
-				</div>
-	</section>
-	<!-- footer include -->
-	<%-- <%@ include file="footer.jsp"%> --%>
-
-
-
-
-	
 	</div>
+
+
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 		crossorigin="anonymous"></script>
 	<script src="/federico/resources/js/scripts.js"></script>
-	<script src="/federico/resources/myLib/client_Script.js"></script>
+	<script src="/federico/resources/myLib/headOffice_Script.js"></script>
 </body>
 </html>
