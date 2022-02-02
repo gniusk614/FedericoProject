@@ -2,6 +2,7 @@ package com.project.federico;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -45,6 +47,7 @@ import vo.NoticeBoardVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
 import vo.StaffVO;
+import vo.ComplainBoardVO;
 
 @RequestMapping(value = "/client")
 @Log4j
@@ -646,6 +649,20 @@ public class ClientController {
 			return mv;
 		}
 		
+		//고객의소리 글등록
+		@RequestMapping(value ="/complainInsert")
+		public ModelAndView complainInsert (HttpServletRequest request, ModelAndView mv ,ComplainBoardVO vo) throws IllegalStateException, IOException {	
+			
+			
+			
+			if(clientService.complainInsert(vo)>0) {
+				mv.addObject("success", "성공");
+			}else {
+				mv.addObject("message", "실패");
+			}
+			mv.setViewName("client/complainInsertComplete");
+			return mv;
+		}
 		
 		
 		

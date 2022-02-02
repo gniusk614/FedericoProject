@@ -51,7 +51,7 @@ tbody tr {
 				$('#searchBtn').on(
 						"click",
 						function() {
-							self.location = "noticeBoardf"
+							self.location = "complainBoardf"
 									+ "${pageMaker.makeQuery(1)}"
 									+ "&searchType=" + $('#searchType').val()
 									+ '&keyword=' + $('#keyword').val()
@@ -72,12 +72,12 @@ tbody tr {
 		<%@ include file="navside.jsp"%>
 		<div id="layoutSidenav_content">
 			<!-- 본문 시작 -->
-			<fmt:parseNumber value="${now.time/(1000*60*60*24)}" integerOnly="true" var="now"></fmt:parseNumber>
+			<fmt:formatDate value="${now}" pattern="yyyyMMdd" var="now" />
 			<div class="container-fluid">
 				<div class="row mt-5 mb-1">
 					<div class="col-md-3"></div>
 					<div class="col-md-6" align="center">
-						<h1 class="display-6">공지사항</h1>
+						<h1 class="display-6">고객의 소리</h1>
 					</div>
 					<div class="col-md-3"></div>
 				</div>
@@ -94,7 +94,7 @@ tbody tr {
 										<div class="row">
 											<div class="col-sm-2">
 												<select name="searchType" id="searchType"
-													class="form-select">
+													class="form-select" onchange="changeSearchComplainOption()">
 													<option value="none"
 														<c:out value="${pageMaker.cri.searchType==null ? 'selected':''}"/>>-
 														-</option>
@@ -104,20 +104,50 @@ tbody tr {
 														<c:out value="${pageMaker.cri.searchType=='content' ? 'selected':''}"/>>내용</option>
 													<option value="titleContent"
 														<c:out value="${pageMaker.cri.searchType=='titleContent' ? 'selected':''}"/>>제목+내용</option>
+													<option value="clientName"
+														<c:out value="${pageMaker.cri.searchType=='clientName' ? 'selected':''}"/>>작성자</option>
+													<option value="fcId"
+														<c:out value="${pageMaker.cri.searchType=='fcId' ? 'selected':''}"/>>가맹점</option>
+													<option value="clientPhone"
+														<c:out value="${pageMaker.cri.searchType=='clientPhone' ? 'selected':''}"/>>연락처</option>
+													<option value="completeFlag"
+														<c:out value="${pageMaker.cri.searchType=='completeFlag' ? 'selected':''}"/>>처리완료여부</option>
 												</select>
 											</div>
-											<div class="col-sm-3">
-												<input class="form-control mr-1" type="search" id="keyword"
-													placeholder="Search" value="${pageMaker.cri.keyword}">
+
+
+
+											<div class="col-sm-3" id="changeCompleteFinder">
+												<c:if test="${pageMaker.cri.searchType!='completeFlag'}">
+													<input class="form-control mr-1" type="search" id="keyword"
+														placeholder="Search" value="${pageMaker.cri.keyword}">
+													<select class="form-select" id="keywordHide"
+														style="display: none;">
+														<option value="">- -</option>
+														<option value="Y"
+															<c:out value="${pageMaker.cri.keyword=='Y' ? 'selected':''}"/>>Y</option>
+														<option value="N"
+															<c:out value="${pageMaker.cri.keyword=='N' ? 'selected':''}"/>>N</option>
+													</select>
+												</c:if>
+												<c:if test="${pageMaker.cri.searchType=='completeFlag'}">
+													<input class="form-control  mr-1" type="search"
+														id="keywordHide" placeholder="Search"
+														value="${pageMaker.cri.keyword}" style="display: none;">
+													<select class="form-select" id="keyword">
+														<option value="">- -</option>
+														<option value="Y"
+															<c:out value="${pageMaker.cri.keyword=='Y' ? 'selected':''}"/>>Y</option>
+														<option value="N"
+															<c:out value="${pageMaker.cri.keyword=='N' ? 'selected':''}"/>>N</option>
+													</select>
+												</c:if>
+
 											</div>
 											<div class="col-sm-3">
 												<button id="searchBtn" class="btn btn-outline-primary">검색</button>
 											</div>
-											<div class="col-sm-4 px-5" align="right">
-												<button id="insertBtn" class="btn btn-primary" onclick="javaScript:location.href='noticeInsertf'">글쓰기</button>
-											</div>
 										</div>
-									</div>
 								</div>
 								<div class="row mb-3">
 									<div class="col lead px-3" style="font-size: medium;">
@@ -131,10 +161,12 @@ tbody tr {
 											<tr align="center"
 												style="height: 50px; vertical-align: middle;">
 												<th scope="col" style="width: 100px;">번호</th>
-												<th scope="col" style="width: 500px;">제목</th>
-												<th scope="col" style="width: 200px;">날짜</th>
-												<th scope="col" style="width: 100px;">조회수</th>
+												<th scope="col" style="width: 50px;">말머리</th>
+												<th scope="col" style="width: 300px;">제목</th>
 												<th scope="col" style="width: 100px;">작성자</th>
+												<th scope="col" style="width: 100px;">가맹점</th>
+												<th scope="col" style="width: 100px;">날짜</th>
+												<th scope="col" style="width: 100px;">처리상태</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -144,46 +176,28 @@ tbody tr {
 												</tr>
 											</c:if>
 
-											<c:forEach var="noticeList" items="${noticeList}">
-												<tr
-													onclick="javascript:location.href='noticeDetail?seq=${noticeList.seq}'"
-													style="vertical-align: middle; height: 50px; background-color: Gainsboro;"
-													align="left">
-													<td align="center"><b class="text-primary">공지</b></td>
-
-													<fmt:parseDate var="regdate" value="${noticeList.regdate}" pattern="yyyy-MM-dd HH:mm:ss" />
-													<fmt:formatDate value="${regdate}" var="regdateFormat" pattern="yyyy-MM-dd"/>
-													<fmt:parseNumber value="${regdate.time/(1000*60*60*24)}" integerOnly="true" var="regdateTime"></fmt:parseNumber>
-													
-
-													<td>${noticeList.title}<c:if test="${now-regdateTime<7}">
-															<b class="text-primary" style="font-size: small;">NEW</b>
-														</c:if>
-													</td>
-													<td align="center">${regdateFormat}</td>
-													<td align="center">${noticeList.cnt}</td>
-													<td align="center">${noticeList.id}</td>
-												</tr>
-											</c:forEach>
 											<c:forEach var="list" items="${boardList}">
 												<tr
-													onclick="javascript:location.href='noticeDetail?seq=${list.seq}'"
+													onclick="javascript:location.href='complainDetail?seq=${list.seq}'"
 													style="vertical-align: middle; height: 50px;">
 													<td align="center">${list.seq}</td>
+													<td align="center">${list.head}</td>
 
-													<fmt:parseDate var="regdate" value="${list.regdate}" pattern="yyyy-MM-dd HH:mm:ss" />
-													<fmt:formatDate value="${regdate}" var="regdateFormat" pattern="yyyy-MM-dd"/>
-													<fmt:parseNumber value="${regdate.time/(1000*60*60*24)}" integerOnly="true" var="regdateTime"></fmt:parseNumber>
-			
+													<fmt:parseDate var="regdate" value="${list.regdate}"
+														pattern="yyyy-MM-dd" />
+													<fmt:formatDate var="regdate" value="${regdate}"
+														pattern="yyyyMMdd" />
 
-													<td>${list.title}<c:if test="${now-regdateTime<7}">
+													<td>${list.title}<c:if test="${now-regdate<7}">
 															<b class="text-primary" style="font-size: small;">NEW</b>
 														</c:if>
 													</td>
 
-													<td align="center">${regdateFormat}</td>
-													<td align="center">${list.cnt}</td>
-													<td align="center">${list.id}</td>
+													
+													<td align="center">${list.clientName}</td>
+													<td align="center">${list.fcId}</td>
+													<td align="center">${list.regdate}</td>
+													<td align="center">${list.completeFlag}</td>
 												</tr>
 											</c:forEach>
 										</tbody>
@@ -194,7 +208,7 @@ tbody tr {
 										<ul class="pagination my">
 											<c:if test="${pageMaker.prev}">
 												<li class="page-item"><a class="page-link"
-													href="noticeBoardf${pageMaker.searchQuery(pageMaker.spageNo-1)}"
+													href="complainBoardf${pageMaker.searchQuery(pageMaker.spageNo-1)}"
 													aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 												</a></li>
 											</c:if>
@@ -211,12 +225,12 @@ tbody tr {
 												</c:if>
 												<c:if test="${i!=pageMaker.cri.currPage}">
 													<li class="page-item"><a
-														href="noticeBoardf${pageMaker.searchQuery(i)}">${i}</a></li>
+														href="complainBoardf${pageMaker.searchQuery(i)}">${i}</a></li>
 												</c:if>
 											</c:forEach>
 											<c:if test="${pageMaker.next}">
 												<li class="page-item"><a class="page-link"
-													href="noticeBoardf${pageMaker.searchQuery(pageMaker.epageNo+1)}"
+													href="complainBoardf${pageMaker.searchQuery(pageMaker.epageNo+1)}"
 													aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 												</a></li>
 											</c:if>
@@ -243,6 +257,6 @@ tbody tr {
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 		crossorigin="anonymous"></script>
 	<script src="/federico/resources/js/scripts.js"></script>
-	<script src="/federico/resources/myLib/client_Script.js"></script>
+	<script src="/federico/resources/myLib/headOffice_Script.js"></script>
 </body>
 </html>
