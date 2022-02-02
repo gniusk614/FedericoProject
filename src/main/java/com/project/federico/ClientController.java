@@ -45,7 +45,7 @@ import vo.MenuVO;
 import vo.NoticeBoardVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
-import vo.StaffVO;
+import vo.ComplainBoardVO;
 
 @RequestMapping(value = "/client")
 @Log4j
@@ -604,9 +604,36 @@ public class ClientController {
 		}
 		
 		@RequestMapping(value ="/fcSearch")
-		public ModelAndView fcsearch (ModelAndView mv, FranchiseVO vo) {					
+		public ModelAndView fcsearch ( @RequestParam("area") String area,@RequestParam("Depth2") String Depth2,  ModelAndView mv, FranchiseVO vo) {
+			// 여기는 뷰단에서 입력 받은 DATA를 입력.						
+			List<FranchiseVO> listArea =  fcService.selectListbyArea(area);			
+			FranchiseVO listDepth2 =  fcService.selectFcOne(vo);			
 			
-			mv.setViewName("client/fcSearch");
+			if(listArea != null && listArea.equals(vo.getFcArea())) {				
+				if(Depth2.equals(listDepth2.getFcAddress().substring(listDepth2.getFcAddress().indexOf(" ")+1,listDepth2.getFcAddress().indexOf(" ")+4))) {
+					 
+							
+				}// 2nd if
+			}// if
+			
+		
+			
+			
+			/*
+			vo = fcService.selectFcOne(vo);
+			
+			if(vo.getFcAddress()!=null) {
+				mv.addObject("fcaddress", vo);
+				mv.addObject("success","success");				
+				}
+			else {			
+				mv.addObject("success","fail");
+			}
+						
+			mv.setViewName("jsonView");
+			*/
+			mv.setViewName("/client/fcSearch");
+			
 			return mv;
 		}
 		
@@ -647,8 +674,27 @@ public class ClientController {
 			return mv;
 		}
 	
+
+
+		//고객의소리 글등록
+		@RequestMapping(value ="/complainInsert")
+		public ModelAndView complainInsert (HttpServletRequest request, ModelAndView mv ,ComplainBoardVO vo) throws IllegalStateException, IOException {	
+			
+			
+			
+			if(clientService.complainInsert(vo)>0) {
+				mv.addObject("success", "성공");
+			}else {
+				mv.addObject("message", "실패");
+			}
+			mv.setViewName("client/complainInsertComplete");
+
+			return mv;
+		}
+		
 		/* ============================={ 이벤트 페이지 }================================ */
 		
+
 		// 이벤트 게시판 이동
 		@RequestMapping(value = "csEventf")
 		public ModelAndView csEventf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
@@ -665,7 +711,7 @@ public class ClientController {
 		
 		// 이벤트 게시판 디테일
 		@RequestMapping(value ="/csEventDetail")
-		public ModelAndView csEventDetail (ModelAndView mv ,EventBoardVO vo) {					
+		public ModelAndView csEventDetail (ModelAndView mv, EventBoardVO vo) {					
 			vo = clientService.selectDetailEventBoard(vo);
 			if(vo!=null) {
 				mv.addObject("eventDetail", vo);
@@ -675,8 +721,6 @@ public class ClientController {
 			mv.setViewName("client/csEventDetail");
 			return mv;
 		}
-		
-		
-		
+
 		
 }// clientController

@@ -39,7 +39,12 @@ import service.FranchiseService;
 import service.HeadOfficeService;
 import service.MenuService;
 import vo.ChartVO;
+
 import vo.EventBoardVO;
+
+import vo.ComplainBoardVO;
+import vo.ComplainCommentVO;
+
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -721,7 +726,7 @@ public class HeadOfficeController {
 			String realPath = request.getRealPath("/");
 			
 			if(realPath.contains(".eclips."))
-				realPath = "C:/Users/19467/git/FedericoProject/src/main/webapp/resources/uploadImage/menuImage/";
+				realPath = "/Users/gniusk614/Documents/WEBDEVELOP/MTest/TeamProject/FedericoProject/src/main/webapp/resources/uploadImage/menuImage/";
 			else {
 				realPath += "/resources/uploadImage/menuImage/";	
 			}
@@ -780,6 +785,7 @@ public class HeadOfficeController {
 			mv.addObject("success","success");			
 		else
 			mv.addObject("success","fail");				
+		
 		mv.setViewName("jsonView"); 
 		return mv;
 		
@@ -1047,6 +1053,104 @@ public class HeadOfficeController {
 		return mv;
 	}
 	
+
+
+	
+	//고객공지사항 이동
+	@RequestMapping(value = "eventBoardf")
+	public ModelAndView eventBoardf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		cri.setSnoEno();
+		
+		List<EventBoardVO> searchList = cservice.searchEventBoard(cri);
+		if (searchList != null && searchList.size() > 0) {
+			
+			mv.addObject("eventList", searchList);
+		} else {
+			mv.addObject("message", "출력할 자료가 없습니다.");
+		}
+		pageMaker.setCri(cri);
+		pageMaker.setTotalRowCount(cservice.searchNoticeBoardRows(cri));
+		
+		mv.setViewName("headoffice/eventBoard");
+		return mv;
+	}
+
+	//고객공지사항 이동
+	@RequestMapping(value = "complainBoardf")
+	public ModelAndView complainBoardf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		cri.setSnoEno();
+		
+		List<ComplainBoardVO> searchList = cservice.searchComplainBoard(cri);
+		if (searchList != null && searchList.size() > 0) {
+			mv.addObject("boardList", searchList);
+		} else {
+			mv.addObject("message", "출력할 자료가 없습니다.");
+		}
+		pageMaker.setCri(cri);
+		pageMaker.setTotalRowCount(cservice.searchComplainBoardRows(cri));
+		
+		mv.setViewName("headoffice/complainBoard");
+		return mv;
+	}
+	
+	//컴플레인 디테일
+	@RequestMapping(value ="/complainDetail")
+	public ModelAndView complainDetail (ModelAndView mv ,ComplainBoardVO vo, ComplainCommentVO cvo) {	
+		cvo.setComplainBoardSeq(vo.getSeq());
+		
+		List<ComplainCommentVO> list = cservice.selectListComplainComment(cvo);
+		vo = cservice.selectDetailComplainBoard(vo);
+		if(vo!=null) {
+			mv.addObject("complainDetail", vo);
+			mv.addObject("complainComment", list);
+		}else {
+			mv.addObject("message", "출력할 글이 없습니다.");
+		}
+		mv.setViewName("headoffice/complainBoardDetail");
+		return mv;
+	}
+	
+	//컴플레인 완료처리
+	@RequestMapping(value ="/complainComplete")
+	public ModelAndView complainComplete (HttpServletRequest request, ModelAndView mv ,ComplainBoardVO vo) {	
+		
+		if(cservice.complainComplete(vo)>0) {
+			mv.addObject("success", "성공");
+		}else {
+			mv.addObject("message", "실패");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	//컴플레인 댓글달기
+	@RequestMapping(value ="/complainCommentInsert")
+	public ModelAndView complainCommentInsert (HttpServletRequest request, ModelAndView mv ,ComplainCommentVO vo) {	
+		String id = (String) request.getSession().getAttribute("loginID");
+		vo.setHoId(id);
+		
+		if(cservice.complainCommentInsert(vo)>0) {
+			mv.addObject("success", "성공");
+		}else {
+			mv.addObject("message", "실패");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 고객의소리 댓글 삭제
+	@RequestMapping(value = "/commentDelete")
+	public ModelAndView commentDelete(ModelAndView mv, ComplainCommentVO vo) {
+		
+		if (cservice.deleteComplainComment(vo)>0) {
+			mv.addObject("success", "성공");
+		}else {
+			mv.addObject("message", "실패");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
 	/* ============================={ 이벤트 페이지 }================================ */
 	// 이벤트 게시판 글등록
 	@RequestMapping(value ="/eventInsert")
@@ -1098,25 +1202,6 @@ public class HeadOfficeController {
 			mv.addObject("message", "실패");
 		}
 		mv.setViewName("jsonView");
-		return mv;
-	}
-	
-	//고객공지사항 이동
-	@RequestMapping(value = "eventBoardf")
-	public ModelAndView eventBoardf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
-		cri.setSnoEno();
-		
-		List<EventBoardVO> searchList = cservice.searchEventBoard(cri);
-		if (searchList != null && searchList.size() > 0) {
-			
-			mv.addObject("eventList", searchList);
-		} else {
-			mv.addObject("message", "출력할 자료가 없습니다.");
-		}
-		pageMaker.setCri(cri);
-		pageMaker.setTotalRowCount(cservice.searchNoticeBoardRows(cri));
-		
-		mv.setViewName("headoffice/eventBoard");
 		return mv;
 	}
 	

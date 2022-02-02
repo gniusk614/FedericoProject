@@ -466,6 +466,79 @@ function boardUpdate(){
 }
 
 
+//======================< 고객의 소리(광훈) >===============================
+//고객의 소리 완료처리
+function complainComplete(seq){
+	$.ajax({
+		type: "get",
+		url: "complainComplete?seq="+seq,
+		success: function(data){
+			if(data.success!=null){
+				alert('완료처리에 성공했습니다.');
+				location.href='complainBoardf';
+			}else{
+				alert('완료처리에 실패했습니다.');
+			}
+		},error: function(){
+			alert('서버장애입니다. 잠시 후 다시 이용해주세요.')
+		}
+	})
+}
+
+//고객의소리 댓글달기
+function complainCommentInsert(seq){
+	var content = $('textarea#content').val();
+	if (confirm("댓글을 다시겠습니까?") == true) {
+	$.ajax({
+		type: "get",
+		url: "complainCommentInsert",
+		data:{
+			complainBoardSeq : seq,
+			commentContent : content
+		}, success: function(data){
+			if(data.success!=null){
+				alert('댓글입력에 성공했습니다.');
+				$('#comment').load('complainDetail?seq='+seq+' #comment')
+				$('textarea#content').val('');
+			}else{
+				alert('댓글입력에 실패했습니다.');
+			}
+		}, error: function(){
+			alert('서버장애입니다.')
+		}
+	})
+	}
+}
+
+//고객의소리 댓글삭제
+function complainCommentDelete(commentSeq, seq){
+	if (confirm("삭제하시겠습니까?") == true) {
+		$.ajax({
+			type : "get",
+			url : "commentDelete",
+			data : {
+				commentSeq : commentSeq,
+			},
+			success : function(data) {
+				if (data.success != null) {
+					alert('댓글삭제에 성공했습니다.');
+					$('#comment').load(
+							'complainDetail?seq=' + seq + ' #comment')
+				} else {
+					alert('댓글삭제에 실패했습니다.');
+				}
+			},
+			error : function() {
+				alert('서버장애입니다.')
+			}
+		})
+	}
+}
+
+
+
+
+
 
 // ===============< 사원계정생성 스크립트(광훈) >============================
 $(function() {
@@ -688,6 +761,19 @@ function changeSearchFranchiseOption() {
 		$input.css('display', 'block').attr('id', 'keyword');
 	}
 
+}
+function changeSearchComplainOption() {
+	
+	$input = $('#changeCompleteFinder').children('input');
+	$select = $('#changeCompleteFinder').children('select');
+	if ($('#searchType').val() == 'completeFlag') {
+		$input.css('display', 'none').attr('id', 'keywordHide');
+		$select.css('display', 'block').attr('id', 'keyword');
+	} else {
+		$select.css('display', 'none').attr('id', 'keywordHide');
+		$input.css('display', 'block').attr('id', 'keyword');
+	}
+	
 }
 
 // ==========================================================================
@@ -1185,12 +1271,7 @@ function fcOrderFlagUpdate(flag) {
 				$('#upmenuPrice').val(data.menuvo.menuPrice);
 				$('#upbeforemenuImage').attr("src",data.menuvo.menuImage);
 				$('#menuImage').val(data.menuvo.menuImage);
-				console.log("data throw test");
-				console.log("menuIndex =>"+data.menuvo.menuIndex);
-				console.log("menuName =>"+data.menuvo.menuName);
-				console.log("menuIntro =>"+data.menuvo.menuIntro);
-				console.log("menuFlag =>"+data.menuvo.menuFlag);
-				console.log("menuImg =>"+data.menuvo.menuImage);			
+		
 			
 				// when 절로 update 할 것 
 				if(data.menuvo.menuFlag == 'pizza'){
@@ -1228,8 +1309,7 @@ function fcOrderFlagUpdate(flag) {
 			success:function(data){ // 성공하면 아래 작업을 실행한다.
 				if(data.success == 'success'){
 						
-					$('.a'+vsindex).val(data.success);
-														
+					$('.a'+vsindex).val(data.success);														
 					
 					if($('#menulife-btn'+vsindex).text()=='비활성화'){					
 						$('#menulife-btn'+vsindex).text('활성화');
@@ -1238,15 +1318,13 @@ function fcOrderFlagUpdate(flag) {
 						$('#t_menuselect').load('menuList #t_menuselect');
 						
 				   }else{
-						console.log('activity success DB=menuLive : live');
-						
+						console.log('activity success DB=menuLive : live');						
 						$('#menulife-btn'+vsindex).text('비활성화');
 						$('.a'+vsindex).css('text-decoration','none');
 						$('#t_menuselect').load('menuList #t_menuselect');
 						 }
 				}
 			},error:function(){
-				
 				console.log("비활성화 받아오기 실패");
 				alert("비활성화 전송에 실패하였습니다.");
 			}

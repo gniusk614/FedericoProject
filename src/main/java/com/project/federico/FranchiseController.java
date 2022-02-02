@@ -1,10 +1,12 @@
 package com.project.federico;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.log4j.Log4j;
 import net.sf.json.JSONArray;
@@ -363,7 +366,31 @@ public class FranchiseController {
 		return mv;
 	}
 
-	
+	// 로그아웃 (강광훈)
+	@RequestMapping(value = "/logout")
+	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
+			RedirectAttributes rttr) throws ServletException, IOException {
+
+		// 1) request 처리
+		response.setContentType("text/html; charset=UTF-8");
+		HttpSession session = request.getSession(false);
+
+		// ** session 인스턴스 정의 후 삭제하기
+		// => 매개변수: 없거나, true, false
+		// => false : session 이 없을때 null 을 return;
+
+		if (session != null)
+			session.invalidate();
+		String uri = "redirect:/franchise/loginf";
+		rttr.addFlashAttribute("message", "로그아웃 완료");
+
+		// mv.addObject("message","~~~") -> forward
+		// uri = "home" -> forward
+
+		mv.setViewName(uri);
+
+		return mv;
+	} // logout
 	
 	
 		// 로그인폼이동 (김민석)
