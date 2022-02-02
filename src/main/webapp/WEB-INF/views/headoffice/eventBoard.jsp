@@ -142,21 +142,14 @@ tbody tr {
 												</tr>
 											</c:if>
 
-											<c:forEach var="eventList" items="${eventList}">
-												<tr
-													onclick="javascript:location.href='eventDetail?eventSeq=${eventList.eventSeq}'"
-													style="vertical-align: middle; height: 50px; background-color: Gainsboro;"
-													align="left">
-													<td align="center"><b class="text-primary">이벤트 게시판</b></td>
-													<td align="center">${eventList.hoId}</td>
-												</tr>
-											</c:forEach>
+											
 											<c:forEach var="list" items="${eventList}">
 												<tr
 													onclick="javascript:location.href='eventDetail?eventSeq=${list.eventSeq}'"
 													style="vertical-align: middle; height: 50px;">
-													<td align="center">${list.eventSeq}</td>							
-													<td align="center">${list.id}</td>
+													<td align="center">${list.eventSeq}</td>	
+													<td align="center">${list.title}</td>							
+													<td align="center">${list.hoId}</td>
 												</tr>
 											</c:forEach>
 										</tbody>

@@ -702,6 +702,14 @@ public class ClientController {
 			
 			
 			List<EventBoardVO> searchList = clientService.searchEventBoard(cri);			
+			if (searchList != null && searchList.size() > 0) {
+				mv.addObject("eventList", searchList);
+			} else {
+				mv.addObject("message", "출력할 자료가 없습니다.");
+			}
+			
+			
+			
 			pageMaker.setCri(cri);
 			pageMaker.setTotalRowCount(clientService.searchEventBoardRows(cri));
 			

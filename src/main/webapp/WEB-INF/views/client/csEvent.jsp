@@ -150,7 +150,7 @@ tbody tr {
 										</c:if>
 										
 										<c:forEach var="eventList" items="${eventList}">
-											<tr onclick="javascript:location.href='csEventDetail?eventSeq=${eventList.eventSeq}'" style="vertical-align:middle; height: 50px; background-color:Gainsboro;" align="left">
+											<tr onclick="javascript:location.href='csEventDetail?eventSeq=${eventList.eventSeq}'" style="vertical-align:middle; height: 50px;" align="left">
 												<td align="center"><b style="color: crimson;">이벤트</b></td>
 												<td>${eventList.title}												
 											</tr>

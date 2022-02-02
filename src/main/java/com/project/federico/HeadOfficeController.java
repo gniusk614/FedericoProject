@@ -1192,6 +1192,9 @@ public class HeadOfficeController {
 	}
 	
 	
+	
+	
+	
 	// 이벤트 게시판 글 삭제
 	@RequestMapping(value = "/eventDelete")
 	public ModelAndView eventDelete(ModelAndView mv, EventBoardVO vo) {
