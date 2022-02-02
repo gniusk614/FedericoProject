@@ -1,8 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<jsp:useBean id="now" class="java.util.Date" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -69,14 +67,14 @@
 			<div class="row mb-5">
 				<div class="col-md-3"></div>
 				<div class="col-md-6" align="center">
-					<h1 class="display-6">고객센터</h1>
+					<h1 class="display-6">이벤트 게시판</h1>
 				</div>
 				<div class="col-md-3"></div>
 			</div>
 			<!-- 컨텐츠 -->
 			<div id="content">
-				<!-- 공지사항 -->
-				<div id="csNoticeBoard" class="container" style="display: block;">
+				<!-- 이벤트 게시판 -->
+				<div id="csEventBoard" class="container" style="display: block;">
 					<div class="row justify-content-md-center mt-5 py-5">
 						<div class="dataTable-wrapper dataTable-loading no-footer">
 							<div class="dataTable-container"
@@ -85,36 +83,27 @@
 									<thead>
 										<tr class="lead"
 											style="font-size: medium; height: 70px; vertical-align: middle;">
-											<td scope="col" style="width: 700px; font-size: x-large; font-weight: bold;">${noticeDetail.title}
-											</td>
-											<td scope="col" style="width: 100px; color: gray;">
-											<fmt:parseDate var="regdate" value="${noticeDetail.regdate}"
-														pattern="yyyy-MM-dd" />
-													<fmt:formatDate var="regdate" value="${regdate}"
-														pattern="yyyy-MM-dd" />
-												<div style="border-right: 1px solid lightgray;">
-													${regdate}</div>
-											</td>
-											<td scope="col" style="width: 100px; color: gray;">조회수&nbsp;${noticeDetail.cnt}</td>
+											<td scope="col" style="width: 700px; font-size: x-large; font-weight: bold;">${eventDetail.title}
+											</td>											
 										</tr>
 									</thead>
 								</table>
 								<div class="row py-3 px-5" style="min-height: 500px; border-bottom: 1px solid black;">
-									<div align="justify"><pre style="font-size: medium;">${noticeDetail.content}</pre></div>
+									<div align="justify"><pre style="font-size: medium;">${eventDetail.content}</pre></div>
 								</div>
 								<div class="row mt-4 px-3">
 									<div class="col-6" align="left">
 									<button class="btn btn-outline-danger" style="width: 100px;"
-									onclick="javascript:location.href='cscenterf'">목록</button>
+									onclick="javascript:location.href='csEventf'">목록</button>
 									</div>
 									<div class="col-6" align="right">
 									<button class="btn btn-outline-danger" style="width: 100px;"
-									onclick="javascript:location.href='csNoticeDetail?seq=${noticeDetail.seq-1}'">
+									onclick="javascript:location.href='csEventDetail?eventSeq=${eventDetail.eventSeq-1}'">
 										<i class="bi bi-caret-left-fill"></i>
 										이전글
 									</button>
 									<button class="btn btn-outline-danger" style="width: 100px;"
-									onclick="javascript:location.href='csNoticeDetail?seq=${noticeDetail.seq+1}'">
+									onclick="javascript:location.href='csEventDetail?eventSeq=${eventDetail.eventSeq+1}'">
 										다음글
 										<i class="bi bi-caret-right-fill"></i>
 									</button>
@@ -127,10 +116,10 @@
 			</div>
 		</div>
 
-				<!-- 고객의 소리 -->
+				<!-- 지난 이벤트 -->
 				<div id="csCompForm" class="container" style="display: none;">
 					<div class="row justify-content-md-center">
-					고객의 소리입니다.
+					지난 이벤트입니다.
 					</div>
 				</div>
 	</section>

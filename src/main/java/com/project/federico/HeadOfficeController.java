@@ -39,8 +39,12 @@ import service.FranchiseService;
 import service.HeadOfficeService;
 import service.MenuService;
 import vo.ChartVO;
+
+import vo.EventBoardVO;
+
 import vo.ComplainBoardVO;
 import vo.ComplainCommentVO;
+
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -1049,6 +1053,28 @@ public class HeadOfficeController {
 		return mv;
 	}
 	
+
+
+	
+	//고객공지사항 이동
+	@RequestMapping(value = "eventBoardf")
+	public ModelAndView eventBoardf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		cri.setSnoEno();
+		
+		List<EventBoardVO> searchList = cservice.searchEventBoard(cri);
+		if (searchList != null && searchList.size() > 0) {
+			
+			mv.addObject("eventList", searchList);
+		} else {
+			mv.addObject("message", "출력할 자료가 없습니다.");
+		}
+		pageMaker.setCri(cri);
+		pageMaker.setTotalRowCount(cservice.searchNoticeBoardRows(cri));
+		
+		mv.setViewName("headoffice/eventBoard");
+		return mv;
+	}
+
 	//고객공지사항 이동
 	@RequestMapping(value = "complainBoardf")
 	public ModelAndView complainBoardf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
@@ -1125,6 +1151,62 @@ public class HeadOfficeController {
 		return mv;
 	}
 	
+	/* ============================={ 이벤트 페이지 }================================ */
+	// 이벤트 게시판 글등록
+	@RequestMapping(value ="/eventInsert")
+	public ModelAndView eventInsert (HttpServletRequest request, ModelAndView mv ,EventBoardVO vo) {	
+		String id = (String) request.getSession().getAttribute("loginID");
+		vo.setHoId(id);
+		System.out.println(vo.getHoId());
+		
+		
+		if(service.eventInsert(vo)>0) {
+			mv.addObject("success", "성공");
+		}else {
+			mv.addObject("message", "실패");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+
+	// 이벤트 게시판 글 수정 / 폼이동
+	@RequestMapping(value = "/eventInsertf")
+	public ModelAndView eventUpdatef(ModelAndView mv, EventBoardVO vo) {
+	
+		mv.setViewName("headoffice/eventBoardInsert");
+		return mv;
+	}
+	
+	// 이벤트 게시판 글 수정(수정자 ID로 작성자 변경됨)
+	@RequestMapping(value ="/eventUpdate")
+	public ModelAndView eventUpdate (HttpServletRequest request, ModelAndView mv ,EventBoardVO vo) {	
+		String id = (String) request.getSession().getAttribute("loginID");
+		vo.setHoId(id);
+		if(service.eventUpdate(vo)>0) {
+			mv.addObject("success", "성공");
+		}else {
+			mv.addObject("message", "실패");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
+	
+	
+	
+	// 이벤트 게시판 글 삭제
+	@RequestMapping(value = "/eventDelete")
+	public ModelAndView eventDelete(ModelAndView mv, EventBoardVO vo) {
+		
+		if (service.eventDelete(vo)>0) {
+			mv.addObject("success", "성공");
+		}else {
+			mv.addObject("message", "실패");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
 	
 }
 // class

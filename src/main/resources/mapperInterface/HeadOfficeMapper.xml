@@ -346,8 +346,26 @@
 	ORDER BY to_char(orderdate,'d') ASC
 	</select>
 
+	<!-- ============================={ 이벤트 페이지 }================================ -->
+	 <!-- 이벤트 게시판 글 등록 -->
+	<insert id="eventInsert">
+	INSERT INTO EVENTBOARD(eventSeq, title, hoId, content) VALUES((select nvl(max(eventSeq),0)+1 from EVENTBOARD n),
+		#{title}, #{hoId}, #{content})
+	</insert>
 	
-
+	
+	<!-- 이벤트 게시판 글 삭제 -->
+	<delete id="eventDelete">
+	DELETE FROM EVENTBOARD where eventSeq = #{eventSeq}
+	</delete>
+	
+	
+	<!-- 이벤트 게시판 글 수정 -->
+	<insert id="eventUpdate">
+		UPDATE EVENTBOARD 
+		SET title = #{title}, content=#{content}, hoId=#{hoId}
+		WHERE eventSeq = #{eventSeq}
+	</insert>	
 
 
 

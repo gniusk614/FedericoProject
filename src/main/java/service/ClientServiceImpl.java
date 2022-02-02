@@ -10,6 +10,7 @@ import mapperInterface.ClientMapper;
 import paging.SearchCriteria;
 import vo.CartVO;
 import vo.ClientVO;
+import vo.EventBoardVO;
 import vo.NoticeBoardVO;
 import vo.ComplainBoardVO;
 import vo.ComplainCommentVO;
@@ -109,12 +110,16 @@ public class ClientServiceImpl implements ClientService {
 		return dao.countUpNoticeBoard(vo);
 	}
 	
+
+	
+
 	//고객의 소리 등록
 	@Override
 	public int complainInsert(ComplainBoardVO vo) {
 		return dao.complainInsert(vo);
 	}
 	
+
 	//컴플레인 리스트 출력
 	@Override
 	public List<ComplainBoardVO> searchComplainBoard(SearchCriteria cri) {
@@ -153,5 +158,22 @@ public class ClientServiceImpl implements ClientService {
 		return dao.deleteComplainComment(vo);
 	}
 	
+	// 이벤트 게시판 
+	@Override
+	public List<EventBoardVO> searchEventBoard(SearchCriteria cri) {
+		return dao.searchEventBoard(cri);
+	}
+
+	// 이벤트 게시판 출력 결과 rows 조회
+	@Override
+	public int searchEventBoardRows(SearchCriteria cri) {
+		return dao.searchEventBoardRows(cri);
+	}
+	
+	// 이벤트 게시판 Detail조회
+	@Override
+	public EventBoardVO selectDetailEventBoard(EventBoardVO vo) {
+		return dao.selectDetailEventBoard(vo);
+	}
 	
 }

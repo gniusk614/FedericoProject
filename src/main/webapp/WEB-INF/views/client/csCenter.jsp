@@ -361,8 +361,13 @@ tbody tr {
 			</div>
 		</div>
 	</section>
+<<<<<<< HEAD
+	<!-- footer include -->
+	<%-- <%@ include file="footer.jsp"%> --%>
+=======
 	<!-- footer inlcud -->
 	 <%-- <%@ include file="footer.jsp"%>  --%>
+>>>>>>> branch 'develop' of https://github.com/KKKhg/FedericoProject.git
 
 	<!-- 개인정보처리방침 모달  -->
 	<div class="modal fade" id="agreeModal" role="dialog">
