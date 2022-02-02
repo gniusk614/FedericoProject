@@ -606,9 +606,36 @@ public class ClientController {
 		}
 		
 		@RequestMapping(value ="/fcSearch")
-		public ModelAndView fcsearch (ModelAndView mv, FranchiseVO vo) {					
+		public ModelAndView fcsearch ( @RequestParam("area") String area,@RequestParam("Depth2") String Depth2,  ModelAndView mv, FranchiseVO vo) {
+			// 여기는 뷰단에서 입력 받은 DATA를 입력.						
+			List<FranchiseVO> listArea =  fcService.selectListbyArea(area);			
+			FranchiseVO listDepth2 =  fcService.selectFcOne(vo);			
 			
-			mv.setViewName("client/fcSearch");
+			if(listArea != null && listArea.equals(vo.getFcArea())) {				
+				if(Depth2.equals(listDepth2.getFcAddress().substring(listDepth2.getFcAddress().indexOf(" ")+1,listDepth2.getFcAddress().indexOf(" ")+4))) {
+					 
+							
+				}// 2nd if
+			}// if
+			
+		
+			
+			
+			/*
+			vo = fcService.selectFcOne(vo);
+			
+			if(vo.getFcAddress()!=null) {
+				mv.addObject("fcaddress", vo);
+				mv.addObject("success","success");				
+				}
+			else {			
+				mv.addObject("success","fail");
+			}
+						
+			mv.setViewName("jsonView");
+			*/
+			mv.setViewName("/client/fcSearch");
+			
 			return mv;
 		}
 		
