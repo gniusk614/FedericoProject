@@ -141,18 +141,19 @@ align-self: center;
 			  <option value="서울">서울시</option>
 			  <option selected="selected" value="경기">경기도</option>
 			</select>
-			pending Item : 좌표찍기			
 		</div>
 		
 		
 		<div class="col" style="height: 64px;">
-			<select class="form-select form-select-lg" id="Depth2" name="Depth2" aria-label="Default select example">
-				
+			<select class="form-select form-select-lg" id="Depth2"  aria-label="Default select example">
+				<option>지역을 선택하세요.</option>
 			</select>			
 		</div>	
 			
 	</div>
 	
+		
+		
 		
 	<!-- 매장명 -->	
 	<div class="row" id="outer_2" style="display:none; margin-top:50px;">
@@ -172,6 +173,11 @@ align-self: center;
 		pending Item : 클릭시 테두리 색상변경(#DC3545), img 변경=> '현재위치검색', 실시간 현재위치API 연동, 지도연동
 		</div>		
 	</div>	
+	
+	
+	
+	
+	
 	
 	<!-- 지도표시 -->
 	<div class="row" style="display:block; margin-top:40px;">
@@ -248,79 +254,57 @@ function showdiv(id) {
 	
 // 지도의 주소를 가져오라는 요청을 지시할 요청자.
 // 1. 지역명 
-function depth1_change(value){
-	
-	const seoul = ['강남구','강동구','강북구','강서구','관악구','광진구','구로구',
+
+function depth1_change(e){	
+	var seoul = ['강남구','강동구','강북구','강서구','관악구','광진구','구로구',
 		  '금천구','노원구','도봉구','동대문구','동작구','마포구','서대문구',
 		  '서초구','성동구','성북구','송파구','양천구','영등포구','용산구',
 		  '은평구','종로구','중구','중랑구'];
 	
-	const ggd = ['고양시 덕양구','고양시 일산구','과천시','광명시','광주시','구리시','군포시','김포시','남양주시','동두천시','부천시 소사구','부천시 오정구','부천시 원미구','성남시 분당구','성남시 수정구','성남시 중원구','수원시 권선구','수원시 장안구',
-		'수원시 팔달구','시흥시','안산시 단원구','안산시 상록구','안성시','안양시 동안구','안양시 만안구','오산시','용인시','의왕시','의정부시','이천시','파주시','평택시','하남시','화성시','가평군','양주군','양평군','여주군','연천군','포천군'];
+	var ggd = ['고양시 덕양구','고양시 일산구','과천시','광명시','광주시','구리시','군포시',
+		'김포시','남양주시','동두천시','부천시 소사구','부천시 오정구','부천시 원미구','성남시 분당구',
+		'성남시 수정구','성남시 중원구','수원시 권선구','수원시 장안구',
+		'수원시 팔달구','시흥시','안산시 단원구','안산시 상록구','안성시','안양시 동안구',
+		'안양시 만안구','오산시','용인시','의왕시','의정부시','이천시','파주시','평택시',
+		'하남시','화성시','가평군','양주군','양평군','여주군','연천군','포천군'];
 	
+	var target = document.getElementById("Depth2");
+		
+	if(e == "서울")var Depth2 = seoul;	
+	else if(e == "경기") var Depth2 = ggd;
 	
-	if($('#Depth1').val=='서울'){
-		$('#Depth2') = seoul; 
-		console.log("서울")
-	}else if (value == '경기'){
-		$('#Depth2') = ggd; 
-		console.log("경기")
-	}
+	target.options.length = 0;
+	
+	for (x in Depth2) {
+		var option = document.createElement("option");
+		option.value = Depth2[x];
+		option.innerHTML = Depth2[x];
+		target.appendChild(option);
+		
+		$.ajax({
+			
+			type:'post',
+			url:'fcSearch'
+			data:{
+				area = e
+				Depth2 = ${'#Depth2'}.val();
+			}
+			success : function() {
+				
+				
+			}, error : function(){
+				
+				
+			}
+		
+		})// ajax
+		
+	} // for
+		
 	
 }// function
-	
 
-
-
-
-
-
-
-
-/*
-function changeGugun() {
-	console.log("minorcity IO Onchange Success");
-	var minorCity = $('#minorCity').val();
-	var majorCity = $('#majorCity').val();
-	console.log($('#majorCity').val());
-	console.log($('#minorCity').val());
-	var minorCityArr = [];
-	var majorCityArr = [];
-	
-	
-	$.ajax({
-		
-		url :'fcSearch',
-		type:'get',
-		data:{ // to clientcontroller
-			minorCity:minorCity
-			majorCity:majorCity
-		},
-		success:function(resultData){
-			if(resultData.success == 'success'){
-				console.log("지도 불러오기 성공!")
-			}
-			var mnlist = resultData.mnlist;
-			$.each(mnlist,function(FranchiseVO, index){
-				minorCityArr.push(mnlist.minorCity)
-						
-				)
-			})
-			
-			
-			
-		},
-		error:function(errorData){
-			if(resultData.success == 'success'){
-				console.log("지도 불러오기 실패")
-			}
-		}
-		
-	})// ajax
-	
-	
-}// changeMinorCity()
-*/	
+</script>	
 	
 	
 	
@@ -336,7 +320,6 @@ function changeGugun() {
 	
 	
 	
-	</script>
 	
 
 	<!-- Footer-->

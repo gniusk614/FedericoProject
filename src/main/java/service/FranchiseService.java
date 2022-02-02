@@ -1,5 +1,6 @@
 package service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,8 @@ public interface FranchiseService {
 	int updateDeliveryTime(FranchiseVO vo); //배송소요시간 update
 	
 	List<FranchiseVO> selectListbyArea(String area); //지역 가맹점 찾기. 
+	
+	
 	
 	List<FranchiseVO> selectListbyMinorAddress(String minor); // 서울(major) 강남구(minor)
 	
