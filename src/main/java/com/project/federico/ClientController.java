@@ -602,38 +602,33 @@ public class ClientController {
 		}
 		
 		@RequestMapping(value ="/fcSearch")
-		public ModelAndView fcsearch ( @RequestParam("area") String area,@RequestParam("Depth2") String Depth2,  ModelAndView mv, FranchiseVO vo) {
-			// 여기는 뷰단에서 입력 받은 DATA를 입력.						
-			List<FranchiseVO> listArea =  fcService.selectListbyArea(area);			
-			FranchiseVO listDepth2 =  fcService.selectFcOne(vo);			
+		public ModelAndView fcsearch (
+				//@RequestParam("area") String area,
+				//@RequestParam("address") String address,
+			ModelAndView mv, FranchiseVO vo, HttpServletRequest request) {
+			// 여기는 뷰단에서 입력 받은 DATA를 입력.
 			
-			if(listArea != null && listArea.equals(vo.getFcArea())) {				
-				if(Depth2.equals(listDepth2.getFcAddress().substring(listDepth2.getFcAddress().indexOf(" ")+1,listDepth2.getFcAddress().indexOf(" ")+4))) {
-					 
-							
-				}// 2nd if
-			}// if
+			//List<FranchiseVO> listArea =  fcService.selectListbyArea(area);			
+			//List<FranchiseVO> listDepth2 = fcService.selectListbyAddress(address);			
+			Map<String, Object> params = new HashMap<String, Object>();
+					
 			
-		
+			params.put("Depth1",request.getParameter("Depth1")); // ajax에서 요청 날리면 얘가 받는다.
+			params.put("Depth2",request.getParameter("Depth2"));
+				//request가 해주는 역할 공부하기. 서블릿과 함께	
+			List<FranchiseVO> list = fcService.selectFcAddress(params);
 			
+			if(list != null) {
 			
-			/*
-			vo = fcService.selectFcOne(vo);
-			
-			if(vo.getFcAddress()!=null) {
-				mv.addObject("fcaddress", vo);
-				mv.addObject("success","success");				
-				}
-			else {			
-				mv.addObject("success","fail");
-			}
-						
-			mv.setViewName("jsonView");
-			*/
-			mv.setViewName("/client/fcSearch");
-			
+						mv.addObject("fcaddress", list);
+						mv.addObject("success","success");				
+			}else {
+				mv.addObject("success","fail");					
+			}			
+				mv.setViewName("jsonView");						 
+			// if
 			return mv;
-		}
+			}
 		
 		
 		//고객센터이동

@@ -145,7 +145,7 @@ align-self: center;
 		
 		
 		<div class="col" style="height: 64px;">
-			<select class="form-select form-select-lg" id="Depth2"  aria-label="Default select example">
+			<select class="form-select form-select-lg" id="Depth2"  aria-label="Default select example" onchange="depth2_change(value)">
 				<option>지역을 선택하세요.</option>
 			</select>			
 		</div>	
@@ -280,47 +280,55 @@ function depth1_change(e){
 		option.value = Depth2[x];
 		option.innerHTML = Depth2[x];
 		target.appendChild(option);
-		
-		$.ajax({
-			
-			type:'post',
-			url:'fcSearch'
-			data:{
-				area = e
-				Depth2 = ${'#Depth2'}.val();
-			}
-			success : function() {
-				
-				
-			}, error : function(){
-				
-				
-			}
-		
-		})// ajax
-		
 	} // for
-		
-	
+
 }// function
 
-</script>	
+function depth2_change(e){	
+	
+	var Depth2 = e;
 	
 	
+	$.ajax ({
+		
+		type : get,
+		url : fcSerach,
+		data : {
+			Depth1 : ${'#Depth1'}.val() ,
+			Depth2 : ${'#Depth2'}.val()
+		},
+		success : function(data){
+			
+			console.log(data);
+			
+			if(data.success=='success'){
+				console.log(data.fcaddress);
+				// java의 컨트롤러에서 넘어온 list의 객체는 바로 js의 배열로 안들어간다.
+				// 그래서 리스트 -> js배열화 해줌.
+				var fcaddressList = data.fcaddress;
+				const listDepth2 = [];
+				
+				for(var i = 0; i <fcaddressList.length ; i++){
+				listDepth2.push(fcaddressList[i]);
+				console.log(listDepth2);
+				}
+				
+			}else {
+				
+				alert('해당 지역에 가맹점이 없습니다.')
+			}
+			
+		},error : function(){
+			alert("통신 오류")
+		}
+		
+	})//ajax
 	
 	
+}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+</script>		
 
 	<!-- Footer-->
 	<%@include file="footer.jsp"%>

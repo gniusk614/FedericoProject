@@ -43,9 +43,7 @@ public interface FranchiseService {
 	
 	List<FranchiseVO> selectListbyArea(String area); //지역 가맹점 찾기. 
 	
-	
-	
-	List<FranchiseVO> selectListbyMinorAddress(String minor); // 서울(major) 강남구(minor)
+	List<FranchiseVO> selectFcAddress(Map<String, Object> params); // 주소컬럼 공급 메소드
 	
 	List<FranchiseVO> selectFc(); //가맹점정보 모두 불러오기
 	

@@ -573,7 +573,7 @@ public class HeadOfficeController {
 	
 
 	
-	//============================Menu=======================
+	//============================Menu 민석=======================
 	@RequestMapping(value = "/menuList")
 	public ModelAndView menuList(ModelAndView mv,MenuVO vo,
 			SearchCriteria cri,PageMaker pageMaker) {
