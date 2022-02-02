@@ -2,6 +2,7 @@ package com.project.federico;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -45,6 +47,7 @@ import vo.NoticeBoardVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
 import vo.StaffVO;
+import vo.ComplainBoardVO;
 
 @RequestMapping(value = "/client")
 @Log4j
@@ -615,9 +618,36 @@ public class ClientController {
 		}
 		
 		@RequestMapping(value ="/fcSearch")
-		public ModelAndView fcsearch (ModelAndView mv, FranchiseVO vo) {					
+		public ModelAndView fcsearch ( @RequestParam("area") String area,@RequestParam("Depth2") String Depth2,  ModelAndView mv, FranchiseVO vo) {
+			// 여기는 뷰단에서 입력 받은 DATA를 입력.						
+			List<FranchiseVO> listArea =  fcService.selectListbyArea(area);			
+			FranchiseVO listDepth2 =  fcService.selectFcOne(vo);			
 			
-			mv.setViewName("client/fcSearch");
+			if(listArea != null && listArea.equals(vo.getFcArea())) {				
+				if(Depth2.equals(listDepth2.getFcAddress().substring(listDepth2.getFcAddress().indexOf(" ")+1,listDepth2.getFcAddress().indexOf(" ")+4))) {
+					 
+							
+				}// 2nd if
+			}// if
+			
+		
+			
+			
+			/*
+			vo = fcService.selectFcOne(vo);
+			
+			if(vo.getFcAddress()!=null) {
+				mv.addObject("fcaddress", vo);
+				mv.addObject("success","success");				
+				}
+			else {			
+				mv.addObject("success","fail");
+			}
+						
+			mv.setViewName("jsonView");
+			*/
+			mv.setViewName("/client/fcSearch");
+			
 			return mv;
 		}
 		
@@ -658,6 +688,20 @@ public class ClientController {
 			return mv;
 		}
 		
+		//고객의소리 글등록
+		@RequestMapping(value ="/complainInsert")
+		public ModelAndView complainInsert (HttpServletRequest request, ModelAndView mv ,ComplainBoardVO vo) throws IllegalStateException, IOException {	
+			
+			
+			
+			if(clientService.complainInsert(vo)>0) {
+				mv.addObject("success", "성공");
+			}else {
+				mv.addObject("message", "실패");
+			}
+			mv.setViewName("client/complainInsertComplete");
+			return mv;
+		}
 		
 		
 		

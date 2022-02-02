@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<jsp:useBean id="now" class="java.util.Date" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -86,8 +88,12 @@
 											<td scope="col" style="width: 700px; font-size: x-large; font-weight: bold;">${noticeDetail.title}
 											</td>
 											<td scope="col" style="width: 100px; color: gray;">
+											<fmt:parseDate var="regdate" value="${noticeDetail.regdate}"
+														pattern="yyyy-MM-dd" />
+													<fmt:formatDate var="regdate" value="${regdate}"
+														pattern="yyyy-MM-dd" />
 												<div style="border-right: 1px solid lightgray;">
-													${noticeDetail.regdate}</div>
+													${regdate}</div>
 											</td>
 											<td scope="col" style="width: 100px; color: gray;">조회수&nbsp;${noticeDetail.cnt}</td>
 										</tr>

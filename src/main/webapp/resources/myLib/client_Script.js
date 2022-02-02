@@ -976,6 +976,43 @@ function clientIdDubCheck(){
 	}
 	
 
+//고객의소리 등록조건
+function complainInsert(){
+	var clientName = $('#clientName').val();
+	var clientPhone = $('#clientPhone').val();
+	var clientEmail = $('#clientEmail').val();
+	var fcId = $('#selectFranchise').val();
+	var title = $('#title').val();
+	var content = CKEDITOR.instances['textcontent'].getData();
+	
+	
+	console.log(clientName);
+	console.log(clientPhone);
+	console.log(clientEmail);
+	console.log(fcId);
+	console.log(title);
+	console.log(content);
+	
+	
+	if(clientName.length>0 && clientPhone.length>0 && clientEmail.length>0 && fcId.length>0 && title.length>0 && content>0){
+		if (confirm('고객의 소리를 등록하시겠습니까?')) {
+			$('#content').val(CKEDITOR.instances['textcontent'].getData());
+			return true;
+		} else {
+			return false;
+		}
+	}
+	if(checkboxChecked==false){
+		alert('개인정보 수집/이용을 동의해야만 주문이 가능합니다.')
+		return false;
+	}
+	else{
+		alert('내용을 빠짐없이 작성해주세요.')
+		return false
+	}
+}//complainInsert
+
+
 
 
 
@@ -1061,6 +1098,7 @@ function orderCancel(num){
 	
 }
 //로그인시 제약사항 체크
+
 function loginCheck(){
 	if($('#LoginclientId').val()<1){
 		alert('아이디를 입력해주세요.');

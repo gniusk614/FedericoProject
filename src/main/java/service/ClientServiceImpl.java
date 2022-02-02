@@ -1,7 +1,6 @@
 package service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +11,8 @@ import paging.SearchCriteria;
 import vo.CartVO;
 import vo.ClientVO;
 import vo.NoticeBoardVO;
+import vo.ComplainBoardVO;
+import vo.ComplainCommentVO;
 
 @Log4j
 @Service
@@ -108,7 +109,49 @@ public class ClientServiceImpl implements ClientService {
 		return dao.countUpNoticeBoard(vo);
 	}
 	
+	//고객의 소리 등록
+	@Override
+	public int complainInsert(ComplainBoardVO vo) {
+		return dao.complainInsert(vo);
+	}
 	
+	//컴플레인 리스트 출력
+	@Override
+	public List<ComplainBoardVO> searchComplainBoard(SearchCriteria cri) {
+		return dao.searchComplainBoard(cri);
+	}
+	// 컴플레인 row 출력
+	@Override
+	public int searchComplainBoardRows(SearchCriteria cri) {
+		return dao.searchComplainBoardRows(cri);
+	}
+	// 컴플레인 디테일 출력
+	@Override
+	public ComplainBoardVO selectDetailComplainBoard(ComplainBoardVO vo) {
+		return dao.selectDetailComplainBoard(vo);
+	}
+	
+	// 컴플레인 완료처리
+	@Override
+	public int complainComplete(ComplainBoardVO vo) {
+		return dao.complainComplete(vo);
+	}
+	
+	// 컴플레인 댓글달기
+	@Override
+	public int complainCommentInsert(ComplainCommentVO vo) {
+		return dao.complainCommentInsert(vo);
+	}	
+	// 컴플레인 댓글출력
+	@Override
+	public List<ComplainCommentVO> selectListComplainComment(ComplainCommentVO vo) {
+		return dao.selectListComplainComment(vo);
+	}
+	// 컴플레인 댓글삭제
+	@Override
+	public int deleteComplainComment(ComplainCommentVO vo) {
+		return dao.deleteComplainComment(vo);
+	}
 	
 	
 }
