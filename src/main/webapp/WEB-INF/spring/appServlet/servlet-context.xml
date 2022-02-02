@@ -94,6 +94,7 @@
 			<!-- 전체를 지정하고 제외경로 지정 -->
 			<mvc:mapping path="/headoffice/*"/>
 			<mvc:exclude-mapping path="/headoffice/loginf"/>
+			<mvc:exclude-mapping path="/headoffice/ckImgSubmit.do*"/>
 			<mvc:exclude-mapping path="/headoffice/login"/>
 		
 			<!--  경로 지정 후 인터셉터 빈 등록 -->

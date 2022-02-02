@@ -78,8 +78,7 @@ tbody tr {
 	<!-- 본문 시작 -->
 	<section class="container py-5"
 		style="height: auto; min-height: 100%; padding-bottom: 168px;">
-		<fmt:formatDate value="${now}" pattern="yyyyMMdd" var="now" />
-
+		<fmt:parseNumber value="${now.time/(1000*60*60*24)}" integerOnly="true" var="now"></fmt:parseNumber>
 		
 		<div class="container-fluid">
 			<div class="row mb-5">
@@ -156,14 +155,14 @@ tbody tr {
 											<tr onclick="javascript:location.href='csNoticeDetail?seq=${noticeList.seq}'" style="vertical-align:middle; height: 50px; background-color:Gainsboro;" align="left">
 												<td align="center"><b style="color: crimson;">공지</b></td>
 												
-												<fmt:parseDate var="regdate" value="${noticeList.regdate}" pattern="yyyy-MM-dd" />
-												<fmt:formatDate var="regdate" value="${regdate}" pattern="yyyyMMdd"/>
+												<fmt:parseDate var="regdate" value="${noticeList.regdate}" pattern="yyyy-MM-dd HH:mm:ss" />
+												<fmt:parseNumber value="${regdate.time/(1000*60*60*24)}" integerOnly="true" var="regdate"></fmt:parseNumber>
 												
 												<td>${noticeList.title}
 												<c:if test="${now-regdate<7}">
-												<b style="font-size:small; color:crimson;">NEW</b></c:if>
+												<b style="font-size:small; color:crimson;">NEW </b></c:if>
 												</td>
-												<td align="center">${noticeList.regdate}</td>
+												<td align="center">${noticeList.regdate} </td>
 												<td align="center">${noticeList.cnt}</td>
 											</tr>
 										</c:forEach>
@@ -171,8 +170,8 @@ tbody tr {
 											<tr onclick="javascript:location.href='csNoticeDetail?seq=${list.seq}'" style="vertical-align:middle; height: 50px;">
 												<td align="center">${list.seq}</td>
 												
-												<fmt:parseDate var="regdate" value="${list.regdate}" pattern="yyyy-MM-dd" />
-												<fmt:formatDate var="regdate" value="${regdate}" pattern="yyyyMMdd"/>
+												<fmt:parseDate var="regdate" value="${list.regdate}" pattern="yyyy-MM-dd HH:mm:ss" />
+												<fmt:parseNumber value="${regdate.time/(1000*60*60*24)}" integerOnly="true" var="regdate"></fmt:parseNumber>
 												
 												<td>${list.title}
 												<c:if test="${now-regdate<7}">
