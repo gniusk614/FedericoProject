@@ -48,7 +48,63 @@ public class FranchiseController {
 	PasswordEncoder passwordEncoder;
 	@Autowired
 	HeadOfficeServiceImpl headOfficeService;
+	
+	
+	
+	// 연간 매출(월별)
+	@RequestMapping(value = "/statsannualsales")
+	public ModelAndView statsAnuualSales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
+		if(session.getAttribute("fcId") != null) {
+			if(! "".equals(request.getParameter("baseDay"))) {
+				List<ChartVO> list = new ArrayList<ChartVO>();
+				Map<String, Object> params = new HashMap<String, Object>();
+				String fcId = (String)session.getAttribute("fcId");
+				String baseDay =  request.getParameter("baseDay");
+				
+				
+				params.put("fcId", fcId);
+				params.put("baseDay", baseDay);
+				list = service.selectFCStatsAnnualSales(params);
+				if(list != null && list.size()>0) {
+					mv.addObject("chartData",list);
+					mv.addObject("success","success");
+				}
 
+			}
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	//메뉴별 판매량 where 월별 and 지점별, 월별 안넣으면 전체기간
+	@RequestMapping(value = "/statsmenusales")
+	public ModelAndView statsMenuSales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
+		if(session.getAttribute("fcId") != null) {
+			List<ChartVO> list = new ArrayList<ChartVO>();
+			Map<String, Object> params = new HashMap<String, Object>();
+			String fcId = (String)session.getAttribute("fcId");
+		
+			String baseDay;
+			if("".equals(request.getParameter("baseDay"))) {
+				baseDay = null;
+			} else {
+				baseDay = request.getParameter("baseDay");
+				baseDay = baseDay.replaceAll("/", "");
+			}
+			
+			params.put("fcId", fcId);
+			params.put("baseDay", baseDay);
+			list = service.selectFCStatsMenuSales(params);
+			if(list != null && list.size()>0) {
+				mv.addObject("chartData",list);
+				mv.addObject("success","success");
+			} 
+			
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
 	
 	//시간대별 매출 where orderdate and fcid and 전체
 	@RequestMapping(value = "/statstimesales")
@@ -58,14 +114,12 @@ public class FranchiseController {
 			Map<String, Object> params = new HashMap<String, Object>();
 			String fcId = (String)session.getAttribute("fcId");
 		
-			log.info(request.getParameter("selectDate"));
 			String selectDate;
 			if("".equals(request.getParameter("selectDate"))) {
 				selectDate = null;
 			} else {
 				selectDate = request.getParameter("selectDate");
 				selectDate = selectDate.replaceAll("/", "");
-				log.info(selectDate);
 			}
 			
 			params.put("fcId", fcId);
@@ -129,11 +183,15 @@ public class FranchiseController {
 				mv.addObject("key", null);
 			} else if("2".equals(request.getParameter("key"))) {
 				mv.addObject("key", "2");
+			} else if("3".equals(request.getParameter("key"))) {
+				mv.addObject("key", "3");
+			} else if("4".equals(request.getParameter("key"))) {
+				mv.addObject("key", "4");
+			} else {
+				mv.setViewName("franchise/fcLoginForm");
 			}
-		} else {
-			mv.setViewName("franchise/fcLoginForm");
-		}
 		
+		}
 		return mv;
 	}
 	

@@ -10,6 +10,10 @@ import vo.FranchiseVO;
 
 public interface FranchiseMapper {
 	
+	List<ChartVO> selectFCStatsAnnualSales(Map<String, Object> params); //연간 판매량(월별, 지점별)
+	
+	List<ChartVO> selectFCStatsMenuSales(Map<String, Object> params); //메뉴별 판매량(월별, 지점별)
+	
 	List<ChartVO> selectFCStatsTimeSales(Map<String, Object> params); // 시간대별 매출
 	
 	List<ChartVO> selectFcStatsMonthlySales(Map<String, Object> params); // 특정 월의 일자별 매출

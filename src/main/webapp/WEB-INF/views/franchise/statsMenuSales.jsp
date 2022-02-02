@@ -19,7 +19,7 @@ $(function(){
 			date.setMonth(date.getMonth() + 1);
 
 			if (date.getTime() > now.getTime()) {
-				$('#selectFcStatsMonthlySales').append($('<option>', {
+				$('#selectFcStatsMenuSales').append($('<option>', {
 					value : '' + date.getFullYear() + monthString + '01',
 					text : date.getFullYear() + '년 ' + monthString + '월',
 					selected : true
@@ -27,26 +27,26 @@ $(function(){
 				) //append
 				break;
 			}
-			$('#selectFcStatsMonthlySales').append($('<option>', {
+			$('#selectFcStatsMenuSales').append($('<option>', {
 				value : '' + date.getFullYear() + monthString + '01',
 				text : date.getFullYear() + '년 ' + monthString + '월'
 			})) //append
 		}//selectbox 만들기
 
-	selectFcStatsMonthlySales(); 
+	selectFcStatsMenuSales(); 
 		
 	}) //ready
 	// 월별매출조회 select 바뀔시 차트바꿔줌.
-	function selectFcStatsMonthlySales() {
+	function selectFcStatsMenuSales() {
 		resetCanvas();
 		$.ajax({
 			type : 'get',
-			url : 'statsmonthlysales',
+			url : 'statsmenusales',
 			data : {
-				baseDay : $('#selectFcStatsMonthlySales').val()
+				baseDay : $('#selectFcStatsMenuSales').val()
 			},
 			success : function(data) {
-				statsSuccessChart(data, 'monthly')
+				statsSuccessChart(data, 'menu')
 			},
 			error : function() {
 				alert('통신장애가 발생했습니다.\n다시 시도해주세요.');
@@ -60,7 +60,7 @@ $(function(){
 
 	<div class=col-2>
 		<!-- 스크립트처리 -->
-		<select id="selectFcStatsMonthlySales" class="form-select" onchange="selectFcStatsMonthlySales()"></select>
+		<select id="selectFcStatsMenuSales" class="form-select" onchange="selectFcStatsMenuSales()"></select>
 	</div>
 
 

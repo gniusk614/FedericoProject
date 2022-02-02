@@ -10,43 +10,42 @@
 $(function(){
 //selectbox 만들기 - 지정일부터 당월까지 생성.
 	var now = new Date();
-	var date = new Date('2020-12-01');		
+	var date = new Date('2020-01-01');		
 	
 
 
 	while (true) {
-			var monthString = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
-			date.setMonth(date.getMonth() + 1);
+			date.setFullYear(date.getFullYear()+1);
 
-			if (date.getTime() > now.getTime()) {
-				$('#selectFcStatsMonthlySales').append($('<option>', {
-					value : '' + date.getFullYear() + monthString + '01',
-					text : date.getFullYear() + '년 ' + monthString + '월',
+			if (date.getFullYear() >= now.getFullYear()) {
+				$('#selectFcStatsAnnualSales').append($('<option>', {
+					value : date.getFullYear() + "0101",
+					text : date.getFullYear() + '년',
 					selected : true
 				})// jquery
 				) //append
 				break;
 			}
-			$('#selectFcStatsMonthlySales').append($('<option>', {
-				value : '' + date.getFullYear() + monthString + '01',
-				text : date.getFullYear() + '년 ' + monthString + '월'
+			$('#selectFcStatsAnnualSales').append($('<option>', {
+				value : date.getFullYear() + "0101",
+				text : date.getFullYear() + '년'
 			})) //append
 		}//selectbox 만들기
 
-	selectFcStatsMonthlySales(); 
+ 	selectFcStatsAnnualSales();  
 		
 	}) //ready
 	// 월별매출조회 select 바뀔시 차트바꿔줌.
-	function selectFcStatsMonthlySales() {
+	function selectFcStatsAnnualSales() {
 		resetCanvas();
 		$.ajax({
 			type : 'get',
-			url : 'statsmonthlysales',
+			url : 'statsannualsales',
 			data : {
-				baseDay : $('#selectFcStatsMonthlySales').val()
+				baseDay : $('#selectFcStatsAnnualSales').val()
 			},
 			success : function(data) {
-				statsSuccessChart(data, 'monthly')
+				statsSuccessChart(data, 'annual')
 			},
 			error : function() {
 				alert('통신장애가 발생했습니다.\n다시 시도해주세요.');
@@ -60,7 +59,7 @@ $(function(){
 
 	<div class=col-2>
 		<!-- 스크립트처리 -->
-		<select id="selectFcStatsMonthlySales" class="form-select" onchange="selectFcStatsMonthlySales()"></select>
+		<select id="selectFcStatsAnnualSales" class="form-select" onchange="selectFcStatsAnnualSales()"></select>
 	</div>
 
 

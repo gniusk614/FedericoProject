@@ -44,16 +44,24 @@ function statsSuccessChart(data, type) {
 		var borderColor = [];
 		var chartID = "fcStatsChartCanvas";
 
+		//조건
 		switch(type){
 			case "monthly":
 				title = $('#selectFcStatsMonthlySales').children(':selected').text()+ ' 매출현황';
 				label = '매출액';
 			break
 			case "time":
-				console.log('==>'+$('#selectDate').val());
 				title = data.selectDate ==null ? "전체기간 시간대별 매출현황" : data.selectDate + " 시간대별 매출현황"
 				label = '매출액';
 				$('#selectDate').val(data.selectDate);
+			break
+			case "menu":
+				title = $('#selectFcStatsMenuSales').children(':selected').text()+ ' 메뉴별 판매량';
+				label = '매출액';
+			break
+			case "annual":
+				title = $('#selectFcStatsAnnualSales').children(':selected').text()+ ' 월별 판매량';
+				label = '매출액';
 			break
 		}//switch
 
@@ -105,7 +113,12 @@ function statsSuccessChart(data, type) {
 					yAxes : [ {
 						fontColor : 'black',
 						ticks: {
-								beginAtZero: true
+								beginAtZero: true,
+								callback: function (value) {
+                                    if (0 === value % 1) {
+                                        return value;
+                                    }
+								}
 						}
 					} ],
 					xAxes : [ {
@@ -120,13 +133,6 @@ function statsSuccessChart(data, type) {
 
 	}
 }//차트그리기
-
- 
-
-
-
-
-
 
 
 </script>
@@ -161,31 +167,32 @@ function statsSuccessChart(data, type) {
 					<!-- 조회유형 선택 -->
 					<div class="card">
 						<div class="card-header parent" style="background-color: #e6e6e6; font-size: 18px;">
-					<!-- 	월별매출조회 - default 이번달, 20년01월~ 21년02월(함수) / 시간대별 매출조회(날짜지정)/ 메뉴별 주문건수 조회 일별, default 최근한달  / 메뉴별 주문건수 Top5 , Worst 5 월별 , 전체 / --> 
+					<!-- 	월별매출조회 - default 이번달, 20년01월~ 21년02월(함수) / 시간대별 매출조회(날짜지정)/ 메뉴별 주문건수 조회 월별, default 이번달  / 메뉴별 매출 Top5 , Worst 5 월별 , 전체 / --> 
 							<c:if test="${key == null}">
-								<a href="stats"><span id="fcStatsMonthlySales" class="selected">월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="stats?key=2"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="stats?key=3"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="stats?key=4"><span id="fcStatsMenuRanking" >메뉴별 판매량 Ranking 조회</span></a>
-							</c:if>
-							<c:if test="${key == '2'}">
-								<a href="stats"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="stats?key=2"><span id="fcStatsDailySales" class="selected">시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="stats?key=3"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="stats?key=4"><span id="fcStatsMenuRanking" >메뉴별 판매량 Ranking 조회</span></a>
+								<a href="stats"><span id="fcStatsAnnualSales" class="selected">연도별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="stats?key=2"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="stats?key=3"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="stats?key=4"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>
+							</c:if>	
+							<c:if test="${key == 2}">
+								<a href="stats"><span id="fcStatsAnnualSales" >연도별 월간 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="stats?key=2"><span id="fcStatsMonthlySales" class="selected">월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="stats?key=3"><span id="fcStatsDailySales" >시간대별 매출 조회(일)</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="stats?key=4"><span id="fcStatsMenuSales" >메뉴별 판매량 조회(월)</span></a>
 							</c:if>
 							<c:if test="${key == '3'}">
-								<a href="stats"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="stats?key=2"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="stats?key=3"><span id="fcStatsMenuSales" class="selected">메뉴별 판매량 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="stats?key=4"><span id="fcStatsMenuRanking" >메뉴별 판매량 Ranking 조회</span></a>
+								<a href="stats"><span id="fcStatsAnnualSales" >연도별 월간 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="stats?key=2"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="stats?key=3"><span id="fcStatsDailySales" class="selected">시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="stats?key=4"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>
 							</c:if>
 							<c:if test="${key == '4'}">
-								<a href="stats"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="stats?key=2"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="stats?key=3"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="stats?key=4"><span id="fcStatsMenuRanking" class="selected">메뉴별 판매량 Ranking 조회</span></a>
+								<a href="stats"><span id="fcStatsAnnualSales" >연도별 월간 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="stats?key=2"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="stats?key=3"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="stats?key=4"><span id="fcStatsMenuSales" class="selected">메뉴별 판매량 조회</span></a>
 							</c:if>
+						
 							
 						</div>
 					</div><!-- 조회유형 선택 -->
@@ -193,11 +200,20 @@ function statsSuccessChart(data, type) {
 					<div class="container-fluid">
 						<div id="includeZone" class="mt-3">
 							<c:if test="${key == null }">
-								<%@ include file="statsMonthlySales.jsp" %>
+								<%@ include file="statsAnnualSales.jsp" %>
 							</c:if>
 							<c:if test="${key == 2 }">
+								<%@ include file="statsMonthlySales.jsp" %>
+							</c:if>
+							<c:if test="${key == 3 }">
 								<%@ include file="statsTimeSales.jsp" %>
 							</c:if>
+							<c:if test="${key == 4 }">
+								<%@ include file="statsMenuSales.jsp" %>
+							</c:if>
+							
+							
+							
 							<div id="canvasZone" align="center">
 								<canvas id="fcStatsChartCanvas" height="550px" width="1400px"></canvas>
 							</div>
