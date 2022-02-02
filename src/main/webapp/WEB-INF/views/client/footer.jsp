@@ -21,7 +21,7 @@
 				<div class="col-sm-1 py-3" align="center" style="color: gray; width: 130px; cursor: pointer;" onclick="JavaScript:$('#emailAgreefModal').modal('show')">
 					이메일 무단수집거부
 				</div>
-				<div class="col-sm-1 py-3" align="center" style="color: gray; border-right: 1px solid gray; width: 120px;">
+				<div class="col-sm-1 py-3" align="center" style="color: gray; border-right: 1px solid gray; cursor:pointer; width: 120px;" onclick="JavaScript:location.href='cscenterf'">
 					고객센터
 				</div>
 				<div class="col-sm-1 py-1" align="center" style="color: gray; border-right: 1px solid gray; width: 250px;">

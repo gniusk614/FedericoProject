@@ -19,7 +19,7 @@
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                 	<c:if test="${! empty fcId }">
-        				${fcId}
+        				<button class="btn btn-success">${fcId}점 점주님! 오늘도 번창하세요</button>
      				</c:if>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
@@ -27,10 +27,10 @@
                         <li><a class="dropdown-item" href="staffMyInfo">내 정보 보기</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <!-- 세션종료후 동작 추가 1.13 광훈 -->
-                        <c:if test="${not empty loginID}">
+                        <c:if test="${not empty fcId}">
                         <li><a class="dropdown-item" href="logout">Logout</a></li>
                         </c:if>
-                        <c:if test="${empty loginID}">
+                        <c:if test="${empty fcId}">
                         <li><a class="dropdown-item" href="loginf">Login</a></li>
                         </c:if>
                     </ul>
