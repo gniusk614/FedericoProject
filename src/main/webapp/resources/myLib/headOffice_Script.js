@@ -466,6 +466,79 @@ function boardUpdate(){
 }
 
 
+//======================< 고객의 소리(광훈) >===============================
+//고객의 소리 완료처리
+function complainComplete(seq){
+	$.ajax({
+		type: "get",
+		url: "complainComplete?seq="+seq,
+		success: function(data){
+			if(data.success!=null){
+				alert('완료처리에 성공했습니다.');
+				location.href='complainBoardf';
+			}else{
+				alert('완료처리에 실패했습니다.');
+			}
+		},error: function(){
+			alert('서버장애입니다. 잠시 후 다시 이용해주세요.')
+		}
+	})
+}
+
+//고객의소리 댓글달기
+function complainCommentInsert(seq){
+	var content = $('textarea#content').val();
+	if (confirm("댓글을 다시겠습니까?") == true) {
+	$.ajax({
+		type: "get",
+		url: "complainCommentInsert",
+		data:{
+			complainBoardSeq : seq,
+			commentContent : content
+		}, success: function(data){
+			if(data.success!=null){
+				alert('댓글입력에 성공했습니다.');
+				$('#comment').load('complainDetail?seq='+seq+' #comment')
+				$('textarea#content').val('');
+			}else{
+				alert('댓글입력에 실패했습니다.');
+			}
+		}, error: function(){
+			alert('서버장애입니다.')
+		}
+	})
+	}
+}
+
+//고객의소리 댓글삭제
+function complainCommentDelete(commentSeq, seq){
+	if (confirm("삭제하시겠습니까?") == true) {
+		$.ajax({
+			type : "get",
+			url : "commentDelete",
+			data : {
+				commentSeq : commentSeq,
+			},
+			success : function(data) {
+				if (data.success != null) {
+					alert('댓글삭제에 성공했습니다.');
+					$('#comment').load(
+							'complainDetail?seq=' + seq + ' #comment')
+				} else {
+					alert('댓글삭제에 실패했습니다.');
+				}
+			},
+			error : function() {
+				alert('서버장애입니다.')
+			}
+		})
+	}
+}
+
+
+
+
+
 
 // ===============< 사원계정생성 스크립트(광훈) >============================
 $(function() {
@@ -688,6 +761,19 @@ function changeSearchFranchiseOption() {
 		$input.css('display', 'block').attr('id', 'keyword');
 	}
 
+}
+function changeSearchComplainOption() {
+	
+	$input = $('#changeCompleteFinder').children('input');
+	$select = $('#changeCompleteFinder').children('select');
+	if ($('#searchType').val() == 'completeFlag') {
+		$input.css('display', 'none').attr('id', 'keywordHide');
+		$select.css('display', 'block').attr('id', 'keyword');
+	} else {
+		$select.css('display', 'none').attr('id', 'keywordHide');
+		$input.css('display', 'block').attr('id', 'keyword');
+	}
+	
 }
 
 // ==========================================================================
@@ -1246,6 +1332,107 @@ function fcOrderFlagUpdate(flag) {
 			})//ajax
 		}//confirm
 	}//.click		
+
+// ==========================< 이벤트 게시판 글 등록/수정/삭제 >=================================
+
+// 이벤트 등록
+function eventUpload(){
+	console.log('안녕');
+	var title = $('#title').val();
+	var contents = CKEDITOR.instances['content'].getData();
+	if(title.length<1){
+		alert('제목을 입력해주세요.');
+		return false;
+	}
+	
+	if(contents.length<1){
+		alert('글 내용을 입력해주세요.');
+		return false;
+	}
+	if (confirm("이벤트를 등록하시겠습니까?") == true) {
+		$.ajax({
+			type : "post",
+			url : "eventInsert",
+			data : {
+				title : title,
+				content : contents
+			},
+			success : function(data) {
+				if (data.success != null) {
+					alert('이벤트 등록에 성공했습니다.');
+					location.href = 'eventBoardf';
+				} else {
+					alert('이벤트 등록에 실패했습니다.');
+				}
+			},
+			error : function() {
+				alert('서버장애입니다. 잠시후 다시 이용해주세요.');
+			}
+		})
+	}
+}
+
+// 이벤트 수정
+function eventUpdate(){
+	var eventSeq = $('#eventSeq').val();
+	var title = $('#title').val();
+	var contents = CKEDITOR.instances['content'].getData();
+	if(title.length<1){
+		alert('제목을 입력해주세요.');
+		$('#title').focus();
+		return false;
+	}
+	if(contents.length<1){
+		alert('글 내용을 입력해주세요.');
+		CKEDITOR.instances['content'].focus();
+		return false;
+	}
+	if (confirm("이벤트를 수정하시겠습니까?") == true) {
+		$.ajax({
+			type : "post",
+			url : "eventUpdate",
+			data : {
+				seq : evnetSeq,
+				title : title,
+				content : contents
+			},
+			success : function(data) {
+				if (data.success != null) {
+					alert('이벤트 수정에 성공했습니다.');
+					location.href = 'eventDetail?eventSeq='+eventSeq;
+				} else {
+					alert('이벤트 수정에 실패했습니다.');
+				}
+			},
+			error : function() {
+				alert('서버장애입니다. 잠시후 다시 이용해주세요.');
+			}
+		})
+	}
+}
+
+// 이벤트 삭제
+function eventDelete(eventSeq){
+	if(confirm("삭제하시겠습니까?")==true){
+		$.ajax({
+			type:"get",
+			url:"eventDelete?eventSeq="+eventSeq,
+			success: function(data){
+				if(data.success!=null){
+					alert('삭제에 성공했습니다.');
+					location.href= 'eventBoardf';
+				}else{
+					alert('삭제에 실패했습니다.');
+				}
+				
+			},error : function(){
+				alert('서버장애입니다. 잠시후 다시 이용해주세요.');
+			}		
+		})
+	}
+}
+
+
 
 			
 	

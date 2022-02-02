@@ -120,7 +120,128 @@
 		</when>
 	</choose>
 	</sql>
+	
+	<!-- ============================={ 이벤트 페이지 }================================ -->
+	<!-- searchEventBoardRow -->
+	<select id="searchEventBoardRows" resultType="int">
+		SELECT COUNT(*) FROM EVENTBOARD <include refid="eventSearch"></include>
+	</select>
 
+		<!-- searchEventBoard 서치,페이징 -->
+	<select id="searchEventBoard" resultType="vo.EventBoardVO">
+		SELECT eventSeq, title, hoId, content, startDate, endDate
+		FROM eventBoard <include refid="eventSearch"></include> 
+		ORDER BY eventSeq desc
+		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY
+	</select>
+		
+		<!-- 이벤트 게시판 클릭시 Detail 출력 -->
+	<select id="selectDetailEventBoard" resultType="vo.EventBoardVO">
+		SELECT eventSeq, title, hoId, content, startDate, endDate
+		FROM eventBoard
+		WHERE eventSeq=#{eventSeq}
+	</select>
+	
+	<sql id="eventSearch" >
+		<if test="keyword != null">
+			<bind name="keyVal" value="'%'+keyword+'%'"/>
+		</if>
+	<choose>
+		<when test="searchType == 'title'.toString()">
+			where title LIKE #{keyVal}
+		</when>
+		<when test="searchType == 'content'.toString()">
+			where content LIKE #{keyVal}
+		</when>
+		<when test="searchType == 'titleContent'.toString()">
+			where title LIKE #{keyVal} OR title LIKE #{keyVal}
+		</when>
+	</choose>
+	</sql>
+
+	<!-- 고객의소리 등록 -->
+	<insert id="complainInsert">
+	INSERT INTO complainBOARD VALUES((select nvl(max(seq),0)+1 from complainBOARD c),
+		#{title}, #{clientName}, #{clientPhone}, #{content}, sysdate, 'N',#{head},#{fcId},#{clientEmail})
+	</insert>
+
+
+		<!-- searchCompainBoardRow -->
+	<select id="searchComplainBoardRows" resultType="int">
+		SELECT COUNT(*) FROM complainBoard <include refid="complainSearch"></include>
+	</select>
+
+		<!-- searchCompain 서치,페이징 -->
+	<select id="searchComplainBoard" resultType="vo.ComplainBoardVO">
+		SELECT *
+		FROM complainBoard <include refid="complainSearch"></include> 
+		ORDER BY seq desc
+		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY
+	</select>
+
+	<sql id="complainSearch">
+		<if test="keyword != null">
+			<bind name="keyVal" value="'%'+keyword+'%'" />
+		</if>
+		<choose>
+			<when test="searchType == 'title'.toString()">
+				where title LIKE #{keyVal}
+			</when>
+			<when test="searchType == 'content'.toString()">
+				where content LIKE #{keyVal}
+			</when>
+			<when test="searchType == 'titleContent'.toString()">
+				where title LIKE #{keyVal} OR title LIKE #{keyVal}
+			</when>
+			<when test="searchType == 'clientName'.toString()">
+				where clientName LIKE #{keyVal}
+			</when>
+			<when test="searchType == 'clientPhone'.toString()">
+				where clientPhone LIKE #{keyVal}
+			</when>
+			<when test="searchType == 'completeFlag'.toString()">
+				where completeFlag LIKE #{keyVal}
+			</when>
+			<when test="searchType == 'fcId'.toString()">
+				where fcId LIKE #{keyVal}
+			</when>
+		</choose>
+	</sql>
+
+
+
+	<!-- 컴플레인 클릭시 Detail 출력 -->
+	<select id="selectDetailComplainBoard" resultType="vo.ComplainBoardVO">
+		SELECT * FROM COMPLAINBOARD
+		WHERE SEQ = #{seq}
+	</select>
+	
+	<!-- 컴플레인 완료처리 -->
+	<insert id="complainComplete" >
+		UPDATE complainBoard SET 
+		completeFlag = 'Y'
+		WHERE seq=#{seq}
+	</insert>
+	
+	<!-- 고객의소리 댓글등록 -->
+	<insert id="complainCommentInsert">
+	INSERT INTO complainComment VALUES((select nvl(max(commentSeq),0)+1 from complainComment c),
+		#{complainBoardSeq}, #{commentContent}, sysdate, #{hoId})
+	</insert>
+	
+	
+	<!-- 고객의소리 댓글출력 -->
+	<select id="selectListComplainComment" resultType="vo.ComplainCommentVO">
+	SELECT * FROM complainComment 
+	WHERE complainBoardSeq = #{complainBoardSeq}
+	ORDER BY commentSeq desc
+	</select>
+	
+	<!-- 고객의소리 댓글삭제 -->
+	<delete id="deleteComplainComment">
+	DELETE FROM complainComment 
+	WHERE commentSeq = #{commentSeq}
+	</delete>
 
 </mapper>
 

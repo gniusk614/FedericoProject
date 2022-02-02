@@ -51,7 +51,7 @@ tbody tr {
 				$('#searchBtn').on(
 						"click",
 						function() {
-							self.location = "noticeBoardf"
+							self.location = "eventBoardf"
 									+ "${pageMaker.makeQuery(1)}"
 									+ "&searchType=" + $('#searchType').val()
 									+ '&keyword=' + $('#keyword').val()
@@ -64,7 +64,7 @@ tbody tr {
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
 	rel="stylesheet" />
 <body>
-	<!-- navtop inlcud -->
+	<!-- navtop include -->
 	<%@ include file="navtop.jsp"%>
 
 	<!-- layoutSidenav 시작 -->
@@ -72,19 +72,19 @@ tbody tr {
 		<%@ include file="navside.jsp"%>
 		<div id="layoutSidenav_content">
 			<!-- 본문 시작 -->
-			<fmt:parseNumber value="${now.time/(1000*60*60*24)}" integerOnly="true" var="now"></fmt:parseNumber>
+			<fmt:formatDate value="${now}" pattern="yyyyMMdd" var="now" />
 			<div class="container-fluid">
 				<div class="row mt-5 mb-1">
 					<div class="col-md-3"></div>
 					<div class="col-md-6" align="center">
-						<h1 class="display-6">공지사항</h1>
+						<h1 class="display-6">이벤트 게시판</h1>
 					</div>
 					<div class="col-md-3"></div>
 				</div>
 				<!-- 컨텐츠 -->
 				<div id="content">
-					<!-- 공지사항 -->
-					<div id="csNoticeBoard" class="container" style="display: block;">
+					<!-- 이벤트 게시판 -->
+					<div id="csEventBoard" class="container" style="display: block;">
 						<div class="row justify-content-md-center py-5">
 
 							<div
@@ -114,7 +114,7 @@ tbody tr {
 												<button id="searchBtn" class="btn btn-outline-primary">검색</button>
 											</div>
 											<div class="col-sm-4 px-5" align="right">
-												<button id="insertBtn" class="btn btn-primary" onclick="javaScript:location.href='noticeInsertf'">글쓰기</button>
+												<button id="insertBtn" class="btn btn-primary" onclick="javaScript:location.href='eventInsertf'">글쓰기</button>
 											</div>
 										</div>
 									</div>
@@ -132,8 +132,6 @@ tbody tr {
 												style="height: 50px; vertical-align: middle;">
 												<th scope="col" style="width: 100px;">번호</th>
 												<th scope="col" style="width: 500px;">제목</th>
-												<th scope="col" style="width: 200px;">날짜</th>
-												<th scope="col" style="width: 100px;">조회수</th>
 												<th scope="col" style="width: 100px;">작성자</th>
 											</tr>
 										</thead>
@@ -144,46 +142,14 @@ tbody tr {
 												</tr>
 											</c:if>
 
-											<c:forEach var="noticeList" items="${noticeList}">
+											
+											<c:forEach var="list" items="${eventList}">
 												<tr
-													onclick="javascript:location.href='noticeDetail?seq=${noticeList.seq}'"
-													style="vertical-align: middle; height: 50px; background-color: Gainsboro;"
-													align="left">
-													<td align="center"><b class="text-primary">공지</b></td>
-
-													<fmt:parseDate var="regdate" value="${noticeList.regdate}" pattern="yyyy-MM-dd HH:mm:ss" />
-													<fmt:formatDate value="${regdate}" var="regdateFormat" pattern="yyyy-MM-dd"/>
-													<fmt:parseNumber value="${regdate.time/(1000*60*60*24)}" integerOnly="true" var="regdateTime"></fmt:parseNumber>
-													
-
-													<td>${noticeList.title}<c:if test="${now-regdateTime<7}">
-															<b class="text-primary" style="font-size: small;">NEW</b>
-														</c:if>
-													</td>
-													<td align="center">${regdateFormat}</td>
-													<td align="center">${noticeList.cnt}</td>
-													<td align="center">${noticeList.id}</td>
-												</tr>
-											</c:forEach>
-											<c:forEach var="list" items="${boardList}">
-												<tr
-													onclick="javascript:location.href='noticeDetail?seq=${list.seq}'"
+													onclick="javascript:location.href='eventDetail?eventSeq=${list.eventSeq}'"
 													style="vertical-align: middle; height: 50px;">
-													<td align="center">${list.seq}</td>
-
-													<fmt:parseDate var="regdate" value="${list.regdate}" pattern="yyyy-MM-dd HH:mm:ss" />
-													<fmt:formatDate value="${regdate}" var="regdateFormat" pattern="yyyy-MM-dd"/>
-													<fmt:parseNumber value="${regdate.time/(1000*60*60*24)}" integerOnly="true" var="regdateTime"></fmt:parseNumber>
-			
-
-													<td>${list.title}<c:if test="${now-regdateTime<7}">
-															<b class="text-primary" style="font-size: small;">NEW</b>
-														</c:if>
-													</td>
-
-													<td align="center">${regdateFormat}</td>
-													<td align="center">${list.cnt}</td>
-													<td align="center">${list.id}</td>
+													<td align="center">${list.eventSeq}</td>	
+													<td align="center">${list.title}</td>							
+													<td align="center">${list.hoId}</td>
 												</tr>
 											</c:forEach>
 										</tbody>
@@ -194,7 +160,7 @@ tbody tr {
 										<ul class="pagination my">
 											<c:if test="${pageMaker.prev}">
 												<li class="page-item"><a class="page-link"
-													href="noticeBoardf${pageMaker.searchQuery(pageMaker.spageNo-1)}"
+													href="eventBoardf${pageMaker.searchQuery(pageMaker.spageNo-1)}"
 													aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 												</a></li>
 											</c:if>
@@ -211,12 +177,12 @@ tbody tr {
 												</c:if>
 												<c:if test="${i!=pageMaker.cri.currPage}">
 													<li class="page-item"><a
-														href="noticeBoardf${pageMaker.searchQuery(i)}">${i}</a></li>
+														href="eventBoardf${pageMaker.searchQuery(i)}">${i}</a></li>
 												</c:if>
 											</c:forEach>
 											<c:if test="${pageMaker.next}">
 												<li class="page-item"><a class="page-link"
-													href="noticeBoardf${pageMaker.searchQuery(pageMaker.epageNo+1)}"
+													href="eventBoardf${pageMaker.searchQuery(pageMaker.epageNo+1)}"
 													aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 												</a></li>
 											</c:if>
@@ -234,7 +200,8 @@ tbody tr {
 				</div>
 			</div>
 
-			<!-- footer inlcud -->
+			
+			<!-- footer include -->
 			<div><%@ include file="footer.jsp"%></div>
 		</div>
 	</div>
