@@ -87,5 +87,6 @@ public interface HeadOfficeMapper {
 	int eventInsert(EventBoardVO vo); // 이벤트 게시판 글 등록
 	int eventUpdate(EventBoardVO vo); // 이벤트 게시판 글 수정
 	int eventDelete(EventBoardVO vo); // 이벤트 게시판 글 삭제
+	EventBoardVO selectDetailEventBoard(EventBoardVO vo); // 이벤트 게시판 디테일
 	
 }

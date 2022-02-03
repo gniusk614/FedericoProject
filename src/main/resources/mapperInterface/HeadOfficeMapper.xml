@@ -367,6 +367,13 @@
 		WHERE eventSeq = #{eventSeq}
 	</insert>	
 
+	<!-- 이벤트 게시판 클릭시 Detail 출력 -->
+	<select id="selectDetailEventBoard" resultType="vo.EventBoardVO">
+		SELECT eventSeq, title, hoId, content, startDate, endDate
+		FROM eventBoard
+		WHERE eventSeq=#{eventSeq}
+	</select>
+	
 
 
 </mapper>

@@ -67,7 +67,7 @@ tbody tr {
 			<!-- 컨텐츠 -->
 			<div id="content">
 				<!-- 이벤트 게시판 -->
-				<div id="csEventBoard" class="container" style="display: block;">
+				<div id="eventBoardDetail" class="container" style="display: block;">
 					<div class="row justify-content-md-center py-5">
 						<div class="dataTable-wrapper dataTable-loading no-footer">
 							<div class="dataTable-container"
@@ -77,16 +77,16 @@ tbody tr {
 										<tr class="lead"
 											style="font-size: medium; height: 70px; vertical-align: middle;">
 											<td scope="col"
-												style="width: 700px; font-size: x-large; font-weight: bold;">${eventDetail.title}
+												style="width: 700px; font-size: x-large; font-weight: bold;">${eventBoardDetail.title}
 											</td>
-											<td scope="col" style="width: 100px; color: gray;">작성자&nbsp;<b>${eventDetail.hoId}</b></td>
+											<td scope="col" style="width: 100px; color: gray;">작성자&nbsp;<b>${eventBoardDetail.hoId}</b></td>
 										</tr>
 									</thead>
 								</table>
 								<div class="row py-3 px-5"
 									style="min-height: 500px; border-bottom: 1px solid black;" align="justify">
 									<div>
-										<pre style="font-size: medium;">${eventDetail.content}</pre>
+										<pre style="font-size: medium;">${eventBoardDetail.content}</pre>
 									</div>
 								</div>
 								<div class="row mt-4 px-3">
@@ -96,11 +96,11 @@ tbody tr {
 									</div>
 									<div class="col-6" align="right">
 										<button class="btn btn-outline-primary" style="width: 100px;"
-											onclick="javascript:location.href='eventUpdatef?eventSeq=${eventDetail.eventSeq}'">
+											onclick="javascript:location.href='eventUpdatef?eventSeq=${eventBoardDetail.eventSeq}'">
 											수정
 										</button>
 										<button class="btn btn-outline-primary" style="width: 100px;"
-											onclick="eventDelete('${eventDetail.eventSeq}')">
+											onclick="eventDelete('${eventBoardDetail.eventSeq}')">
 											삭제
 										</button>
 									</div>
