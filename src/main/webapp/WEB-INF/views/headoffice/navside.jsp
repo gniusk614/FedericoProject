@@ -14,7 +14,7 @@
 				<div class="nav">
 
 					<!-- 메인 대쉬보드 -->
-					<a class="nav-link" href="headofficeMain"> <!-- 새로고침 아니고 메인페이지로 이동(광훈 / 1.11)  -->
+					<a class="nav-link" href="login"> <!-- 새로고침 아니고 메인페이지로 이동(광훈 / 1.11)  -->
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
 							fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
   								<path fill-rule="evenodd"

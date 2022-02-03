@@ -133,8 +133,10 @@
 		FROM (SELECT TRUNC(SYSDATE-6 + LEVEL -1) orderdate
 		            FROM dual
       				<![CDATA[  CONNECT BY LEVEL < 8) i  ]]>
-		LEFT JOIN orderlist o ON o.fcid = #{value} AND o.completeyn = 'Y'
-		    AND to_char(o.orderdate,'yymmdd') = to_char(i.orderdate,'yymmdd')
+		LEFT JOIN orderlist o ON o.completeyn = 'Y'  AND to_char(o.orderdate,'yymmdd') = to_char(i.orderdate,'yymmdd')
+		<if test="value != null and value != ''">
+			AND  o.fcid = #{value}
+		</if>
 		LEFT JOIN orderdetaillist d ON o.ordernumber = d.ordernumber
 		LEFT JOIN menuinfo m ON m.menuindex = d.menuindex
 		GROUP BY i.orderdate
@@ -149,8 +151,10 @@
 		JOIN orderdetaillist d ON d.ordernumber = o.ordernumber
 		JOIN menuinfo m ON d.menuindex = m.menuindex
 		WHERE o.orderdate BETWEEN TRUNC(sysdate, 'dd')-1  AND TRUNC(sysdate, 'dd')
-		AND f.fcid = #{value}
 		AND o.completeyn = 'Y'
+		<if test="value != null and value != ''">
+			AND f.fcid = #{value}
+		</if>
 		GROUP BY o.fcid
 	</select>
 
@@ -162,8 +166,10 @@
 		JOIN orderdetaillist d ON d.ordernumber = o.ordernumber
 		JOIN menuinfo m on d.menuindex = m.menuindex
 		WHERE o.orderdate BETWEEN trunc(sysdate, 'MM')  AND add_months(trunc(sysdate, 'MM'),1)
-		AND f.fcid = #{value}
 		AND o.completeyn = 'Y'
+		<if test="value != null and value != ''">
+			AND f.fcid = #{value}
+		</if>
 		GROUP BY o.fcid
 	</select>
 
@@ -175,8 +181,10 @@
 		JOIN orderdetaillist d ON d.ordernumber = o.ordernumber
 		JOIN menuinfo m ON d.menuindex = m.menuindex
 		WHERE o.orderdate BETWEEN TRUNC(sysdate, 'dd')  AND TRUNC(sysdate, 'dd')+1
-		AND f.fcid = #{value}
 		AND o.completeyn = 'Y'
+		<if test="value != null and value != ''">
+			AND f.fcid = #{value}
+		</if>
 		GROUP BY o.fcid
 	</select>
 
@@ -186,8 +194,10 @@
 		FROM fcorder o
 		JOIN fcorderdetail d ON o.fcorderseq = d.fcorderseq
 		JOIN iteminfo i ON d.itemindex = i.itemindex
-		WHERE o.fcid = #{value}
-		AND o.fcorderdate BETWEEN TRUNC(sysdate, 'MM')  AND add_months(TRUNC(sysdate, 'MM'),1)
+		WHERE o.fcorderdate BETWEEN TRUNC(sysdate, 'MM')  AND add_months(TRUNC(sysdate, 'MM'),1)
+		<if test="value != null and value != ''">
+			AND o.fcid = #{value}
+		</if>
 	</select>
 
 	<!-- 가맹점 발주내역 searchOrderRows -->

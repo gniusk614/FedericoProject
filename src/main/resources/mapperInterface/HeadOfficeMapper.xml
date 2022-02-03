@@ -43,6 +43,18 @@
 		</foreach>
 	</insert>
 	
+	<!-- 본사 홈에 띄울 가맹점 미처리 자재발주 -->
+	<select id="selectFcOrderSumPirce" resultType="vo.FcOrderVO">
+		SELECT O.FCORDERSEQ, O.FCID, TO_CHAR(O.FCORDERDATE, 'YY/MM/DD HH24:MI') fcOrderDate, SUM(D.ITEMQTY * I.ITEMPRICE) sumPrice
+		FROM FCORDER O
+		JOIN FCORDERDETAIL D ON O.FCORDERSEQ = D.FCORDERSEQ
+		JOIN ITEMINFO I ON I.ITEMINDEX = D.ITEMINDEX
+		WHERE FCORDERFLAG = 'N'
+		GROUP BY O.FCORDERSEQ, O.FCID, O.FCORDERDATE
+		ORDER BY FCORDERSEQ 	
+	</select>
+
+
 
 	
   

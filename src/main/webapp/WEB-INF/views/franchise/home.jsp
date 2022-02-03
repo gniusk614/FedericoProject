@@ -23,63 +23,68 @@ $(function(){
 		type: 'get',
 		url: 'fcchartsevenday',
 		success: function(data){
-			var chartLabel =[];
-			var chartData =[];
-			var chartColor = [];
-			var borderColor = [];
-			var chartID ="fcLastSevenDaysChart";
-			
-			
-			var data = data.charData;
-			$.each(data, function(index, element){
-				chartLabel.push(element.chartLabel);
-				chartData.push(element.chartCount);
-				var strRGBA = 'rgba(154, 205, 50, 0.3)';
-				var borderRGBA = 'rgb(50, 205, 89)';
-				chartColor.push(strRGBA);
-				borderColor.push(borderRGBA);
+			if(data.success == 'success'){
+				var chartLabel =[];
+				var chartData =[];
+				var chartColor = [];
+				var borderColor = [];
+				var chartID ="fcLastSevenDaysChart";
 				
-				console.log(element.chartCount);
-				console.log(element.chartLabel);
-			}) //each
-			
-			new Chart(chartID, {
-				type : 'horizontalBar',
-				data : {
-					labels : chartLabel,
-					datasets : [ {
-						label: '매출액',
-						data : chartData,
-						backgroundColor : chartColor,
-						borderColor : borderColor,
-						fill : false,
-						borderWidth: 1
-					} ]
-				},
-				options : {
-					legend: {
-							labels: {
-									fontColor: 'Black'	
-							}
+				
+				var data = data.charData;
+				$.each(data, function(index, element){
+					chartLabel.push(element.chartLabel);
+					chartData.push(element.chartCount);
+					var strRGBA = 'rgba(154, 205, 50, 0.3)';
+					var borderRGBA = 'rgb(50, 205, 89)';
+					chartColor.push(strRGBA);
+					borderColor.push(borderRGBA);
+					
+					console.log(element.chartCount);
+					console.log(element.chartLabel);
+				}) //each
+				
+				new Chart(chartID, {
+					type : 'horizontalBar',
+					data : {
+						labels : chartLabel,
+						datasets : [ {
+							label: '매출액',
+							data : chartData,
+							backgroundColor : chartColor,
+							borderColor : borderColor,
+							fill : false,
+							borderWidth: 1
+						} ]
 					},
-					title: {
-							display: true,
-							text: '주간 매출 현황',
-							fontSize: 20,
-							fontStyle: 'bold',
-							fontColor: 'black'
-					},
-					scales: {
-							yAxes:[{
-									barPercentage:0.4,
-									fontColor: 'black'
-							}],
-							xAxes: [{
-									fontColor: 'black'
-							}]
+					options : {
+						legend: {
+								labels: {
+										fontColor: 'Black'	
+								}
+						},
+						title: {
+								display: true,
+								text: '주간 매출 현황',
+								fontSize: 20,
+								fontStyle: 'bold',
+								fontColor: 'black'
+						},
+						scales: {
+								yAxes:[{
+										barPercentage:0.4,
+										fontColor: 'black'
+								}],
+								xAxes: [{
+										fontColor: 'black'
+								}]
+						}
 					}
-				}
-			});//그래프				
+				});//그래프		
+				
+			} else {
+				alert('통신장애가 발생했습니다.\n다시 시도해주세요.');
+			}
 		},
 		error: function(){
 			alert('통신장애가 발생했습니다.\n다시 시도해주세요.');
