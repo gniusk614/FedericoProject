@@ -13,6 +13,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 <script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
 <script src="/federico/resources/myLib/franchise_Script.js"></script>
+<!-- chart js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 <script>
@@ -56,44 +57,34 @@ $(function(){
 					} ]
 				},
 				options : {
+					legend: {
+							labels: {
+									fontColor: 'Black'	
+							}
+					},
 					title: {
-						display: true,
-						text: '주간 매출 현황',
-						fontSize: 20,
-						fontStyle: 'bold'
+							display: true,
+							text: '주간 매출 현황',
+							fontSize: 20,
+							fontStyle: 'bold',
+							fontColor: 'black'
 					},
 					scales: {
-						yAxes:[{
-							barPercentage:0.4
-						}]
+							yAxes:[{
+									barPercentage:0.4,
+									fontColor: 'black'
+							}],
+							xAxes: [{
+									fontColor: 'black'
+							}]
 					}
 				}
 			});//그래프				
-				
-			
-			
-			
-			
-			
-			
 		},
 		error: function(){
-			
-			
-			
+			alert('통신장애가 발생했습니다.\n다시 시도해주세요.');
 		}
-		
-		
-		
 	})//ajax
-	
-
-	
-	
-	
-	
-	
-	
 })//ready
 </script>
 

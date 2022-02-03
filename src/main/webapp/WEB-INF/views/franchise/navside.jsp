@@ -66,13 +66,13 @@
 					</div>
 					
 
-					<!-- 정산하기 -->
+					<!-- 매출관리 -->
 					<a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
 						data-bs-target="#collapseLayouts3" aria-expanded="false"
 						aria-controls="collapseLayouts3">
 						<div class="sb-nav-link-icon">
 							<i class="fas fa-columns"></i>
-						</div> 정산하기
+						</div> 매출관리
 						<div class="sb-sidenav-collapse-arrow">
 							<i class="fas fa-angle-down"></i>
 						</div>
@@ -80,7 +80,7 @@
 					<div class="collapse" id="collapseLayouts3"
 						aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
-							<a class="nav-link" href="fcorder?flag=N">매출내역조회</a>
+							<a class="nav-link" href="stats">매출내역조회</a>
 						</nav>
 					</div>
 
