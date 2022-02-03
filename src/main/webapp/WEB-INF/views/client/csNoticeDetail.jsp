@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<jsp:useBean id="now" class="java.util.Date" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,30 +48,17 @@
 
 
 </style>
-<script>
-	//Search 이벤트 -> makequery 메서드 사용하기위해 jsp파일에 배치
-	$(
-			function() {
-				// SearchType 이 '---' 면 keyword 클리어
-				$('#searchType').change(function() {
-					$('#keyword').val('');
-				}); //change
-				// 검색후 요청
-				$('#searchBtn').on( "click", function() {
-							self.location = "cscenterf"
-									+ "${pageMaker.makeQuery(1)}"
-									+ "&searchType=" + $('#searchType').val()
-									+ '&keyword=' + $('#keyword').val()
-						}); //on_click 
-
-			}) //ready
-</script>
 </head>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
 	rel="stylesheet" />
 <body>
-
+	<c:if test="${not empty message}">
+		<script>
+			alert('출력할 글이 없습니다.');
+			location.href = history.go(-1);
+		</script>
+	</c:if>
 
 	<!-- Navigation-->
 	<%@include file="nav.jsp"%>
@@ -99,15 +88,19 @@
 											<td scope="col" style="width: 700px; font-size: x-large; font-weight: bold;">${noticeDetail.title}
 											</td>
 											<td scope="col" style="width: 100px; color: gray;">
+											<fmt:parseDate var="regdate" value="${noticeDetail.regdate}"
+														pattern="yyyy-MM-dd" />
+													<fmt:formatDate var="regdate" value="${regdate}"
+														pattern="yyyy-MM-dd" />
 												<div style="border-right: 1px solid lightgray;">
-													${noticeDetail.regdate}</div>
+													${regdate}</div>
 											</td>
 											<td scope="col" style="width: 100px; color: gray;">조회수&nbsp;${noticeDetail.cnt}</td>
 										</tr>
 									</thead>
 								</table>
 								<div class="row py-3 px-5" style="min-height: 500px; border-bottom: 1px solid black;">
-									<div><pre style="font-size: medium;">${noticeDetail.content}</pre></div>
+									<div align="justify"><pre style="font-size: medium;">${noticeDetail.content}</pre></div>
 								</div>
 								<div class="row mt-4 px-3">
 									<div class="col-6" align="left">
@@ -141,7 +134,7 @@
 					</div>
 				</div>
 	</section>
-	<!-- footer inlcud -->
+	<!-- footer include -->
 	<%-- <%@ include file="footer.jsp"%> --%>
 
 

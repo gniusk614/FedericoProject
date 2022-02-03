@@ -20,7 +20,7 @@
 	
 	<!-- 가맹점별 주문정보 조회 - completeYN 필드 유무로 조건검. -->
 	<select id="selectFcOrderbyFcId" resultType="vo.OrderListVO">
-		SELECT ordernumber, fcid, completeyn, memo, orderdate, clientPhone, clientAddress
+		SELECT ordernumber, fcid, completeyn, memo, to_char(orderdate,'yy/mm/dd hh24:mi') orderdate, clientPhone, clientAddress
 		FROM orderlist o
 		WHERE o.fcid = #{fcId}
 		<choose>
@@ -36,7 +36,8 @@
 	<!-- 주문번호별 주문상세내역 조회 -->
 	<select id="selectDetailbyOrderNumber" resultMap="OrderDetailListVO">
 		SELECT o.*, m.menuName, m.menuPrice
-		FROM orderdetaillist o, menuinfo m WHERE o.ordernumber = #{orderNumber} ORDER BY o.orderdetailnumber
+		FROM orderdetaillist o, menuinfo m WHERE o.ordernumber = #{orderNumber} And m.menuindex = o.menuindex 
+		ORDER BY o.orderdetailnumber
 	</select>
 
 	<!-- 주문취소처리 -->
@@ -59,7 +60,9 @@
 	
 	<!-- 완료주문 서치,페이징 -->
 	<select id="searchCompleteOrder" parameterType="hashmap" resultType="vo.OrderListVO" >
-		SELECT * FROM orderlist
+		SELECT ordernumber, clientid, fcid, completeyn, memo, to_char(orderDate,'YY/MM/DD HH24:MI') orderDate,
+		clientname, clientaddress, clientphone, memberyn		
+		FROM orderlist
 		 <include refid="completeOrderSearch"></include>
 		AND completeyn = 'Y' AND fcid = #{vo.fcId}
 		ORDER BY ordernumber desc

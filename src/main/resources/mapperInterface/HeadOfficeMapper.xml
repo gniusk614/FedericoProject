@@ -74,7 +74,7 @@
 	
 	<!-- 가맹점 발주정보 서치,페이징 -->
 	<select id="searchFcOrder" parameterType="hashmap" resultType="vo.FcOrderVO" >
-		SELECT * FROM fcorder
+		SELECT fcorderseq, fcid, to_char(fcorderdate,'yy/mm/dd hh24:mi') as fcorderdate, fcorderflag FROM fcorder
 		 <include refid="fcOrderSearch"></include>
 		<if test="flag != null and value != '' ">
 			and fcorderflag = #{flag}
@@ -295,6 +295,29 @@
 	</sql>
 
 
+	 <!-- notice 글등록 -->
+	<insert id="noticeInsert">
+	INSERT INTO NOTICEBOARD VALUES((select nvl(max(seq),0)+1 from NOTICEBOARD n),
+		#{title}, #{id}, #{content}, sysdate, 0, #{noticeFlag})
+	</insert>
+	
+	
+	<!-- notice 삭제 -->
+	<delete id="noticeDelete">
+	DELETE FROM NOTICEBOARD where seq = #{seq}
+	</delete>
+	
+	
+	<!-- notice 업데이트 -->
+	<insert id="noticeUpdate">
+		UPDATE NOTICEBOARD 
+		SET title = #{title}, content=#{content}, noticeFlag=#{noticeFlag} , id=#{id}
+		WHERE seq = #{seq}
+	</insert>
+
+
+
+
 
 	<!-- ============================={ 통계 }================================ -->
 	<!-- 최근 1년 월별 통계 -->
@@ -323,8 +346,26 @@
 	ORDER BY to_char(orderdate,'d') ASC
 	</select>
 
+	<!-- ============================={ 이벤트 페이지 }================================ -->
+	 <!-- 이벤트 게시판 글 등록 -->
+	<insert id="eventInsert">
+	INSERT INTO EVENTBOARD(eventSeq, title, hoId, content) VALUES((select nvl(max(eventSeq),0)+1 from EVENTBOARD n),
+		#{title}, #{hoId}, #{content})
+	</insert>
 	
-
+	
+	<!-- 이벤트 게시판 글 삭제 -->
+	<delete id="eventDelete">
+	DELETE FROM EVENTBOARD where eventSeq = #{eventSeq}
+	</delete>
+	
+	
+	<!-- 이벤트 게시판 글 수정 -->
+	<insert id="eventUpdate">
+		UPDATE EVENTBOARD 
+		SET title = #{title}, content=#{content}, hoId=#{hoId}
+		WHERE eventSeq = #{eventSeq}
+	</insert>	
 
 
 

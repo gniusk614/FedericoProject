@@ -39,12 +39,13 @@ import service.OrderService;
 import service.SendService;
 import vo.CartVO;
 import vo.ClientVO;
+import vo.EventBoardVO;
 import vo.FranchiseVO;
 import vo.MenuVO;
 import vo.NoticeBoardVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
-import vo.StaffVO;
+import vo.ComplainBoardVO;
 
 @RequestMapping(value = "/client")
 @Log4j
@@ -137,7 +138,7 @@ public class ClientController {
 					session.removeAttribute("list");
 				}
 				session.removeAttribute("listSize");
-				
+				session.removeAttribute("fcId");
 			}
 			
 		}
@@ -219,10 +220,8 @@ public class ClientController {
 		
 		if (session.getAttribute("clientLoginID") != null) {
 			vo.setClientId(session.getAttribute("clientLoginID").toString());
-			String clientPhone = clientService.selectOne(vo).getClientPhone();
-			clientPhone = clientPhone.substring(0, 3) + "-" + clientPhone.substring(3, 7) + "-" + clientPhone.substring(7);
 			mv.addObject("clientAddress", clientService.selectOne(vo).getClientAddress());
-			mv.addObject("clientPhone", clientPhone);
+			mv.addObject("clientPhone", clientService.selectOne(vo).getClientPhone());
 			mv.addObject("clientName", clientService.selectOne(vo).getClientName());
 		} else if(session.getAttribute("nonAddress") != null) {
 			mv.addObject("clientAddress", (String)session.getAttribute("nonAddress"));
@@ -605,9 +604,36 @@ public class ClientController {
 		}
 		
 		@RequestMapping(value ="/fcSearch")
-		public ModelAndView fcsearch (ModelAndView mv, FranchiseVO vo) {					
+		public ModelAndView fcsearch ( @RequestParam("area") String area,@RequestParam("Depth2") String Depth2,  ModelAndView mv, FranchiseVO vo) {
+			// 여기는 뷰단에서 입력 받은 DATA를 입력.						
+			List<FranchiseVO> listArea =  fcService.selectListbyArea(area);			
+			FranchiseVO listDepth2 =  fcService.selectFcOne(vo);			
 			
-			mv.setViewName("client/fcSearch");
+			if(listArea != null && listArea.equals(vo.getFcArea())) {				
+				if(Depth2.equals(listDepth2.getFcAddress().substring(listDepth2.getFcAddress().indexOf(" ")+1,listDepth2.getFcAddress().indexOf(" ")+4))) {
+					 
+							
+				}// 2nd if
+			}// if
+			
+		
+			
+			
+			/*
+			vo = fcService.selectFcOne(vo);
+			
+			if(vo.getFcAddress()!=null) {
+				mv.addObject("fcaddress", vo);
+				mv.addObject("success","success");				
+				}
+			else {			
+				mv.addObject("success","fail");
+			}
+						
+			mv.setViewName("jsonView");
+			*/
+			mv.setViewName("/client/fcSearch");
+			
 			return mv;
 		}
 		
@@ -647,9 +673,62 @@ public class ClientController {
 			mv.setViewName("client/csNoticeDetail");
 			return mv;
 		}
+	
+
+
+		//고객의소리 글등록
+		@RequestMapping(value ="/complainInsert")
+		public ModelAndView complainInsert (HttpServletRequest request, ModelAndView mv ,ComplainBoardVO vo) throws IllegalStateException, IOException {	
+			
+			
+			
+			if(clientService.complainInsert(vo)>0) {
+				mv.addObject("success", "성공");
+			}else {
+				mv.addObject("message", "실패");
+			}
+			mv.setViewName("client/complainInsertComplete");
+
+			return mv;
+		}
 		
+		/* ============================={ 이벤트 페이지 }================================ */
 		
+
+		// 이벤트 게시판 이동
+		@RequestMapping(value = "csEventf")
+		public ModelAndView csEventf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+			cri.setSnoEno();
+			
+			
+			List<EventBoardVO> searchList = clientService.searchEventBoard(cri);			
+			if (searchList != null && searchList.size() > 0) {
+				mv.addObject("eventList", searchList);
+			} else {
+				mv.addObject("message", "출력할 자료가 없습니다.");
+			}
+			
+			
+			
+			pageMaker.setCri(cri);
+			pageMaker.setTotalRowCount(clientService.searchEventBoardRows(cri));
+			
+			mv.setViewName("client/csEvent");
+			return mv;
+		}
 		
-		
+		// 이벤트 게시판 디테일
+		@RequestMapping(value ="/csEventDetail")
+		public ModelAndView csEventDetail (ModelAndView mv, EventBoardVO vo) {					
+			vo = clientService.selectDetailEventBoard(vo);
+			if(vo!=null) {
+				mv.addObject("eventDetail", vo);
+			}else {
+				mv.addObject("message", "출력할 글이 없습니다.");
+			}
+			mv.setViewName("client/csEventDetail");
+			return mv;
+		}
+
 		
 }// clientController

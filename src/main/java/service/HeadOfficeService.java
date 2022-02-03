@@ -6,11 +6,13 @@ import java.util.Map;
 
 import paging.SearchCriteria;
 import vo.ChartVO;
+import vo.EventBoardVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
 import vo.HeadOfficeVO;
 import vo.ItemInfoVO;
+import vo.NoticeBoardVO;
 import vo.StaffVO;
 
 public interface HeadOfficeService {
@@ -71,10 +73,20 @@ public interface HeadOfficeService {
 	List<FranchiseVO> searchFcList(SearchCriteria cri); // 가맹점정보 Search
 	
 	int searchFcRows(SearchCriteria cri); // 가맹점정보 Search 결과 Rows 조회
+	
+	int noticeInsert(NoticeBoardVO vo); //공지사항 등록
+	int noticeUpdate(NoticeBoardVO vo); //공지사항 수정
+	int noticeDelete(NoticeBoardVO vo); //공지사항 삭제
 
 	List<ChartVO> monthChart();//월별통계
 	
 	List<ChartVO> dayChart(); //요일별통계
+
+
+	int eventInsert(EventBoardVO vo); // 이벤트 게시판 등록
+	int eventUpdate(EventBoardVO vo); // 이벤트 게시판 수정
+	int eventDelete(EventBoardVO vo); // 이벤트 게시판 삭제
+
 	
 	
 	
