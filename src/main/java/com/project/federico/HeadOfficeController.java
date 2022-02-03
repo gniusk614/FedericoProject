@@ -1168,8 +1168,21 @@ public class HeadOfficeController {
 		mv.setViewName("jsonView");
 		return mv;
 	}
-
-	// 이벤트 게시판 글 수정 / 폼이동
+	
+	// 이벤트 게시판 디테일
+	@RequestMapping(value ="/eventBoardDetail")
+	public ModelAndView eventBoardDetail(ModelAndView mv, EventBoardVO vo) {					
+		vo = HeadOfficeService.selectDetailEventBoard(vo);
+		if(vo!=null) {
+			mv.addObject("eventBoardDetail", vo);
+		}else {
+			mv.addObject("message", "출력할 글이 없습니다.");
+		}
+		mv.setViewName("headoffice/eventBoardDetail");
+		return mv;
+	}
+	
+	// 이벤트 게시판 폼이동
 	@RequestMapping(value = "/eventInsertf")
 	public ModelAndView eventUpdatef(ModelAndView mv, EventBoardVO vo) {
 	
