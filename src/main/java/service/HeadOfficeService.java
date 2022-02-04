@@ -86,9 +86,7 @@ public interface HeadOfficeService {
 	int eventInsert(EventBoardVO vo); // 이벤트 게시판 등록
 	int eventUpdate(EventBoardVO vo); // 이벤트 게시판 수정
 	int eventDelete(EventBoardVO vo); // 이벤트 게시판 삭제
-	static EventBoardVO selectDetailEventBoard(EventBoardVO vo) {
-		return vo;
-	} // 이벤트 게시판 디테일
+	EventBoardVO selectDetailEventBoard(EventBoardVO vo); // 이벤트 게시판 디테일
 	
 
 	

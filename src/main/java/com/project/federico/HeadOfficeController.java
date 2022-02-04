@@ -957,7 +957,7 @@ public class HeadOfficeController {
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// 서버에 저장된 이미지 경로
-		String path = "D:\\MTest\\MyWork\\Federico\\src\\main\\webapp\\resources\\uploadImage\\boardImage\\"; // 저장된 이미지 경로
+		String path = "/Users/gniusk614/Documents/WEBDEVELOP/MTest/TeamProject/FedericoProject/src/main/webapp/resources/uploadImage/boardImage/"; // 저장된 이미지 경로
 		System.out.println("2path:" + path);
 		String sDirPath = path + uid + "_" + fileName;
 
@@ -1172,7 +1172,8 @@ public class HeadOfficeController {
 	// 이벤트 게시판 디테일
 	@RequestMapping(value ="/eventBoardDetail")
 	public ModelAndView eventBoardDetail(ModelAndView mv, EventBoardVO vo) {					
-		vo = HeadOfficeService.selectDetailEventBoard(vo);
+		vo = service.selectDetailEventBoard(vo);
+		System.out.println("** eventBoardDetail => "+vo);
 		if(vo!=null) {
 			mv.addObject("eventBoardDetail", vo);
 		}else {
