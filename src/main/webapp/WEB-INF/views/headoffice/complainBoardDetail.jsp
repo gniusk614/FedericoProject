@@ -81,7 +81,7 @@ tbody tr {
 											</td>
 											<td scope="col" style="width: 100px; ">작성자&nbsp;<b>${complainDetail.clientName}</b></td>
 											<td scope="col" style="width: 100px; ">연락처&nbsp;<b>${complainDetail.clientPhone}</b></td>
-											<td scope="col" style="width: 100px; ">&nbsp;<b>${complainDetail.clientEmail}</b></td>
+											<td scope="col" style="width: 100px; ">&nbsp;<b><A href="mailto:${complainDetail.clientEmail}">${complainDetail.clientEmail}</a></b></td>
 											<td scope="col" style="width: 100px; ">
 											<div style="border-right: 1px solid lightgray; border-left: 1px solid lightgray;">
 											&nbsp;가맹점&nbsp;${complainDetail.fcId}</div></td>
@@ -121,8 +121,13 @@ tbody tr {
 												</div>
 												<div class="row mt-3">
 													<div class="col-10">${complainComment.commentContent}</div>
-													<div class="col-2" style="cursor: pointer;" align="right" onclick="complainCommentDelete(${complainComment.commentSeq},${complainDetail.seq})"><i class="bi bi-trash"></i></div>
-												</div>
+														<c:if test="${loginID==complainComment.hoId || loginID=='admin'}">
+															<div class="col-2" align="right">
+																	<i class="bi bi-trash" style="cursor: pointer;"
+																	onclick="complainCommentDelete(${complainComment.commentSeq},${complainDetail.seq})"></i>
+															</div>
+														</c:if>
+													</div>
 											</div>
 											<hr>
 										</c:forEach>

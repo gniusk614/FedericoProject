@@ -676,8 +676,8 @@ table, tr, td, th {
 					<div class="card">
 						<div class="card-body">
 							<div class="form mb-3">
-								<input class="form-control" type="text" id="nonClientName"
-									name="nonName" placeholder="고객명" />
+								<input class="form-control" type="text" id="inputClientName"
+									name="inputClientName" placeholder="고객명" />
 								<div class="invalid-feedback" id="failMessage"
 									style="font-size: small;" align="left"></div>
 							</div>
@@ -695,7 +695,7 @@ table, tr, td, th {
 									name="inputCertifiedNumber" type="text"
 									oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"
 									placeholder="인증번호" readonly="readonly" />
-								<button class="btn btn-outline-danger" type="button"
+								<button class="btn btn-outline-danger" type="button" disabled="disabled"
 									id="checkBtn">인증번호 확인</button>
 							</div>
 						</div>

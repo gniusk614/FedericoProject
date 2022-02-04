@@ -2,11 +2,18 @@ package service;
 
 import java.util.HashMap;
 
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMessage.RecipientType;
+
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import vo.EmailVO;
 
 @Service
 public class SendService {
@@ -80,6 +87,19 @@ public class SendService {
 //			System.out.println(e.getCode());
 //		}
 	}
+	
+	 @Autowired
+	 protected JavaMailSender  mailSender;
+	 
+	public void SendEmail(EmailVO email) throws Exception {
+
+			MimeMessage msg = mailSender.createMimeMessage();
+			msg.setSubject(email.getSubject());
+			msg.setText(email.getContent());
+			msg.setRecipient(RecipientType.TO, new InternetAddress(email.getReciver()));
+
+			mailSender.send(msg);
+		}
 
 	
 
