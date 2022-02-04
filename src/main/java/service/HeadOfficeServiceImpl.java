@@ -248,4 +248,8 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 		return dao.eventDelete(vo);
 	}
 	
+	public EventBoardVO selectDetailEventBoard(EventBoardVO vo) {
+		return dao.selectDetailEventBoard(vo);
+	}
+	
 }

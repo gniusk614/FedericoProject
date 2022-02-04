@@ -84,7 +84,7 @@ tbody tr {
 				<!-- 컨텐츠 -->
 				<div id="content">
 					<!-- 이벤트 게시판 -->
-					<div id="csEventBoard" class="container" style="display: block;">
+					<div id="eventBoard" class="container" style="display: block;">
 						<div class="row justify-content-md-center py-5">
 
 							<div
@@ -145,7 +145,7 @@ tbody tr {
 											
 											<c:forEach var="list" items="${eventList}">
 												<tr
-													onclick="javascript:location.href='eventDetail?eventSeq=${list.eventSeq}'"
+													onclick="javascript:location.href='eventBoardDetail?eventSeq=${list.eventSeq}'"
 													style="vertical-align: middle; height: 50px;">
 													<td align="center">${list.eventSeq}</td>	
 													<td align="center">${list.title}</td>							
