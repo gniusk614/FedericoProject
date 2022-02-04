@@ -91,8 +91,6 @@ public class HeadOfficeController {
 	// 가맹점 발주내역 처리완료로 변경
 	@RequestMapping(value = "/fcordersequpdate")
 	public ModelAndView fcOrderSeqUpdate(ModelAndView mv, FcOrderVO vo, @RequestParam("flag") String flag) {
-		log.info("flag"+flag);
-		log.info("fcorderseq"+vo.getFcOrderSeq());
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("flag", flag);
@@ -248,10 +246,8 @@ public class HeadOfficeController {
 			
 			cVo = service.selectNumberOfFranchise("");
 			mv.addObject("numberOfAllFranchise", cVo==null ? 0 : cVo.getChartCount());
-			log.info("위  => "+cVo.getChartCount());
 			cVo = service.selectNumberOfFranchise("NEW");
 			mv.addObject("numberOfNewFranchise", cVo==null ? 0 : cVo.getChartCount());
-			log.info("아래  => "+cVo.getChartCount());
 			
 			List<FcOrderVO> list = new ArrayList<FcOrderVO>();
 			list = service.selectFcOrderSumPirce();

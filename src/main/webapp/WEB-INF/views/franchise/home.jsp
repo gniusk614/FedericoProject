@@ -40,8 +40,6 @@ $(function(){
 					chartColor.push(strRGBA);
 					borderColor.push(borderRGBA);
 					
-					console.log(element.chartCount);
-					console.log(element.chartLabel);
 				}) //each
 				
 				new Chart(chartID, {
@@ -112,7 +110,7 @@ $(function(){
 				</div>
 				<div class="col-2">
 					<div class="input-group mb-3">
-					  <input type="text" class="form-control" id="deliveryTime" value="${deliveryTime}" onchange="">
+					  <input type="text" class="form-control" id="deliveryTime" value="${deliveryTime}" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');">
 					  <button class="btn btn-outline-success" type="button" id="deliveryTimeBtn" onclick="updateDeliveryTime()">변경</button>
 					</div>	
 				</div>
