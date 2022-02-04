@@ -875,7 +875,10 @@ function joinCheckboxCheck(flag) {
 		}else{
 			$('#checkbox_yes_1').css('display','none');
 			$('#checkbox_no_1').css('display','inline');
+			$('#checkbox_yes_all').css('display','none');
+			$('#checkbox_no_all').css('display','inline');
 			serviceCheckboxChecked = false;
+			AllCheckboxChecked = false;
 		}
 	}//서비스 이용약관 동의
 	else if(flag=='2'){
@@ -886,7 +889,10 @@ function joinCheckboxCheck(flag) {
 		}else{
 			$('#checkbox_yes_2').css('display','none');
 			$('#checkbox_no_2').css('display','inline');
+			$('#checkbox_yes_all').css('display','none');
+			$('#checkbox_no_all').css('display','inline');
 			checkboxChecked = false;
+			AllCheckboxChecked = false;
 		}
 	}//개인정보 수집/이용동의
 	else if(flag=='3'){
@@ -897,7 +903,10 @@ function joinCheckboxCheck(flag) {
 		}else{
 			$('#checkbox_yes_3').css('display','none');
 			$('#checkbox_no_3').css('display','inline');
+			$('#checkbox_yes_all').css('display','none');
+			$('#checkbox_no_all').css('display','inline');
 			gpsCheckboxChecked = false;
+			AllCheckboxChecked = false;
 		}
 	}//위치기반서비스 이용동의
 	else if(flag=='sms'){
@@ -910,7 +919,10 @@ function joinCheckboxCheck(flag) {
 			$('#smsCheckbox_yes').css('display','none');
 			$('#smsCheckbox_no').css('display','inline');
 			$('#smsCheck').val('N');
+			$('#checkbox_yes_all').css('display','none');
+			$('#checkbox_no_all').css('display','inline');
 			smsCheckboxChecked = false;
+			AllCheckboxChecked = false;
 		}
 	}//문자서비스 이용동의
 	else if(flag=='email'){
@@ -923,9 +935,21 @@ function joinCheckboxCheck(flag) {
 			$('#emailCheckbox_yes').css('display','none');
 			$('#emailCheckbox_no').css('display','inline');
 			$('#emailCheck').val('N');
+			$('#checkbox_yes_all').css('display','none');
+			$('#checkbox_no_all').css('display','inline');
 			emailCheckboxChecked = false;
+			AllCheckboxChecked = false;
 		}
 	}//이메일서비스 이용동의
+	if(checkboxChecked == true &&
+			serviceCheckboxChecked == true &&
+			gpsCheckboxChecked == true &&
+			smsCheckboxChecked == true &&
+			emailCheckboxChecked == true){
+		AllCheckboxChecked = true;
+		$('#checkbox_no_all').css('display','none');
+		$('#checkbox_yes_all').css('display','inline');
+	}
 }//checkboxCheck
 
 //회원가입 약관 동의 후 버튼
@@ -993,18 +1017,17 @@ function complainInsert(){
 	console.log(title);
 	console.log(content);
 	
-	
-	if(clientName.length>0 && clientPhone.length>0 && clientEmail.length>0 && fcId.length>0 && title.length>0 && content>0){
+	if(checkboxChecked==false){
+		alert('개인정보 수집/이용을 동의해야만 주문이 가능합니다.')
+		return false;
+	}
+	if(clientName.length>0 && clientPhone.length>0 && clientEmail.length>0 && fcId.length>0 && title.length>0 && content.length>0){
 		if (confirm('고객의 소리를 등록하시겠습니까?')) {
 			$('#content').val(CKEDITOR.instances['textcontent'].getData());
 			return true;
 		} else {
 			return false;
 		}
-	}
-	if(checkboxChecked==false){
-		alert('개인정보 수집/이용을 동의해야만 주문이 가능합니다.')
-		return false;
 	}
 	else{
 		alert('내용을 빠짐없이 작성해주세요.')
