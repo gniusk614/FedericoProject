@@ -11,6 +11,8 @@ import vo.FranchiseVO;
 
 public interface FranchiseService {
 
+	ChartVO fcLastMonthSales(String fcId); //가맹점 전월 매출
+	
 	List<ChartVO> selectFCStatsAnnualSales(Map<String, Object> params); //연간 판매량(월별, 지점별)
 	
 	List<ChartVO> selectFCStatsMenuSales(Map<String, Object> params); //메뉴별 판매량(월별, 지점별)

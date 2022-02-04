@@ -44,7 +44,7 @@
 				</div>
 				</c:if>
 				<c:if test="${not empty loginID}">
-				<div class="col-sm-1 py-3" align="center" onclick="javaScript:location.href='/federico/headoffice/headofficeMain'"
+				<div class="col-sm-1 py-3" align="center" onclick="javaScript:location.href='/federico/headoffice/login'"
 				style="color: gray; width: 100px; cursor: pointer;">
 					<i class="bi bi-building"></i>&nbsp;본사공간
 				</div>

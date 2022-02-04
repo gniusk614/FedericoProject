@@ -22,8 +22,17 @@
 	</resultMap>
 <!-- resultMap 설정 ============================================================-->  
 
-	<!-- 가맹점 자재발주 등록(발주먼저등록), return fcOrderSeq -->
 	
+	<!-- 가맹점 개설현황 - 매개변수로 where 조건 -->
+	<select id="selectNumberOfFranchise" parameterType="String" resultType="vo.ChartVO">
+		SELECT COUNT(*) chartCount FROM FRANCHISE
+		<if test="_parameter == 'NEW'.toString()">
+			WHERE TO_CHAR(CREATEDDATE, 'YYMM') = TO_CHAR(SYSDATE,'YYMM')
+		</if>		
+	</select>
+
+	
+	<!-- 가맹점 자재발주 등록(발주먼저등록), return fcOrderSeq -->
 	<insert id="insertFcOrder" parameterType="vo.FcOrderVO">
 		<selectKey keyProperty="fcOrderSeq" resultType="int" order="BEFORE">
 			SELECT nvl(max(fcorderseq),0)+1 FROM fcorder
@@ -43,6 +52,18 @@
 		</foreach>
 	</insert>
 	
+	<!-- 본사 홈에 띄울 가맹점 미처리 자재발주 -->
+	<select id="selectFcOrderSumPirce" resultType="vo.FcOrderVO">
+		SELECT O.FCORDERSEQ, O.FCID, TO_CHAR(O.FCORDERDATE, 'YY/MM/DD HH24:MI') fcOrderDate, SUM(D.ITEMQTY * I.ITEMPRICE) sumPrice
+		FROM FCORDER O
+		JOIN FCORDERDETAIL D ON O.FCORDERSEQ = D.FCORDERSEQ
+		JOIN ITEMINFO I ON I.ITEMINDEX = D.ITEMINDEX
+		WHERE FCORDERFLAG = 'N'
+		GROUP BY O.FCORDERSEQ, O.FCID, O.FCORDERDATE
+		ORDER BY FCORDERSEQ 	
+	</select>
+
+
 
 	
   

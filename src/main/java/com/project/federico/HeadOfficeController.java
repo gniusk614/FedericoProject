@@ -91,8 +91,6 @@ public class HeadOfficeController {
 	// 가맹점 발주내역 처리완료로 변경
 	@RequestMapping(value = "/fcordersequpdate")
 	public ModelAndView fcOrderSeqUpdate(ModelAndView mv, FcOrderVO vo, @RequestParam("flag") String flag) {
-		log.info("flag"+flag);
-		log.info("fcorderseq"+vo.getFcOrderSeq());
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("flag", flag);
@@ -231,50 +229,121 @@ public class HeadOfficeController {
 	// 로그인(강광훈)
 	@RequestMapping(value = "/login")
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
-			HeadOfficeVO headOfficeVo, StaffVO staffVo) throws ServletException, IOException {
-
-		// 정보 저장
-		String password = headOfficeVo.getHoPassword();
+			HeadOfficeVO headOfficeVo, StaffVO staffVo, ChartVO cVo, HttpSession session) throws ServletException, IOException {
 		String uri = "/headoffice/loginForm";
-
-		
-		System.out.println(headOfficeVo.getHoPassword());
-		System.out.println(staffVo.getStaffCode());
-		
-		
-		
-		// 로그인서비스처리
-		staffVo = service.selectOne(staffVo);
-
-		if (staffVo != null) {
-			headOfficeVo.setStaffVo(staffVo);
-			headOfficeVo = service.loginSelectOne(headOfficeVo);
+		// 이미 로그인 한 경우
+		if(session.getAttribute("loginID") != null) {
+			// 홈화면에 나타낼 정보 처리(좌상단 통계)
+			String fcId = null;
+			cVo = fservice.fcThisMonthSales(fcId);
+			mv.addObject("thisMonthSales", cVo==null ? 0 : cVo.getChartCount());
+			cVo = fservice.fcTodaySales(fcId);
+			mv.addObject("todaySales", cVo==null ? 0 : cVo.getChartCount());
+			cVo = fservice.fcYesterdaySales(fcId);
+			mv.addObject("yesterdaySales", cVo==null ? 0 : cVo.getChartCount());
+			cVo = fservice.fcLastMonthSales(fcId);
+			mv.addObject("lastMonthSales", cVo==null ? 0 : cVo.getChartCount());
 			
-			// 정보 확인
-			if (headOfficeVo != null) { // ID는 일치 -> Password 확인
-				if (passwordEncoder.matches(password, headOfficeVo.getHoPassword())) {
-					// if (headOfficeVo.getHoPassword().equals(password)) {
-
-					headOfficeVo.setStaffVo(staffVo);// 굳이 이걸왜 한번 더 해야하는지모르겠는데 이거해야 밑에 널포인트 안뜸 ...
-					// 로그인 성공 -> 로그인 정보 session에 보관, home
-					request.getSession().setAttribute("loginID", headOfficeVo.getStaffVo().getStaffCode());
-					request.getSession().setAttribute("loginName", headOfficeVo.getStaffVo().getStaffName());
-					uri = "redirect:headofficeMain";
+			cVo = service.selectNumberOfFranchise("");
+			mv.addObject("numberOfAllFranchise", cVo==null ? 0 : cVo.getChartCount());
+			cVo = service.selectNumberOfFranchise("NEW");
+			mv.addObject("numberOfNewFranchise", cVo==null ? 0 : cVo.getChartCount());
+			
+			List<FcOrderVO> list = new ArrayList<FcOrderVO>();
+			list = service.selectFcOrderSumPirce();
+			if(list != null && list.size()>0) {
+				mv.addObject("orderList",list);
+			}
+			
+			uri = "headoffice/headofficeMain";
+		} else {
+			// 정보 저장
+			String password = headOfficeVo.getHoPassword();
+			
+			
+			
+			System.out.println(headOfficeVo.getHoPassword());
+			System.out.println(staffVo.getStaffCode());
+			
+			
+			
+			// 로그인서비스처리
+			staffVo = service.selectOne(staffVo);
+			
+			if (staffVo != null) {
+				headOfficeVo.setStaffVo(staffVo);
+				headOfficeVo = service.loginSelectOne(headOfficeVo);
+				
+				// 정보 확인
+				if (headOfficeVo != null) { // ID는 일치 -> Password 확인
+					if (passwordEncoder.matches(password, headOfficeVo.getHoPassword())) {
+						// if (headOfficeVo.getHoPassword().equals(password)) {
+						
+						headOfficeVo.setStaffVo(staffVo);// 굳이 이걸왜 한번 더 해야하는지모르겠는데 이거해야 밑에 널포인트 안뜸 ...
+						// 로그인 성공 -> 로그인 정보 session에 보관
+						request.getSession().setAttribute("loginID", headOfficeVo.getStaffVo().getStaffCode());
+						request.getSession().setAttribute("loginName", headOfficeVo.getStaffVo().getStaffName());
+						uri = "headoffice/headofficeMain";
+						
+						// 로그인 후 홈화면에 나타낼 정보 처리(좌상단 통계)
+						String fcId = null;
+						cVo = fservice.fcThisMonthSales(fcId);
+						mv.addObject("thisMonthSales", cVo==null ? 0 : cVo.getChartCount());
+						cVo = fservice.fcTodaySales(fcId);
+						mv.addObject("todaySales", cVo==null ? 0 : cVo.getChartCount());
+						cVo = fservice.fcYesterdaySales(fcId);
+						mv.addObject("yesterdaySales", cVo==null ? 0 : cVo.getChartCount());
+						cVo = fservice.fcLastMonthSales(fcId);
+						mv.addObject("lastMonthSales", cVo==null ? 0 : cVo.getChartCount());
+						
+						cVo = service.selectNumberOfFranchise("");
+						mv.addObject("numberOfAllFranchise", cVo==null ? 0 : cVo.getChartCount());
+						cVo = service.selectNumberOfFranchise("NEW");
+						mv.addObject("numberOfNewFranchise", cVo==null ? 0 : cVo.getChartCount());
+						
+						List<FcOrderVO> list = new ArrayList<FcOrderVO>();
+						list = service.selectFcOrderSumPirce();
+						if(list != null && list.size()>0) {
+							mv.addObject("orderList",list);
+						}
+						
+						
+					} else {
+						mv.addObject("message", "Password가 일치하지않습니다.");
+					}
 				} else {
-					mv.addObject("message", "Password가 일치하지않습니다.");
-				}
+					mv.addObject("message", "회원정보가 없습니다. ID를 확인해주세요.");
+				} // if
 			} else {
 				mv.addObject("message", "회원정보가 없습니다. ID를 확인해주세요.");
-			} // if
-		} else {
-			mv.addObject("message", "회원정보가 없습니다. ID를 확인해주세요.");
-		} // if(staffVo null)
-
+			} // if(staffVo null)
+		}
 		mv.setViewName(uri);
 
 		return mv;
 	}// login
 
+	// 본사 홈화면 최근7일 매출 차트데이터
+	@RequestMapping(value = "/allFcchartsevenday")
+	public ModelAndView allFcChartSevenDay(ModelAndView mv) {
+		String fcId = null;
+		List<ChartVO> chartList = new ArrayList<ChartVO>();
+		
+		chartList = fservice.fcLastSevenDaysSalesPerDay(fcId);
+		if(chartList != null && chartList.size()>0) {
+			mv.addObject("charData", chartList);
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+		
+		mv.addObject("charData", chartList);
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
 	// 로그아웃 (강광훈)
 	@RequestMapping(value = "/logout")
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
@@ -1172,7 +1241,8 @@ public class HeadOfficeController {
 	// 이벤트 게시판 디테일
 	@RequestMapping(value ="/eventBoardDetail")
 	public ModelAndView eventBoardDetail(ModelAndView mv, EventBoardVO vo) {					
-		vo = HeadOfficeService.selectDetailEventBoard(vo);
+		vo = service.selectDetailEventBoard(vo);
+		System.out.println("** eventBoardDetail => "+vo);
 		if(vo!=null) {
 			mv.addObject("eventBoardDetail", vo);
 		}else {
@@ -1184,9 +1254,22 @@ public class HeadOfficeController {
 	
 	// 이벤트 게시판 폼이동
 	@RequestMapping(value = "/eventInsertf")
-	public ModelAndView eventUpdatef(ModelAndView mv, EventBoardVO vo) {
+	public ModelAndView eventInsertf(ModelAndView mv, EventBoardVO vo) {
 	
 		mv.setViewName("headoffice/eventBoardInsert");
+		return mv;
+	}
+	
+	// 이벤트 게시판 글 수정 폼이동
+	@RequestMapping(value = "/eventUpdatef")
+	public ModelAndView eventUpdatef(ModelAndView mv, EventBoardVO vo) {
+		vo = service.selectDetailEventBoard(vo);
+		if (vo != null) {
+			mv.addObject("eventDetail", vo);
+		} else {
+			mv.addObject("message", "출력할 글이 없습니다.");
+		}
+		mv.setViewName("headoffice/eventBoardUpdate");
 		return mv;
 	}
 	
