@@ -118,7 +118,7 @@ table, tr, td, th {
 													</div>
 													<div class="row">
 														<div class="col" align="right">
-															<a class="small" href="passwordReset"
+															<a class="small" href="findIdPwf"
 																style="font-size: medium; color: Crimson;">아이디/비밀번호 찾기</a>
 														</div>
 													</div>
