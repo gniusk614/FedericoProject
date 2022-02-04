@@ -583,7 +583,8 @@ public class FranchiseController {
 				mv.addObject("fcYesterdaySales", cVo==null ? 0 : cVo.getChartCount());
 				cVo = service.fcThisMonthOrderSum(fcId);
 				mv.addObject("fcThisMonthOrderSum", cVo==null ? 0 : cVo.getChartCount());
-				
+				cVo = service.fcLastMonthSales(fcId);
+				mv.addObject("fcLastMonthSales", cVo==null ? 0 : cVo.getChartCount());
 				
 				mv.setViewName("franchise/home");
 				
@@ -640,7 +641,8 @@ public class FranchiseController {
 							mv.addObject("fcYesterdaySales", cVo==null ? 0 : cVo.getChartCount());
 							cVo = service.fcThisMonthOrderSum(fcId);
 							mv.addObject("fcThisMonthOrderSum", cVo==null ? 0 : cVo.getChartCount());
-							
+							cVo = service.fcLastMonthSales(fcId);
+							mv.addObject("fcLastMonthSales", cVo==null ? 0 : cVo.getChartCount());
 
 							
 						}

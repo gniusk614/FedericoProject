@@ -1,6 +1,5 @@
 package service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,8 @@ import vo.StaffVO;
 
 public interface HeadOfficeService {
 
+	ChartVO selectNumberOfFranchise(String s); // 가맹점 개설현황 - 매개변수로 where 조건
+	
 	List<FcOrderVO> selectFcOrderSumPirce(); // 본사 홈에 띄울 가맹점 미처리 자재발주
 
 	int insertFcOrderDetail(List<FcOrderDetailVO> vo); //가맹점 자재발주 상세내역 등록

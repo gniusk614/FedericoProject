@@ -165,12 +165,25 @@
 		JOIN orderlist o ON f.fcid = o.fcid
 		JOIN orderdetaillist d ON d.ordernumber = o.ordernumber
 		JOIN menuinfo m on d.menuindex = m.menuindex
-		WHERE o.orderdate BETWEEN trunc(sysdate, 'MM')  AND add_months(trunc(sysdate, 'MM'),1)
+		WHERE o.orderdate BETWEEN TRUNC(SYSDATE,'MM') AND LAST_DAY(SYSDATE)
 		AND o.completeyn = 'Y'
 		<if test="value != null and value != ''">
 			AND f.fcid = #{value}
 		</if>
-		GROUP BY o.fcid
+	</select>
+	
+		<!-- 가맹점 전월 매출 -->
+	<select id="fcLastMonthSales" resultType="vo.ChartVO">
+		SELECT sum(d.menuqty * m.menuprice) chartCount
+		FROM franchise f
+		JOIN orderlist o ON f.fcid = o.fcid
+		JOIN orderdetaillist d ON d.ordernumber = o.ordernumber
+		JOIN menuinfo m on d.menuindex = m.menuindex
+		WHERE o.orderdate BETWEEN ADD_MONTHS(TRUNC(SYSDATE,'MM'),-1) AND LAST_DAY(ADD_MONTHS(SYSDATE,-1))
+		AND o.completeyn = 'Y'
+		<if test="value != null and value != ''">
+			AND f.fcid = #{value}
+		</if>
 	</select>
 
 	<!-- 가맹점 당일 매출 -->
@@ -326,8 +339,8 @@
 
 	<!-- HeadOffice 인서트 -->
 	<insert id="fcInsert">
-		INSERT INTO franchise(fcId, fcPassword, fcName, fcAddress, fcArea, fcPhone, hoId,fcClose) 
-		VALUES(#{fcId}, #{fcPassword}, #{fcName}, #{fcAddress},#{fcArea}, #{fcPhone}, #{hoId}, #{fcClose})
+		INSERT INTO franchise(fcId, fcPassword, fcName, fcAddress, fcArea, fcPhone, hoId,fcClose, createddate) 
+		VALUES(#{fcId}, #{fcPassword}, #{fcName}, #{fcAddress},#{fcArea}, #{fcPhone}, #{hoId}, #{fcClose}, sysdate)
 	</insert>
 
 

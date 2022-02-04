@@ -243,8 +243,15 @@ public class HeadOfficeController {
 			mv.addObject("todaySales", cVo==null ? 0 : cVo.getChartCount());
 			cVo = fservice.fcYesterdaySales(fcId);
 			mv.addObject("yesterdaySales", cVo==null ? 0 : cVo.getChartCount());
-			cVo = fservice.fcThisMonthOrderSum(fcId);
-			mv.addObject("thisMonthOrderSum", cVo==null ? 0 : cVo.getChartCount());
+			cVo = fservice.fcLastMonthSales(fcId);
+			mv.addObject("lastMonthSales", cVo==null ? 0 : cVo.getChartCount());
+			
+			cVo = service.selectNumberOfFranchise("");
+			mv.addObject("numberOfAllFranchise", cVo==null ? 0 : cVo.getChartCount());
+			log.info("위  => "+cVo.getChartCount());
+			cVo = service.selectNumberOfFranchise("NEW");
+			mv.addObject("numberOfNewFranchise", cVo==null ? 0 : cVo.getChartCount());
+			log.info("아래  => "+cVo.getChartCount());
 			
 			List<FcOrderVO> list = new ArrayList<FcOrderVO>();
 			list = service.selectFcOrderSumPirce();
@@ -277,7 +284,7 @@ public class HeadOfficeController {
 						// if (headOfficeVo.getHoPassword().equals(password)) {
 						
 						headOfficeVo.setStaffVo(staffVo);// 굳이 이걸왜 한번 더 해야하는지모르겠는데 이거해야 밑에 널포인트 안뜸 ...
-						// 로그인 성공 -> 로그인 정보 session에 보관, home
+						// 로그인 성공 -> 로그인 정보 session에 보관
 						request.getSession().setAttribute("loginID", headOfficeVo.getStaffVo().getStaffCode());
 						request.getSession().setAttribute("loginName", headOfficeVo.getStaffVo().getStaffName());
 						uri = "headoffice/headofficeMain";
@@ -290,8 +297,13 @@ public class HeadOfficeController {
 						mv.addObject("todaySales", cVo==null ? 0 : cVo.getChartCount());
 						cVo = fservice.fcYesterdaySales(fcId);
 						mv.addObject("yesterdaySales", cVo==null ? 0 : cVo.getChartCount());
-						cVo = fservice.fcThisMonthOrderSum(fcId);
-						mv.addObject("thisMonthOrderSum", cVo==null ? 0 : cVo.getChartCount());
+						cVo = fservice.fcLastMonthSales(fcId);
+						mv.addObject("lastMonthSales", cVo==null ? 0 : cVo.getChartCount());
+						
+						cVo = service.selectNumberOfFranchise("");
+						mv.addObject("numberOfAllFranchise", cVo==null ? 0 : cVo.getChartCount());
+						cVo = service.selectNumberOfFranchise("NEW");
+						mv.addObject("numberOfNewFranchise", cVo==null ? 0 : cVo.getChartCount());
 						
 						List<FcOrderVO> list = new ArrayList<FcOrderVO>();
 						list = service.selectFcOrderSumPirce();

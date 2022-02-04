@@ -22,8 +22,17 @@
 	</resultMap>
 <!-- resultMap 설정 ============================================================-->  
 
-	<!-- 가맹점 자재발주 등록(발주먼저등록), return fcOrderSeq -->
 	
+	<!-- 가맹점 개설현황 - 매개변수로 where 조건 -->
+	<select id="selectNumberOfFranchise" parameterType="String" resultType="vo.ChartVO">
+		SELECT COUNT(*) chartCount FROM FRANCHISE
+		<if test="_parameter == 'NEW'.toString()">
+			WHERE TO_CHAR(CREATEDDATE, 'YYMM') = TO_CHAR(SYSDATE,'YYMM')
+		</if>		
+	</select>
+
+	
+	<!-- 가맹점 자재발주 등록(발주먼저등록), return fcOrderSeq -->
 	<insert id="insertFcOrder" parameterType="vo.FcOrderVO">
 		<selectKey keyProperty="fcOrderSeq" resultType="int" order="BEFORE">
 			SELECT nvl(max(fcorderseq),0)+1 FROM fcorder
