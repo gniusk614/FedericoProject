@@ -253,6 +253,7 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 		return dao.eventDelete(vo);
 	}
 	
+	@Override
 	public EventBoardVO selectDetailEventBoard(EventBoardVO vo) {
 		return dao.selectDetailEventBoard(vo);
 	}
