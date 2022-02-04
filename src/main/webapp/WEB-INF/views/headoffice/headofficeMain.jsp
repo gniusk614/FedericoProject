@@ -110,22 +110,30 @@ $(function(){
 				<!-- 상단 좌측 -->
 				<div class="col-6 fs-5" align="center">
 					<div class="row m-1" style="height: 190px; border: 1px solid lightgray;">
-					<fmt:parseNumber var="dailySalesRatio" value="${todaySales/yesterdaySales * 100}" integerOnly="true" />
+					
 						<div class="col-4">
 							<br><span>전일 매출</span><br><b class="fs-2"><fmt:formatNumber value="${yesterdaySales}" pattern="#,###"/></b> 원
 						</div>
 						<div class="col-4">
 							<br><span>당일 매출</span><br><b class="fs-2"><fmt:formatNumber value="${todaySales}" pattern="#,###"/></b> 원<br>
-							<c:if test="${dailySalesRatio>=100}">
-								<span style="color: blue;">(+ ${dailySalesRatio-100}%)</span>
+						
+							<c:if test="${yesterdaySales != 0 && todaySales != 0}">
+								<fmt:parseNumber var="dailySalesRatio" value="${todaySales/yesterdaySales * 100}" integerOnly="true" />
+								<c:if test="${dailySalesRatio>=100}">
+									<span style="color: blue;">(+ ${dailySalesRatio-100}%)</span>
+								</c:if>
+								<c:if test="${dailySalesRatio<100}">
+									<span style="color: red;">(- ${100-dailySalesRatio}%)</span>
+								</c:if>
 							</c:if>
-							<c:if test="${dailySalesRatio<100}">
-								<span style="color: red;">(- ${100-dailySalesRatio}%)</span>
-							</c:if>
+							<c:if test="${yesterdaySales == 0 || todaySales == 0}">
+								<span style="color: red;">( - )</span>
+							</c:if>	
+								
 						</div>
 						<div class="col-4">
 							<br><span>당월 매출</span><br><b class="fs-2"><fmt:formatNumber value="${thisMonthSales}" pattern="#,###"/></b> 원<br>
-							<c:if test="${lastMonthSales != 0}">
+							<c:if test="${lastMonthSales != 0 && thisMonthSales != 0}">
 								<fmt:parseNumber var="monthlySalesRatio" value="${thisMonthSales/lastMonthSales * 100}" integerOnly="true" />
 								<c:if test="${monthlySalesRatio>=100}">
 									<span style="color: blue;">(+ ${monthlySalesRatio-100}%)</span>
@@ -134,7 +142,7 @@ $(function(){
 									<span style="color: red;">(- ${100-monthlySalesRatio}%)</span>
 								</c:if>									
 							</c:if>		
-							<c:if test="${lastMonthSales == 0}">
+							<c:if test="${lastMonthSales == 0 || thisMonthSales == 0}">
 								<span style="color: red;">( - )</span>
 							</c:if>
 							
