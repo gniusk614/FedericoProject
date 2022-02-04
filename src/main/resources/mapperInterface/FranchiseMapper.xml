@@ -155,7 +155,6 @@
 		<if test="value != null and value != ''">
 			AND f.fcid = #{value}
 		</if>
-		GROUP BY o.fcid
 	</select>
 
 	<!-- 가맹점 당월 매출 -->
@@ -198,7 +197,6 @@
 		<if test="value != null and value != ''">
 			AND f.fcid = #{value}
 		</if>
-		GROUP BY o.fcid
 	</select>
 
 	<!-- 가맹점 당월 발주금액 -->

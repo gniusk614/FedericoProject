@@ -31,6 +31,22 @@ $(function(){
 	
 }) //ready
 
+// 주문 데이터삽입 용 -----------------------------------------------------
+function testpay(){
+	var today =  new Date();
+	var hour = today.getHours();
+	var minute = today.getMinutes();
+	
+	$('#iamfcId').val($('#selectFranchise').val());
+	$('#iamMemo').val($('#clientMemo').val());	
+	
+	var itemQty = $('#save').attr('data-totalQty');
+    $('#iamForm').submit();
+	
+}
+
+
+
 
 // iamPort 결제 
 function iamPort(){
