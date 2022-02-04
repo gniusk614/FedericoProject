@@ -1185,9 +1185,22 @@ public class HeadOfficeController {
 	
 	// 이벤트 게시판 폼이동
 	@RequestMapping(value = "/eventInsertf")
-	public ModelAndView eventUpdatef(ModelAndView mv, EventBoardVO vo) {
+	public ModelAndView eventInsertf(ModelAndView mv, EventBoardVO vo) {
 	
 		mv.setViewName("headoffice/eventBoardInsert");
+		return mv;
+	}
+	
+	// 이벤트 게시판 글 수정 폼이동
+	@RequestMapping(value = "/eventUpdatef")
+	public ModelAndView eventUpdatef(ModelAndView mv, EventBoardVO vo) {
+		vo = service.selectDetailEventBoard(vo);
+		if (vo != null) {
+			mv.addObject("eventDetail", vo);
+		} else {
+			mv.addObject("message", "출력할 글이 없습니다.");
+		}
+		mv.setViewName("headoffice/eventBoardUpdate");
 		return mv;
 	}
 	
