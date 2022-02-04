@@ -18,6 +18,30 @@ public class FranchiseServiceImple implements FranchiseService {
 	@Autowired
 	FranchiseMapper dao;
 
+	//연간 판매량(월별, 지점별)
+	@Override
+	public List<ChartVO> selectFCStatsAnnualSales(Map<String, Object> params) {
+		return dao.selectFCStatsAnnualSales(params);
+	}
+	
+	//메뉴별 판매량(월별, 지점별)
+	@Override
+	public List<ChartVO> selectFCStatsMenuSales(Map<String, Object> params) {
+		return dao.selectFCStatsMenuSales(params);
+	}
+	
+	// 시간대별 매출
+	@Override
+	public List<ChartVO> selectFCStatsTimeSales(Map<String, Object> params) {
+		return dao.selectFCStatsTimeSales(params);
+	}
+	
+	// 특정 월의 일자별 매출
+	@Override
+	public List<ChartVO> selectFcStatsMonthlySales(Map<String, Object> params) {
+		return dao.selectFcStatsMonthlySales(params);
+	}
+	
 	//가맹점 단골고객 조회 rowsCount
 	@Override
 	public int selectFcClientRowsCount(Map<String, Object> params) {
