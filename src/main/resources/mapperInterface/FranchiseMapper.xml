@@ -2,6 +2,72 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mapperInterface.FranchiseMapper">
+	
+	<!-- 연간 판매량(월별, 지점별)  -->
+	<select id="selectFCStatsAnnualSales" resultType="vo.ChartVO">
+		SELECT I.ORDERMONTH chartLabel, NVL(SUM(D.MENUQTY*M.MENUPRICE),0) chartCount
+		FROM (SELECT TO_CHAR(TRUNC(TO_DATE(#{baseDay},'YYYYMMDD'),'YY'),'YYMM')+LEVEL-1 ORDERMONTH FROM DUAL
+		<![CDATA[CONNECT BY LEVEL < 13) I]]>
+		LEFT JOIN ORDERLIST O ON TO_CHAR(O.ORDERDATE,'YYMM') = I.ORDERMONTH 
+		<if test="fcId != null and fcId != ''">
+			AND O.FCID = #{fcId}
+		</if>
+		LEFT JOIN ORDERDETAILLIST D ON O.ORDERNUMBER = D.ORDERNUMBER
+		LEFT JOIN MENUINFO M ON D.MENUINDEX = M.MENUINDEX
+		GROUP BY I.ORDERMONTH
+		ORDER BY I.ORDERMONTH
+	</select>	
+	
+	<!-- 메뉴별 월간 판매량(월별, 지점별)  -->
+	<select id="selectFCStatsMenuSales" resultType="vo.ChartVO">
+		SELECT M.MENUNAME chartLabel,NVL(SUM(O.MENUQTY),0) chartCount
+		FROM MENUINFO M
+		LEFT JOIN (SELECT O.ORDERDATE, O.FCID ,D.MENUINDEX, D.MENUQTY
+		FROM ORDERLIST O
+		JOIN ORDERDETAILLIST D ON O.ORDERNUMBER = D.ORDERNUMBER WHERE 1=1
+		<if test="fcId != null and fcId != ''">
+			AND FCID = #{fcId} 
+		</if>
+		<if test="baseDay != null and baseDay != ''">
+			AND TO_CHAR(O.ORDERDATE,'YY/MM') = TO_CHAR(TO_DATE(#{baseDay},'YYYYMMDD'),'YY/MM')) O
+		</if>
+		ON M.MENUINDEX = O.MENUINDEX
+		GROUP BY M.MENUNAME
+		ORDER BY chartCount DESC, M.MENUNAME ASC NULLS LAST
+	</select>
+	
+	<!-- 시간대별 매출 where orderdate and fcid and 전체 -->
+	<select id="selectFCStatsTimeSales" resultType="vo.ChartVO">
+		SELECT I.ORDERTIME chartLabel, SUM(M.MENUPRICE*D.MENUQTY) chartCount
+		<![CDATA[FROM (SELECT LEVEL-1 ORDERTIME FROM DUAL CONNECT BY LEVEL <25) I]]>
+		LEFT JOIN ORDERLIST O ON TO_CHAR(O.ORDERDATE,'HH24') = I.ORDERTIME 
+		<if test="selectDate != null and selectDate != ''">
+			AND TO_CHAR(O.ORDERDATE, 'YYMMDD') = #{selectDate} 
+		</if>
+		<if test="fcId != null and fcId != ''">
+			AND FCID=#{fcId}
+		</if>
+		LEFT JOIN ORDERDETAILLIST D ON O.ORDERNUMBER = D.ORDERNUMBER
+		LEFT JOIN MENUINFO M ON M.MENUINDEX = D.MENUINDEX
+		GROUP BY I.ORDERTIME
+		ORDER BY I.ORDERTIME	
+	</select>
+	
+	<!-- 특정 월의 일자별 매출 WHERE FCID -->
+	<select id="selectFcStatsMonthlySales" resultType="vo.ChartVO">
+		SELECT I.ORDERDATE as chartLabel, SUM(M.MENUPRICE*D.MENUQTY) as chartCount
+		FROM (SELECT TO_CHAR(TRUNC(TO_DATE(#{baseDay}),'MM'),'YYYYMMDD')+LEVEL-1 ORDERDATE
+		        FROM DUAL
+		<![CDATA[CONNECT BY LEVEL < TO_NUMBER(TO_CHAR(LAST_DAY(TO_DATE(#{baseDay})),'DD'))+1) I]]>       
+		LEFT JOIN ORDERLIST O ON TO_CHAR(O.ORDERDATE,'YYYYMMDD') = I.ORDERDATE 
+		<if test="fcId != null and fcId != ''">
+			AND FCID = #{fcId}
+		</if>
+		LEFT JOIN ORDERDETAILLIST D ON O.ORDERNUMBER = D.ORDERNUMBER
+		LEFT JOIN MENUINFO M ON M.MENUINDEX = D.MENUINDEX
+		GROUP BY I.ORDERDATE
+		ORDER BY I.ORDERDATE
+	</select>
 
 
 	<!-- 가맹점 단골고객 삭제 -->
@@ -20,7 +86,7 @@
 		<if test="fcId != null and fcId != ''">
 			AND FCID = #{fcId}
 		</if>
-		<if test="clientPhone != null and clientPhoe != ''">
+		<if test="clientPhone != null and clientPhone != ''">
 			AND CLIENTPHONE = #{clientPhone}
 		</if>
 		<if test="seq != null and seq != ''">
@@ -76,7 +142,7 @@
 	</select>
 
 	<!-- 가맹점 전일 매출 -->
-	<select id="fcYesterdaySales" resultType="vo.ChartVO">
+	<select id="fcYesterdaySales" parameterType="string" resultType="vo.ChartVO">
 		SELECT sum(d.menuqty * m.menuprice) chartCount
 		FROM franchise f
 		JOIN orderlist o ON f.fcid = o.fcid

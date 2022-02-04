@@ -48,6 +48,11 @@ $(function() {
 		$('#datetimepicker1').datetimepicker('maxDate', e.date); 
 	});
 
+
+	// input 숫자만 입력받기
+	$('#deliveryTime').on('keyup',function(){
+		$(this).val($(this).val().replace(/[^0-9]/g,''));		
+	})
 	
 }) //ready
 
@@ -701,13 +706,69 @@ function fcOrderDetailForm(fcOrderSeq) {
 	})
 }// fcOrderDetailForm
 
-	
-
-
-
-
-
 // ============================= 가맹점 자재발주조회 (현구) =======================================
+
+
+
+
+
+// ============================= 가맹점 통계관련 (현구) =======================================
+
+
+
+$(function(){
+	
+/*	//checkbox 기본이벤트
+	$('.checkboxParent').children('input:checkbox').on('change',function(){
+		if($(this).is(':checked')){
+			$('.checkboxParent').children('input:checkbox').not($(this)).prop('checked',false);
+			$('.checkboxParent').children('input:checkbox').not($(this)).next().css('fontWeight','normal');
+			$(this).next().css('fontWeight','bold')
+		} else if(! $(this).is(':checked')){
+			$(this).next().css('fontWeight','normal');
+		}
+	})*/
+	
+	// 통계 메뉴 이벤트
+	$('.parent').find('span').on('click',function(){
+		$(this).addClass('selected');
+		$('.parent').find('span').not($(this)).removeClass();
+	})
+	
+	
+	
+}) //ready
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ============================= 가맹점 통계관련 (현구) =======================================
 
 
 

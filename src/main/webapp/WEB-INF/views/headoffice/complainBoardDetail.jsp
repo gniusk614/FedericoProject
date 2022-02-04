@@ -103,15 +103,7 @@ tbody tr {
 										<pre style="font-size: medium;">${complainDetail.content}</pre>
 									</div>
 								</div>
-								<div class="row py-3 px-5"
-									style="border-bottom: 1px solid black;" align="justify">
-									<div>
-										첨부파일
-									</div>
-									<div>
-										${complainDetail.uploadfile}
-									</div>
-								</div>
+								
 								<div class="row py-3 px-5"
 									style="border-bottom: 1px solid black;" align="justify">
 									<div class="mb-3">

@@ -65,6 +65,9 @@ public class ClientController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
+	
+
+	
 	// 결제완료폼 이동 + 주문정보 인서트
 	@RequestMapping(value = "/ordercomplete")
 	public ModelAndView ordercomplete(ModelAndView mv, HttpServletRequest request, HttpSession session, ClientVO clientVo) {
@@ -273,7 +276,6 @@ public class ClientController {
 	@RequestMapping(value = "/addCartNM")
 	public ModelAndView addCartNoneMember(ModelAndView mv, HttpSession session, MenuVO menuVo, CartVO cartVo) {
 		List<CartVO> list = null;
-		System.out.println(session.getAttribute("list"));
 		if (session.getAttribute("list") != null) {
 			list = (List<CartVO>) session.getAttribute("list");
 		} else {
@@ -548,10 +550,20 @@ public class ClientController {
 		
 		//회원가입
 		@RequestMapping(value = "clientJoin")
-		public ModelAndView clientJoin(ModelAndView mv, ClientVO vo , RedirectAttributes rttr) {
+		public ModelAndView clientJoin(ModelAndView mv, ClientVO vo , RedirectAttributes rttr, HttpSession session, CartVO cartVo) {
 			vo.setClientPassword(passwordEncoder.encode(vo.getClientPassword()));
 			if (clientService.insertClient(vo) > 0) {
 				rttr.addAttribute("message", "계정생성이 완료되었습니다.");
+				// 회원가입 시 장바구니 있으면 회원장바구니에 추가
+				if(session.getAttribute("list") != null) {
+					List<CartVO> list = (List<CartVO>) session.getAttribute("list");
+					if(list.size() > 0) {
+						for(CartVO imsi : list) {
+							imsi.setClientId(vo.getClientId());
+							clientService.insertCart(imsi);
+						}
+					}
+				}
 			} else {
 				rttr.addAttribute("message", "계정생성이 실패하였습니다");
 			}
