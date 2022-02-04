@@ -346,8 +346,7 @@ function fcincheck() {
 		$('#fcPasswordRepeat').addClass('is-invalid');
 		$('#fcprMessage').html('password를 확인하세요');
 	}
-
-	if (fcidCheck == true && fcpCheck == true && fcprCheck == true) {
+	if (fcidCheck == true && fcpCheck == true && fcprCheck == true && fcdubCheck == true) {
 		if (confirm('계정을 생성하시겠습니까?')==true) {
 			return true;
 		} else {

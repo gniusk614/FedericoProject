@@ -39,13 +39,14 @@ import service.OrderService;
 import service.SendService;
 import vo.CartVO;
 import vo.ClientVO;
+import vo.ComplainBoardVO;
+import vo.EmailVO;
 import vo.EventBoardVO;
 import vo.FranchiseVO;
 import vo.MenuVO;
 import vo.NoticeBoardVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
-import vo.ComplainBoardVO;
 
 @RequestMapping(value = "/client")
 @Log4j
@@ -64,7 +65,6 @@ public class ClientController {
 	FranchiseService fcService;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
 	
 
 	
@@ -468,7 +468,6 @@ public class ClientController {
 		
 		String phoneNumber = vo.getClientPhone();
 		vo = clientService.selectOnePhone(vo);
-		
 		if (vo != null) {
 			mv.addObject("selectOne", vo);
 		} else {
@@ -486,6 +485,40 @@ public class ClientController {
 		mv.setViewName("jsonView");
 		return mv;
 	}
+	// 비번찾기문자전송 컨트롤러
+		@GetMapping("/findPwSendSMS")
+		public @ResponseBody ModelAndView findPwSendSMS(ModelAndView mv, ClientVO vo) {
+			String clientName = vo.getClientName();
+			String phoneNumber = vo.getClientPhone();
+			vo = clientService.selectOne(vo);
+			if(vo!=null) {
+				if (vo.getClientName().equals(clientName) == false) {
+					log.info(clientName + "," + vo.getClientName());
+					mv.addObject("message", "가입정보와 다른 이름입니다. 입력정보를 다시 확인해주세요");
+				} else if (vo.getClientPhone().equals(phoneNumber) == false) {
+					mv.addObject("message", "가입정보와 다른 번호입니다. 입력정보를 다시 확인해주세요");
+					log.info(phoneNumber + "," + vo.getClientPhone());
+				} else {
+					Random rand = new Random();
+					String numStr = "";
+					for (int i = 0; i < 6; i++) {
+						String ran = Integer.toString(rand.nextInt(10));
+						numStr += ran;
+					}
+					System.out.println("수신자 번호 : " + phoneNumber);
+					System.out.println("인증번호 : " + numStr);
+					sendService.certifiedPhoneNumber(phoneNumber, numStr);
+					mv.addObject("numStr", numStr);
+					mv.addObject("clientVO", vo);
+				}
+			}else {
+				mv.addObject("message", "가입정보가 없습니다.");
+			}
+			mv.setViewName("jsonView");
+			return mv;
+		}
+	
+	
 
 	
 	// 비회원 주소 세션 저장
@@ -537,11 +570,11 @@ public class ClientController {
 		
 		//selectOne
 		@RequestMapping(value = "/clientSelectOne")
-		public ModelAndView clientSelectOne(ModelAndView mv, ClientVO vo) throws ServletException, IOException {
+		public ModelAndView clientSelectOne(ModelAndView mv, ClientVO vo) {
 			vo = clientService.selectOne(vo);
 
 			if (vo != null)
-				mv.addObject("cleintDetail", vo); // MyBatis 에선 null , size()>0 으로 확인
+				mv.addObject("clientDetail", vo); // MyBatis 에선 null , size()>0 으로 확인
 			else
 				mv.addObject("message", "정보가 없습니다.");
 			mv.setViewName("jsonView");
@@ -703,6 +736,100 @@ public class ClientController {
 
 			return mv;
 		}
+		// 아이디비번찾기 이동
+		@RequestMapping(value = "findIdPwf")
+		public ModelAndView findIdPwf(ModelAndView mv) {
+			String uri = "client/findIdPw";
+			mv.setViewName(uri);
+			return mv;
+		}
+		
+		// 아이디찾기
+		@RequestMapping(value = "findId")
+		public ModelAndView findId(ModelAndView mv, ClientVO vo) {
+
+			String clientName = vo.getClientName();
+			vo = clientService.selectOnePhone(vo);
+			if(vo!=null) {
+				if(vo.getClientName().equals(clientName)==false) {
+					mv.addObject("message", "가입정보와 다른 이름입니다. 한번 더 확인해주세요.");
+				}else {
+					mv.addObject("clientId", vo.getClientId());
+				}
+			}else {
+				mv.addObject("message", "가입정보가 없습니다.");
+			}
+			mv.setViewName("jsonView");
+			return mv;
+		}
+
+		// 이메일전송
+		@RequestMapping(value = "sendEmail")
+		public ModelAndView sendEmailComplete(ModelAndView mv, ClientVO vo, EmailVO email) throws Exception {
+
+		    StringBuffer temp = new StringBuffer();
+		    
+		    String[] code = {"!","@","#","$","%","^","&","*"};
+		    Random rnd = new Random();
+		    for (int i = 0; i < 8; i++) {
+		        int rIndex = rnd.nextInt(4);
+		        switch (rIndex) {
+		        case 0:
+		            // a-z
+		            temp.append((char) ((int) (rnd.nextInt(26)) + 97));
+		            break;
+		        case 1:
+		            // A-Z
+		            temp.append((char) ((int) (rnd.nextInt(26)) + 65));
+		            break;
+		        case 2:
+		            // 0-9
+		            temp.append((rnd.nextInt(10)));
+		            break;
+		    	case 3:
+		    		temp.append(code[(rnd.nextInt(8))]);
+		    		break;
+		    	}
+		    }
+		    System.out.println(temp);
+		    System.out.println(vo.getClientEmail());
+		    
+		    vo.setClientPassword(passwordEncoder.encode(temp));
+		    
+		    if(clientService.updateClientPw(vo)>0) {
+		    	mv.addObject("message", "비밀번호 변경 성공");
+		    }else {
+		    	mv.addObject("message", "비밀번호 변경 실패");
+		    	System.out.println("비밀번호변경실패");
+		    }
+		    String reciver = vo.getClientEmail(); // 받을사람의 이메일입니다.-> naver nate 등등
+			String subject = "페데리코피자 고객 임시비밀번호입니다.";
+			String content = "페데리코피자입니다. 고객님의 임시 비밀번호는 "+temp+"입니다.";
+
+			email.setReciver(reciver);
+			email.setSubject(subject);
+			email.setContent(content);
+			sendService.SendEmail(email);
+			mv.setViewName("jsonView");
+			return mv;
+		}
+	
+		
+		// 이메일전송완료 이동
+		@RequestMapping(value = "sendEmailComplete")
+		public ModelAndView sendEmailComplete(ModelAndView mv) {
+			String uri = "client/sendEmailComplete";
+			
+			
+			
+			mv.setViewName(uri);
+			return mv;
+		}
+		
+		
+		
+		
+		
 		
 		/* ============================={ 이벤트 페이지 }================================ */
 		

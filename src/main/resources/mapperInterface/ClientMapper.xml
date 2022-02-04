@@ -17,6 +17,11 @@
 		SELECT * FROM client where clientPhone = #{clientPhone}
 	</select>
 	
+	<!-- 클라이언트 pw 변경 -->
+	<insert id="updateClientPw">
+		UPDATE client SET clientPassword = #{clientPassword}
+		WHERE clientId = #{clientId}
+	</insert>
 	
 	
 <!-- ======================= 카트 관련 ====================== -->
