@@ -819,9 +819,6 @@ public class ClientController {
 		@RequestMapping(value = "sendEmailComplete")
 		public ModelAndView sendEmailComplete(ModelAndView mv) {
 			String uri = "client/sendEmailComplete";
-			
-			
-			
 			mv.setViewName(uri);
 			return mv;
 		}
