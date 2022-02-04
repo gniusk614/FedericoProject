@@ -42,9 +42,6 @@ function iamPort(){
 	$('#iamfcId').val($('#selectFranchise').val());
 	$('#iamMemo').val($('#clientMemo').val());	
 	
-	console.log("fcid => "+$('#iamfcId').val());
-	console.log("memo => "+$('#iamMemo').val());
-	
 	var itemQty = $('#save').attr('data-totalQty');
 	var menuName = $('#menuName0').html();
 	if($('#menuName1').html() != null){
