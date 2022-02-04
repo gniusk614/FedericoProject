@@ -26,6 +26,17 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 	@Autowired
 	HeadOfficeMapper dao;
 
+	//가맹점 개설현황 - 매개변수로 where 조건
+	@Override
+	public ChartVO selectNumberOfFranchise(String s) {
+		return dao.selectNumberOfFranchise(s);
+	}
+	
+	// 본사 홈에 띄울 가맹점 미처리 자재발주
+	@Override
+	public List<FcOrderVO> selectFcOrderSumPirce() {
+		return dao.selectFcOrderSumPirce();
+	}
 	
 	//가맹점 자재발주 상세내역 등록
 	@Override

@@ -19,7 +19,7 @@
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                 	<c:if test="${! empty fcId }">
-        				<button class="btn btn-success">${fcId}점 점주님! 오늘도 번창하세요</button>
+        				<button class="btn btn-success"><span id="fcId">${fcId}</span>점 점주님! 오늘도 번창하세요</button>
      				</c:if>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>

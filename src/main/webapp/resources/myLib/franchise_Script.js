@@ -104,17 +104,16 @@ function fcOrderSearchChange(){
 
 // 배달소요시간 변경
 function updateDeliveryTime(){
-	
 	$.ajax({
 		type: 'get',
 		url : 'updatedeliverytime',
 		data: {
 			deliveryTime: $('#deliveryTime').val(),
-			fcId: $('#fcId').attr('data-fcid')
+			fcId: $('#fcId').html()
 		},
 		success: function(data){
 			if(data.success = 'success'){
-				location.reload;
+				alert('배달 소요시간이 '+$('#deliveryTime').val()+'분으로 변경되었습니다.');
 			}
 		},
 		error: function(){
