@@ -35,6 +35,7 @@ $(function(){
  	selectFcStatsAnnualSales();  
 		
 	}) //ready
+	
 	// 월별매출조회 select 바뀔시 차트바꿔줌.
 	function selectFcStatsAnnualSales() {
 		resetCanvas();

@@ -176,8 +176,7 @@ $(function(){
 							</div>
 							<div class="col-6">
 								<br><span>당일 매출</span><br><b class="fs-2"><fmt:formatNumber value="${fcTodaySales}" pattern="#,###"/></b> 원<br>
-							
-							<c:if test="${fcYesterdaySales != 0 && fcTodaySales != 0} }">
+							<c:if test="${fcYesterdaySales != 0 && fcTodaySales != 0}">
 								<fmt:parseNumber var="dailySalesRatio" value="${fcTodaySales/fcYesterdaySales * 100}" integerOnly="true" />	
 								<c:if test="${dailySalesRatio>=100}">
 									<span style="color: blue;">(+ ${dailySalesRatio-100}%)</span>
@@ -189,7 +188,7 @@ $(function(){
 							<c:if test="${fcYesterdaySales == 0 || fcTodaySales ==0}">
 								<span style="color: red;">( - )</span>
 							</c:if>
-							
+								
 							</div>
 						</div>
 						<div class="row m-1" style="height: 190px; border: 1px solid lightgray;">
