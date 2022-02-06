@@ -54,6 +54,7 @@ public class FranchiseController {
 	
 	
 	
+	
 	// 연간 매출(월별)
 	@RequestMapping(value = "/statsannualsales")
 	public ModelAndView statsAnuualSales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
@@ -72,7 +73,6 @@ public class FranchiseController {
 					mv.addObject("chartData",list);
 					mv.addObject("success","success");
 				}
-
 			}
 		}
 		mv.setViewName("jsonView");
