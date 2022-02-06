@@ -615,21 +615,32 @@ public class ClientController {
 			return mv;
 		}
 		
+		@RequestMapping(value ="/fcSearchArea")
+		public ModelAndView fcsearchmain (ModelAndView mv, FranchiseVO vo, HttpServletRequest request) {
+			Map<String, Object> params = new HashMap<String, Object>();			
+			// 해쉬맵도 하나의 주머니인데 이 파라미터 값을 list로 넣어준다.?
+			// 왜? 
+			// 각 리스트에 담겨진 주머니(key,value)가 리스트에 담겨진다.
+			params.put("Depth1",request.getParameter("Depth1")); // ajax에서 요청 날리면 얘가 받는다.
+			params.put("Depth2",request.getParameter("Depth2")); // request가 해주는 역할 공부하기. 서블릿과 함께	
+			
+			List<FranchiseVO> list = fcService.selectFcAddress(params);
+			
+			if(list != null) {
+			
+						mv.addObject("fcaddress", list);
+						mv.addObject("success","success");				
+			}else {
+				mv.addObject("success","fail");					
+			}			
+				mv.setViewName("jsonView");						 
+		
+			return mv;
+			}
+		
 		@RequestMapping(value ="/fcSearch")
 		public ModelAndView fcsearch (ModelAndView mv, FranchiseVO vo, HttpServletRequest request) {
-			Map<String, Object> params = new HashMap<String, Object>();			
-			
-//			params.put("Depth1",request.getParameter("Depth1")); // ajax에서 요청 날리면 얘가 받는다.
-//			params.put("Depth2",request.getParameter("Depth2")); // request가 해주는 역할 공부하기. 서블릿과 함께	
-//			List<FranchiseVO> list = fcService.selectFcAddress(params);
-//			
-//			if(list != null) {
-//			
-//						mv.addObject("fcaddress", list);
-//						mv.addObject("success","success");				
-//			}else {
-//				mv.addObject("success","fail");					
-//			}			
+				
 				mv.setViewName("/client/fcSearch");						 
 			// if
 			return mv;

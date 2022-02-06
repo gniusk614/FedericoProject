@@ -277,7 +277,7 @@
 	</resultMap>
 	
 	<select id="selectFcAddress" resultType="vo.FranchiseVO">
-		select FCID, FCAREA, FCADDRESS, from franchise 
+		select FCID, FCAREA, FCADDRESS from franchise 
 		where fcarea = #{Depth1} and 
 		      fcaddress like ('%'||#{Depth2}||'%')
 		order by fcid
