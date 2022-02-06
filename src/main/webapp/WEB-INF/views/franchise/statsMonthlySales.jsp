@@ -10,15 +10,16 @@
 $(function(){
 //selectbox 만들기 - 지정일부터 당월까지 생성.
 	var now = new Date();
-	var date = new Date('2020-12-01');		
+	var date = new Date('2021-01-28');		
+	
 	
 
-
 	while (true) {
-			var monthString = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
-			date.setMonth(date.getMonth() + 1);
-
-			if (date.getTime() > now.getTime()) {
+		var monthString = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+		
+		
+			
+			if (date.getTime() >= now.getTime()) {
 				$('#selectFcStatsMonthlySales').append($('<option>', {
 					value : '' + date.getFullYear() + monthString + '01',
 					text : date.getFullYear() + '년 ' + monthString + '월',
@@ -27,10 +28,14 @@ $(function(){
 				) //append
 				break;
 			}
+			
 			$('#selectFcStatsMonthlySales').append($('<option>', {
 				value : '' + date.getFullYear() + monthString + '01',
 				text : date.getFullYear() + '년 ' + monthString + '월'
 			})) //append
+			
+			date.setMonth(date.getMonth() + 1);
+			
 		}//selectbox 만들기
 
 	selectFcStatsMonthlySales(); 
