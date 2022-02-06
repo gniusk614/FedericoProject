@@ -122,10 +122,10 @@
 							<i class="fas fa-angle-down"></i>
 						</div>
 					</a>
-					<div class="collapse" id="collapseLayouts5"
-						aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
+					<div class="collapse" id="collapseLayouts5"	aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
 							<a class="nav-link" href="chartf">각종 통계</a>
+							<a class="nav-link" href="chartimsi">각종 통계1</a>
 						</nav>
 					</div>
 					<!-- 각종 통계 -->

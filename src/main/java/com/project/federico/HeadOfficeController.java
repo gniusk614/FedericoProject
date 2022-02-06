@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +72,149 @@ public class HeadOfficeController {
 	@Autowired
 	ClientService cservice;
 	
+
+	
+	//메뉴별 판매량 where 월별 and 지점별, 월별 안넣으면 전체기간
+	@RequestMapping(value = "/statsmenusales")
+	public ModelAndView statsMenuSales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
+			List<ChartVO> list = new ArrayList<ChartVO>();
+			Map<String, Object> params = new HashMap<String, Object>();
+			String fcId = request.getParameter("fcId");
+		
+			String baseDay;
+			if("".equals(request.getParameter("baseDay"))) {
+				baseDay = null;
+			} else {
+				baseDay = request.getParameter("baseDay");
+				baseDay = baseDay.replaceAll("/", "");
+			}
+			
+			params.put("fcId", fcId);
+			params.put("baseDay", baseDay);
+			list = fservice.selectFCStatsMenuSales(params);
+			if(list != null && list.size()>0) {
+				mv.addObject("chartData",list);
+				mv.addObject("success","success");
+			} 
+		mv.setViewName("jsonView");
+		return mv;
+	}	
+	
+	
+	//시간대별 매출 where orderdate and fcid and 전체
+		@RequestMapping(value = "/statstimesales")
+		public ModelAndView statsTimeSales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
+				List<ChartVO> list = new ArrayList<ChartVO>();
+				Map<String, Object> params = new HashMap<String, Object>();
+				String fcId = request.getParameter("fcId");
+			
+				String selectDate;
+				if("".equals(request.getParameter("selectDate"))) {
+					selectDate = null;
+				} else {
+					selectDate = request.getParameter("selectDate");
+					selectDate = selectDate.replaceAll("/", "");
+				}
+				
+				params.put("fcId", fcId);
+				params.put("selectDate", selectDate);
+				list = fservice.selectFCStatsTimeSales(params);
+				if(list != null && list.size()>0) {
+					if(selectDate != null) {
+						selectDate = selectDate.substring(0,2)+"/"+selectDate.substring(2,4)+"/"+selectDate.substring(4);
+					}
+					mv.addObject("chartData",list);
+					mv.addObject("selectDate", selectDate);
+					mv.addObject("success","success");
+				} 
+				
+			mv.setViewName("jsonView");
+			return mv;
+		}	
+	
+	// 가맹점별 월별 매출 조회 - parameter로 전체조회도 가능
+	@RequestMapping(value = "/statsmonthlysales")
+	public ModelAndView statsMonthlySales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
+		List<ChartVO> list = new ArrayList<ChartVO>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		String fcId = request.getParameter("fcId");
+		
+		//기준일구하기
+		String baseDay;
+		if(request.getParameter("baseDay") == null) {
+			SimpleDateFormat format = new SimpleDateFormat("YYYYMMdd");
+			Date today = new Date();
+			baseDay = format.format(today);
+		} else {
+			baseDay = request.getParameter("baseDay");
+		}
+		
+		params.put("fcId", fcId);
+		params.put("baseDay", baseDay);
+		list = fservice.selectFcStatsMonthlySales(params);
+		if(list != null && list.size()>0) {
+			mv.addObject("chartData",list);
+			mv.addObject("success","success");
+		} 
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}	
+	
+	// 연간 매출(월별, 지점별)
+	@RequestMapping(value = "/statsannualsales")
+	public ModelAndView statsAnuualSales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
+		if(! "".equals(request.getParameter("baseDay"))) {
+			List<ChartVO> list = new ArrayList<ChartVO>();
+			Map<String, Object> params = new HashMap<String, Object>();
+			String fcId = request.getParameter("fcId");
+			String baseDay =  request.getParameter("baseDay");
+			log.info("fcid  => "+fcId);
+			
+			params.put("fcId", fcId);
+			params.put("baseDay", baseDay);
+			list = fservice.selectFCStatsAnnualSales(params);
+			if(list != null && list.size()>0) {
+				mv.addObject("chartData",list);
+				mv.addObject("success","success");
+			}
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 지점List select ajax
+	@RequestMapping(value = "/selectFcId")
+	public ModelAndView selectFcId(ModelAndView mv) {
+		
+		List<FranchiseVO> list = fservice.selectFc();
+		if(list != null && list.size()>0) {
+			mv.addObject("fcList", list);
+			mv.addObject("success", "success");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
+	// chartimsi 페이지 들어가기
+	@RequestMapping(value = "/chartimsi")
+	public ModelAndView chart1(ModelAndView mv, HttpServletRequest request) {
+		
+		if(request.getParameter("key") == null) {
+			mv.addObject("key", null);
+		} else if("2".equals(request.getParameter("key"))) {
+			mv.addObject("key", "2");
+		} else if("3".equals(request.getParameter("key"))) {
+			mv.addObject("key", "3");
+		} else if("4".equals(request.getParameter("key"))) {
+			mv.addObject("key", "4");
+		} 	
+		
+		
+		mv.setViewName("headoffice/chart1");
+		return mv;
+	}
 	
 	
 
