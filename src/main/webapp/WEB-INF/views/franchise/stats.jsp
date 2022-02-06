@@ -68,8 +68,12 @@ function statsSuccessChart(data, type) {
 		var data = data.chartData;
 		$.each(data, function(index, element) {
 			if(type == "monthly"){
-				var imsi = element.chartLabel;
+				let imsi = element.chartLabel;
 				imsi = imsi.substring(4,6)+'/'+imsi.substring(6);
+				chartLabel.push(imsi);
+			} else if(type == "annual"){
+				let imsi = element.chartLabel;
+				imsi = imsi.substring(0,2) + '/' + imsi.substring(2);
 				chartLabel.push(imsi);
 			} else {
 				chartLabel.push(element.chartLabel);

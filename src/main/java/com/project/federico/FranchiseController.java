@@ -287,11 +287,18 @@ public class FranchiseController {
 	@RequestMapping(value = "/fcchartsevenday")
 	public ModelAndView fcChartSevenDay(ModelAndView mv, HttpSession session) {
 		if(session.getAttribute("fcId") != null) {
+			List<ChartVO> chartList = new ArrayList<ChartVO>();
+			
 			String fcId = (String)session.getAttribute("fcId");
-			List<ChartVO> chartList = service.fcLastSevenDaysSalesPerDay(fcId);
+			chartList = service.fcLastSevenDaysSalesPerDay(fcId);
+			if(chartList != null && chartList.size()>0) {
+				mv.addObject("charData", chartList);
+				mv.addObject("success", "success");
+			} else {
+				mv.addObject("success", "fail");
+			}
+			
 			mv.addObject("charData", chartList);
-			for (ChartVO cvo: chartList){
-			};
 		}
 		mv.setViewName("jsonView");
 		return mv;
@@ -576,7 +583,8 @@ public class FranchiseController {
 				mv.addObject("fcYesterdaySales", cVo==null ? 0 : cVo.getChartCount());
 				cVo = service.fcThisMonthOrderSum(fcId);
 				mv.addObject("fcThisMonthOrderSum", cVo==null ? 0 : cVo.getChartCount());
-				
+				cVo = service.fcLastMonthSales(fcId);
+				mv.addObject("fcLastMonthSales", cVo==null ? 0 : cVo.getChartCount());
 				
 				mv.setViewName("franchise/home");
 				
@@ -633,7 +641,8 @@ public class FranchiseController {
 							mv.addObject("fcYesterdaySales", cVo==null ? 0 : cVo.getChartCount());
 							cVo = service.fcThisMonthOrderSum(fcId);
 							mv.addObject("fcThisMonthOrderSum", cVo==null ? 0 : cVo.getChartCount());
-							
+							cVo = service.fcLastMonthSales(fcId);
+							mv.addObject("fcLastMonthSales", cVo==null ? 0 : cVo.getChartCount());
 
 							
 						}

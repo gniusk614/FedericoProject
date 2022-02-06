@@ -23,63 +23,66 @@ $(function(){
 		type: 'get',
 		url: 'fcchartsevenday',
 		success: function(data){
-			var chartLabel =[];
-			var chartData =[];
-			var chartColor = [];
-			var borderColor = [];
-			var chartID ="fcLastSevenDaysChart";
-			
-			
-			var data = data.charData;
-			$.each(data, function(index, element){
-				chartLabel.push(element.chartLabel);
-				chartData.push(element.chartCount);
-				var strRGBA = 'rgba(154, 205, 50, 0.3)';
-				var borderRGBA = 'rgb(50, 205, 89)';
-				chartColor.push(strRGBA);
-				borderColor.push(borderRGBA);
+			if(data.success == 'success'){
+				var chartLabel =[];
+				var chartData =[];
+				var chartColor = [];
+				var borderColor = [];
+				var chartID ="fcLastSevenDaysChart";
 				
-				console.log(element.chartCount);
-				console.log(element.chartLabel);
-			}) //each
-			
-			new Chart(chartID, {
-				type : 'horizontalBar',
-				data : {
-					labels : chartLabel,
-					datasets : [ {
-						label: '매출액',
-						data : chartData,
-						backgroundColor : chartColor,
-						borderColor : borderColor,
-						fill : false,
-						borderWidth: 1
-					} ]
-				},
-				options : {
-					legend: {
-							labels: {
-									fontColor: 'Black'	
-							}
+				
+				var data = data.charData;
+				$.each(data, function(index, element){
+					chartLabel.push(element.chartLabel);
+					chartData.push(element.chartCount);
+					var strRGBA = 'rgba(154, 205, 50, 0.3)';
+					var borderRGBA = 'rgb(50, 205, 89)';
+					chartColor.push(strRGBA);
+					borderColor.push(borderRGBA);
+					
+				}) //each
+				
+				new Chart(chartID, {
+					type : 'horizontalBar',
+					data : {
+						labels : chartLabel,
+						datasets : [ {
+							label: '매출액',
+							data : chartData,
+							backgroundColor : chartColor,
+							borderColor : borderColor,
+							fill : false,
+							borderWidth: 1
+						} ]
 					},
-					title: {
-							display: true,
-							text: '주간 매출 현황',
-							fontSize: 20,
-							fontStyle: 'bold',
-							fontColor: 'black'
-					},
-					scales: {
-							yAxes:[{
-									barPercentage:0.4,
-									fontColor: 'black'
-							}],
-							xAxes: [{
-									fontColor: 'black'
-							}]
+					options : {
+						legend: {
+								labels: {
+										fontColor: 'Black'	
+								}
+						},
+						title: {
+								display: true,
+								text: '주간 매출 현황',
+								fontSize: 20,
+								fontStyle: 'bold',
+								fontColor: 'black'
+						},
+						scales: {
+								yAxes:[{
+										barPercentage:0.4,
+										fontColor: 'black'
+								}],
+								xAxes: [{
+										fontColor: 'black'
+								}]
+						}
 					}
-				}
-			});//그래프				
+				});//그래프		
+				
+			} else {
+				alert('통신장애가 발생했습니다.\n다시 시도해주세요.');
+			}
 		},
 		error: function(){
 			alert('통신장애가 발생했습니다.\n다시 시도해주세요.');
@@ -107,7 +110,7 @@ $(function(){
 				</div>
 				<div class="col-2">
 					<div class="input-group mb-3">
-					  <input type="text" class="form-control" id="deliveryTime" value="${deliveryTime}" onchange="">
+					  <input type="text" class="form-control" id="deliveryTime" value="${deliveryTime}" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');">
 					  <button class="btn btn-outline-success" type="button" id="deliveryTimeBtn" onclick="updateDeliveryTime()">변경</button>
 					</div>	
 				</div>
@@ -172,18 +175,43 @@ $(function(){
 								<br><span>전일 매출</span><br><b class="fs-2"><fmt:formatNumber value="${fcYesterdaySales}" pattern="#,###"/></b> 원
 							</div>
 							<div class="col-6">
-								<br><span>당일 매출</span><br><b class="fs-2"><fmt:formatNumber value="${fcTodaySales}" pattern="#,###"/></b> 원
+								<br><span>당일 매출</span><br><b class="fs-2"><fmt:formatNumber value="${fcTodaySales}" pattern="#,###"/></b> 원<br>
+							<c:if test="${fcYesterdaySales != 0 && fcTodaySales != 0}">
+								<fmt:parseNumber var="dailySalesRatio" value="${fcTodaySales/fcYesterdaySales * 100}" integerOnly="true" />	
+								<c:if test="${dailySalesRatio>=100}">
+									<span style="color: blue;">(+ ${dailySalesRatio-100}%)</span>
+								</c:if>
+								<c:if test="${dailySalesRatio<100}">
+									<span style="color: red;">(- ${100-dailySalesRatio}%)</span>
+								</c:if>	
+							</c:if>
+							<c:if test="${fcYesterdaySales == 0 || fcTodaySales ==0}">
+								<span style="color: red;">( - )</span>
+							</c:if>
+								
 							</div>
 						</div>
 						<div class="row m-1" style="height: 190px; border: 1px solid lightgray;">
 							<div class="col-6">
-									<br><span>당월 매출</span><br><b class="fs-2"><fmt:formatNumber value="${fcThisMonthSales}" pattern="#,###"/></b> 원
-								</div>
-								<div class="col-6">
-									<br><span>당월 발주금액</span><br><b class="fs-2"><fmt:formatNumber value="${fcThisMonthOrderSum}" pattern="#,###"/></b> 원
-								</div>
-							</div>
+								<br><span>당월 매출</span><br><b class="fs-2"><fmt:formatNumber value="${fcThisMonthSales}" pattern="#,###"/></b> 원<br>
+								<c:if test="${fcLastMonthSales != 0 && fcThisMonthSales !=0}">
+									<fmt:parseNumber var="monthlySalesRatio" value="${fcThisMonthSales/fcLastMonthSales * 100}" integerOnly="true" />
+									<c:if test="${monthlySalesRatio>=100}">
+										<span style="color: blue;">(+ ${monthlySalesRatio-100}%)</span>
+									</c:if>
+									<c:if test="${monthlySalesRatio<100}">
+										<span style="color: red;">(- ${100-monthlySalesRatio}%)</span>
+									</c:if>									
+								</c:if>		
+								<c:if test="${fcLastMonthSales == 0 || fcThisMonthSales ==0}">
+									<span style="color: red;">( - )</span>
+								</c:if>
 
+							</div>
+							<div class="col-6">
+								<br><span>당월 발주금액</span><br><b class="fs-2"><fmt:formatNumber value="${fcThisMonthOrderSum}" pattern="#,###"/></b> 원
+							</div>
+						</div>
 					</div>
 					<!-- 하단 우측 -->
 					<div class="col-6">

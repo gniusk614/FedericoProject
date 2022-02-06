@@ -1,7 +1,5 @@
 package vo;
 
-import java.sql.Date;
-
 import lombok.Data;
 
 @Data

@@ -346,8 +346,7 @@ function fcincheck() {
 		$('#fcPasswordRepeat').addClass('is-invalid');
 		$('#fcprMessage').html('password를 확인하세요');
 	}
-
-	if (fcidCheck == true && fcpCheck == true && fcprCheck == true) {
+	if (fcidCheck == true && fcpCheck == true && fcprCheck == true && fcdubCheck == true) {
 		if (confirm('계정을 생성하시겠습니까?')==true) {
 			return true;
 		} else {
@@ -1339,13 +1338,13 @@ function fcOrderFlagUpdate(flag) {
 function eventUpload(){
 	console.log('안녕');
 	var title = $('#title').val();
-	var contents = CKEDITOR.instances['content'].getData();
+	var content = CKEDITOR.instances['content'].getData();
 	if(title.length<1){
 		alert('제목을 입력해주세요.');
 		return false;
 	}
 	
-	if(contents.length<1){
+	if(content.length<1){
 		alert('글 내용을 입력해주세요.');
 		return false;
 	}
@@ -1355,7 +1354,7 @@ function eventUpload(){
 			url : "eventInsert",
 			data : {
 				title : title,
-				content : contents
+				content : content
 			},
 			success : function(data) {
 				if (data.success != null) {
@@ -1376,13 +1375,13 @@ function eventUpload(){
 function eventUpdate(){
 	var eventSeq = $('#eventSeq').val();
 	var title = $('#title').val();
-	var contents = CKEDITOR.instances['content'].getData();
+	var content = CKEDITOR.instances['content'].getData();
 	if(title.length<1){
 		alert('제목을 입력해주세요.');
 		$('#title').focus();
 		return false;
 	}
-	if(contents.length<1){
+	if(content.length<1){
 		alert('글 내용을 입력해주세요.');
 		CKEDITOR.instances['content'].focus();
 		return false;
@@ -1392,14 +1391,14 @@ function eventUpdate(){
 			type : "post",
 			url : "eventUpdate",
 			data : {
-				seq : evnetSeq,
+				eventSeq : eventSeq,
 				title : title,
-				content : contents
+				content : content
 			},
 			success : function(data) {
 				if (data.success != null) {
 					alert('이벤트 수정에 성공했습니다.');
-					location.href = 'eventDetail?eventSeq='+eventSeq;
+					location.href = 'eventBoardDetail?eventSeq='+eventSeq;
 				} else {
 					alert('이벤트 수정에 실패했습니다.');
 				}

@@ -104,17 +104,16 @@ function fcOrderSearchChange(){
 
 // 배달소요시간 변경
 function updateDeliveryTime(){
-	
 	$.ajax({
 		type: 'get',
 		url : 'updatedeliverytime',
 		data: {
 			deliveryTime: $('#deliveryTime').val(),
-			fcId: $('#fcId').attr('data-fcid')
+			fcId: $('#fcId').html()
 		},
 		success: function(data){
 			if(data.success = 'success'){
-				location.reload;
+				alert('배달 소요시간이 '+$('#deliveryTime').val()+'분으로 변경되었습니다.');
 			}
 		},
 		error: function(){
@@ -127,13 +126,13 @@ function updateDeliveryTime(){
 
 // 상세주문정보 모달 열기
 function showOrderDetail(orderNumber, clientAdrress, clientPhone, memo){
-
+	console.log("123"+$('#fcId').html());
 	$.ajax({
 		type: 'get',
 		url: 'selectDetail',
 		data: {
 			orderNumber: orderNumber,
-			fcId: $('#fcId').val(),
+			fcId: $('#fcId').html(),
 			clientPhone: clientPhone
 		},
 		success: function(data){
@@ -221,7 +220,7 @@ function hideOrderDetailModal(){
 // 상세주문정보 모달에서 단골고객등록
 function insertRegClient(){
 	var memo = $('#insertRegClientMemo').val();
-	
+
 	if(memo != null && memo.length>0){
 		if($('.insertFlag:checked').length == 1){
 			var gbFlag = $('.insertFlag:checked').val();
@@ -229,7 +228,7 @@ function insertRegClient(){
 				type: 'get',
 				url: 'fcclientreg',
 				data: {
-					fcId: $('#fcId').val(),
+					fcId: $('#fcId').html(),
 					clientPhone: $('#clientPhone').attr('data-clientPhone'),
 					memo: memo,
 					gbFlag: gbFlag
@@ -268,8 +267,7 @@ function insertRegClient(){
 	} else{
 		alert('내용을 입력해주세요.');
 	}
-	
-} 
+}
 
 // 상세주문정보 모달에서 단골고객수정
 function updateRegClient(){

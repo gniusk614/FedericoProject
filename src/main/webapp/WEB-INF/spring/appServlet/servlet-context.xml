@@ -38,6 +38,11 @@
 	<mybatis-spring:scan base-package="mapperInterface"></mybatis-spring:scan>
 	
 	
+	
+	
+	
+	
+	
 	<!--  JDBC Connection -->
 	<!--  <beans:bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -101,6 +106,9 @@
 			<beans:ref bean = "loginInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors> 
+	
+	
+
 	
 	
 </beans:beans>
