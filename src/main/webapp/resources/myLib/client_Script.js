@@ -461,6 +461,7 @@ var cprCheck=false;//비밀번호중복
 var cadCheck=false;//주소입력 확인
 var cemCheck=false;//이메일입력 확인
 var cemserverCheck=false;//이메일입력 확인
+var cbdCheck = true; //[선택]생년월일 관련 유효성검사
 $(function(){
 	//이름 체크
 	$('#nonClientName').focusout(function(){
@@ -618,6 +619,40 @@ $(function(){
 	});// id_focusout
 	
 	
+	
+
+	
+	// 생년월일 유효성
+	$('#clientBirthday').on('keyup',function(){
+		var imsi = $(this).val();
+		$(this).val(imsi.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1'));
+		
+		if($(this).val().length >0 && $(this).val().length<6){
+			cbdCheck = false;
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+			$('#cbdMessage').html('생년월일은 6자리 입니다.');
+		} else if($(this).val().length == 0){
+			cbdCheck = true;
+			$(this).removeClass('is-invalid');
+			$(this).removeClass('is-valid');
+		} else{
+			var cbd =  $(this).val();
+			var cMonth = Number(cbd.substring(2,4));
+			var cDay = Number(cbd.substring(4));
+			if(cMonth != 0 && cMonth <13 && cDay != 0 && cDay < 32){
+				cbdCheck = true;
+				$(this).removeClass('is-invalid');
+				$(this).addClass('is-valid');
+			} else{
+				cbdCheck = false;
+				$(this).removeClass('is-valid');
+				$(this).addClass('is-invalid');
+				$('#cbdMessage').html('유효하지 않은 생년월일입니다.');
+			}
+			
+		}
+	})
 	
 	
 
@@ -1198,8 +1233,9 @@ function clientIncheck() {
 		$('#cemMessage').html('Email을 확인하세요');
 	}
 	if (cidCheck == true && cpCheck == true && cprCheck == true 
-			&& cadCheck == true && cemCheck == true && cemserverCheck==true) {
+			&& cadCheck == true && cemCheck == true && cemserverCheck==true && cbdCheck == true) {
 		if(confirm('가입을 진행하시겠습니까?')==true) {
+			$('form').submit();
 			return true;
 		} else {
 			return false;
