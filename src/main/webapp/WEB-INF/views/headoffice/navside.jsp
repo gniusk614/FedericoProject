@@ -125,8 +125,8 @@
 					<div class="collapse" id="collapseLayouts5"	aria-labelledby="headingFour" data-bs-parent="#sidenavAccordion">
 						<nav class="sb-sidenav-menu-nested nav">
 							<a class="nav-link" href="chartf">각종 통계</a>
-							<a class="nav-link" href="chartsales">기간별 통계</a>
-							<a class="nav-link" href="chartagegroup">연령별 통계</a>
+							<a class="nav-link" href="chartsales">매출 및 판매량 통계</a>
+							<a class="nav-link" href="chartagegroup">회원관련 통계</a>
 						</nav>
 					</div>
 					<!-- 각종 통계 -->
