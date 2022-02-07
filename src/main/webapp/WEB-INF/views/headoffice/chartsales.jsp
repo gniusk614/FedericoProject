@@ -179,28 +179,28 @@ function statsSuccessChart(data, type) {
 						<div class="card-header parent" style="background-color: #e6e6e6; font-size: 18px;">
 					<!-- 	월별매출조회 - default 이번달, 20년01월~ 21년02월(함수) / 시간대별 매출조회(날짜지정)/ 메뉴별 주문건수 조회 월별, default 이번달  / 메뉴별 매출 Top5 , Worst 5 월별 , 전체 / --> 
 							<c:if test="${key == null}">
-								<a href="chartimsi"><span id="fcStatsAnnualSales" class="selected">연도별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartimsi?key=2"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartimsi?key=3"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartimsi?key=4"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>
+								<a href="chartsales"><span id="fcStatsAnnualSales" class="selected">연도별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=2"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=3"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=4"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>
 							</c:if>	
 							<c:if test="${key == 2}">
-								<a href="chartimsi"><span id="fcStatsAnnualSales" >연도별 월간 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartimsi?key=2"><span id="fcStatsMonthlySales" class="selected">월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartimsi?key=3"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartimsi?key=4"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>
+								<a href="chartsales"><span id="fcStatsAnnualSales" >연도별 월간 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=2"><span id="fcStatsMonthlySales" class="selected">월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=3"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=4"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>
 							</c:if>
-							<c:if test="${key == '3'}">
-								<a href="chartimsi"><span id="fcStatsAnnualSales" >연도별 월간 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartimsi?key=2"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartimsi?key=3"><span id="fcStatsDailySales" class="selected">시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartimsi?key=4"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>
+							<c:if test="${key == 3}">
+								<a href="chartsales"><span id="fcStatsAnnualSales" >연도별 월간 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=2"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=3"><span id="fcStatsDailySales" class="selected">시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=4"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>
 							</c:if>
-							<c:if test="${key == '4'}">
-								<a href="chartimsi"><span id="fcStatsAnnualSales" >연도별 월간 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartimsi?key=2"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartimsi?key=3"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartimsi?key=4"><span id="fcStatsMenuSales" class="selected">메뉴별 판매량 조회</span></a>
+							<c:if test="${key == 4}">
+								<a href="chartsales"><span id="fcStatsAnnualSales" >연도별 월간 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=2"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=3"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=4"><span id="fcStatsMenuSales" class="selected">메뉴별 판매량 조회</span></a>
 							</c:if>
 						
 							

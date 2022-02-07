@@ -197,8 +197,8 @@ public class HeadOfficeController {
 	}
 	
 	
-	// chartimsi 페이지 들어가기
-	@RequestMapping(value = "/chartimsi")
+	// chartsales 페이지 들어가기
+	@RequestMapping(value = "/chartsales")
 	public ModelAndView chart1(ModelAndView mv, HttpServletRequest request) {
 		
 		if(request.getParameter("key") == null) {
@@ -212,7 +212,7 @@ public class HeadOfficeController {
 		} 	
 		
 		
-		mv.setViewName("headoffice/chart1");
+		mv.setViewName("headoffice/chartsales");
 		return mv;
 	}
 	
