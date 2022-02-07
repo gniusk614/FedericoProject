@@ -18,4 +18,5 @@ public class OrderListVO {
 	private String clientPhone;
 	private String memberYN;
 	
+	private String price;
 }

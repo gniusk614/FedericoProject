@@ -83,6 +83,11 @@ public class ClientServiceImpl implements ClientService {
 	public int updateClientPw(ClientVO vo) {
 		return dao.updateClientPw(vo);
 	}
+	//내 정보 변경
+	@Override
+	public int updateMyInfo(ClientVO vo) {
+		return dao.updateMyInfo(vo);
+	}
 	
 
 	//공지사항게시판 공지체크만 전체출력

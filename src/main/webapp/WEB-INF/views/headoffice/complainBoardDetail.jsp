@@ -79,7 +79,7 @@ tbody tr {
 											<td scope="col"
 												style="width: 400px; font-size: x-large; font-weight: bold;">${complainDetail.title}
 											</td>
-											<td scope="col" style="width: 100px; ">작성자&nbsp;<b>${complainDetail.clientName}</b></td>
+											<td scope="col" style="width: 100px; ">고객명&nbsp;<b>${complainDetail.clientName}</b></td>
 											<td scope="col" style="width: 100px; ">연락처&nbsp;<b>${complainDetail.clientPhone}</b></td>
 											<td scope="col" style="width: 100px; ">&nbsp;<b><A href="mailto:${complainDetail.clientEmail}">${complainDetail.clientEmail}</a></b></td>
 											<td scope="col" style="width: 100px; ">
@@ -153,10 +153,18 @@ tbody tr {
 											onclick="javascript:location.href='complainBoardf'">목록</button>
 									</div>
 									<div class="col-6" align="right">
+									<c:if test="${complainDetail.completeFlag=='N'}">
 										<button class="btn btn-outline-primary" style="width: 100px;"
 											onclick="complainComplete('${complainDetail.seq}')">
 											완료처리
 										</button>
+									</c:if>
+									<c:if test="${complainDetail.completeFlag=='Y'}">
+										<button class="btn btn-outline-primary" style="width: 100px;" disabled="disabled"
+											onclick="complainComplete('${complainDetail.seq}')">
+											완료처리
+										</button>
+									</c:if>
 									</div>
 								</div>
 							</div>
