@@ -21,7 +21,70 @@
 		<result column="itemPrice" property="itemPrice"/>
 	</resultMap>
 <!-- resultMap 설정 ============================================================-->  
-
+	
+	<!-- 회원 연령대 조회 -->
+	<select id="selectMemberAgeGroup" resultType="vo.ChartVO">
+		<![CDATA[
+		SELECT A.AGEGROUP chartLabel, COUNT(C.CLIENTID) chartCount
+		FROM (SELECT LEVEL*10 || '대' AGEGROUP
+		        FROM DUAL
+		        CONNECT BY LEVEL <10) A
+		LEFT JOIN (SELECT CLIENTID,
+		        CASE WHEN TO_NUMBER(SUBSTR(CLIENTBIRTHDAY, 1, 2)) <= TO_NUMBER(TO_CHAR(SYSDATE, 'YY')) THEN TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY'))- (2000+ TO_NUMBER(SUBSTR(CLIENTBIRTHDAY, 1, 2)) + 1)
+		            WHEN TO_NUMBER(SUBSTR(CLIENTBIRTHDAY, 1, 2)) > TO_NUMBER(TO_CHAR(SYSDATE, 'YY')) THEN TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY'))- (1900+TO_NUMBER(SUBSTR(CLIENTBIRTHDAY, 1, 2)) + 1)
+		            END AS AGE
+		        FROM CLIENT) C ON A.AGEGROUP = TRUNC(C.AGE/10)*10||'대'
+		GROUP BY A.AGEGROUP
+		ORDER BY A.AGEGROUP	 ]]>	
+	</select>
+	
+	
+	<!-- 연령대별 메뉴 판매량 by 지점 -->
+	<select id="selectStatsAgeGroupMenuSales" resultType="vo.ChartVO">
+		SELECT M.MENUNAME chartLabel, SUM(A.MENUQTY) chartCount
+		FROM MENUINFO M
+		LEFT JOIN (SELECT I.CLIENTID, D.MENUINDEX, D.MENUQTY
+		        FROM (SELECT CLIENTID,
+	  <![CDATA[ CASE WHEN TO_NUMBER(SUBSTR(CLIENTBIRTHDAY, 1, 2)) <= TO_NUMBER(TO_CHAR(SYSDATE, 'YY')) THEN TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY'))- (2000+ TO_NUMBER(SUBSTR(CLIENTBIRTHDAY, 1, 2)) + 1)
+		            WHEN TO_NUMBER(SUBSTR(CLIENTBIRTHDAY, 1, 2)) > TO_NUMBER(TO_CHAR(SYSDATE, 'YY')) THEN TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY'))- (1900+TO_NUMBER(SUBSTR(CLIENTBIRTHDAY, 1, 2)) + 1)
+		            END AS AGE FROM CLIENT) I ]]>
+		            JOIN ORDERLIST O ON O.CLIENTID = I.CLIENTID 
+		            <if test="fcId != null and fcId != ''">
+		          	  AND FCID = #{fcId}
+		            </if>
+		            JOIN ORDERDETAILLIST D ON D.ORDERNUMBER = O.ORDERNUMBER
+		            WHERE TO_CHAR(TRUNC(I.AGE/10)*10) = #{ageGroup} ) A 
+		            ON A.MENUINDEX = M.MENUINDEX
+		GROUP BY M.MENUNAME
+		ORDER BY SUM(A.MENUQTY) DESC NULLS LAST	
+	</select>
+	
+	
+	<!-- 연령대별 매출 by 년도 and 지점 -->
+	<select id="selectStatsAgeGroupSales" resultType="vo.ChartVO">
+		<![CDATA[
+			SELECT A.AGEGROUP chartLabel, SUM(M.MENUPRICE*D.MENUQTY) chartCount
+			FROM (SELECT LEVEL*10 AGEGROUP
+			        FROM DUAL
+			        CONNECT BY LEVEL <10) A
+			LEFT JOIN (SELECT CLIENTID,
+			        CASE WHEN TO_NUMBER(SUBSTR(CLIENTBIRTHDAY, 1, 2)) <= TO_NUMBER(TO_CHAR(SYSDATE, 'YY')) THEN TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY'))- (2000+ TO_NUMBER(SUBSTR(CLIENTBIRTHDAY, 1, 2)) + 1)
+			            WHEN TO_NUMBER(SUBSTR(CLIENTBIRTHDAY, 1, 2)) > TO_NUMBER(TO_CHAR(SYSDATE, 'YY')) THEN TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY'))- (1900+TO_NUMBER(SUBSTR(CLIENTBIRTHDAY, 1, 2)) + 1)
+			            END AS AGE ]]>
+			        FROM CLIENT) C ON A.AGEGROUP = TRUNC(C.AGE/10)*10
+			LEFT JOIN ORDERLIST O ON O.CLIENTID = C.CLIENTID AND TO_CHAR(TRUNC(O.ORDERDATE, 'YY'),'YYYYMMDD') = #{baseDay}
+			<if test="fcId != null and fcId != ''">
+				AND O.FCID = #{fcId}
+			</if>
+			LEFT JOIN ORDERDETAILLIST D ON O.ORDERNUMBER = D.ORDERNUMBER
+			LEFT JOIN MENUINFO M ON D.MENUINDEX = M.MENUINDEX
+			
+			GROUP BY A.AGEGROUP
+			ORDER BY A.AGEGROUP		
+		
+	</select>
+	
+	
 	
 	<!-- 가맹점 개설현황 - 매개변수로 where 조건 -->
 	<select id="selectNumberOfFranchise" parameterType="String" resultType="vo.ChartVO">
