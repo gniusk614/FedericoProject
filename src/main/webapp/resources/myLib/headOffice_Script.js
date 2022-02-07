@@ -496,7 +496,6 @@ function complainCommentInsert(seq){
 			commentContent : content
 		}, success: function(data){
 			if(data.success!=null){
-				alert('댓글입력에 성공했습니다.');
 				$('#comment').load('complainDetail?seq='+seq+' #comment')
 				$('textarea#content').val('');
 			}else{

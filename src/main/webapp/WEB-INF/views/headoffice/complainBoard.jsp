@@ -163,7 +163,7 @@ tbody tr {
 												<th scope="col" style="width: 100px;">번호</th>
 												<th scope="col" style="width: 50px;">말머리</th>
 												<th scope="col" style="width: 300px;">제목</th>
-												<th scope="col" style="width: 100px;">작성자</th>
+												<th scope="col" style="width: 100px;">고객명</th>
 												<th scope="col" style="width: 100px;">가맹점</th>
 												<th scope="col" style="width: 100px;">날짜</th>
 												<th scope="col" style="width: 100px;">처리상태</th>

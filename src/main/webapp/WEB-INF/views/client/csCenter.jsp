@@ -309,11 +309,7 @@ tbody tr {
 											<input class="form-control mb-3" type="text"
 												id="title" name="title" placeholder="제목" />
 											<textarea class="form-control mb-3" style="resize: none; height:300px; " id="textcontent"
-												 name="content" placeholder="내용 2000자 이내">
-											</textarea>
-											
-											<textarea class="form-control mb-3" style="resize: none; height:300px; " id="content"
-												 name="content" hidden="hidden">
+												 name="content" placeholder="내용 600자 이내">
 											</textarea>
 											
 										</div>
@@ -619,8 +615,8 @@ tbody tr {
 	value =CKEDITOR.instances['textcontent'].getData();
 	
 	console.log(value)
-	 if(CKEDITOR.instances['textcontent'].document.getBody().getText().length>400){
-		 alert('400자 이상 작성할 수 없습니다.')
+	 if(CKEDITOR.instances['textcontent'].document.getBody().getText().length>600){
+		 alert('600자 이상 작성할 수 없습니다.')
 	 }
 	});
 		
