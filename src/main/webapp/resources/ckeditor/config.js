@@ -38,6 +38,7 @@ CKEDITOR.editorConfig = function( config ) {
 	
 	config.extraPlugins = 'wordcount'; 
 	config.extraPlugins = 'notification'; 
+	config.fillEmptyBlocks = false;
 	
 	config.wordcount = {
 

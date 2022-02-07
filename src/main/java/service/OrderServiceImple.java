@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j;
 import mapperInterface.OrderMapper;
+import paging.SearchCriteria;
 import vo.FcOrderVO;
 import vo.OrderDetailListVO;
 import vo.OrderListVO;
@@ -56,6 +57,18 @@ public class OrderServiceImple implements OrderService {
 	public List<OrderListVO> selectFcOrderbyFcId(OrderListVO orderListVo) {
 		return dao.selectFcOrderbyFcId(orderListVo);
 	}
+	//고객별 주문조회
+	@Override
+	public List<OrderListVO> searchClientIdOrderList(Map<String, Object> params) {
+		return dao.searchClientIdOrderList(params);
+	}
+	
+	//고객별 주문조회 row
+	@Override
+	public int searchClientIdOrderRows(Map<String, Object> params) {
+		return dao.searchClientIdOrderRows(params);
+	}
+	
 	
 	// 주문상세목록에 등록
 	@Override
@@ -75,6 +88,11 @@ public class OrderServiceImple implements OrderService {
 		return dao.selectOrderbyPhone(vo);
 	}
 	
+	// 주문정보 조회(by ordernumber)
+	@Override
+	public OrderListVO selectOneOrderList(OrderListVO vo) {
+		return dao.selectOneOrderList(vo);
+	}
 	
 	
 }

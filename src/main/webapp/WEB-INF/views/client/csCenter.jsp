@@ -309,11 +309,7 @@ tbody tr {
 											<input class="form-control mb-3" type="text"
 												id="title" name="title" placeholder="제목" />
 											<textarea class="form-control mb-3" style="resize: none; height:300px; " id="textcontent"
-												 name="content" placeholder="내용 2000자 이내">
-											</textarea>
-											
-											<textarea class="form-control mb-3" style="resize: none; height:300px; " id="content"
-												 name="content" hidden="hidden">
+												 name="content" placeholder="내용 600자 이내">
 											</textarea>
 											
 										</div>
@@ -336,7 +332,7 @@ tbody tr {
 									<div class="row">
 									<div class="col mt-3" align="left">
 									<p style="font-size: small; color: gray;">
-‧ 본사 유선 접수 02-2645-8495 (내선번호 : 고객 관련 문의 2번 / 마케팅 문의 3번 / 전산 시스템 문의 8번 )<br>
+‧ 본사 유선 접수 02-0000-0000 (내선번호 : 고객 관련 문의 2번 / 마케팅 문의 3번 / 전산 시스템 문의 8번 )<br>
 ‧ 상담가능시간 09:00 ~ 17:00 (주말/공휴일 휴무)<br>
 ‧ 이메일 문의 gniusk614@nate.com<br>
 ‧ 온라인 주문 취소 및 문의 : 070-0000-0000 (운영 시간 – 매일 11:00~23:00)</p></div>
@@ -619,8 +615,8 @@ tbody tr {
 	value =CKEDITOR.instances['textcontent'].getData();
 	
 	console.log(value)
-	 if(CKEDITOR.instances['textcontent'].document.getBody().getText().length>400){
-		 alert('400자 이상 작성할 수 없습니다.')
+	 if(CKEDITOR.instances['textcontent'].document.getBody().getText().length>600){
+		 alert('600자 이상 작성할 수 없습니다.')
 	 }
 	});
 		
