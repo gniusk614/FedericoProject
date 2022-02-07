@@ -509,7 +509,7 @@ public class ClientController {
 					System.out.println("인증번호 : " + numStr);
 					sendService.certifiedPhoneNumber(phoneNumber, numStr);
 					mv.addObject("numStr", numStr);
-					mv.addObject("clientVO", vo);
+					mv.addObject("clientId", vo.getClientId());
 				}
 			}else {
 				mv.addObject("message", "가입정보가 없습니다.");
@@ -790,7 +790,7 @@ public class ClientController {
 		    }
 		    System.out.println(temp);
 		    System.out.println(vo.getClientEmail());
-		    
+		    vo = clientService.selectOne(vo);
 		    vo.setClientPassword(passwordEncoder.encode(temp));
 		    
 		    if(clientService.updateClientPw(vo)>0) {

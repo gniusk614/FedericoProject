@@ -192,11 +192,11 @@ function showChart(flag) {
 
 
 
-var fcidCheck = false; // => 사원번호
+var fcidCheck = false; // => 가맹점아이디체크
 var fclpCheck = false; // =>로그인비번
 var fcpCheck = false; // ->비번
 var fcprCheck = false; // ->비번확인
-var fcdubCheck = false; // ->사원번호중복
+var fcdubCheck = false; // ->가맹점아이디중복
 
 $(function() {
 	// ==================<가맹정계정생성 (광훈)>==========================
@@ -211,8 +211,11 @@ $(function() {
 		fcInputClear();
 	});
 	
-	
-	
+	$('#fcId').change(function(){
+		fcdubCheck = false;
+		$(this).removeClass('is-valid');
+		$(this).addClass('is-invalid');
+	})
 	
 	
 	// 가맹점 ID
@@ -801,7 +804,7 @@ $(function() {
 
 	// ** 계정 생성 확인버튼 클릭시
 	$('#submitBtn').click(function() {
-
+		console.log()
 		if (incheck() == true) {
 
 			$.ajax({
@@ -894,6 +897,12 @@ var dubCheck = false; // ->사원번호중복
 // 2) 개별적 오류점검 위한 focusout 이벤트 핸들러 : JQuery
 $(function() {
 	// 사원번호
+	$('#code').change(function(){
+		dubCheck=false;
+		$(this).removeClass('is-valid');
+		$(this).addClass('is-invalid');
+	});
+	
 	$('#code').focusout(function() {
 		cCheck = codeCheck();
 		if (cCheck == false) {
@@ -1036,7 +1045,7 @@ function incheck() {
 		$('#prMessage').html('password를 확인하세요');
 	}
 
-	if (cCheck == true && pCheck == true && prCheck == true) {
+	if (cCheck == true && dubCheck==true && pCheck == true && prCheck == true) {
 		if (confirm('계정을 생성하시겠습니까?')==true) {
 			return true;
 		} else {
