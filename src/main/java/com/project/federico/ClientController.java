@@ -955,8 +955,27 @@ public class ClientController {
 			mv.setViewName("jsonView");
 			return mv;
 		}
-		
-		
+
+		// 회원삭제
+		@RequestMapping(value = "deleteClient")
+		public ModelAndView deleteClient(ModelAndView mv, HttpSession session, ClientVO vo) {
+			vo.setClientId((String) session.getAttribute("clientLoginID"));
+			String deleteReason = vo.getDeleteReason();
+			
+			
+			
+			vo = clientService.selectOne(vo);
+			vo.setDeletePhone(vo.getClientPhone());
+			vo.setDeleteReason(deleteReason);
+			
+			if (clientService.deleteClient(vo) > 0) {
+				mv.addObject("success", "success");
+			} else {
+				mv.addObject("success", "fail");
+			}
+			mv.setViewName("jsonView");
+			return mv;
+		}
 		
 		
 		
