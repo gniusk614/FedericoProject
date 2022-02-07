@@ -534,6 +534,113 @@ function complainCommentDelete(commentSeq, seq){
 }
 
 
+// ===============< 가맹점 비밀번호 변경 스크립트(구) >============================
+$(function(){
+	
+
+	
+	// ** 비밀번호수정 모달 닫힐시
+	$('#fcPwChangeModal').on('hidden.bs.modal', function() {
+		$('#fcLoginPassword').val('').removeClass('is-valid').removeClass('is-invalid');
+		$('#fcPassword').val('').removeClass('is-valid').removeClass('is-invalid');
+		$('#fcPasswordRepeat').val('').removeClass('is-valid').removeClass('is-invalid');
+		$('#fcPassword').attr("disabled", true)
+		$('#fcPasswordRepeat').attr("disabled", true)
+	});
+	
+	// 비밀번호 변경시 현재 비밀번호 확인
+	$('#fcPwCheck').click(function() {
+		var fcinputPW = $('#fcLoginPassword').val();
+		$.ajax({
+			type : "post",
+			url : "fcloginPwCheck",
+			data : {
+				fcPassword : fcinputPW,
+				fcId: $('#fcId').text()
+			},
+			success : function(data) {
+				if (data.success == 'success') {
+					$('#fcLoginPassword').removeClass('is-invalid');
+					$('#fcLoginPassword').addClass('is-valid');
+					$('#fcPassword').attr("disabled", false);
+					$('#fcPassword').focus();
+				}
+				if (data.success == 'fail') {
+					$('#fcLoginPassword').removeClass('is-valid');
+					$('#fcLoginPassword').addClass('is-invalid');
+					$('#fcPasswordRepeat').attr("disabled", true)
+					$('#fclpMessage').html('비밀번호가 틀립니다.');
+				}
+			},
+			error : function() {
+				alert("서버와 접속에 실패했습니다.");
+			}
+		});// ajax
+	});// fcloginPassword_click	
+
+	fcPwUCk = false;
+	fcPwrUCK = false;
+
+	// 비밀번호
+	$('#fcPassword').focusout(function() {
+		fcPwUCk = fcpwCheck();
+		if (fcPwUCk == false) {
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+			$('#fcPasswordRepeat').attr("disabled", true)
+		} else {
+			// $(this).removeClass('is-invalid');
+			// $(this).addClass('is-valid');
+			$('#fcPasswordRepeat').attr("disabled", false)
+		}
+		$('#fcPasswordRepeat').focus();
+	});// password_focusout
+
+	// 비밀번호확인
+	$('#fcPasswordRepeat').focusout(function() {
+		fcPwrUCK = fcpwrpCheck();
+		if (fcPwrUCK == false) {	
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+			$('#fcPassword').removeClass('is-valid');
+			$('#fcPassword').addClass('is-invalid');
+		} else {
+			$('#fcPassword').removeClass('is-invalid');
+			$('#fcPassword').addClass('is-valid');
+			$(this).removeClass('is-invalid');
+			$(this).addClass('is-valid');
+		}
+	})	
+	
+	
+	$('#fcPwUpBtn').click(function() {
+		if (confirm('비밀번호를 변경하시겠습니까?')) {
+			$.ajax({
+				type : "post",
+				url : "fcpwupdate",
+				data : {
+					fcPassword : $('#fcPassword').val(),
+					fcId: $('#fcId').text()
+				},
+				success : function(data) {
+					if (data.success == 'success') {
+						alert('비밀번호가 변경되었습니다.')
+						$('#fcPwChangeModal').modal('hide');
+					}
+					if (data.success == 'fail') {
+						alert('비밀번호 변경에 실패했습니다.')
+					}
+				},
+				error : function() {
+					alert("서버와 접속에 실패했습니다.");
+				}
+			});// ajax
+		}
+	});// loginPassword_click	
+	
+}) //ready
+
+
 
 
 

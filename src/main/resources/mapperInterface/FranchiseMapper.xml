@@ -326,6 +326,12 @@
 		WHERE fcId = #{fcId}
 	</insert>
 	
+	<!-- 프랜차이즈 비밀번호 변경 -->
+	<insert id="fcPwUpdate">
+		UPDATE franchise 
+		SET FCPASSWORD = #{fcPassword} 
+		WHERE fcId = #{fcId}
+	</insert>
 	
 	
 	<!-- 프랜차이즈 업데이트 -->
