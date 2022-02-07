@@ -11,7 +11,8 @@ $(function(){
 //월별 selectbox 만들기 - 지정일부터 당월까지 생성.
 	var now = new Date();
 	var date = new Date('2021-01-28');		
-
+	
+	
 	while (true) {
 			var monthString = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
 			
