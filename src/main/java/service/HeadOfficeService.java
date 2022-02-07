@@ -16,6 +16,12 @@ import vo.StaffVO;
 
 public interface HeadOfficeService {
 
+	List<ChartVO> selectMemberAgeGroup(); //회원 연령대 조회
+	
+	List<ChartVO> selectStatsAgeGroupMenuSales(Map<String, Object> parmas); //연령대별 메뉴 판매량 by 지점
+
+	List<ChartVO> selectStatsAgeGroupSales(Map<String, Object> parmas); //연령대별 매출 by 년도
+	
 	ChartVO selectNumberOfFranchise(String s); // 가맹점 개설현황 - 매개변수로 where 조건
 	
 	List<FcOrderVO> selectFcOrderSumPirce(); // 본사 홈에 띄울 가맹점 미처리 자재발주

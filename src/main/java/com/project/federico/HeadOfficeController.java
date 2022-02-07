@@ -72,7 +72,67 @@ public class HeadOfficeController {
 	@Autowired
 	ClientService cservice;
 	
-
+	
+	// 회원 연령대 조회
+	@RequestMapping(value = "/statsmemberagegroup")
+	public ModelAndView statsMemberAgeGroup(ModelAndView mv, HttpServletRequest request) {
+		List<ChartVO> list = new ArrayList<ChartVO>();
+		
+		list = service.selectMemberAgeGroup();
+		if(list != null && list.size() > 0) {
+			mv.addObject("chartData",list);
+			mv.addObject("success","success");
+		}
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 연령대별 메뉴 판매량 by 지점
+	@RequestMapping(value = "/statsagegroupmenusales")
+	public ModelAndView statsAgeGroupMenuSales(ModelAndView mv, HttpServletRequest request) {
+		List<ChartVO> list = new ArrayList<ChartVO>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		String ageGroup = request.getParameter("ageGroup");
+		String fcId = null;
+		if(request.getParameter("fcId") != null) {
+			fcId = request.getParameter("fcId");
+		}
+		params.put("ageGroup", ageGroup);
+		params.put("fcId", fcId);
+		
+		list = service.selectStatsAgeGroupMenuSales(params);
+		if(list != null && list.size() > 0) {
+			mv.addObject("chartData",list);
+			mv.addObject("success","success");
+		}
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 연령대별 매출 by 년도 and 지점
+	@RequestMapping(value = "/statsagegroupsales")
+	public ModelAndView statsAgeGroupSales(ModelAndView mv, HttpServletRequest request) {
+		List<ChartVO> list = new ArrayList<ChartVO>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		String baseDay = request.getParameter("baseDay");
+		String fcId = null;
+		if(request.getParameter("fcId") != null) {
+			fcId = request.getParameter("fcId");
+		}
+		params.put("baseDay", baseDay);
+		params.put("fcId", fcId);
+		
+		list = service.selectStatsAgeGroupSales(params);
+		if(list != null && list.size() > 0) {
+			mv.addObject("chartData",list);
+			mv.addObject("success","success");
+		}
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
 	
 	//메뉴별 판매량 where 월별 and 지점별, 월별 안넣으면 전체기간
 	@RequestMapping(value = "/statsmenusales")
@@ -197,8 +257,8 @@ public class HeadOfficeController {
 	}
 	
 	
-	// chartimsi 페이지 들어가기
-	@RequestMapping(value = "/chartimsi")
+	// chartsales 페이지 들어가기
+	@RequestMapping(value = "/chartsales")
 	public ModelAndView chart1(ModelAndView mv, HttpServletRequest request) {
 		
 		if(request.getParameter("key") == null) {
@@ -212,11 +272,27 @@ public class HeadOfficeController {
 		} 	
 		
 		
-		mv.setViewName("headoffice/chart1");
+		mv.setViewName("headoffice/chartsales");
 		return mv;
 	}
 	
 	
+	// chartamember 페이지 들어가기
+	@RequestMapping(value = "/chartagegroup")
+	public ModelAndView chartAgeGroup(ModelAndView mv, HttpServletRequest request) {
+		
+		if(request.getParameter("key") == null) {
+			mv.addObject("key", null);
+		} else if("2".equals(request.getParameter("key"))) {
+			mv.addObject("key", "2");
+		} else if("3".equals(request.getParameter("key"))) {
+			mv.addObject("key", "3");
+		} 
+		
+		
+		mv.setViewName("headoffice/chartagegroup");
+		return mv;
+	}
 
 	// 가맹점 발주내역 상세보기(발주번호 별로) return json
 	@RequestMapping(value = "/fcorderdetail")

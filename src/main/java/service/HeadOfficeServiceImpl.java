@@ -26,6 +26,25 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 	@Autowired
 	HeadOfficeMapper dao;
 
+	
+	//회원 연령대 조회
+	@Override
+	public List<ChartVO> selectMemberAgeGroup() {
+		return dao.selectMemberAgeGroup();
+	}
+	
+	//연령대별 메뉴 판매량 by 지점
+	@Override
+	public List<ChartVO> selectStatsAgeGroupMenuSales(Map<String, Object> parmas) {
+		return dao.selectStatsAgeGroupMenuSales(parmas);
+	}
+	
+	//연령대별 매출 by 년도
+	@Override
+	public List<ChartVO> selectStatsAgeGroupSales(Map<String, Object> parmas) {
+		return dao.selectStatsAgeGroupSales(parmas);
+	}
+	
 	//가맹점 개설현황 - 매개변수로 where 조건
 	@Override
 	public ChartVO selectNumberOfFranchise(String s) {
