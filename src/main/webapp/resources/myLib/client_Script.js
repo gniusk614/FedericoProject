@@ -549,6 +549,11 @@ $(function(){
 	    }
 	});
 	
+	$('#clientId').change(function(){
+		cidDubCheck=false;
+		$(this).removeClass('is-valid');
+		$(this).addClass('is-invalid');
+	})
 	
 
 	// 회원가입ID
@@ -771,11 +776,12 @@ function checkboxCheck() {
 	}
 }//checkboxCheck
 
-//핸드폰 인증 객체
+//핸드폰 인증
 var phoneChecked = false
+var numStr="";
 //인증메시지 전송
 function sendSms(){
-	if($('#inputPhoneNumber').val().length<1){
+	if($('#inputPhoneNumber').val().length<1){ //핸드폰 번호 입력확인
 		$('#inputPhoneNumber').addClass('is-invalid');
 		alert('휴대폰번호를 입력해주세요');
 	}else{
@@ -788,45 +794,58 @@ function sendSms(){
             clientPhone : phoneNumber
         },
         success: function(resultData){
-        	if(resultData.selectOne!=null){
-        		alert('이미 가입된 정보가 있습니다. 로그인 후 이용해주세요.');
-        		location.reload();
-        	}else{
-        	  alert('인증번호 발송 완료!');
-        	  $('#inputCertifiedNumber').attr('readonly',false);
-        	  $('#checkBtn').attr('disabled',false);
-        	  $('#checkBtn').click(function(){
-                if($.trim(resultData.numStr)==$('#inputCertifiedNumber').val()){
-                    alert('휴대폰 인증이 정상적으로 완료되었습니다.')
-                    $('#inputPhoneNumber').removeClass('is-invalid');
-                    $('#inputCertifiedNumber').removeClass('is-invalid');
-                    $('#inputPhoneNumber').attr('readonly',true).addClass('is-valid');
-                    $('#inputCertifiedNumber').attr('readonly',true).addClass('is-valid');
-                    $('#nonOrderBtn').attr('disabled',false);
-                    $('#phoneCheckModal').modal('hide');
-                    $('#button-addon2').attr('disabled',true)
-                    $('#checkBtn').attr('disabled',true)
-                    $('#joinPhoneCheckBtn').attr('onClick',false).css({
-                    	cursor: 'default'
-                    });
-                    $('#checkText').html('인증을 완료하였습니다.')
-                    phoneChecked=true;
-                }else{
-                   alert('휴대폰 인증에 실패하였습니다. 인증번호를 확인해주세요.')
-                   $('#inputPhoneNumber').removeClass('is-valid');
-                   $('#inputCertifiedNumber').removeClass('is-valid');
-                   $('#inputPhoneNumber').addClass('is-invalid');
-                   $('#inputCertifiedNumber').addClass('is-invalid');
-                   phoneChecked=false;
-                }
-            })
-        }},//success
+        		if(resultData.selectOne!=null){ // 가입된 핸드폰인지 확인
+            		alert('이미 가입된 정보가 있습니다. 로그인 후 이용해주세요.');
+            		location.reload();
+            	}else{
+            	  alert('인증번호 발송 완료!');
+            	  $('#inputCertifiedNumber').attr('readonly',false);
+            	  $('#checkBtn').attr('disabled',false);
+            	  numStr=resultData.numStr;
+            	  console.log(numStr);
+            	}	
+        	},//success
         error: function(){
 			alert('서버오류입니다.')
 		}	
     })
 	}
 }
+
+function phoneCheckBtnJoin(){
+		 console.log(numStr);
+        if($.trim(numStr)==$('#inputCertifiedNumber').val()){
+            alert('휴대폰 인증이 정상적으로 완료되었습니다.')
+            $('#inputPhoneNumber').removeClass('is-invalid');
+            $('#inputCertifiedNumber').removeClass('is-invalid');
+            $('#inputPhoneNumber').attr('readonly',true).addClass('is-valid');
+            $('#inputCertifiedNumber').attr('readonly',true).addClass('is-valid');
+            $('#nonOrderBtn').attr('disabled',false);
+            $('#phoneCheckModal').modal('hide');
+            $('#button-addon2').attr('disabled',true)
+            $('#checkBtn').attr('disabled',true)
+            $('#joinPhoneCheckBtn').attr('onClick',false).css({
+            	cursor: 'default'
+            });
+            $('#checkText').html('인증을 완료하였습니다.')
+            phoneChecked=true;
+            return;
+        }else{
+           alert('휴대폰 인증에 실패하였습니다. 인증번호를 확인해주세요.')
+           $('#inputPhoneNumber').removeClass('is-valid');
+           $('#inputCertifiedNumber').removeClass('is-valid');
+           $('#inputPhoneNumber').addClass('is-invalid');
+           $('#inputCertifiedNumber').addClass('is-invalid');
+           phoneChecked=false;
+           return;
+        }
+}
+
+
+
+
+
+
 //아이디 찾기
 function findId(){
 	if($('#clientName').val().length<1){
@@ -878,6 +897,7 @@ function findIdCheck(){
 
 //핸드폰 인증 객체
 var phoneChecked = false
+var id = "";
 function findPwsendSms(){
 	if($('#inputPhoneNumber').val().length<1){
 		$('#inputPhoneNumber').addClass('is-invalid');
@@ -899,40 +919,8 @@ function findPwsendSms(){
         	}else{
         	  alert('인증번호 발송 완료!');
         	  $('#inputCertifiedNumber').attr('readonly',false);
-        	  $('#checkBtn').click(function(){
-                if($.trim(resultData.numStr)==$('#inputCertifiedNumber').val()){
-                    alert('휴대폰 인증이 정상적으로 완료되었습니다.')
-                    location.href="sendEmailComplete";
-                    $('#inputPhoneNumber').removeClass('is-invalid');
-                    $('#inputCertifiedNumber').removeClass('is-invalid');
-                    $('#inputPhoneNumber').attr('readonly',true).addClass('is-valid');
-                    $('#inputCertifiedNumber').attr('readonly',true).addClass('is-valid');
-                    $('#phoneCheckModal').modal('hide');
-                    $('#button-addon2').attr('disabled',true)
-                    $('#checkBtn').attr('disabled',true)
-                    phoneChecked=true;
-                    $.ajax({
-                    	type:"Post",
-                    	url: "sendEmail",
-                    	data:{
-                    		clientId: resultData.clientVO.clientId,
-                    		clientEmail : resultData.clientVO.clientEmail
-                    	},
-                    	success: function(data){
-                    		alert('이메일 전송에 성공했습니다.')
-                    	},error: function(){
-                    		alert('이메일서버장애')
-                    	}
-                    })
-                }else{
-                   alert('휴대폰 인증에 실패하였습니다. 인증번호를 확인해주세요.')
-                   $('#inputPhoneNumber').removeClass('is-valid');
-                   $('#inputCertifiedNumber').removeClass('is-valid');
-                   $('#inputPhoneNumber').addClass('is-invalid');
-                   $('#inputCertifiedNumber').addClass('is-invalid');
-                   phoneChecked=false;
-                }
-            })
+        	  numStr=resultData.numStr;
+        	  id=resultData.clientId;
         }},//success
         error: function(){
 			alert('서버오류입니다.')
@@ -941,7 +929,48 @@ function findPwsendSms(){
 	}
 }
 
+
+function phoneCheckBtnFind(){
+	if($.trim(numStr)==$('#inputCertifiedNumber').val()){
+        alert('휴대폰 인증이 정상적으로 완료되었습니다.')
+        location.href="sendEmailComplete";
+        $('#inputPhoneNumber').removeClass('is-invalid');
+        $('#inputCertifiedNumber').removeClass('is-invalid');
+        $('#inputPhoneNumber').attr('readonly',true).addClass('is-valid');
+        $('#inputCertifiedNumber').attr('readonly',true).addClass('is-valid');
+        $('#phoneCheckModal').modal('hide');
+        $('#button-addon2').attr('disabled',true)
+        $('#checkBtn').attr('disabled',true)
+        phoneChecked=true;
+        $.ajax({
+        	type:"Post",
+        	url: "sendEmail",
+        	data:{
+        		clientId: id
+        	},
+        	success: function(data){
+        		alert('이메일 전송에 성공했습니다.')
+        	},error: function(){
+        		alert('이메일서버장애')
+        	}
+        })
+    }else{
+       alert('휴대폰 인증에 실패하였습니다. 인증번호를 확인해주세요.')
+       $('#inputPhoneNumber').removeClass('is-valid');
+       $('#inputCertifiedNumber').removeClass('is-valid');
+       $('#inputPhoneNumber').addClass('is-invalid');
+       $('#inputCertifiedNumber').addClass('is-invalid');
+       phoneChecked=false;
+    }
+}
+
+
+
+
 function infoUpsendSms(){
+	if($('#inputPhoneNumber').val().length<1){
+		alert('휴대폰번호를 입력하세요.');
+	}else{
 	$.ajax({
 		type: "post",
 		url: "infoUpsendSms",
@@ -951,28 +980,32 @@ function infoUpsendSms(){
 			alert('인증번호 발송 완료!');
 			$('#inputCertifiedNumber').attr('readonly',false);
       	  	$('#checkBtn').attr('disabled',false);
-      	  	$('#checkBtn').click(function(){
-              if($.trim(data.numStr)==$('#inputCertifiedNumber').val()){
-                  alert('휴대폰 인증이 정상적으로 완료되었습니다.')
-                  $('#inputPhoneNumber').removeClass('is-invalid');
-                  $('#inputCertifiedNumber').removeClass('is-invalid');
-                  $('#inputCertifiedNumber').attr('readonly',true)
-                  $('#phoneCheckModal_up').modal('hide');
-                  $('#phoneChangeConfirm').attr('disabled',false);
-//                  $('#button-addon2').attr('disabled',true)
-                  $('#checkBtn').attr('disabled',true)
-              }else{
-                 alert('휴대폰 인증에 실패하였습니다. 인증번호를 확인해주세요.')
-                 $('#inputPhoneNumber').removeClass('is-valid');
-                 $('#inputCertifiedNumber').removeClass('is-valid');
-                 $('#inputPhoneNumber').addClass('is-invalid');
-                 $('#inputCertifiedNumber').addClass('is-invalid');
-              }
-          })
+      	  	numStr=data.numStr;
 		}
 		
 	})
+	}
 }
+
+
+function phoneCheckBtnInfoUp(){
+	if($.trim(numStr)==$('#inputCertifiedNumber').val()){
+        alert('휴대폰 인증이 정상적으로 완료되었습니다.')
+        $('#inputPhoneNumber').removeClass('is-invalid');
+        $('#inputCertifiedNumber').removeClass('is-invalid');
+        $('#inputCertifiedNumber').attr('readonly',true)
+        $('#phoneChangeConfirm').attr('disabled',false);
+        $('#checkBtn').attr('disabled',true)
+    }else{
+       alert('휴대폰 인증에 실패하였습니다. 인증번호를 확인해주세요.')
+       $('#inputPhoneNumber').removeClass('is-valid');
+       $('#inputCertifiedNumber').removeClass('is-valid');
+       $('#inputPhoneNumber').addClass('is-invalid');
+       $('#inputCertifiedNumber').addClass('is-invalid');
+    }
+}
+
+
 
 
 //개인정보동의 내용 모달
@@ -1301,7 +1334,7 @@ function clientIncheck() {
 		$('#emailServer').addClass('is-invalid');
 		$('#cemMessage').html('Email을 확인하세요');
 	}
-	if (cidCheck == true && cpCheck == true && cprCheck == true 
+	if (cidCheck == true && cpCheck == true && cprCheck == true && cidDubCheck==true
 			&& cadCheck == true && cemCheck == true && cemserverCheck==true && cbdCheck == true) {
 		if(confirm('가입을 진행하시겠습니까?')==true) {
 			$('form').submit();
