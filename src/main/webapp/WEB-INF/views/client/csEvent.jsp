@@ -138,7 +138,7 @@ tbody tr {
 								<table id="table_id" class="table table-striped table-hover">
 									<thead>
 										<tr align="center" style="height: 50px; vertical-align:middle;">
-											<th scope="col" style="width: 100px;">번호</th>
+											<th scope="col" style="width: 100px;">목록</th>
 											<th scope="col" style="width: 500px;">제목</th>
 										</tr>
 									</thead>
