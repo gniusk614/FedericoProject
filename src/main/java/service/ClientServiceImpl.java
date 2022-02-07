@@ -88,6 +88,11 @@ public class ClientServiceImpl implements ClientService {
 	public int updateMyInfo(ClientVO vo) {
 		return dao.updateMyInfo(vo);
 	}
+	//회원탈퇴
+	@Override
+	public int deleteClient(ClientVO vo) {
+		return dao.deleteClient(vo);
+	}
 	
 
 	//공지사항게시판 공지체크만 전체출력

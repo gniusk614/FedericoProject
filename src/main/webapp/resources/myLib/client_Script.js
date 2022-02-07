@@ -1364,15 +1364,7 @@ function infoUp(){
 			},
 			success:function(data){
 				if(data.success=='success'){
-					$.ajax({
-						type: "Get",
-						url: "myinfoUp",
-						success:function(resultPage){
-							$('#content').html(resultPage);
-						},error:function(){
-							alert('정보수정 폼 서버장애');
-						}
-					})
+					location.href="myinfoUp";
 				}else{
 					alert('비밀번호가 틀립니다. 다시 확인해주세요.');
 				}
@@ -1392,24 +1384,29 @@ function phonechangeSumit(){
 
 //패스워드 변경
 function pwchangeSumit(){
-	if(confirm('비밀번호를 변경하시겠습니까?')){
-		console.log($('#clientPassword').val());
-		$.ajax({
-			type: "post",
-			url: "myPasswordUpdate",
-			data:{
-				clientPassword : $('#clientPassword').val()
-			},success: function(data){
-				if(data.success=='success'){
-					alert('비밀번호 변경에 성공했습니다.');
-					$('#pwchangeModal').modal('hide');
-				}else{
-					alert('비밀번호 변경에 실패하였습니다.');
-				}
-			},error: function(){
-				alert('서버장애');
+		if(cpCheck==false || cprCheck==false){
+			alert('비밀번호를 확인해주세요.')
+		}
+		else{
+			if(confirm('비밀번호를 변경하시겠습니까?')){
+				console.log($('#clientPassword').val());
+				$.ajax({
+					type: "post",
+					url: "myPasswordUpdate",
+					data:{
+						clientPassword : $('#clientPassword').val()
+					},success: function(data){
+						if(data.success=='success'){
+							alert('비밀번호 변경에 성공했습니다.');
+							$('#pwchangeModal').modal('hide');
+						}else{
+							alert('비밀번호 변경에 실패하였습니다.');
+						}
+					},error: function(){
+						alert('서버장애');
+					}
+				})
 			}
-		})
 	}
 }
 
@@ -1468,7 +1465,25 @@ function UpdateMyinfo(){
 }
 
 
-
+function deleteClient(){
+	var deleteReason = $('input:radio[name="btnradio"]:checked').val();
+	if(confirm('정말로 탈퇴하시겠습니까?')){
+	$.ajax({
+		type: "post",
+		url: "deleteClient",
+		data: {
+			deleteReason : deleteReason
+		},success: function(data){
+			alert('회원 탈퇴에 성공하였습니다.');
+			location.href='clientLogout'
+		},error: function(){
+			alert('서버장애');
+		}
+		
+	})
+	}
+	
+}
 
 
 

@@ -10,25 +10,28 @@
 	</insert>
 	<!-- 클라이언트 selectOne (WHERE = ID) -->
 	<select id="selectOne" resultType="vo.ClientVO">
-		SELECT * FROM client where clientId = #{clientId}
+		SELECT * FROM client where clientId = #{clientId} AND DELETECHECK = 'N'
 	</select>
 	<!-- 클라이언트 selectOne (WHERE = Phone) -->
-	<select id="selectOnePhone" resultType="vo.ClientVO">
-		SELECT * FROM client where clientPhone = #{clientPhone}
+	<select id="selectOnePhone" resultType="vo.ClientVO"> 
+		SELECT * FROM client where clientPhone = #{clientPhone} AND DELETECHECK = 'N'
 	</select>
 	
 	<!-- 클라이언트 pw 임의변경 -->
 	<insert id="updateClientPw">
 		UPDATE client SET clientPassword = #{clientPassword}
-		WHERE clientId = #{clientId}
+		WHERE clientId = #{clientId} AND DELETECHECK = 'N'
 	</insert>
 	<!-- 클라이언트 정보변경 -->
 	<insert id="updateMyInfo">
 		UPDATE client SET clientAddress = #{clientAddress}, clientEmail = #{clientEmail},
 		smsCheck = #{smsCheck}, emailCheck = #{emailCheck}
-		WHERE clientId = #{clientId}
+		WHERE clientId = #{clientId} AND DELETECHECK = 'N'
 	</insert>
-	
+	<insert id="deleteClient">
+		UPDATE client SET clientPhone = '' , deleteCheck = 'Y', deleteReason = #{deleteReason}, deletePhone = #{deletePhone}
+		WHERE clientId = #{clientId} AND DELETECHECK = 'N'
+	</insert>
 	
 	
 	
