@@ -20,7 +20,6 @@
 	crossorigin="anonymous"></script>
 <script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
 <script src="/federico/resources/myLib/inCheck.js"></script>
-<script src="/federico/resources/ckeditor/ckeditor.js"></script>
 <script
 	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script
@@ -84,9 +83,11 @@ tbody tr {
 			</div>
 			<!-- 컨텐츠 -->
 			<div id="content">
-				<div id="myOrderList" class="container myinfo" style="display: block;">
+				<div id="myOrderList" class="container myinfo"
+					style="display: block;">
 					<div class="row justify-content-md-center mt-1 py-5">
-						<div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+						<div
+							class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
 							<div class="dataTable-top"></div>
 							<div class="row mb-3">
 								<div class="col lead px-3" style="font-size: medium;">
@@ -113,14 +114,14 @@ tbody tr {
 											</tr>
 										</c:if>
 										<c:forEach var="list" items="${orderList}">
-											<tr
-												onclick="orderDetail(${list.orderNumber})"
+											<tr onclick="orderDetail(${list.orderNumber})"
 												style="vertical-align: middle; height: 50px;">
 												<td align="center">${list.orderNumber}</td>
 												<td align="center">${list.clientAddress}</td>
 												<td align="center">${list.fcId}</td>
 												<td align="center">${list.orderDate}</td>
-												<fmt:formatNumber value="${list.price}" pattern="#,###" var="price"/>
+												<fmt:formatNumber value="${list.price}" pattern="#,###"
+													var="price" />
 												<td align="center">${price}원</td>
 											</tr>
 										</c:forEach>
@@ -172,8 +173,10 @@ tbody tr {
 				<div id="myInfoUp" class="container myinfo" style="display: none;">
 					<div class="row mt-5 mb-2">
 						<font style="font-size: x-large;"><b>비밀번호 확인</b></font><br>
-						<p class="lead" style="color: gray; font-size: medium;">정보를 안전하게 보호하기 위해 <b style="color: crimson;">비밀번호를 다시 한 번 입력</b>해 주세요.
-						<p>
+						<p class="lead" style="color: gray; font-size: medium;">
+							정보를 안전하게 보호하기 위해 <b style="color: crimson;">비밀번호를 다시 한 번 입력</b>해
+							주세요.
+						</p>
 						<hr>
 					</div>
 					<div class="row justify-content-md-center mt-5 mb-5">
@@ -196,18 +199,53 @@ tbody tr {
 							</div>
 						</div>
 					</div>
-				<div id="deleteMyInfo" class="container myinfo" style="display: none;">삭제</div>
-
-
+				</div>
+				<div id="deleteMyInfo" class="container myinfo"
+					style="display: none;">
+					<div class="row mt-5">
+						<p class="lead" style="color: gray; font-size: medium;">
+							회원탈퇴 이후 <b style="color: crimson;">동일한 아이디로 재가입</b>이 불가합니다.
+						</p>
+						<hr>
+					</div>
+					<div class="row justify-content-md-center">
+						<font style="font-size: x-large;">온라인서비스 이용이 만족스럽지 못하셨나요?</font><br>
+						<p class="lead" style="color: gray; font-size: medium;">회원탈퇴
+							사유를 선택해 주시면 서비스 개선을 통해 더욱 발전하는 페데리코가 되겠습니다.</p>
+						<hr>
+					</div>
+					<div class="row justify-content-md-center mt-2 mb-2">
+						<div class="btn-group mt-3 mb-5" role="group"
+							aria-label="Basic radio toggle button group">
+							<input type="radio" class="btn-check" name="btnradio" id="homepage" value="홈페이지 사용 불편" autocomplete="off" checked> 
+							<label class="btn btn-outline-danger" for="homepage"  onchange="showETCbox()">홈페이지 사용 불편</label> 
+							
+							<input type="radio" class="btn-check" name="btnradio" id="service" value="서비스 불만족" autocomplete="off"> 
+							<label class="btn btn-outline-danger" for="service" onchange="showETCbox()">서비스 불만족</label> 
+							
+							<input type="radio" class="btn-check" name="btnradio" id="infomation" value="필요한 정보의 부족" autocomplete="off"> 
+							<label class="btn btn-outline-danger" for="infomation" onchange="showETCbox()">필요한 정보의 부족</label> 
+							
+							<input type="radio" class="btn-check" name="btnradio" id="product" value="제품 불만족" autocomplete="off"> 
+							<label class="btn btn-outline-danger" for="product" onchange="showETCbox()">제품 불만족</label> 
+							
+							<input type="radio" class="btn-check" name="btnradio" id="etc" value="기타" autocomplete="off">
+							<label class="btn btn-outline-danger" for="etc" onchange="showETCbox()">기타</label>
+						</div>
+						<hr>
+					</div>
+					<div class="row justify-content-md-center mt-2 mb-2">
+						<button class="btn btn-danger" onclick="deleteClient()"
+							style="width: 40%; height: 60px; font-size: large;">회원탈퇴</button>
 					</div>
 				</div>
-				</div>
+			</div>
+		</div>
 	</section>
 	<!-- footer include -->
 	<%--  <%@ include file="footer.jsp"%> --%>
 
 	
-<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 		crossorigin="anonymous"></script>

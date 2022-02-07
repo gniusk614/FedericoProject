@@ -27,6 +27,7 @@ public interface ClientMapper {
 	int insertClient(ClientVO vo); //회원가입
 	int updateClientPw(ClientVO vo);//비밀번호 변경
 	int updateMyInfo(ClientVO vo);//내정보변경
+	int deleteClient(ClientVO vo);//회원탈퇴
 
 	List<NoticeBoardVO> selectNoticeBoard(); //공지사항게시판 공지체크만 전체출력
 	List<NoticeBoardVO> searchNoticeBoard(SearchCriteria cri);//공지사항게시판 출력
