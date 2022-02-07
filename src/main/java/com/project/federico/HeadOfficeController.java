@@ -722,7 +722,7 @@ public class HeadOfficeController {
 		return mv;
 	}// staffDetail
 
-	// ** 비번변경시 현재비번확인
+	// ** 직원 비번변경시 현재비번확인
 	@RequestMapping(value = "/staffloginPwCheck")
 	public ModelAndView staffloginPwCheck(HttpServletRequest request, ModelAndView mv, HeadOfficeVO hvo, StaffVO svo) {
 		String hoid = (String) request.getSession().getAttribute("loginID");
@@ -769,6 +769,39 @@ public class HeadOfficeController {
 
 //=========================< 가맹점 관리 >=========================
 
+	
+	// ** 가맹점 비번변경시 현재비번확인
+	@RequestMapping(value = "/fcloginPwCheck")
+	public ModelAndView fcloginPwCheck(HttpServletRequest request, ModelAndView mv, FranchiseVO fvo) {
+		
+		String inputPw = fvo.getFcPassword();
+
+		fvo = fservice.selectFcOne(fvo);
+
+		if (passwordEncoder.matches(inputPw, fvo.getFcPassword())) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+
+		return mv;
+	}// fcloginPwCheck	
+	
+	// 가맹점 비밀번호 변경
+	@RequestMapping(value = "/fcpwupdate")
+	public ModelAndView fcPwUpdate(ModelAndView mv, FranchiseVO vo) {
+		if (fservice.fcPwUpdate(vo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+		return mv;
+	}// fcupdate
+	
 	// 가맹점 리스트
 	@RequestMapping(value = "/fclist")
 	public ModelAndView fclist(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
