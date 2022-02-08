@@ -1021,13 +1021,6 @@ public class ClientController {
 		}
 		
 		
-		@RequestMapping(value = "maps")
-		public ModelAndView maps(ModelAndView mv) {
-			mv.setViewName("client/maps");
-			return mv;
-		}
-		
-		
 		
 		
 		/* ============================={ 이벤트 페이지 }================================ */
