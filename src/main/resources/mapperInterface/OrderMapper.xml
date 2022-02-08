@@ -65,7 +65,7 @@
 		FROM orderlist
 		 <include refid="completeOrderSearch"></include>
 		AND completeyn = 'Y' AND fcid = #{vo.fcId}
-		ORDER BY ordernumber desc
+		ORDER BY orderdate desc
 		OFFSET #{cri.sno}-1 ROWS FETCH NEXT #{cri.rowsPerPage} ROWS ONLY 
 	</select>
 	
