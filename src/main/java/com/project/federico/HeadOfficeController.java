@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -41,12 +40,9 @@ import service.FranchiseService;
 import service.HeadOfficeService;
 import service.MenuService;
 import vo.ChartVO;
-
-import vo.EventBoardVO;
-
 import vo.ComplainBoardVO;
 import vo.ComplainCommentVO;
-
+import vo.EventBoardVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
