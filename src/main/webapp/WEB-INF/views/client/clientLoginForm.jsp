@@ -36,6 +36,7 @@ table, tr, td, th {
 	border: 1px solid black;
 }
 
+
 </style>
 </head>
 <link
@@ -117,6 +118,15 @@ table, tr, td, th {
 														<c:if test="${not empty message}">${message}</c:if>
 													</div>
 													<div class="row">
+														<div class="col" align="left">
+															<div class="form-check px-0">
+															 	<input class="form-check-input-md" type="checkbox" id="autoLoginCheckBox">
+															 	<label class="form-check-label" for="autoLoginCheckBox" style="font-size: medium; color: crimson;" >
+															  	  자동로그인
+															  	</label>
+															</div>
+															<input type="text" name="autoLogin" id="autoLogin" value="false" hidden="hidden">
+														</div>
 														<div class="col" align="right">
 															<a class="small" href="findIdPwf"
 																style="font-size: medium; color: Crimson;">아이디/비밀번호 찾기</a>
