@@ -263,6 +263,8 @@
 
 
 	<build>
+		<!-- linux 환경에서 maven build 시 최종파일이름 지정 -->
+		<finalName>federico</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
