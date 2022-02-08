@@ -1,6 +1,7 @@
 package service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,6 +94,17 @@ public class ClientServiceImpl implements ClientService {
 	public int deleteClient(ClientVO vo) {
 		return dao.deleteClient(vo);
 	}
+	//자동로그인
+	@Override
+	public int keepLogin(Map<String, Object> params) {
+		return dao.keepLogin(params);
+	}
+	//세션아이디 유효기간 남아있는 아이디 select
+	@Override
+	public ClientVO checkUserWithSessionKey(String sessionId) {
+		return dao.checkUserWithSessionKey(sessionId);
+	}
+	
 	
 
 	//공지사항게시판 공지체크만 전체출력

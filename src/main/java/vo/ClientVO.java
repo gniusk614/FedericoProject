@@ -17,5 +17,4 @@ public class ClientVO {
 	private String deleteReason;
 	private String deletePhone;
 	
-	
 }

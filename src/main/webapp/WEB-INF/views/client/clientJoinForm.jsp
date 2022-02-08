@@ -695,7 +695,7 @@ table, tr, td, th {
 									name="inputCertifiedNumber" type="text"
 									oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"
 									placeholder="인증번호" readonly="readonly" />
-								<button class="btn btn-outline-danger" type="button" disabled="disabled"
+								<button class="btn btn-outline-danger" type="button" disabled="disabled" onclick="phoneCheckBtnJoin()"
 									id="checkBtn">인증번호 확인</button>
 							</div>
 						</div>
