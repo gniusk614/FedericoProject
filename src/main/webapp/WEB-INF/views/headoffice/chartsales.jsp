@@ -89,7 +89,6 @@ function statsSuccessChart(data, type) {
 			var borderRGBA = 'rgb(50, 205, 89)';
 			chartColor.push(strRGBA);
 			borderColor.push(borderRGBA);
-
 		}) //each
 
 		new Chart(chartID, {
@@ -143,8 +142,6 @@ function statsSuccessChart(data, type) {
 
 	}
 }//차트그리기
-
-
 </script>
 </head>
 <style>
@@ -158,7 +155,6 @@ function statsSuccessChart(data, type) {
 <body>
 <!-- navtop inlcud -->
 <%@ include file="navtop.jsp" %>
-
 <!-- layoutSidenav 시작 -->
 <div id="layoutSidenav">
 	<%@ include file="navside.jsp" %>
@@ -173,37 +169,34 @@ function statsSuccessChart(data, type) {
 				기간별 통계 및 메뉴통계</h4>
 				</div>
 				<div class="card-body" style="min-height: 720px;">
-					
 					<!-- 조회유형 선택 -->
 					<div class="card">
 						<div class="card-header parent" style="background-color: #e6e6e6; font-size: 18px;">
 					<!-- 	월별매출조회 - default 이번달, 20년01월~ 21년02월(함수) / 시간대별 매출조회(날짜지정)/ 메뉴별 주문건수 조회 월별, default 이번달  / 메뉴별 매출 Top5 , Worst 5 월별 , 전체 / --> 
 							<c:if test="${key == null}">
-								<a href="chartsales"><span id="fcStatsAnnualSales" class="selected">연도별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartsales?key=2"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales"><span id="fcStatsAnnualSales" class="selected">월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=2"><span id="fcStatsMonthlySales" >일별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
 								<a href="chartsales?key=3"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
 								<a href="chartsales?key=4"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>
 							</c:if>	
 							<c:if test="${key == 2}">
-								<a href="chartsales"><span id="fcStatsAnnualSales" >연도별 월간 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartsales?key=2"><span id="fcStatsMonthlySales" class="selected">월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales"><span id="fcStatsAnnualSales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=2"><span id="fcStatsMonthlySales" class="selected">일별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
 								<a href="chartsales?key=3"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
 								<a href="chartsales?key=4"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>
 							</c:if>
 							<c:if test="${key == 3}">
-								<a href="chartsales"><span id="fcStatsAnnualSales" >연도별 월간 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartsales?key=2"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales"><span id="fcStatsAnnualSales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=2"><span id="fcStatsMonthlySales" >일별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
 								<a href="chartsales?key=3"><span id="fcStatsDailySales" class="selected">시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
 								<a href="chartsales?key=4"><span id="fcStatsMenuSales" >메뉴별 판매량 조회</span></a>
 							</c:if>
 							<c:if test="${key == 4}">
-								<a href="chartsales"><span id="fcStatsAnnualSales" >연도별 월간 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="chartsales?key=2"><span id="fcStatsMonthlySales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales"><span id="fcStatsAnnualSales" >월별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="chartsales?key=2"><span id="fcStatsMonthlySales" >일별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
 								<a href="chartsales?key=3"><span id="fcStatsDailySales" >시간대별 매출 조회</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
 								<a href="chartsales?key=4"><span id="fcStatsMenuSales" class="selected">메뉴별 판매량 조회</span></a>
 							</c:if>
-						
-							
 						</div>
 					</div><!-- 조회유형 선택 -->
 					<!-- 통계결과 -->
@@ -221,34 +214,19 @@ function statsSuccessChart(data, type) {
 							<c:if test="${key == 4 }">
 								<%@ include file="statsMenuSales.jsp" %>
 							</c:if>
-							
-							
-							
+							<br>
 							<div id="canvasZone" align="center">
 								<canvas id="fcStatsChartCanvas" height="550px" width="1400px"></canvas>
 							</div>
 					</div>
-			
-			
 				</div>
 			</div>
 		</div> <!-- 본문 끝 -->
 	</div> 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		<!-- footer inlcud -->
 		<div><%@ include file="footer.jsp" %></div>
 	</div> <!-- 본문 끝 -->
 </div> <!-- layoutSidenav 끝 -->			
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="/federico/resources/js/scripts.js"></script>

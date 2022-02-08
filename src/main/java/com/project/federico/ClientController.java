@@ -70,12 +70,11 @@ public class ClientController {
 	
 	// 결제완료폼 이동 + 주문정보 인서트
 	@RequestMapping(value = "/ordercomplete")
-	public ModelAndView ordercomplete(ModelAndView mv, HttpServletRequest request, HttpSession session, ClientVO clientVo) {
+	public ModelAndView ordercomplete(ModelAndView mv, HttpServletRequest request, HttpSession session, ClientVO clientVo, RedirectAttributes rttr) {
 		List<CartVO> list = (List<CartVO>)session.getAttribute("list");
 		Map<String, Object> params = new HashMap<String, Object>();
 		String fcId;
 		String memo;
-		
 		
 		// iampay 일 경우
 		if("iam".equals(request.getParameter("iam"))){
@@ -85,7 +84,6 @@ public class ClientController {
 			fcId = (String)session.getAttribute("fcId");
 			memo = (String)session.getAttribute("memo");
 		}
-		
 		
 		// map에 인서트할 값 세팅
 		if(session.getAttribute("clientLoginID") != null) {
@@ -117,7 +115,7 @@ public class ClientController {
 			
 			//해당가맹점 배달소요시간 조회
 			String deliveryTime = fcService.selectDeliveryTimebyFcId(fcId);
-			mv.addObject("deliveryTime", deliveryTime);
+			rttr.addFlashAttribute("deliveryTime", deliveryTime);
 			
 			
 			// 주문상세정보 인서트
@@ -145,10 +143,15 @@ public class ClientController {
 			}
 			
 		}
-		mv.setViewName("client/orderComplete");
+		mv.setViewName("redirect:ordercompletef");
 		return mv;
 	}
 	
+	// 결제완료 후 redirect 용
+	@RequestMapping(value = "/ordercompletef")
+	public String orderCompletf() {
+		return "client/orderComplete";
+	}
 	
 	// 카카오페이 결제요청
 	  @RequestMapping(value = "/kakaoPay") 

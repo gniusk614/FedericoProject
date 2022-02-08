@@ -71,7 +71,6 @@ function statsSuccessChart(data, type) {
 			var borderRGBA = 'rgb(50, 205, 89)';
 			chartColor.push(strRGBA);
 			borderColor.push(borderRGBA);
-
 		}) //each
 
 		new Chart(chartID, {
@@ -122,11 +121,8 @@ function statsSuccessChart(data, type) {
 		});//그래프				 
 	} else {
 		alert('통신장애가 발생했습니다.\n다시 시도해주세요.');
-
 	}
 }//차트그리기
-
-
 </script>
 </head>
 <style>
@@ -155,7 +151,6 @@ function statsSuccessChart(data, type) {
 				연령별 통계</h4>
 				</div>
 				<div class="card-body" style="min-height: 720px;">
-					
 					<!-- 조회유형 선택 -->
 					<div class="card">
 						<div class="card-header parent" style="background-color: #e6e6e6; font-size: 18px;">
@@ -174,8 +169,6 @@ function statsSuccessChart(data, type) {
 								<a href="chartagegroup?key=2"><span >연령대별 메뉴 판매량</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
 								<a href="chartagegroup?key=3"><span class="selected">연령대별 회원수</span></a>&nbsp;&nbsp;&nbsp;&nbsp;
 							</c:if>
-						
-							
 						</div>
 					</div><!-- 조회유형 선택 -->
 					<!-- 통계결과 -->
@@ -190,29 +183,16 @@ function statsSuccessChart(data, type) {
 							<c:if test="${key == 3 }">
 								<%@ include file="statsMemberAgeGroup.jsp" %>
 							</c:if>
-						
 							
-							
-							
+							<br>
 							<div id="canvasZone" align="center">
 								<canvas id="fcStatsChartCanvas" height="550px" width="1400px"></canvas>
 							</div>
 					</div>
-			
-			
 				</div>
 			</div>
 		</div> <!-- 본문 끝 -->
 	</div> 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		<!-- footer inlcud -->
 		<div><%@ include file="footer.jsp" %></div>
 	</div> <!-- 본문 끝 -->
