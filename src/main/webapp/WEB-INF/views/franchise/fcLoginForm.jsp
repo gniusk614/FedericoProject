@@ -47,7 +47,6 @@
 										<div
 											class="d-flex align-items-center justify-content-between mt-4 mb-0">
 											<div class="col-xxl-8">
-												<a class="small" href="passwordReset">비밀번호 재설정</a>
 											</div>
 											<div class="col-xxl-4">
 												<a class="btn btn-success" href="/federico/">메인으로</a> 

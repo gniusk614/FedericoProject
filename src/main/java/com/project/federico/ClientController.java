@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.WebUtils;
 
 import lombok.extern.log4j.Log4j;
 import paging.PageMaker;
@@ -233,7 +236,7 @@ public class ClientController {
 		} else if(session.getAttribute("nonName") != null) {
 			uri = "client/nonOrderAddress";
 		} else {
-			uri="client/clientLoginForm";
+			uri="redirect:clientLoginf";
 		}
 		
 		mv.setViewName(uri);
@@ -399,17 +402,20 @@ public class ClientController {
 
 // 로그인(강광훈)
 	@RequestMapping(value = "/clientLogin")
-	public ModelAndView clientLogin(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
-			ClientVO vo, CartVO cartVo) throws ServletException, IOException {
+	public ModelAndView clientLogin(HttpSession session,HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
+			ClientVO vo, CartVO cartVo , @RequestParam("autoLogin") String autoLogin) throws ServletException, IOException {
 		// 정보 저장
 		String password = vo.getClientPassword();
 		String uri = "/client/clientLoginForm";
-
+		
 		System.out.println(vo.getClientPassword());
 		System.out.println(vo.getClientId());
-
+		
 		vo = clientService.selectOne(vo);
-
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		
 		// 정보 확인
 		if (vo != null) { // ID는 일치 -> Password 확인
 			if (passwordEncoder.matches(password, vo.getClientPassword())) {
@@ -417,6 +423,23 @@ public class ClientController {
 				request.getSession().setAttribute("clientLoginID", vo.getClientId());
 				request.getSession().setAttribute("clientLoginName", vo.getClientName());
 				uri = "redirect:home";
+				log.info(autoLogin);
+				//자동로그인
+				if ("true".equals(autoLogin)){
+					log.info("여기옴?");
+	                Cookie cookie =new Cookie("loginCookie", session.getId());
+	                cookie.setPath("/");
+	                int amount =60 *60 *24 *7;
+	                cookie.setMaxAge(amount); //7일
+	                // 쿠키를 적용해 준다.
+	                response.addCookie(cookie);
+	                
+	                Date sessionLimit =new Date(System.currentTimeMillis() + (1000*amount));
+					params.put("clientId", vo.getClientId());
+					params.put("sessionId", session.getId());
+					params.put("next", sessionLimit);
+					clientService.keepLogin(params);
+	            }
 			} else {
 				mv.addObject("message", "Password가 일치하지않습니다.");
 			}
@@ -438,18 +461,38 @@ public class ClientController {
 	// 로그아웃 (강광훈)
 	@RequestMapping(value = "/clientLogout")
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
-			RedirectAttributes rttr) throws ServletException, IOException {
+			RedirectAttributes rttr, ClientVO vo) throws ServletException, IOException {
 
 		// 1) request 처리
 		response.setContentType("text/html; charset=UTF-8");
 		HttpSession session = request.getSession(false);
-
+		
 		// ** session 인스턴스 정의 후 삭제하기
 		// => 매개변수: 없거나, true, false
 		// => false : session 이 없을때 null 을 return;
-
-		if (session != null)
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		if (session != null) {
+			vo.setClientId((String)session.getAttribute("clientLoginID"));
 			session.invalidate();
+			
+			Cookie loginCookie = WebUtils.getCookie(request,"loginCookie");
+            if ( loginCookie !=null ){
+                // null이 아니면 존재하면!
+                loginCookie.setPath("/");
+                // 쿠키는 없앨 때 유효시간을 0으로 설정하는 것 !!! invalidate같은거 없음.
+                loginCookie.setMaxAge(0);
+                // 쿠키 설정을 적용한다.
+                response.addCookie(loginCookie);
+                 
+                // 사용자 테이블에서도 유효기간을 현재시간으로 다시 세팅해줘야함.
+                Date date =new Date(System.currentTimeMillis());
+                params.put("clientId", vo.getClientId());
+				params.put("sessionId", session.getId());
+				params.put("next", date);
+                clientService.keepLogin(params);
+            }
+		}
 		String uri = "redirect:home";
 		rttr.addFlashAttribute("message", "로그아웃 완료");
 
@@ -977,6 +1020,12 @@ public class ClientController {
 			return mv;
 		}
 		
+		
+		@RequestMapping(value = "maps")
+		public ModelAndView maps(ModelAndView mv) {
+			mv.setViewName("client/maps");
+			return mv;
+		}
 		
 		
 		

@@ -476,7 +476,20 @@ $(function(){
 			nameChecked = true;
 		}
 	})//focusout
-
+	
+	
+	
+	$('#autoLoginCheckBox').on('change', function() {
+		if ($(this).is(':checked')) {
+			 $('#autoLogin').attr('value', 'true');
+			 
+		} else {
+			$('#autoLogin').attr('value', 'false');
+		}
+		
+		console.log($('#autoLogin').val())
+	});
+	
 	
 	//주소창 닫힐시
 	$('#addressModal').on('hidden.bs.modal', function() {
