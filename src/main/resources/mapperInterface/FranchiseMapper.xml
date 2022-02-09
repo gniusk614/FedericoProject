@@ -283,7 +283,7 @@
 		SELECT * FROM franchise where fcarea = #{value} ORDER BY fcid
 	</select>
 	
-	<!-- ======================= 프랜차이즈 주소 관련 ====================== 
+	<!-- ======================= 프랜차이즈 지도API 관련 ====================== -->
 	
 	<resultMap type="vo.FranchiseVO" id="FranchiseVO">
 		<result property="fcId" column="fcId"/>
@@ -294,13 +294,29 @@
 		<result property="fcPhone" column="fcPhone"/>
 		<result property="hoId" column="hoId"/>
 		<result property="fcClose" column="fcClose"/>
-		<result property="deliveryTime" column="deliveryTime"/>
-		<result property="fcminoraddress" column="fcminoraddress"/>	
-		
-		<collection property="menuVo" resultMap="MenuVO"></collection>
+		<result property="deliveryTime" column="deliveryTime"/>		
 	</resultMap>
 	
+	<select id="selectFcAddress" resultType="vo.FranchiseVO">
+		select FCID, FCAREA, FCADDRESS, FCPHONE from franchise 
+		where fcarea = #{Depth1} and 
+		      fcaddress like ('%'||#{Depth2}||'%')
+		order by fcid
+	</select>
 	
+	<select id="selectFcLocation" resultType="vo.FranchiseVO">
+	select fcId, fcAddress, fcPhone
+	from franchise
+	where fcAddress like ('%'||#{value}||'%')
+	order by fcId
+	</select>
+	
+	<select id="selectFcAllAddress" resultType="vo.FranchiseVO">
+		SELECT fcaddress, fcid
+		FROM franchise 
+	</select>
+	
+	<!-- 글자수 추출하기 ex 
 	<select id="selectListbyMinorAddress" resultType="vo.FranchiseVO">
 		select FCID, FCADDRESS from franchise 
 		where fcarea = #{majorCity} and 
@@ -308,14 +324,15 @@
 			  from franchise) fcminoraddress = #{minorCity}
 		order by fcid	
 	</select>
-	
- ======================= 프랜차이즈 주소 관련 ====================== -->
+	-->
+<!-- ======================= 프랜차이즈 주소 관련 ====================== -->
 	
 	
 	
 	<select id="selectFcOne" resultType="vo.FranchiseVO">
 		SELECT fcid,fcpassword,fcname,fcaddress,fcarea,fcphone,hoid
-		FROM franchise WHERE fcid = #{fcId}
+		FROM franchise 
+		WHERE fcid = #{fcId}
 	</select>
 
 	

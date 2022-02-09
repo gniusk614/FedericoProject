@@ -14,17 +14,19 @@
 <meta name="author" content="" />
 <title>페데리꼬 피자</title>
 <link href="/federico/resources/css/styles.css" rel="stylesheet" />
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
 	crossorigin="anonymous"></script>
-<script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
 <script src="/federico/resources/myLib/inCheck.js"></script>
 <script src="/federico/resources/ckeditor/ckeditor.js"></script>
 <script
 	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script
 	src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 <style>
 .checked {
 	border-bottom: 2px solid black;
@@ -73,6 +75,14 @@ tbody tr {
 					<div class="card-body">
 						<div class="row mb-3">
 							<div class="col">
+								<input type="text" id="startDate" placeholder="이벤트 시작일"></div>								
+						</div>
+						<div class="row mb-3">
+							<div class="col">
+								<input type="text" id="endDate" placeholder="이벤트 종료일"></div>								
+						</div>
+						<div class="row mb-3">
+							<div class="col">
 								<textarea class="form-control" id="content">
 								글자수 600자 제한
 								</textarea>
@@ -110,7 +120,7 @@ tbody tr {
 		 alert('400자 이상 작성할 수 없습니다.')
 	 }
 	});
-		
+
 	</script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
