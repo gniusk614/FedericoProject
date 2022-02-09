@@ -38,6 +38,7 @@ import paging.PageMaker;
 import paging.SearchCriteria;
 import service.ClientServiceImpl;
 import service.FranchiseService;
+import service.HeadOfficeService;
 import service.MenuServiceImpl;
 import service.OrderService;
 import service.SendService;
@@ -47,6 +48,7 @@ import vo.ComplainBoardVO;
 import vo.EmailVO;
 import vo.EventBoardVO;
 import vo.FranchiseVO;
+import vo.HeadOfficeVO;
 import vo.MenuVO;
 import vo.NoticeBoardVO;
 import vo.OrderDetailListVO;
@@ -69,7 +71,8 @@ public class ClientController {
 	FranchiseService fcService;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
+	@Autowired
+	HeadOfficeService headOfficeService;
 
 	
 	// 결제완료폼 이동 + 주문정보 인서트
@@ -424,6 +427,7 @@ public class ClientController {
 		if (vo != null) { // ID는 일치 -> Password 확인
 			if (passwordEncoder.matches(password, vo.getClientPassword())) {
 				// 로그인 성공 -> 로그인 정보 session에 보관, home
+				
 				request.getSession().setAttribute("clientLoginID", vo.getClientId());
 				request.getSession().setAttribute("clientLoginName", vo.getClientName());
 				uri = "redirect:home";
@@ -699,39 +703,120 @@ public class ClientController {
 			return mv;
 		}
 		
+//===========================<< MAP START >>==========================
 		@RequestMapping(value ="/fcSearch")
-		public ModelAndView fcsearch ( @RequestParam("area") String area,@RequestParam("Depth2") String Depth2,  ModelAndView mv, FranchiseVO vo) {
-			// 여기는 뷰단에서 입력 받은 DATA를 입력.						
-			List<FranchiseVO> listArea =  fcService.selectListbyArea(area);			
-			FranchiseVO listDepth2 =  fcService.selectFcOne(vo);			
+		public ModelAndView fcsearch (ModelAndView mv, FranchiseVO vo, HttpServletRequest request, HttpSession session) {
 			
-			if(listArea != null && listArea.equals(vo.getFcArea())) {				
-				if(Depth2.equals(listDepth2.getFcAddress().substring(listDepth2.getFcAddress().indexOf(" ")+1,listDepth2.getFcAddress().indexOf(" ")+4))) {
-					 
-							
-				}// 2nd if
-			}// if
-			
-		
-			
-			
-			/*
-			vo = fcService.selectFcOne(vo);
-			
-			if(vo.getFcAddress()!=null) {
-				mv.addObject("fcaddress", vo);
-				mv.addObject("success","success");				
-				}
-			else {			
-				mv.addObject("success","fail");
-			}
+			if("card".equals(request.getParameter("card"))) {
+				List<FranchiseVO> list = (List<FranchiseVO>)session.getAttribute("fcInfo2");
+//				log.info(list.toString());
+				mv.addObject("list", list);
 						
-			mv.setViewName("jsonView");
-			*/
-			mv.setViewName("/client/fcSearch");
-			
+			}
+				mv.setViewName("/client/fcSearch");						 
+			// if
+				
 			return mv;
-		}
+			}
+
+		@RequestMapping(value ="/fcSearchArea")
+		public ModelAndView fcsearchmain (ModelAndView mv, FranchiseVO vo, HeadOfficeVO hvo, HttpServletRequest request, HttpSession session) {
+			Map<String, Object> params = new HashMap<String, Object>();			
+			// 해쉬맵도 하나의 주머니인데 이 파라미터 값을 list로 넣어준다.?
+			// 왜? 
+			// 각 리스트에 담겨진 주머니(key,value)가 리스트에 담겨진다.
+			params.put("Depth1",request.getParameter("Depth1")); // ajax에서 요청 날리면 얘가 받는다.
+			params.put("Depth2",request.getParameter("Depth2")); // request가 해주는 역할 공부하기. 서블릿과 함께	
+			
+			List<FranchiseVO> list = fcService.selectFcAddress(params);
+			
+			if(list != null) {
+						mv.addObject("list", list);
+						session.setAttribute("fcInfo2", list);
+						mv.addObject("success","success");	
+//						log.info("fcSearchArea =>"+list.toString());
+			}else {
+				mv.addObject("success","fail");					
+			}			
+				mv.setViewName("jsonView");						 
+		
+			return mv;
+			}
+		
+		@RequestMapping(value = "/fcSearchLocation")
+		public ModelAndView fcSearchLocation (ModelAndView mv, FranchiseVO vo, HeadOfficeVO hvo, HttpServletRequest request, HttpSession session) {
+			
+			List<FranchiseVO> list = fcService.selectFcLocation(request.getParameter("fcAddress_keyword"));
+			
+			log.info("fcSearchLocation list =>"+list);
+			
+			if(list!= null) {				
+				mv.addObject("list",list);
+				mv.addObject("success","success");
+			}else {
+				mv.addObject("success","fail");
+			}			
+				mv.setViewName("jsonView");						 
+			return mv;
+			}// fcSearchLocation
+		/*
+		@RequestMapping(value = "/fcSearchCard")
+		public ModelAndView fcSearchCard (ModelAndView mv, FranchiseVO vo, HttpServletRequest request, HttpSession session) {
+			List<FranchiseVO> list;
+			
+			Map<String, Object> params = new HashMap<String, Object>();	
+			params.put("Depth1",request.getParameter("Depth1")); // ajax에서 요청 날리면 얘가 받는다.
+			params.put("Depth2",request.getParameter("Depth2"));			
+			
+			if(params != null) {
+				list = fcService.selectFcAddress(params);
+			}else {		
+				list = fcService.selectFcLocation(request.getParameter("fcAddress_keyword"));
+			}		
+			
+			if(list != null) {
+				mv.addObject("list",list);
+			}else {
+				mv.addObject("success","fail");
+			}			
+				mv.setViewName("/client/fcSearch");						 
+			return mv;
+			}// fcSearchLocation
+		*/
+		
+		@RequestMapping(value = "/fcAllAddress")
+		public ModelAndView fcAllAddress (ModelAndView mv, FranchiseVO vo) {
+			
+			List<FranchiseVO> list = fcService.selectFcAllAddress(vo);
+			log.info("fcAllAddress list =>"+list.toString());
+			if(list != null) {
+				mv.addObject("list",list);
+				mv.addObject("success","success");
+			}
+			mv.setViewName("jsonView");
+			return mv;
+		}//fcAllAddress
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//===============================<<MAP END>>============================		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		//고객센터이동

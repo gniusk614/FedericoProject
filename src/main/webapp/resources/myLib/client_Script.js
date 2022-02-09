@@ -1421,6 +1421,73 @@ function loginCheck(){
 	
 }
 
+
+//==========================<프랜차이즈 이름으로 가맹점 찾기>==================================
+
+function a1enter(){
+				$.ajax ({
+					
+					url :'fcSearchLocation',
+					type :'get',
+					data : {
+						fcId : $('#a1').val()
+					},
+					success : function(data){
+							
+							console.log(data.fcAddress);
+							console.log(data.fcId);
+							
+									if(data.success != null){
+									//이 스크립트는 BODY 영역에 작성 한다. 
+									var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+										mapOption = {
+									    	center: new kakao.maps.LatLng(37.359515565737276, 127.10538427434284), // 지도의 중심좌표
+									    	level: 3 
+									    	// 지도의 확대 레벨 : 0~14 정수이며, 작을수록 확대되어보임 (클수록 넓은범위 표시됨) 
+											};  
+									//lat : 위도(latitude) , lng [long] : 경도(longitude)
+									
+									//지도를 생성합니다    
+									var map = new kakao.maps.Map(mapContainer, mapOption); 
+									 
+									//주소-좌표 변환 객체를 생성합니다
+									var geocoder = new kakao.maps.services.Geocoder();
+									
+									//주소로 좌표를 검색합니다
+									var address = data.fcAddress ;
+									var description = data.fcId ; // description: 설명,묘사
+									 
+									// geocoder.addressSearch(address, function(result, status) { ..});
+									geocoder.addressSearch(address, function(result, status) { 
+										// 정상적으로 검색이 완료됐으면
+										if (status === daum.maps.services.Status.OK) { 								
+											var coords = new daum.maps.LatLng(result[0].y, result[0].x);  
+											// 결과값으로 받은 위치를 마커로 표시합니다
+											var marker = new daum.maps.Marker({ map: map, position: coords }); 
+											// 인포윈도우로 장소에 대한 설명을 표시합니다 
+											var infowindow = new daum.maps.InfoWindow({ 
+											content: '<div style="width:150px;text-align:center;padding:6px 0;">'+description+'</div>' 
+											}); // infowindow
+											 
+											infowindow.open(map, marker); 
+											// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다 
+											map.setCenter(coords); 
+										
+										} // if
+										}) // geocoder
+								}//if(data.success != null)
+					}//success
+					,error : function(){
+						alert("통신오류")
+					}
+				})// ajax	
+			}//a1enter
+
+	
+	
+		
+	
+=======
 // 주문상세조회
 function orderDetail(num){
 	$.ajax({
@@ -1584,6 +1651,7 @@ function deleteClient(){
 	})
 	
 }*/
+
 
 
 

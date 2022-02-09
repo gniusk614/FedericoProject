@@ -150,11 +150,6 @@ public class FranchiseServiceImple implements FranchiseService {
 	public List<FranchiseVO> selectListbyArea(String area) {
 		return dao.selectListbyArea(area);
 	}
-
-	// ex) 서울(major) 강남구(minor)
-	public List<FranchiseVO> selectListbyMinorAddress(String minor){
-		return dao.selectListbyMinorAddress(minor);
-	}
 	
 	// 가맹점정보 모두 불러오기
 	@Override
@@ -185,5 +180,22 @@ public class FranchiseServiceImple implements FranchiseService {
 	public int fcInsert(FranchiseVO vo) {
 		return dao.fcInsert(vo);
 	}
-
+	
+	// 프랜차이즈 지도위치 표시
+	@Override
+	public List<FranchiseVO> selectFcAddress(Map<String, Object> params) {
+		return dao.selectFcAddress(params);
+	}
+	
+	// 프랜차이즈 지도 주소기준표시
+	@Override
+	public List<FranchiseVO> selectFcLocation(String fcAddress_keyword){
+		return dao.selectFcLocation(fcAddress_keyword);
+	}
+	
+	// 프랜차이즈 지도 주소전체검색
+	@Override
+	public List<FranchiseVO> selectFcAllAddress(FranchiseVO vo){
+		return dao.selectFcAllAddress(vo);
+	}
 }
