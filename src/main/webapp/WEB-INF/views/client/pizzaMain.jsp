@@ -56,7 +56,7 @@ a {
 	<!-- Header-->
 	<header class="container bg-danger py-4">
 		<div class="row justify-content-md-center mb-3">
-			<div class="col-12 lead" align="center" style="font-size:x-large; height: 100px; color: white">
+			<div class="col-12 lead" align="center" style="font-size:x-large; height: 100px; color: white;">
 			페데리코가 준비한 <b>깊은 풍미의 피자</b>를 즐겨보세요<br>
 			<p style="font-family: Treegarden; font-size: xx-large;">The uglier it is, the tastier it is .<p>
 			</div>
