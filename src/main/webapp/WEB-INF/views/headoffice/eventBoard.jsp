@@ -72,7 +72,7 @@ tbody tr {
 		<%@ include file="navside.jsp"%>
 		<div id="layoutSidenav_content">
 			<!-- 본문 시작 -->
-			<fmt:formatDate value="${now}" pattern="yyyyMMdd" var="now" />
+			<fmt:parseNumber value="${now.time/(1000*60*60*24)}" integerOnly="true" var="now"></fmt:parseNumber>
 			<div class="container-fluid">
 				<div class="row mt-5 mb-1">
 					<div class="col-md-3"></div>
@@ -130,7 +130,7 @@ tbody tr {
 										<thead>
 											<tr align="center"
 												style="height: 50px; vertical-align: middle;">
-												<th scope="col" style="width: 100px;">번호</th>
+												<th scope="col" style="width: 100px;">상황</th>
 												<th scope="col" style="width: 500px;">제목</th>
 												<th scope="col" style="width: 100px;">작성자</th>
 												<th scope="col" style="width: 100px;">이벤트 시작일</th>
@@ -143,18 +143,34 @@ tbody tr {
 													<td colspan="6" class="fw-bold fs-5">${message}</td>
 												</tr>
 											</c:if>
-
-											
+										<%-- 			<fmt:parseDate var="endDate" value="${eventList.endDate}" pattern="yyyyMMdd" /> --%>
+													<%-- <fmt:formatDate value="${eventList.endDate}" var="endDateFormat" pattern="yyyy-MM-dd HHmmss"/>
+													<fmt:parseNumber value="${endDate.time/(1000*60*60*24)}" integerOnly="true" var="endDateTime"></fmt:parseNumber>
+											   --%>
 											<c:forEach var="list" items="${eventList}">
+												<fmt:parseDate var="endDate" value="${list.endDate}" pattern="yyyy-MM-dd" />
+												<fmt:formatDate value="${endDate}" var="endDateFormat" pattern="yyyy-MM-dd"/>
+												
+												<fmt:parseDate var="startDate" value="${list.startDate}" pattern="yyyy-MM-dd" />
+												<fmt:formatDate value="${startDate}" var="startDateFormat" pattern="yyyy-MM-dd"/>
+												
+												<fmt:parseNumber value="${endDate.time/(1000*60*60*24)}" integerOnly="true" var="endDateTime"></fmt:parseNumber>
+												
 												<tr
 													onclick="javascript:location.href='eventBoardDetail?eventSeq=${list.eventSeq}'"
 													style="vertical-align: middle; height: 50px;">
-													<td align="center">${list.eventSeq}</td>	
+													<c:if test="${now>endDateTime}">
+													<td align="center">종료</td>
+													</c:if>	
+													<c:if test="${now<=endDateTime}">
+													<td align="center">진행중</td>
+													</c:if>	
 													<td align="center">${list.title}</td>							
 													<td align="center">${list.hoId}</td>
-													<td align="center">${list.startDate}</td>
-													<td align="center">${list.endDate}</td>
+													<td align="center">${startDateFormat}</td>
+													<td align="center">${endDateFormat}</td>
 												</tr>
+												
 											</c:forEach>
 										</tbody>
 									</table>
