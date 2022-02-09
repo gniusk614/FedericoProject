@@ -133,6 +133,8 @@ tbody tr {
 												<th scope="col" style="width: 100px;">번호</th>
 												<th scope="col" style="width: 500px;">제목</th>
 												<th scope="col" style="width: 100px;">작성자</th>
+												<th scope="col" style="width: 100px;">이벤트 시작일</th>
+												<th scope="col" style="width: 100px;">이벤트 종료일</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -150,6 +152,8 @@ tbody tr {
 													<td align="center">${list.eventSeq}</td>	
 													<td align="center">${list.title}</td>							
 													<td align="center">${list.hoId}</td>
+													<td align="center">${list.startDate}</td>
+													<td align="center">${list.endDate}</td>
 												</tr>
 											</c:forEach>
 										</tbody>

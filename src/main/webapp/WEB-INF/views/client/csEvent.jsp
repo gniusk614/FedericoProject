@@ -92,11 +92,11 @@ tbody tr {
 				<div id="csEvent" class="col-sm-4 checked" align="center"
 					style="font-size: large; color: black; border-bottom: 2px solid black; cursor: pointer;"
 					onclick="clickEffect('csEvent'); showCsDiv('csEvent');">
-					이벤트 게시판</div>
-				<div id="csComp" class="col-sm-4 checked" align="center"
+					진행중인 이벤트</div>
+				<div id="csEvent" class="col-sm-4 checked" align="center"
 					style="font-size: large; color: gray; border-bottom: 1px solid lightgray; cursor: pointer;"
-					onclick="clickEffect('csComp'); showCsDiv('csComp');">
-					지난 이벤트 게시판</div>
+					onclick="clickEffect('csEvent'); showCsDiv('csEvent');">
+					지난 이벤트</div>
 			</div>
 			<!-- 컨텐츠 -->
 			<div id="content">
@@ -138,8 +138,10 @@ tbody tr {
 								<table id="table_id" class="table table-striped table-hover">
 									<thead>
 										<tr align="center" style="height: 50px; vertical-align:middle;">
-											<th scope="col" style="width: 100px;">번호</th>
+											<th scope="col" style="width: 100px;">목록</th>
 											<th scope="col" style="width: 500px;">제목</th>
+											<th scope="col" style="width: 150px;">이벤트 시작일</th>
+											<th scope="col" style="width: 150px;">이벤트 종료일</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -152,7 +154,9 @@ tbody tr {
 										<c:forEach var="eventList" items="${eventList}">
 											<tr onclick="javascript:location.href='csEventDetail?eventSeq=${eventList.eventSeq}'" style="vertical-align:middle; height: 50px;" align="left">
 												<td align="center"><b style="color: crimson;">이벤트</b></td>
-												<td>${eventList.title}												
+												<td>${eventList.title}</td>
+												<td>${eventList.startDate}</td>
+												<td>${eventList.endDate}</td>										
 											</tr>
 										</c:forEach>
 										
