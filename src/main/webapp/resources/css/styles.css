@@ -5541,6 +5541,12 @@ textarea.form-control-lg {
   align-items: center;
   min-height: calc(100% - 1rem);
 }
+/* 현구 customize */
+.modal-dialog-half-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(67% - 1rem);
+}
 
 .modal-content {
   position: relative;

@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.WebUtils;
 
 import lombok.extern.log4j.Log4j;
 import paging.PageMaker;
@@ -70,12 +73,11 @@ public class ClientController {
 	
 	// 결제완료폼 이동 + 주문정보 인서트
 	@RequestMapping(value = "/ordercomplete")
-	public ModelAndView ordercomplete(ModelAndView mv, HttpServletRequest request, HttpSession session, ClientVO clientVo) {
+	public ModelAndView ordercomplete(ModelAndView mv, HttpServletRequest request, HttpSession session, ClientVO clientVo, RedirectAttributes rttr) {
 		List<CartVO> list = (List<CartVO>)session.getAttribute("list");
 		Map<String, Object> params = new HashMap<String, Object>();
 		String fcId;
 		String memo;
-		
 		
 		// iampay 일 경우
 		if("iam".equals(request.getParameter("iam"))){
@@ -85,7 +87,6 @@ public class ClientController {
 			fcId = (String)session.getAttribute("fcId");
 			memo = (String)session.getAttribute("memo");
 		}
-		
 		
 		// map에 인서트할 값 세팅
 		if(session.getAttribute("clientLoginID") != null) {
@@ -117,7 +118,7 @@ public class ClientController {
 			
 			//해당가맹점 배달소요시간 조회
 			String deliveryTime = fcService.selectDeliveryTimebyFcId(fcId);
-			mv.addObject("deliveryTime", deliveryTime);
+			rttr.addFlashAttribute("deliveryTime", deliveryTime);
 			
 			
 			// 주문상세정보 인서트
@@ -145,10 +146,15 @@ public class ClientController {
 			}
 			
 		}
-		mv.setViewName("client/orderComplete");
+		mv.setViewName("redirect:ordercompletef");
 		return mv;
 	}
 	
+	// 결제완료 후 redirect 용
+	@RequestMapping(value = "/ordercompletef")
+	public String orderCompletf() {
+		return "client/orderComplete";
+	}
 	
 	// 카카오페이 결제요청
 	  @RequestMapping(value = "/kakaoPay") 
@@ -233,7 +239,7 @@ public class ClientController {
 		} else if(session.getAttribute("nonName") != null) {
 			uri = "client/nonOrderAddress";
 		} else {
-			uri="client/clientLoginForm";
+			uri="redirect:clientLoginf";
 		}
 		
 		mv.setViewName(uri);
@@ -399,17 +405,20 @@ public class ClientController {
 
 // 로그인(강광훈)
 	@RequestMapping(value = "/clientLogin")
-	public ModelAndView clientLogin(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
-			ClientVO vo, CartVO cartVo) throws ServletException, IOException {
+	public ModelAndView clientLogin(HttpSession session,HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
+			ClientVO vo, CartVO cartVo , @RequestParam("autoLogin") String autoLogin) throws ServletException, IOException {
 		// 정보 저장
 		String password = vo.getClientPassword();
 		String uri = "/client/clientLoginForm";
-
+		
 		System.out.println(vo.getClientPassword());
 		System.out.println(vo.getClientId());
-
+		
 		vo = clientService.selectOne(vo);
-
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		
 		// 정보 확인
 		if (vo != null) { // ID는 일치 -> Password 확인
 			if (passwordEncoder.matches(password, vo.getClientPassword())) {
@@ -417,6 +426,23 @@ public class ClientController {
 				request.getSession().setAttribute("clientLoginID", vo.getClientId());
 				request.getSession().setAttribute("clientLoginName", vo.getClientName());
 				uri = "redirect:home";
+				log.info(autoLogin);
+				//자동로그인
+				if ("true".equals(autoLogin)){
+					log.info("여기옴?");
+	                Cookie cookie =new Cookie("loginCookie", session.getId());
+	                cookie.setPath("/");
+	                int amount =60 *60 *24 *7;
+	                cookie.setMaxAge(amount); //7일
+	                // 쿠키를 적용해 준다.
+	                response.addCookie(cookie);
+	                
+	                Date sessionLimit =new Date(System.currentTimeMillis() + (1000*amount));
+					params.put("clientId", vo.getClientId());
+					params.put("sessionId", session.getId());
+					params.put("next", sessionLimit);
+					clientService.keepLogin(params);
+	            }
 			} else {
 				mv.addObject("message", "Password가 일치하지않습니다.");
 			}
@@ -438,18 +464,38 @@ public class ClientController {
 	// 로그아웃 (강광훈)
 	@RequestMapping(value = "/clientLogout")
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
-			RedirectAttributes rttr) throws ServletException, IOException {
+			RedirectAttributes rttr, ClientVO vo) throws ServletException, IOException {
 
 		// 1) request 처리
 		response.setContentType("text/html; charset=UTF-8");
 		HttpSession session = request.getSession(false);
-
+		
 		// ** session 인스턴스 정의 후 삭제하기
 		// => 매개변수: 없거나, true, false
 		// => false : session 이 없을때 null 을 return;
-
-		if (session != null)
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		if (session != null) {
+			vo.setClientId((String)session.getAttribute("clientLoginID"));
 			session.invalidate();
+			
+			Cookie loginCookie = WebUtils.getCookie(request,"loginCookie");
+            if ( loginCookie !=null ){
+                // null이 아니면 존재하면!
+                loginCookie.setPath("/");
+                // 쿠키는 없앨 때 유효시간을 0으로 설정하는 것 !!! invalidate같은거 없음.
+                loginCookie.setMaxAge(0);
+                // 쿠키 설정을 적용한다.
+                response.addCookie(loginCookie);
+                 
+                // 사용자 테이블에서도 유효기간을 현재시간으로 다시 세팅해줘야함.
+                Date date =new Date(System.currentTimeMillis());
+                params.put("clientId", vo.getClientId());
+				params.put("sessionId", session.getId());
+				params.put("next", date);
+                clientService.keepLogin(params);
+            }
+		}
 		String uri = "redirect:home";
 		rttr.addFlashAttribute("message", "로그아웃 완료");
 
@@ -509,7 +555,7 @@ public class ClientController {
 					System.out.println("인증번호 : " + numStr);
 					sendService.certifiedPhoneNumber(phoneNumber, numStr);
 					mv.addObject("numStr", numStr);
-					mv.addObject("clientVO", vo);
+					mv.addObject("clientId", vo.getClientId());
 				}
 			}else {
 				mv.addObject("message", "가입정보가 없습니다.");
@@ -790,7 +836,7 @@ public class ClientController {
 		    }
 		    System.out.println(temp);
 		    System.out.println(vo.getClientEmail());
-		    
+		    vo = clientService.selectOne(vo);
 		    vo.setClientPassword(passwordEncoder.encode(temp));
 		    
 		    if(clientService.updateClientPw(vo)>0) {
@@ -955,9 +1001,27 @@ public class ClientController {
 			mv.setViewName("jsonView");
 			return mv;
 		}
-		
-		
-		
+
+		// 회원삭제
+		@RequestMapping(value = "deleteClient")
+		public ModelAndView deleteClient(ModelAndView mv, HttpSession session, ClientVO vo) {
+			vo.setClientId((String) session.getAttribute("clientLoginID"));
+			String deleteReason = vo.getDeleteReason();
+			
+			
+			
+			vo = clientService.selectOne(vo);
+			vo.setDeletePhone(vo.getClientPhone());
+			vo.setDeleteReason(deleteReason);
+			
+			if (clientService.deleteClient(vo) > 0) {
+				mv.addObject("success", "success");
+			} else {
+				mv.addObject("success", "fail");
+			}
+			mv.setViewName("jsonView");
+			return mv;
+		}
 		
 		
 		

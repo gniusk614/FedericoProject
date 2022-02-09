@@ -1,6 +1,7 @@
 package service;
 
 import java.util.List;
+import java.util.Map;
 
 import paging.SearchCriteria;
 import vo.CartVO;
@@ -25,6 +26,9 @@ public interface ClientService {
 	int insertClient(ClientVO vo); //회원가입
 	int updateClientPw(ClientVO vo);//비밀번호 변경
 	int updateMyInfo(ClientVO vo);//내정보변경
+	int deleteClient(ClientVO vo);//회원탈퇴
+	int keepLogin(Map<String, Object> params);//자동로그인
+	ClientVO checkUserWithSessionKey(String sessionId);//유효기간 남아있는 아이디 select
 	
 	List<NoticeBoardVO> selectNoticeBoard();//공지사항게시판 공지체크만 전체출력
 	List<NoticeBoardVO> searchNoticeBoard(SearchCriteria cri);//공지사항search

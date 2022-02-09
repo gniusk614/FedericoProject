@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.Session;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -41,12 +41,9 @@ import service.FranchiseService;
 import service.HeadOfficeService;
 import service.MenuService;
 import vo.ChartVO;
-
-import vo.EventBoardVO;
-
 import vo.ComplainBoardVO;
 import vo.ComplainCommentVO;
-
+import vo.EventBoardVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -722,7 +719,7 @@ public class HeadOfficeController {
 		return mv;
 	}// staffDetail
 
-	// ** 비번변경시 현재비번확인
+	// ** 직원 비번변경시 현재비번확인
 	@RequestMapping(value = "/staffloginPwCheck")
 	public ModelAndView staffloginPwCheck(HttpServletRequest request, ModelAndView mv, HeadOfficeVO hvo, StaffVO svo) {
 		String hoid = (String) request.getSession().getAttribute("loginID");
@@ -769,6 +766,39 @@ public class HeadOfficeController {
 
 //=========================< 가맹점 관리 >=========================
 
+	
+	// ** 가맹점 비번변경시 현재비번확인
+	@RequestMapping(value = "/fcloginPwCheck")
+	public ModelAndView fcloginPwCheck(HttpServletRequest request, ModelAndView mv, FranchiseVO fvo) {
+		
+		String inputPw = fvo.getFcPassword();
+
+		fvo = fservice.selectFcOne(fvo);
+
+		if (passwordEncoder.matches(inputPw, fvo.getFcPassword())) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+
+		return mv;
+	}// fcloginPwCheck	
+	
+	// 가맹점 비밀번호 변경
+	@RequestMapping(value = "/fcpwupdate")
+	public ModelAndView fcPwUpdate(ModelAndView mv, FranchiseVO vo) {
+		if (fservice.fcPwUpdate(vo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+		return mv;
+	}// fcupdate
+	
 	// 가맹점 리스트
 	@RequestMapping(value = "/fclist")
 	public ModelAndView fclist(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
@@ -917,7 +947,7 @@ public class HeadOfficeController {
 
 			 realPath = "C:/Users/19467/git/FedericoProject/src/main/webapp/resources/uploadImage/menuImage/";
 		// realPath = "D:/MTest/MyWork/Spring02/src/main/webapp/resources/"+vo.getId()+"/";
-		else realPath += "/federico/resources/uploadImage/";
+		else realPath += "/resources/uploadImage/menuImage/";
 
 		// ** 폴더 만들기 (File 클래스활용)
 		File f1 = new File(realPath);
@@ -941,7 +971,6 @@ public class HeadOfficeController {
 
 		String uri = null;
 		
-
 		if(menuService.menuInsert(vo)>0) {
 			mv.addObject("message",vo.getMenuName()+"입력이 완료되었습니다.");
 			mv.addObject("success","success");
@@ -1203,7 +1232,10 @@ public class HeadOfficeController {
 			byte[] bytes = upload.getBytes();
 
 			// 이미지 경로 생성
-			String path = "/Users/gniusk614/Documents/WEBDEVELOP/MTest/TeamProject/FedericoProject/src/main/webapp/resources/uploadImage/boardImage/"; 
+			String path = request.getRealPath("/");
+			if (path.contains(".eclipse."))
+				path = "/Users/gniusk614/Documents/WEBDEVELOP/MTest/TeamProject/FedericoProject/src/main/webapp/resources/uploadImage/boardImage/"; // 저장된 이미지 경로
+			else path += "/resources/uploadImage/boardImage/"; 
 			// 이미지 경로 설정(폴더 자동 생성)
 			String ckUploadPath = path + uid + "_" + fileName;
 			File folder = new File(path);
@@ -1247,7 +1279,13 @@ public class HeadOfficeController {
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// 서버에 저장된 이미지 경로
-		String path = "/Users/gniusk614/Documents/WEBDEVELOP/MTest/TeamProject/FedericoProject/src/main/webapp/resources/uploadImage/boardImage/"; // 저장된 이미지 경로
+		String path = request.getRealPath("/");
+		log.info("realpath => "+path);
+		if (path.contains(".eclipse."))
+			path = "/Users/gniusk614/Documents/WEBDEVELOP/MTest/TeamProject/FedericoProject/src/main/webapp/resources/uploadImage/boardImage/"; // 저장된 이미지 경로
+		else path += "/resources/uploadImage/boardImage/";
+		
+		
 		System.out.println("2path:" + path);
 		String sDirPath = path + uid + "_" + fileName;
 

@@ -192,11 +192,11 @@ function showChart(flag) {
 
 
 
-var fcidCheck = false; // => 사원번호
+var fcidCheck = false; // => 가맹점아이디체크
 var fclpCheck = false; // =>로그인비번
 var fcpCheck = false; // ->비번
 var fcprCheck = false; // ->비번확인
-var fcdubCheck = false; // ->사원번호중복
+var fcdubCheck = false; // ->가맹점아이디중복
 
 $(function() {
 	// ==================<가맹정계정생성 (광훈)>==========================
@@ -211,8 +211,11 @@ $(function() {
 		fcInputClear();
 	});
 	
-	
-	
+	$('#fcId').change(function(){
+		fcdubCheck = false;
+		$(this).removeClass('is-valid');
+		$(this).addClass('is-invalid');
+	})
 	
 	
 	// 가맹점 ID
@@ -534,6 +537,113 @@ function complainCommentDelete(commentSeq, seq){
 }
 
 
+// ===============< 가맹점 비밀번호 변경 스크립트(구) >============================
+$(function(){
+	
+
+	
+	// ** 비밀번호수정 모달 닫힐시
+	$('#fcPwChangeModal').on('hidden.bs.modal', function() {
+		$('#fcLoginPassword').val('').removeClass('is-valid').removeClass('is-invalid');
+		$('#fcPassword').val('').removeClass('is-valid').removeClass('is-invalid');
+		$('#fcPasswordRepeat').val('').removeClass('is-valid').removeClass('is-invalid');
+		$('#fcPassword').attr("disabled", true)
+		$('#fcPasswordRepeat').attr("disabled", true)
+	});
+	
+	// 비밀번호 변경시 현재 비밀번호 확인
+	$('#fcPwCheck').click(function() {
+		var fcinputPW = $('#fcLoginPassword').val();
+		$.ajax({
+			type : "post",
+			url : "fcloginPwCheck",
+			data : {
+				fcPassword : fcinputPW,
+				fcId: $('#fcId').text()
+			},
+			success : function(data) {
+				if (data.success == 'success') {
+					$('#fcLoginPassword').removeClass('is-invalid');
+					$('#fcLoginPassword').addClass('is-valid');
+					$('#fcPassword').attr("disabled", false);
+					$('#fcPassword').focus();
+				}
+				if (data.success == 'fail') {
+					$('#fcLoginPassword').removeClass('is-valid');
+					$('#fcLoginPassword').addClass('is-invalid');
+					$('#fcPasswordRepeat').attr("disabled", true)
+					$('#fclpMessage').html('비밀번호가 틀립니다.');
+				}
+			},
+			error : function() {
+				alert("서버와 접속에 실패했습니다.");
+			}
+		});// ajax
+	});// fcloginPassword_click	
+
+	fcPwUCk = false;
+	fcPwrUCK = false;
+
+	// 비밀번호
+	$('#fcPassword').focusout(function() {
+		fcPwUCk = fcpwCheck();
+		if (fcPwUCk == false) {
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+			$('#fcPasswordRepeat').attr("disabled", true)
+		} else {
+			// $(this).removeClass('is-invalid');
+			// $(this).addClass('is-valid');
+			$('#fcPasswordRepeat').attr("disabled", false)
+		}
+		$('#fcPasswordRepeat').focus();
+	});// password_focusout
+
+	// 비밀번호확인
+	$('#fcPasswordRepeat').focusout(function() {
+		fcPwrUCK = fcpwrpCheck();
+		if (fcPwrUCK == false) {	
+			$(this).removeClass('is-valid');
+			$(this).addClass('is-invalid');
+			$('#fcPassword').removeClass('is-valid');
+			$('#fcPassword').addClass('is-invalid');
+		} else {
+			$('#fcPassword').removeClass('is-invalid');
+			$('#fcPassword').addClass('is-valid');
+			$(this).removeClass('is-invalid');
+			$(this).addClass('is-valid');
+		}
+	})	
+	
+	
+	$('#fcPwUpBtn').click(function() {
+		if (confirm('비밀번호를 변경하시겠습니까?')) {
+			$.ajax({
+				type : "post",
+				url : "fcpwupdate",
+				data : {
+					fcPassword : $('#fcPassword').val(),
+					fcId: $('#fcId').text()
+				},
+				success : function(data) {
+					if (data.success == 'success') {
+						alert('비밀번호가 변경되었습니다.')
+						$('#fcPwChangeModal').modal('hide');
+					}
+					if (data.success == 'fail') {
+						alert('비밀번호 변경에 실패했습니다.')
+					}
+				},
+				error : function() {
+					alert("서버와 접속에 실패했습니다.");
+				}
+			});// ajax
+		}
+	});// loginPassword_click	
+	
+}) //ready
+
+
 
 
 
@@ -694,7 +804,7 @@ $(function() {
 
 	// ** 계정 생성 확인버튼 클릭시
 	$('#submitBtn').click(function() {
-
+		console.log()
 		if (incheck() == true) {
 
 			$.ajax({
@@ -787,6 +897,12 @@ var dubCheck = false; // ->사원번호중복
 // 2) 개별적 오류점검 위한 focusout 이벤트 핸들러 : JQuery
 $(function() {
 	// 사원번호
+	$('#code').change(function(){
+		dubCheck=false;
+		$(this).removeClass('is-valid');
+		$(this).addClass('is-invalid');
+	});
+	
 	$('#code').focusout(function() {
 		cCheck = codeCheck();
 		if (cCheck == false) {
@@ -929,7 +1045,7 @@ function incheck() {
 		$('#prMessage').html('password를 확인하세요');
 	}
 
-	if (cCheck == true && pCheck == true && prCheck == true) {
+	if (cCheck == true && dubCheck==true && pCheck == true && prCheck == true) {
 		if (confirm('계정을 생성하시겠습니까?')==true) {
 			return true;
 		} else {
@@ -1274,12 +1390,11 @@ function fcOrderFlagUpdate(flag) {
 				// when 절로 update 할 것 
 				if(data.menuvo.menuFlag == 'pizza'){
 					$('#upmenuFlag option:eq(0)').prop('selected',true);
-				}if (data.menuvo.menuFlag == 'sets'){
+				}else if (data.menuvo.menuFlag == 'sets'){
 					$('#upmenuFlag option:eq(1)').prop('selected',true);
 				}else {
 					$('#upmenuFlag option:eq(2)').prop('selected',true);
 				}
-						
 				//$('#menuUpdatef1').load('menuUpdatef.jsp #menuUpdatef');				
 				$('#menuUpdatef').modal('show');
 				console.log("전송 성공");				

@@ -56,9 +56,9 @@
 	<!-- 특정 월의 일자별 매출 WHERE FCID -->
 	<select id="selectFcStatsMonthlySales" resultType="vo.ChartVO">
 		SELECT I.ORDERDATE as chartLabel, SUM(M.MENUPRICE*D.MENUQTY) as chartCount
-		FROM (SELECT TO_CHAR(TRUNC(TO_DATE(#{baseDay}),'MM'),'YYYYMMDD')+LEVEL-1 ORDERDATE
+		FROM (SELECT TO_CHAR(TRUNC(TO_DATE(#{baseDay},'YYYYMMDD'),'MM'),'YYYYMMDD')+LEVEL-1 ORDERDATE
 		        FROM DUAL
-		<![CDATA[CONNECT BY LEVEL < TO_NUMBER(TO_CHAR(LAST_DAY(TO_DATE(#{baseDay})),'DD'))+1) I]]>       
+		<![CDATA[CONNECT BY LEVEL < TO_NUMBER(TO_CHAR(LAST_DAY(TO_DATE(#{baseDay},'YYYYMMDD')),'DD'))+1) I]]>       
 		LEFT JOIN ORDERLIST O ON TO_CHAR(O.ORDERDATE,'YYYYMMDD') = I.ORDERDATE 
 		<if test="fcId != null and fcId != ''">
 			AND FCID = #{fcId}
@@ -229,7 +229,7 @@
 		<include refid="fcItemOrderSearchFlag"></include>
 		AND o.fcid = #{vo.fcId}
 		GROUP BY o.fcorderseq, o.fcid, o.fcorderdate, o.fcorderflag
-		ORDER BY fcorderseq desc
+		ORDER BY o.fcorderdate desc
 		OFFSET #{cri.sno}-1 ROWS FETCH NEXT #{cri.rowsPerPage} ROWS ONLY 
 	</select>
 	
@@ -326,6 +326,12 @@
 		WHERE fcId = #{fcId}
 	</insert>
 	
+	<!-- 프랜차이즈 비밀번호 변경 -->
+	<insert id="fcPwUpdate">
+		UPDATE franchise 
+		SET FCPASSWORD = #{fcPassword} 
+		WHERE fcId = #{fcId}
+	</insert>
 	
 	
 	<!-- 프랜차이즈 업데이트 -->

@@ -165,7 +165,7 @@
 									name="inputCertifiedNumber" type="text"
 									oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"
 									placeholder="인증번호" readonly="readonly" />
-								<button class="btn btn-outline-danger" type="button"
+								<button class="btn btn-outline-danger" type="button" onclick="phoneCheckBtnFind()"
 									id="checkBtn">인증번호 확인</button>
 							</div>
 						</div>

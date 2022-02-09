@@ -10,28 +10,41 @@
 	</insert>
 	<!-- 클라이언트 selectOne (WHERE = ID) -->
 	<select id="selectOne" resultType="vo.ClientVO">
-		SELECT * FROM client where clientId = #{clientId}
+		SELECT * FROM client where clientId = #{clientId} AND DELETECHECK = 'N'
 	</select>
 	<!-- 클라이언트 selectOne (WHERE = Phone) -->
-	<select id="selectOnePhone" resultType="vo.ClientVO">
-		SELECT * FROM client where clientPhone = #{clientPhone}
+	<select id="selectOnePhone" resultType="vo.ClientVO"> 
+		SELECT * FROM client where clientPhone = #{clientPhone} AND DELETECHECK = 'N'
 	</select>
 	
 	<!-- 클라이언트 pw 임의변경 -->
 	<insert id="updateClientPw">
 		UPDATE client SET clientPassword = #{clientPassword}
-		WHERE clientId = #{clientId}
+		WHERE clientId = #{clientId} AND DELETECHECK = 'N'
 	</insert>
 	<!-- 클라이언트 정보변경 -->
 	<insert id="updateMyInfo">
 		UPDATE client SET clientAddress = #{clientAddress}, clientEmail = #{clientEmail},
 		smsCheck = #{smsCheck}, emailCheck = #{emailCheck}
-		WHERE clientId = #{clientId}
+		WHERE clientId = #{clientId} AND DELETECHECK = 'N'
+	</insert>
+	<insert id="deleteClient">
+		UPDATE client SET clientPhone = '' , deleteCheck = 'Y', deleteReason = #{deleteReason}, deletePhone = #{deletePhone}
+		WHERE clientId = #{clientId} AND DELETECHECK = 'N'
 	</insert>
 	
-	
-	
-	
+
+    <!-- 로그인된 경우 해당 세션id와 유효시간을 사용자 테이블에 세팅한다. -->
+    <update id="keepLogin">
+        update client set sessionKey = #{sessionId}, sessionLimit = #{next} where clientId=#{clientId}
+    </update>
+     
+    <!-- 유효기간이 남아 있으면서 해당 sessionId를 가지는 사용자 정보를 꺼내오는 부분 -->
+    <select id="checkUserWithSessionKey" resultType="vo.ClientVO">
+       <![CDATA[select * from client where sessionKey = #{sessionId} and sessionLimit > sysdate]]>
+    </select>
+
+
 	
 	
 <!-- ======================= 카트 관련 ====================== -->

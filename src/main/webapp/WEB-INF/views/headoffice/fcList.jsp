@@ -257,7 +257,7 @@ a {
 
 
 
-	<!-- 사원상세정보 modal -->
+	<!-- 가맹점상세정보 modal -->
 	<div class="modal fade" id="fcmodal" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -292,8 +292,14 @@ a {
 										<td colspan="2"><div id="fcName"></div></td>
 									</tr>
 									<tr>
-										<td colspan="4">
+										<td colspan="5">
 											<table class="table mb-0">
+												<tr>
+													<th scope="col">비밀번호</th>
+													<td colspan="3" style="padding: 0px;" align="center">
+														<input class="btn btn-primary mb-1" type="button" id="fcPwChange" value="비밀번호 변경" onclick="$('#fcPwChangeModal').modal('show');">
+													</td>
+												</tr>
 												<tr>
 													<th scope="col">주 소</th>
 													<td colspan="3"><div id="fcAddress"></div></td>
@@ -334,6 +340,69 @@ a {
 			</div>
 		</div>
 	</div>
+
+
+<!-- 비밀번호 수정 modal -->
+	<div class="modal fade" id="fcPwChangeModal" role="dialog">
+		<div class="modal-dialog modal-dialog-half-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+							fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+ 								<path
+								d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+						</svg>
+						&nbsp;비밀번호 수정
+					</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div id="modal-body" class="modal-body">
+					<div class="container-fluid px-4">
+						<form>
+							<div class="form-group gy-5">
+								<label class="form-label">현재 비밀번호</label>
+								<div class="input-group mb-2 ">
+									 <input
+										type="password" class="form-control" id="fcLoginPassword"
+										placeholder="현재 비밀번호를 확인합니다.">
+									<button class="btn btn-outline-secondary" type="button"
+										id="fcPwCheck">확인</button>
+									<div class="invalid-feedback" id="fclpMessage"></div>
+								</div>
+								<!-- 맞으면 스크립트에서 ${password}.addclass('is-valid')addclass -->
+								<div class="form-group has-success mb-2">
+									<label class="form-label">비밀번호</label> <input type="password"
+										class="form-control" id="fcPassword"
+										placeholder="길이4이상, 영문자, 숫자와 특수문자는 1개 이상 포함"
+										disabled="disabled">
+									<div class="invalid-feedback" id="fcpMessage"></div>
+								</div>
+								<!-- 맞으면 스크립트에서 ${passwordRepeat}.addclass('is-valid')addclass -->
+								<!-- 틀리면 스크립트에서 ${passwordRepeat}.addclass('is-invalid')addclass -->
+								<div class="form-group has-danger mb-2">
+									<label class="form-label">비밀번호 확인</label> <input
+										type="password" class="form-control" id="fcPasswordRepeat"
+										disabled="disabled">
+									<div class="invalid-feedback" id="fcprMessage"></div>
+								</div>
+								<div>
+									<br>
+								</div>
+								<div>
+									<input class="btn btn-primary" type="button" id="fcPwUpBtn"
+										value="수정"> <button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer"></div>
+			</div>
+		</div>
+	</div><!-- 비밀번호 수정 modal -->
 
 
 
