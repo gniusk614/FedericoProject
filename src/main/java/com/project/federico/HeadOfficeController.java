@@ -859,25 +859,6 @@ public class HeadOfficeController {
 		return mv;
 		
 	} //menuDie
-	/*
-	@RequestMapping(value = "/menuLive")
-	public ModelAndView menuLive(ModelAndView mv,MenuVO vo) {
-		
-		System.out.println("sysout : "+vo.getMenuLive());
-		log.info("log info : "+vo.getMenuLive());
-		
-		if(menuService.menuLive(vo)>0) {			
-			mv.addObject("success","success");			
-		}else {			
-			mv.addObject("success","fail");
-		}
-				
-		mv.setViewName("jsonView"); 
-		return mv;
-		
-	} //menuLive
-	*/
-
 	
 	//메인화면 보내기
 	@RequestMapping(value = "/headofficeMain")

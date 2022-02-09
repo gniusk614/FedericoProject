@@ -298,13 +298,25 @@
 	</resultMap>
 	
 	<select id="selectFcAddress" resultType="vo.FranchiseVO">
-		select FCID, FCAREA, FCADDRESS from franchise 
+		select FCID, FCAREA, FCADDRESS, FCPHONE from franchise 
 		where fcarea = #{Depth1} and 
 		      fcaddress like ('%'||#{Depth2}||'%')
 		order by fcid
 	</select>
 	
-	<!-- 글자수 추출하기ex 
+	<select id="selectFcLocation" resultType="vo.FranchiseVO">
+	select fcId, fcAddress, fcPhone
+	from franchise
+	where fcAddress like ('%'||#{value}||'%')
+	order by fcId
+	</select>
+	
+	<select id="selectFcAllAddress" resultType="vo.FranchiseVO">
+		SELECT fcaddress, fcid
+		FROM franchise 
+	</select>
+	
+	<!-- 글자수 추출하기 ex 
 	<select id="selectListbyMinorAddress" resultType="vo.FranchiseVO">
 		select FCID, FCADDRESS from franchise 
 		where fcarea = #{majorCity} and 
@@ -319,7 +331,8 @@
 	
 	<select id="selectFcOne" resultType="vo.FranchiseVO">
 		SELECT fcid,fcpassword,fcname,fcaddress,fcarea,fcphone,hoid
-		FROM franchise WHERE fcid = #{fcId}
+		FROM franchise 
+		WHERE fcid = #{fcId}
 	</select>
 
 	

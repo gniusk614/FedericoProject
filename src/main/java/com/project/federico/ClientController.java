@@ -34,6 +34,7 @@ import paging.PageMaker;
 import paging.SearchCriteria;
 import service.ClientServiceImpl;
 import service.FranchiseService;
+import service.HeadOfficeService;
 import service.MenuServiceImpl;
 import service.OrderService;
 import service.SendService;
@@ -43,6 +44,7 @@ import vo.ComplainBoardVO;
 import vo.EmailVO;
 import vo.EventBoardVO;
 import vo.FranchiseVO;
+import vo.HeadOfficeVO;
 import vo.MenuVO;
 import vo.NoticeBoardVO;
 import vo.OrderDetailListVO;
@@ -65,7 +67,8 @@ public class ClientController {
 	FranchiseService fcService;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
+	@Autowired
+	HeadOfficeService headOfficeService;
 
 	
 	// 결제완료폼 이동 + 주문정보 인서트
@@ -414,6 +417,7 @@ public class ClientController {
 		if (vo != null) { // ID는 일치 -> Password 확인
 			if (passwordEncoder.matches(password, vo.getClientPassword())) {
 				// 로그인 성공 -> 로그인 정보 session에 보관, home
+				
 				request.getSession().setAttribute("clientLoginID", vo.getClientId());
 				request.getSession().setAttribute("clientLoginName", vo.getClientName());
 				uri = "redirect:home";
@@ -648,8 +652,24 @@ public class ClientController {
 			return mv;
 		}
 		
+//===========================<< MAP START >>==========================
+		@RequestMapping(value ="/fcSearch")
+		public ModelAndView fcsearch (ModelAndView mv, FranchiseVO vo, HttpServletRequest request, HttpSession session) {
+			
+			if("card".equals(request.getParameter("card"))) {
+				List<FranchiseVO> list = (List<FranchiseVO>)session.getAttribute("fcInfo2");
+//				log.info(list.toString());
+				mv.addObject("list", list);
+						
+			}
+				mv.setViewName("/client/fcSearch");						 
+			// if
+				
+			return mv;
+			}
+
 		@RequestMapping(value ="/fcSearchArea")
-		public ModelAndView fcsearchmain (ModelAndView mv, FranchiseVO vo, HttpServletRequest request) {
+		public ModelAndView fcsearchmain (ModelAndView mv, FranchiseVO vo, HeadOfficeVO hvo, HttpServletRequest request, HttpSession session) {
 			Map<String, Object> params = new HashMap<String, Object>();			
 			// 해쉬맵도 하나의 주머니인데 이 파라미터 값을 list로 넣어준다.?
 			// 왜? 
@@ -660,9 +680,10 @@ public class ClientController {
 			List<FranchiseVO> list = fcService.selectFcAddress(params);
 			
 			if(list != null) {
-			
-						mv.addObject("fcaddress", list);
-						mv.addObject("success","success");				
+						mv.addObject("list", list);
+						session.setAttribute("fcInfo2", list);
+						mv.addObject("success","success");	
+//						log.info("fcSearchArea =>"+list.toString());
 			}else {
 				mv.addObject("success","fail");					
 			}			
@@ -671,13 +692,80 @@ public class ClientController {
 			return mv;
 			}
 		
-		@RequestMapping(value ="/fcSearch")
-		public ModelAndView fcsearch (ModelAndView mv, FranchiseVO vo, HttpServletRequest request) {
-				
-				mv.setViewName("/client/fcSearch");						 
-			// if
+		@RequestMapping(value = "/fcSearchLocation")
+		public ModelAndView fcSearchLocation (ModelAndView mv, FranchiseVO vo, HeadOfficeVO hvo, HttpServletRequest request, HttpSession session) {
+			
+			List<FranchiseVO> list = fcService.selectFcLocation(request.getParameter("fcAddress_keyword"));
+			
+			log.info("fcSearchLocation list =>"+list);
+			
+			if(list!= null) {				
+				mv.addObject("list",list);
+				mv.addObject("success","success");
+			}else {
+				mv.addObject("success","fail");
+			}			
+				mv.setViewName("jsonView");						 
 			return mv;
+			}// fcSearchLocation
+		/*
+		@RequestMapping(value = "/fcSearchCard")
+		public ModelAndView fcSearchCard (ModelAndView mv, FranchiseVO vo, HttpServletRequest request, HttpSession session) {
+			List<FranchiseVO> list;
+			
+			Map<String, Object> params = new HashMap<String, Object>();	
+			params.put("Depth1",request.getParameter("Depth1")); // ajax에서 요청 날리면 얘가 받는다.
+			params.put("Depth2",request.getParameter("Depth2"));			
+			
+			if(params != null) {
+				list = fcService.selectFcAddress(params);
+			}else {		
+				list = fcService.selectFcLocation(request.getParameter("fcAddress_keyword"));
+			}		
+			
+			if(list != null) {
+				mv.addObject("list",list);
+			}else {
+				mv.addObject("success","fail");
+			}			
+				mv.setViewName("/client/fcSearch");						 
+			return mv;
+			}// fcSearchLocation
+		*/
+		
+		@RequestMapping(value = "/fcAllAddress")
+		public ModelAndView fcAllAddress (ModelAndView mv, FranchiseVO vo) {
+			
+			List<FranchiseVO> list = fcService.selectFcAllAddress(vo);
+			log.info("fcAllAddress list =>"+list.toString());
+			if(list != null) {
+				mv.addObject("list",list);
+				mv.addObject("success","success");
 			}
+			mv.setViewName("jsonView");
+			return mv;
+		}//fcAllAddress
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//===============================<<MAP END>>============================		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		//고객센터이동

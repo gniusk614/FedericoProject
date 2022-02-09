@@ -53,6 +53,10 @@ public interface FranchiseService {
 	List<FranchiseVO> selectListbyArea(String area); //지역 가맹점 찾기. 
 	
 	List<FranchiseVO> selectFcAddress(Map<String, Object> params); // 주소컬럼 공급 메소드
+
+	List<FranchiseVO> selectFcLocation(String fcAddress_keyword); // 주소기준 검색
+	
+	List<FranchiseVO> selectFcAllAddress(FranchiseVO vo); // 전체주소 검색
 	
 	List<FranchiseVO> selectFc(); //가맹점정보 모두 불러오기
 	

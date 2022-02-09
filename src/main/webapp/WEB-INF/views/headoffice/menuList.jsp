@@ -404,16 +404,11 @@ $(function() {
 							 				reader.readAsDataURL(this.files[0]);
 							 		} // if
 								}); // change	
-								
-								
-								
 								</script>
-								
-								
 							</div>
 						</div>
 					</div>			
-		</div>
+				</div>
 <!-- 		option : pizza -->
     </div>
 		<div class="modal-footer">

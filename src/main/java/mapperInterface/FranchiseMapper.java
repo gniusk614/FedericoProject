@@ -62,5 +62,7 @@ public interface FranchiseMapper {
 	int fcInsert(FranchiseVO vo); //프랜차이즈 계정생성
 	int fcClose(FranchiseVO vo); ////프랜차이즈 폐점,오픈처리
 	
+	List<FranchiseVO> selectFcLocation(String fcAddress_keyword); // 주소기준 검색
 	
+	List<FranchiseVO> selectFcAllAddress(FranchiseVO vo);
 }
