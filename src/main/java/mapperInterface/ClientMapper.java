@@ -22,6 +22,7 @@ public interface ClientMapper {
 	
 	
 	ClientVO selectOne(ClientVO vo); //고객 정보 1건 출력
+	ClientVO selectDubCheck(ClientVO vo); //고객 아이디 중복확인
 	ClientVO selectOnePhone(ClientVO vo); //고객 정보 핸드폰으로 찾기 1건 출력
 	List<ClientVO> searchClientList(SearchCriteria cri); //고객정보 search
 	int insertClient(ClientVO vo); //회원가입

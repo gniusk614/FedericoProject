@@ -55,7 +55,11 @@ public class ClientServiceImpl implements ClientService {
 		return dao.insertCart(vo);
 	}
 	
-	
+	//고객 아이디 중복확인
+	@Override
+	public ClientVO selectDubCheck(ClientVO vo) {
+		return dao.selectDubCheck(vo);
+	}
 	//고객 정보 1건 출력
 	@Override
 	public ClientVO selectOne(ClientVO vo) {
