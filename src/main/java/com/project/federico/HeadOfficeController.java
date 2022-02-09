@@ -25,6 +25,7 @@ import org.apache.catalina.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -448,7 +449,7 @@ public class HeadOfficeController {
 	}// loginf-> 폼으로 이동시켜줌
 
 	// 로그인(강광훈)
-	@RequestMapping(value = "/login")
+	@PostMapping(value = "/login")
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
 			HeadOfficeVO headOfficeVo, StaffVO staffVo, ChartVO cVo, HttpSession session) throws ServletException, IOException {
 		String uri = "/headoffice/loginForm";
@@ -1451,6 +1452,9 @@ public class HeadOfficeController {
 	public ModelAndView complainCommentInsert (HttpServletRequest request, ModelAndView mv ,ComplainCommentVO vo) {	
 		String id = (String) request.getSession().getAttribute("loginID");
 		vo.setHoId(id);
+		
+		vo.setCommentContent(vo.getCommentContent().replaceAll("<", "&lt;"));
+		vo.setCommentContent(vo.getCommentContent().replaceAll(">", "&gt;"));
 		
 		if(cservice.complainCommentInsert(vo)>0) {
 			mv.addObject("success", "성공");
