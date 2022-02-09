@@ -29,12 +29,12 @@ public class ClientLoginIntercepter extends HandlerInterceptorAdapter {
 		// ** Login 여부에 따른 인증 구현
 		// 1) session 객체 가져오기
 		HttpSession session = request.getSession(false);
-
+		String url = "/WEB-INF/views/client/pizzaMain.jsp";
 		
 		// 2) 로그인 확인하기
 		// => 결과에 따라 true 또는 false 를 return
 		if (session!=null && session.getAttribute("clientLoginID")!=null) {
-			// Login 되어있음 -> Controller 진행
+			request.getRequestDispatcher(url).forward(request, response);
 			return true;
 		}else {
 			// Login 되어있지 않음
@@ -49,7 +49,6 @@ public class ClientLoginIntercepter extends HandlerInterceptorAdapter {
 				cartVo.setClientId(vo.getClientId());
 				if(vo != null) {
 					session.setAttribute("clientLoginID",vo.getClientId());
-					String url = "/WEB-INF/views/client/pizzaMain.jsp";
 					
 					// 로그인 시 장바구니에 물건 있으면 nav에 숫자표시
 					List<CartVO> list = service.selectCartbyClient(cartVo);
@@ -62,7 +61,7 @@ public class ClientLoginIntercepter extends HandlerInterceptorAdapter {
 			}
 			
 			// 2.2) forward : loginForm 출력
-			String url = "/WEB-INF/views/client/clientLoginForm.jsp";
+			url = "/WEB-INF/views/client/clientLoginForm.jsp";
 			request.getRequestDispatcher(url).forward(request, response);			
 			return false;
 		}

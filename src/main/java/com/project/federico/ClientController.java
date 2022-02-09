@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -404,7 +405,7 @@ public class ClientController {
 	}
 
 // 로그인(강광훈)
-	@RequestMapping(value = "/clientLogin")
+	@PostMapping(value = "/clientLogin")
 	public ModelAndView clientLogin(HttpSession session,HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
 			ClientVO vo, CartVO cartVo , @RequestParam("autoLogin") String autoLogin) throws ServletException, IOException {
 		// 정보 저장
@@ -602,8 +603,10 @@ public class ClientController {
 			return mv;
 		}
 		// 회원가입창 디테일 이동
-		@RequestMapping(value = "clientJoin2ndf")
+		@PostMapping(value = "clientJoin2ndf")
 		public ModelAndView clientJoinf2ndf(ModelAndView mv, ClientVO vo) {
+			
+			
 			mv.addObject("clientName", vo.getClientName());
 			mv.addObject("clientPhone", vo.getClientPhone());
 			mv.addObject("smsCheck", vo.getSmsCheck());
@@ -614,10 +617,10 @@ public class ClientController {
 			return mv;
 		}
 		
-		//selectOne
+		//아이디중복확인
 		@RequestMapping(value = "/clientSelectOne")
 		public ModelAndView clientSelectOne(ModelAndView mv, ClientVO vo) {
-			vo = clientService.selectOne(vo);
+			vo = clientService.selectDubCheck(vo);
 
 			if (vo != null)
 				mv.addObject("clientDetail", vo); // MyBatis 에선 null , size()>0 으로 확인
@@ -630,6 +633,8 @@ public class ClientController {
 		//회원가입
 		@RequestMapping(value = "clientJoin")
 		public ModelAndView clientJoin(ModelAndView mv, ClientVO vo , RedirectAttributes rttr, HttpSession session, CartVO cartVo) {
+			
+			
 			vo.setClientPassword(passwordEncoder.encode(vo.getClientPassword()));
 			if (clientService.insertClient(vo) > 0) {
 				rttr.addAttribute("message", "계정생성이 완료되었습니다.");

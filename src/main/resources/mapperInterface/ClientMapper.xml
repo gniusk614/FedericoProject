@@ -12,6 +12,10 @@
 	<select id="selectOne" resultType="vo.ClientVO">
 		SELECT * FROM client where clientId = #{clientId} AND DELETECHECK = 'N'
 	</select>
+	<!-- 클라이언트 selectOne (WHERE = ID) -->
+	<select id="selectDubCheck" resultType="vo.ClientVO">
+		SELECT * FROM client where clientId = #{clientId}
+	</select>
 	<!-- 클라이언트 selectOne (WHERE = Phone) -->
 	<select id="selectOnePhone" resultType="vo.ClientVO"> 
 		SELECT * FROM client where clientPhone = #{clientPhone} AND DELETECHECK = 'N'
