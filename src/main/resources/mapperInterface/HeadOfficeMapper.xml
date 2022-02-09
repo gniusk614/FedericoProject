@@ -78,7 +78,6 @@
 			</if>
 			LEFT JOIN ORDERDETAILLIST D ON O.ORDERNUMBER = D.ORDERNUMBER
 			LEFT JOIN MENUINFO M ON D.MENUINDEX = M.MENUINDEX
-			
 			GROUP BY A.AGEGROUP
 			ORDER BY A.AGEGROUP		
 		
@@ -163,7 +162,7 @@
 		<if test="flag != null and value != '' ">
 			and fcorderflag = #{flag}
 		</if>
-		ORDER BY fcorderseq desc
+		ORDER BY fcorderdate desc
 		OFFSET #{cri.sno}-1 ROWS FETCH NEXT #{cri.rowsPerPage} ROWS ONLY 
 	</select>
 	

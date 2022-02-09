@@ -1390,12 +1390,11 @@ function fcOrderFlagUpdate(flag) {
 				// when 절로 update 할 것 
 				if(data.menuvo.menuFlag == 'pizza'){
 					$('#upmenuFlag option:eq(0)').prop('selected',true);
-				}if (data.menuvo.menuFlag == 'sets'){
+				}else if (data.menuvo.menuFlag == 'sets'){
 					$('#upmenuFlag option:eq(1)').prop('selected',true);
 				}else {
 					$('#upmenuFlag option:eq(2)').prop('selected',true);
 				}
-						
 				//$('#menuUpdatef1').load('menuUpdatef.jsp #menuUpdatef');				
 				$('#menuUpdatef').modal('show');
 				console.log("전송 성공");				
