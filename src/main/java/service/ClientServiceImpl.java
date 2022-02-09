@@ -202,10 +202,24 @@ public class ClientServiceImpl implements ClientService {
 		return dao.searchEventBoardRows(cri);
 	}
 	
+	@Override
+	public List<EventBoardVO> searchEndEventBoard(SearchCriteria cri) {
+		return dao.searchEndEventBoard(cri);
+	}
+	
+	@Override
+	public int searchEndEventBoardRows(SearchCriteria cri) {
+		return dao.searchEventBoardRows(cri);
+	}
+	
+	
+	
 	// 이벤트 게시판 Detail조회
 	@Override
 	public EventBoardVO selectDetailEventBoard(EventBoardVO vo) {
 		return dao.selectDetailEventBoard(vo);
 	}
+	
+	
 	
 }
