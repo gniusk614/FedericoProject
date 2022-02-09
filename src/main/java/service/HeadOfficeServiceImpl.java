@@ -276,5 +276,13 @@ public class HeadOfficeServiceImpl implements HeadOfficeService {
 	public EventBoardVO selectDetailEventBoard(EventBoardVO vo) {
 		return dao.selectDetailEventBoard(vo);
 	}
+	@Override
+	public List<EventBoardVO> searchEventBoard(SearchCriteria cri) {
+		return dao.searchEventBoard(cri);
+	}
 	
+	@Override
+	public int searchEventBoardRows(SearchCriteria cri) {
+		return dao.searchEventBoardRows(cri);
+	}
 }

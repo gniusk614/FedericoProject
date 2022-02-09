@@ -163,7 +163,7 @@
 	<select id="searchEventBoard" resultType="vo.EventBoardVO">
 		SELECT eventSeq, title, hoId, content, TO_CHAR(startDate,'yyyy-MM-dd') AS startDate, TO_CHAR(endDate,'yyyy-MM-dd') AS endDate
 		FROM eventBoard <![CDATA[ WHERE enddate > sysdate ]]><include refid="eventSearch"></include> 
-		ORDER BY eventSeq desc
+		ORDER BY endDate desc
 		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY
 	</select>
 	
@@ -176,11 +176,10 @@
 	<select id="searchEndEventBoard" resultType="vo.EventBoardVO">
 		SELECT eventSeq, title, hoId, content, TO_CHAR(startDate,'yyyy-MM-dd') AS startDate, TO_CHAR(endDate,'yyyy-MM-dd') AS endDate
 		FROM eventBoard <![CDATA[ WHERE enddate < sysdate ]]><include refid="eventSearch"></include> 
-		ORDER BY eventSeq desc
+		ORDER BY endDate desc
 		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY
 	</select>
 		
-
 	
 	<sql id="eventSearch" >
 		<if test="keyword != null">
@@ -198,6 +197,13 @@
 		</when>
 	</choose>
 	</sql>
+
+
+
+
+
+
+
 
 	<!-- 고객의소리 등록 -->
 	<insert id="complainInsert">

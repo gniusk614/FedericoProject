@@ -1475,7 +1475,7 @@ public class HeadOfficeController {
 		cri.setSnoEno();
 		
 		
-		List<EventBoardVO> searchList = cservice.searchEventBoard(cri);
+		List<EventBoardVO> searchList = service.searchEventBoard(cri);
 		if (searchList != null && searchList.size() > 0) {
 
 			mv.addObject("eventList", searchList);
@@ -1483,7 +1483,7 @@ public class HeadOfficeController {
 			mv.addObject("message", "출력할 자료가 없습니다.");
 		}
 		pageMaker.setCri(cri);
-		pageMaker.setTotalRowCount(cservice.searchNoticeBoardRows(cri));
+		pageMaker.setTotalRowCount(service.searchEventBoardRows(cri));
 
 		mv.setViewName("headoffice/eventBoard");
 		return mv;
