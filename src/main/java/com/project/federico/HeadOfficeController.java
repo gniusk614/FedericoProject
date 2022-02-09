@@ -1117,11 +1117,6 @@ public class HeadOfficeController {
 		return "headoffice/headofficeMain";
 	} //headofficeMain
 	
-	//차트화면 보내기
-	@RequestMapping(value = "/chartf")
-	public String chartf(ModelAndView mv,MenuVO vo) {
-		return "headoffice/chart";
-	} //headofficeMain
 	
 	
 	// 차트화면 띄우기
