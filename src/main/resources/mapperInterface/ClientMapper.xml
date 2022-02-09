@@ -156,23 +156,31 @@
 	<!-- ============================={ 이벤트 페이지 }================================ -->
 	<!-- searchEventBoardRow -->
 	<select id="searchEventBoardRows" resultType="int">
-		SELECT COUNT(*) FROM EVENTBOARD <include refid="eventSearch"></include>
+		SELECT COUNT(*) FROM EVENTBOARD <![CDATA[ WHERE enddate > sysdate ]]> <include refid="eventSearch"></include>
 	</select>
 
 		<!-- searchEventBoard 서치,페이징 -->
 	<select id="searchEventBoard" resultType="vo.EventBoardVO">
-		SELECT eventSeq, title, hoId, content, startDate, endDate
-		FROM eventBoard <include refid="eventSearch"></include> 
+		SELECT eventSeq, title, hoId, content, TO_CHAR(startDate,'yyyy-MM-dd') AS startDate, TO_CHAR(endDate,'yyyy-MM-dd') AS endDate
+		FROM eventBoard <![CDATA[ WHERE enddate > sysdate ]]><include refid="eventSearch"></include> 
+		ORDER BY eventSeq desc
+		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY
+	</select>
+	
+	<!-- searchEndEventBoardRow -->
+	<select id="searchEndEventBoardRows" resultType="int">
+		SELECT COUNT(*) FROM EVENTBOARD <![CDATA[ WHERE enddate < sysdate ]]> <include refid="eventSearch"></include>
+	</select>
+
+		<!-- searchEndEventBoard 서치,페이징 -->
+	<select id="searchEndEventBoard" resultType="vo.EventBoardVO">
+		SELECT eventSeq, title, hoId, content, TO_CHAR(startDate,'yyyy-MM-dd') AS startDate, TO_CHAR(endDate,'yyyy-MM-dd') AS endDate
+		FROM eventBoard <![CDATA[ WHERE enddate < sysdate ]]><include refid="eventSearch"></include> 
 		ORDER BY eventSeq desc
 		OFFSET #{sno}-1 ROWS FETCH NEXT #{rowsPerPage} ROWS ONLY
 	</select>
 		
-		<!-- 이벤트 게시판 클릭시 Detail 출력 -->
-	<select id="selectDetailEventBoard" resultType="vo.EventBoardVO">
-		SELECT eventSeq, title, hoId, content, startDate, endDate
-		FROM eventBoard
-		WHERE eventSeq=#{eventSeq}
-	</select>
+
 	
 	<sql id="eventSearch" >
 		<if test="keyword != null">
@@ -180,13 +188,13 @@
 		</if>
 	<choose>
 		<when test="searchType == 'title'.toString()">
-			where title LIKE #{keyVal}
+			AND title LIKE #{keyVal} 
 		</when>
 		<when test="searchType == 'content'.toString()">
-			where content LIKE #{keyVal}
+			AND content LIKE #{keyVal}
 		</when>
 		<when test="searchType == 'titleContent'.toString()">
-			where title LIKE #{keyVal} OR title LIKE #{keyVal}
+			AND (title LIKE #{keyVal} OR title LIKE #{keyVal})
 		</when>
 	</choose>
 	</sql>
