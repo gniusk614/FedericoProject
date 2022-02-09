@@ -14,8 +14,7 @@ public class ClientVO {
 	private String smsCheck;
 	private String emailCheck;
 	private String deleteCheck;
-	
-	
-	
+	private String deleteReason;
+	private String deletePhone;
 	
 }

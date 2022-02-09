@@ -16,7 +16,6 @@
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
 	crossorigin="anonymous"></script>
-<script src="/federico/resources/myLib/jquery-3.2.1.min.js"></script>
 <script src="/federico/resources/myLib/inCheck.js"></script>
 <script
 	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
@@ -35,6 +34,7 @@
 table, tr, td, th {
 	border: 1px solid black;
 }
+
 
 </style>
 </head>
@@ -117,6 +117,15 @@ table, tr, td, th {
 														<c:if test="${not empty message}">${message}</c:if>
 													</div>
 													<div class="row">
+														<div class="col" align="left">
+															<div class="form-check px-0">
+															 	<input class="form-check-input-md" type="checkbox" id="autoLoginCheckBox">
+															 	<label class="form-check-label" for="autoLoginCheckBox" style="font-size: medium; color: crimson;" >
+															  	  자동로그인
+															  	</label>
+															</div>
+															<input type="text" name="autoLogin" id="autoLogin" value="false" hidden="hidden">
+														</div>
 														<div class="col" align="right">
 															<a class="small" href="findIdPwf"
 																style="font-size: medium; color: Crimson;">아이디/비밀번호 찾기</a>
@@ -161,7 +170,7 @@ table, tr, td, th {
 														<input class="form-control" id="inputCertifiedNumber"
 															name="inputCertifiedNumber" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"
 															placeholder="인증번호" readonly="readonly" />
-														<button class="btn btn-outline-danger" type="button"
+														<button class="btn btn-outline-danger" type="button" onclick="phoneCheckBtnJoin()"
 															id="checkBtn">인증번호 확인</button>
 													</div>
 													<div class="row">

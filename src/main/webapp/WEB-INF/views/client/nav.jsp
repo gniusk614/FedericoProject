@@ -60,7 +60,7 @@ a {
 					</c:if>				
 					<c:if test="${not empty clientLoginID}">
 						<div>
-							<a href="#" style="color:white;">마이페이지</a>&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="clientMyInfo" style="color:white;">마이페이지</a>&nbsp;&nbsp;&nbsp;&nbsp;
 						</div>
 						<div>
 							<a href="clientLogout" style="color:white;">로그아웃</a>&nbsp;&nbsp;&nbsp;&nbsp;

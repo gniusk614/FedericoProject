@@ -1,6 +1,7 @@
 package service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,11 @@ public class ClientServiceImpl implements ClientService {
 		return dao.insertCart(vo);
 	}
 	
-	
+	//고객 아이디 중복확인
+	@Override
+	public ClientVO selectDubCheck(ClientVO vo) {
+		return dao.selectDubCheck(vo);
+	}
 	//고객 정보 1건 출력
 	@Override
 	public ClientVO selectOne(ClientVO vo) {
@@ -83,6 +88,27 @@ public class ClientServiceImpl implements ClientService {
 	public int updateClientPw(ClientVO vo) {
 		return dao.updateClientPw(vo);
 	}
+	//내 정보 변경
+	@Override
+	public int updateMyInfo(ClientVO vo) {
+		return dao.updateMyInfo(vo);
+	}
+	//회원탈퇴
+	@Override
+	public int deleteClient(ClientVO vo) {
+		return dao.deleteClient(vo);
+	}
+	//자동로그인
+	@Override
+	public int keepLogin(Map<String, Object> params) {
+		return dao.keepLogin(params);
+	}
+	//세션아이디 유효기간 남아있는 아이디 select
+	@Override
+	public ClientVO checkUserWithSessionKey(String sessionId) {
+		return dao.checkUserWithSessionKey(sessionId);
+	}
+	
 	
 
 	//공지사항게시판 공지체크만 전체출력

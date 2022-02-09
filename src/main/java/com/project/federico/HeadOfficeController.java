@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,10 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.catalina.Session;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,12 +42,9 @@ import service.FranchiseService;
 import service.HeadOfficeService;
 import service.MenuService;
 import vo.ChartVO;
-
-import vo.EventBoardVO;
-
 import vo.ComplainBoardVO;
 import vo.ComplainCommentVO;
-
+import vo.EventBoardVO;
 import vo.FcOrderDetailVO;
 import vo.FcOrderVO;
 import vo.FranchiseVO;
@@ -71,7 +71,226 @@ public class HeadOfficeController {
 	ClientService cservice;
 	
 	
+	// 회원 연령대 조회
+	@RequestMapping(value = "/statsmemberagegroup")
+	public ModelAndView statsMemberAgeGroup(ModelAndView mv, HttpServletRequest request) {
+		List<ChartVO> list = new ArrayList<ChartVO>();
+		
+		list = service.selectMemberAgeGroup();
+		if(list != null && list.size() > 0) {
+			mv.addObject("chartData",list);
+			mv.addObject("success","success");
+		}
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
 	
+	// 연령대별 메뉴 판매량 by 지점
+	@RequestMapping(value = "/statsagegroupmenusales")
+	public ModelAndView statsAgeGroupMenuSales(ModelAndView mv, HttpServletRequest request) {
+		List<ChartVO> list = new ArrayList<ChartVO>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		String ageGroup = request.getParameter("ageGroup");
+		String fcId = null;
+		if(request.getParameter("fcId") != null) {
+			fcId = request.getParameter("fcId");
+		}
+		params.put("ageGroup", ageGroup);
+		params.put("fcId", fcId);
+		
+		list = service.selectStatsAgeGroupMenuSales(params);
+		if(list != null && list.size() > 0) {
+			mv.addObject("chartData",list);
+			mv.addObject("success","success");
+		}
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 연령대별 매출 by 년도 and 지점
+	@RequestMapping(value = "/statsagegroupsales")
+	public ModelAndView statsAgeGroupSales(ModelAndView mv, HttpServletRequest request) {
+		List<ChartVO> list = new ArrayList<ChartVO>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		String baseDay = request.getParameter("baseDay");
+		String fcId = null;
+		if(request.getParameter("fcId") != null) {
+			fcId = request.getParameter("fcId");
+		}
+		params.put("baseDay", baseDay);
+		params.put("fcId", fcId);
+		
+		list = service.selectStatsAgeGroupSales(params);
+		if(list != null && list.size() > 0) {
+			mv.addObject("chartData",list);
+			mv.addObject("success","success");
+		}
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	//메뉴별 판매량 where 월별 and 지점별, 월별 안넣으면 전체기간
+	@RequestMapping(value = "/statsmenusales")
+	public ModelAndView statsMenuSales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
+			List<ChartVO> list = new ArrayList<ChartVO>();
+			Map<String, Object> params = new HashMap<String, Object>();
+			String fcId = request.getParameter("fcId");
+		
+			String baseDay;
+			if("".equals(request.getParameter("baseDay"))) {
+				baseDay = null;
+			} else {
+				baseDay = request.getParameter("baseDay");
+				baseDay = baseDay.replaceAll("/", "");
+			}
+			
+			params.put("fcId", fcId);
+			params.put("baseDay", baseDay);
+			list = fservice.selectFCStatsMenuSales(params);
+			if(list != null && list.size()>0) {
+				mv.addObject("chartData",list);
+				mv.addObject("success","success");
+			} 
+		mv.setViewName("jsonView");
+		return mv;
+	}	
+	
+	
+	//시간대별 매출 where orderdate and fcid and 전체
+		@RequestMapping(value = "/statstimesales")
+		public ModelAndView statsTimeSales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
+				List<ChartVO> list = new ArrayList<ChartVO>();
+				Map<String, Object> params = new HashMap<String, Object>();
+				String fcId = request.getParameter("fcId");
+			
+				String selectDate;
+				if("".equals(request.getParameter("selectDate"))) {
+					selectDate = null;
+				} else {
+					selectDate = request.getParameter("selectDate");
+					selectDate = selectDate.replaceAll("/", "");
+				}
+				
+				params.put("fcId", fcId);
+				params.put("selectDate", selectDate);
+				list = fservice.selectFCStatsTimeSales(params);
+				if(list != null && list.size()>0) {
+					if(selectDate != null) {
+						selectDate = selectDate.substring(0,2)+"/"+selectDate.substring(2,4)+"/"+selectDate.substring(4);
+					}
+					mv.addObject("chartData",list);
+					mv.addObject("selectDate", selectDate);
+					mv.addObject("success","success");
+				} 
+				
+			mv.setViewName("jsonView");
+			return mv;
+		}	
+	
+	// 가맹점별 월별 매출 조회 - parameter로 전체조회도 가능
+	@RequestMapping(value = "/statsmonthlysales")
+	public ModelAndView statsMonthlySales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
+		List<ChartVO> list = new ArrayList<ChartVO>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		String fcId = request.getParameter("fcId");
+		
+		//기준일구하기
+		String baseDay;
+		if(request.getParameter("baseDay") == null) {
+			SimpleDateFormat format = new SimpleDateFormat("YYYYMMdd");
+			Date today = new Date();
+			baseDay = format.format(today);
+		} else {
+			baseDay = request.getParameter("baseDay");
+		}
+		
+		params.put("fcId", fcId);
+		params.put("baseDay", baseDay);
+		list = fservice.selectFcStatsMonthlySales(params);
+		if(list != null && list.size()>0) {
+			mv.addObject("chartData",list);
+			mv.addObject("success","success");
+		} 
+		
+		mv.setViewName("jsonView");
+		return mv;
+	}	
+	
+	// 연간 매출(월별, 지점별)
+	@RequestMapping(value = "/statsannualsales")
+	public ModelAndView statsAnuualSales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
+		if(! "".equals(request.getParameter("baseDay"))) {
+			List<ChartVO> list = new ArrayList<ChartVO>();
+			Map<String, Object> params = new HashMap<String, Object>();
+			String fcId = request.getParameter("fcId");
+			String baseDay =  request.getParameter("baseDay");
+			log.info("fcid  => "+fcId);
+			
+			params.put("fcId", fcId);
+			params.put("baseDay", baseDay);
+			list = fservice.selectFCStatsAnnualSales(params);
+			if(list != null && list.size()>0) {
+				mv.addObject("chartData",list);
+				mv.addObject("success","success");
+			}
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	// 지점List select ajax
+	@RequestMapping(value = "/selectFcId")
+	public ModelAndView selectFcId(ModelAndView mv) {
+		
+		List<FranchiseVO> list = fservice.selectFc();
+		if(list != null && list.size()>0) {
+			mv.addObject("fcList", list);
+			mv.addObject("success", "success");
+		}
+		mv.setViewName("jsonView");
+		return mv;
+	}
+	
+	
+	// chartsales 페이지 들어가기
+	@RequestMapping(value = "/chartsales")
+	public ModelAndView chart1(ModelAndView mv, HttpServletRequest request) {
+		
+		if(request.getParameter("key") == null) {
+			mv.addObject("key", null);
+		} else if("2".equals(request.getParameter("key"))) {
+			mv.addObject("key", "2");
+		} else if("3".equals(request.getParameter("key"))) {
+			mv.addObject("key", "3");
+		} else if("4".equals(request.getParameter("key"))) {
+			mv.addObject("key", "4");
+		} 	
+		
+		
+		mv.setViewName("headoffice/chartsales");
+		return mv;
+	}
+	
+	
+	// chartamember 페이지 들어가기
+	@RequestMapping(value = "/chartagegroup")
+	public ModelAndView chartAgeGroup(ModelAndView mv, HttpServletRequest request) {
+		
+		if(request.getParameter("key") == null) {
+			mv.addObject("key", null);
+		} else if("2".equals(request.getParameter("key"))) {
+			mv.addObject("key", "2");
+		} else if("3".equals(request.getParameter("key"))) {
+			mv.addObject("key", "3");
+		} 
+		
+		
+		mv.setViewName("headoffice/chartagegroup");
+		return mv;
+	}
 
 	// 가맹점 발주내역 상세보기(발주번호 별로) return json
 	@RequestMapping(value = "/fcorderdetail")
@@ -227,7 +446,7 @@ public class HeadOfficeController {
 	}// loginf-> 폼으로 이동시켜줌
 
 	// 로그인(강광훈)
-	@RequestMapping(value = "/login")
+	@PostMapping(value = "/login")
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
 			HeadOfficeVO headOfficeVo, StaffVO staffVo, ChartVO cVo, HttpSession session) throws ServletException, IOException {
 		String uri = "/headoffice/loginForm";
@@ -501,7 +720,7 @@ public class HeadOfficeController {
 		return mv;
 	}// staffDetail
 
-	// ** 비번변경시 현재비번확인
+	// ** 직원 비번변경시 현재비번확인
 	@RequestMapping(value = "/staffloginPwCheck")
 	public ModelAndView staffloginPwCheck(HttpServletRequest request, ModelAndView mv, HeadOfficeVO hvo, StaffVO svo) {
 		String hoid = (String) request.getSession().getAttribute("loginID");
@@ -548,6 +767,39 @@ public class HeadOfficeController {
 
 //=========================< 가맹점 관리 >=========================
 
+	
+	// ** 가맹점 비번변경시 현재비번확인
+	@RequestMapping(value = "/fcloginPwCheck")
+	public ModelAndView fcloginPwCheck(HttpServletRequest request, ModelAndView mv, FranchiseVO fvo) {
+		
+		String inputPw = fvo.getFcPassword();
+
+		fvo = fservice.selectFcOne(fvo);
+
+		if (passwordEncoder.matches(inputPw, fvo.getFcPassword())) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+
+		return mv;
+	}// fcloginPwCheck	
+	
+	// 가맹점 비밀번호 변경
+	@RequestMapping(value = "/fcpwupdate")
+	public ModelAndView fcPwUpdate(ModelAndView mv, FranchiseVO vo) {
+		if (fservice.fcPwUpdate(vo) > 0) {
+			mv.addObject("success", "success");
+		} else {
+			mv.addObject("success", "fail");
+		}
+
+		mv.setViewName("jsonView");
+		return mv;
+	}// fcupdate
+	
 	// 가맹점 리스트
 	@RequestMapping(value = "/fclist")
 	public ModelAndView fclist(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
@@ -696,7 +948,7 @@ public class HeadOfficeController {
 
 			 realPath = "C:/Users/19467/git/FedericoProject/src/main/webapp/resources/uploadImage/menuImage/";
 		// realPath = "D:/MTest/MyWork/Spring02/src/main/webapp/resources/"+vo.getId()+"/";
-		else realPath += "/federico/resources/uploadImage/";
+		else realPath += "/resources/uploadImage/menuImage/";
 
 		// ** 폴더 만들기 (File 클래스활용)
 		File f1 = new File(realPath);
@@ -720,7 +972,6 @@ public class HeadOfficeController {
 
 		String uri = null;
 		
-
 		if(menuService.menuInsert(vo)>0) {
 			mv.addObject("message",vo.getMenuName()+"입력이 완료되었습니다.");
 			mv.addObject("success","success");
@@ -963,7 +1214,10 @@ public class HeadOfficeController {
 			byte[] bytes = upload.getBytes();
 
 			// 이미지 경로 생성
-			String path = "/Users/gniusk614/Documents/WEBDEVELOP/MTest/TeamProject/FedericoProject/src/main/webapp/resources/uploadImage/boardImage/"; 
+			String path = request.getRealPath("/");
+			if (path.contains(".eclipse."))
+				path = "/Users/gniusk614/Documents/WEBDEVELOP/MTest/TeamProject/FedericoProject/src/main/webapp/resources/uploadImage/boardImage/"; // 저장된 이미지 경로
+			else path += "/resources/uploadImage/boardImage/"; 
 			// 이미지 경로 설정(폴더 자동 생성)
 			String ckUploadPath = path + uid + "_" + fileName;
 			File folder = new File(path);
@@ -1007,7 +1261,13 @@ public class HeadOfficeController {
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// 서버에 저장된 이미지 경로
-		String path = "/Users/gniusk614/Documents/WEBDEVELOP/MTest/TeamProject/FedericoProject/src/main/webapp/resources/uploadImage/boardImage/"; // 저장된 이미지 경로
+		String path = request.getRealPath("/");
+		log.info("realpath => "+path);
+		if (path.contains(".eclipse."))
+			path = "/Users/gniusk614/Documents/WEBDEVELOP/MTest/TeamProject/FedericoProject/src/main/webapp/resources/uploadImage/boardImage/"; // 저장된 이미지 경로
+		else path += "/resources/uploadImage/boardImage/";
+		
+		
 		System.out.println("2path:" + path);
 		String sDirPath = path + uid + "_" + fileName;
 
@@ -1179,6 +1439,9 @@ public class HeadOfficeController {
 		String id = (String) request.getSession().getAttribute("loginID");
 		vo.setHoId(id);
 		
+		vo.setCommentContent(vo.getCommentContent().replaceAll("<", "&lt;"));
+		vo.setCommentContent(vo.getCommentContent().replaceAll(">", "&gt;"));
+		
 		if(cservice.complainCommentInsert(vo)>0) {
 			mv.addObject("success", "성공");
 		}else {
@@ -1208,8 +1471,9 @@ public class HeadOfficeController {
 		String id = (String) request.getSession().getAttribute("loginID");
 		vo.setHoId(id);
 		System.out.println(vo.getHoId());
-		
-		
+		vo.setStartDate(vo.getStartDate().replaceAll("/", ""));
+		vo.setEndDate(vo.getEndDate().replaceAll("/", ""));		
+		log.info("start date =>    "+vo.getStartDate());
 		if(service.eventInsert(vo)>0) {
 			mv.addObject("success", "성공");
 		}else {

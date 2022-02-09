@@ -36,19 +36,23 @@
 	<section class="container" style="height: auto; min-height: 100%; padding-bottom: 168px;">
 	<!-- 본문 시작 -->
 		<div class="container" style="width: 940px;">
-			<br><div class="text-center mt-5"><h1 class="display-4">주문이 완료되었습니다</h1></div>
-			<br><div class="text-center mt-5"><h1 class="display-6">배달완료 예정시간은 
-			<span class="display-5" style="color: crimson;">${now_hh}시${now_mm}분</span>입니다.</h1></div>
+			<br><div class="text-center mt-5"><h1 class="display-6">주문이 완료되었습니다 : )</h1></div>
+			<br><div class="text-center mt-5"><p class="lead" style="font-size: xx-large;">배달완료 예정시간은 
+			<span class="lead" style="font-size:xx-large; color: crimson;">${now_hh}시${now_mm}분</span>입니다.</p></div>
 		</div>
-		<div class="row justify-content-md-center">
+		<div class="row justify-content-md-center mt-5">
 		<img src="/federico/resources/Image/delievery2.png"
 					style="width: 400px; opacity: 0.4">
 		</div>				
 			
 		
 		
-		<button>홈으로?</button>
-		<button>주문내역?</button>
+		<div class="row justify-content-md-center mt-5">
+				<div class="col-sm" align="center">
+					<button class="btn btn-danger" type="button"
+						onclick="javaScript:location.href='home'">메인홈페이지 이동</button>
+				</div>
+		</div>
 		
 	
 	

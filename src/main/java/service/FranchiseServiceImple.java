@@ -18,6 +18,12 @@ public class FranchiseServiceImple implements FranchiseService {
 	@Autowired
 	FranchiseMapper dao;
 
+	//프랜차이즈 비밀번호 변경
+	@Override
+	public int fcPwUpdate(FranchiseVO vo) {
+		return dao.fcPwUpdate(vo);
+	}
+	
 	//가맹점 전월 매출
 	@Override
 	public ChartVO fcLastMonthSales(String fcId) {

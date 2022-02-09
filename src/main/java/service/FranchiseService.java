@@ -10,6 +10,8 @@ import vo.FranchiseVO;
 
 public interface FranchiseService {
 
+	int fcPwUpdate(FranchiseVO vo); //프랜차이즈 비밀번호 변경
+	
 	ChartVO fcLastMonthSales(String fcId); //가맹점 전월 매출
 	
 	List<ChartVO> selectFCStatsAnnualSales(Map<String, Object> params); //연간 판매량(월별, 지점별)

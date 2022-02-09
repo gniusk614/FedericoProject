@@ -127,6 +127,7 @@ table, tr, td, th {
 									<div class="row">
 										<div class="input-group mb-2">
 											<input id="clientBirthday" name="clientBirthday" class="form-control" type="text" placeholder="[선택] 생년월일 ex) 900614" maxlength="6">
+											<div class="invalid-feedback" id="cbdMessage"></div>
 										</div>
 									</div>
 									<div class="row px-0" style="height: 100px;">
@@ -139,7 +140,7 @@ table, tr, td, th {
 											<input type="hidden" id="clientAddress" name="clientAddress">
 											<input type="hidden" id="clientEmail" name="clientEmail">
 											<button class="btn btn-secondary" type="reset" style="width: 50%; height: 60px; font-size: large;">취소</button>&nbsp;&nbsp;
-											<button class="btn btn-danger" type="submit"
+											<button class="btn btn-danger" type="button"
 												onclick="return clientIncheck()"
 												style="width: 50%; height: 60px; font-size: large;">확인</button>
 										</div>

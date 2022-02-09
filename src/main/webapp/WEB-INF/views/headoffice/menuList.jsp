@@ -356,9 +356,9 @@ $(function() {
 				<div class="input-group mb-3">
 				  <label class="input-group-text" for="inputGroupSelect01">분류</label>
 				  <select class="form-select menuselect" id="upmenuFlag" name="menuFlag">
-				    <option selected value="pizza">피자</option>
-				    <option value="sets">세트메뉴</option>
-				    <option value="side">사이드</option>
+				    <option value="pizza">피자</option>
+				    <option value="sets" >세트메뉴</option>
+				    <option value="side" >사이드</option>
 				  </select>
         		</div> 
         			

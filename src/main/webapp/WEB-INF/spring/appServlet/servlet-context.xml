@@ -16,7 +16,6 @@
       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
       
-
  
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
@@ -83,16 +82,9 @@
 	
 	<!-- 22.01.16 JDBC null 오류 발생억제 Tag 추가 (김민석) -->
 	
-	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   ** 인터셉터 설정 
-   1) 인터셉터 클래스 빈등록 --> 
+	<!--  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- 본사 로그인인터셉터 -->
  	<beans:bean id="loginInterceptor" class="com.project.federico.LoginIntercepter"/> 
-
-<!--    2) url 과 인터셉터 설정 
-   => Namespaces 에서 mvc 확인 ,
-   => mvc 사용하면 위에 있는 다음 2 Tag 수정 필요함
-         <mvc:annotation-driven  ,  <mvc:resources
- -->
 
 	<mvc:interceptors>
 		<mvc:interceptor>
@@ -104,6 +96,19 @@
 		
 			<!--  경로 지정 후 인터셉터 빈 등록 -->
 			<beans:ref bean = "loginInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors> 
+	
+	
+	
+	<!-- 고객페이지 로그인인터셉터 -->
+ 	<beans:bean id="clientLoginInterceptor" class="com.project.federico.ClientLoginIntercepter"/> 
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/client/clientLoginf"/>
+		
+			<beans:ref bean = "clientLoginInterceptor"/>
 		</mvc:interceptor>
 	</mvc:interceptors> 
 	

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -54,6 +55,7 @@ public class FranchiseController {
 	
 	
 	
+	
 	// 연간 매출(월별)
 	@RequestMapping(value = "/statsannualsales")
 	public ModelAndView statsAnuualSales(ModelAndView mv, HttpServletRequest request, HttpSession session) {
@@ -72,7 +74,6 @@ public class FranchiseController {
 					mv.addObject("chartData",list);
 					mv.addObject("success","success");
 				}
-
 			}
 		}
 		mv.setViewName("jsonView");
@@ -555,7 +556,7 @@ public class FranchiseController {
 		}// loginf-> 폼으로 이동시켜줌
 		
 		// 로그인 및 프랜차이즈 홈 이동
-		@RequestMapping(value ="/login")
+		@PostMapping(value ="/login")
 		public ModelAndView login(HttpServletRequest request,HttpServletResponse response,ModelAndView mv,			
 				HeadOfficeVO hvo, FranchiseVO vo, HttpSession session, OrderListVO orderListVo, ChartVO cVo) {
 			String fcId;

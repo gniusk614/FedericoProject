@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -23,11 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.WebUtils;
 
 import lombok.extern.log4j.Log4j;
 import paging.PageMaker;
@@ -73,12 +77,11 @@ public class ClientController {
 	
 	// 결제완료폼 이동 + 주문정보 인서트
 	@RequestMapping(value = "/ordercomplete")
-	public ModelAndView ordercomplete(ModelAndView mv, HttpServletRequest request, HttpSession session, ClientVO clientVo) {
+	public ModelAndView ordercomplete(ModelAndView mv, HttpServletRequest request, HttpSession session, ClientVO clientVo, RedirectAttributes rttr) {
 		List<CartVO> list = (List<CartVO>)session.getAttribute("list");
 		Map<String, Object> params = new HashMap<String, Object>();
 		String fcId;
 		String memo;
-		
 		
 		// iampay 일 경우
 		if("iam".equals(request.getParameter("iam"))){
@@ -88,7 +91,6 @@ public class ClientController {
 			fcId = (String)session.getAttribute("fcId");
 			memo = (String)session.getAttribute("memo");
 		}
-		
 		
 		// map에 인서트할 값 세팅
 		if(session.getAttribute("clientLoginID") != null) {
@@ -120,7 +122,7 @@ public class ClientController {
 			
 			//해당가맹점 배달소요시간 조회
 			String deliveryTime = fcService.selectDeliveryTimebyFcId(fcId);
-			mv.addObject("deliveryTime", deliveryTime);
+			rttr.addFlashAttribute("deliveryTime", deliveryTime);
 			
 			
 			// 주문상세정보 인서트
@@ -148,10 +150,15 @@ public class ClientController {
 			}
 			
 		}
-		mv.setViewName("client/orderComplete");
+		mv.setViewName("redirect:ordercompletef");
 		return mv;
 	}
 	
+	// 결제완료 후 redirect 용
+	@RequestMapping(value = "/ordercompletef")
+	public String orderCompletf() {
+		return "client/orderComplete";
+	}
 	
 	// 카카오페이 결제요청
 	  @RequestMapping(value = "/kakaoPay") 
@@ -236,7 +243,7 @@ public class ClientController {
 		} else if(session.getAttribute("nonName") != null) {
 			uri = "client/nonOrderAddress";
 		} else {
-			uri="client/clientLoginForm";
+			uri="redirect:clientLoginf";
 		}
 		
 		mv.setViewName(uri);
@@ -401,18 +408,21 @@ public class ClientController {
 	}
 
 // 로그인(강광훈)
-	@RequestMapping(value = "/clientLogin")
-	public ModelAndView clientLogin(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
-			ClientVO vo, CartVO cartVo) throws ServletException, IOException {
+	@PostMapping(value = "/clientLogin")
+	public ModelAndView clientLogin(HttpSession session,HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
+			ClientVO vo, CartVO cartVo , @RequestParam("autoLogin") String autoLogin) throws ServletException, IOException {
 		// 정보 저장
 		String password = vo.getClientPassword();
 		String uri = "/client/clientLoginForm";
-
+		
 		System.out.println(vo.getClientPassword());
 		System.out.println(vo.getClientId());
-
+		
 		vo = clientService.selectOne(vo);
-
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		
 		// 정보 확인
 		if (vo != null) { // ID는 일치 -> Password 확인
 			if (passwordEncoder.matches(password, vo.getClientPassword())) {
@@ -421,6 +431,23 @@ public class ClientController {
 				request.getSession().setAttribute("clientLoginID", vo.getClientId());
 				request.getSession().setAttribute("clientLoginName", vo.getClientName());
 				uri = "redirect:home";
+				log.info(autoLogin);
+				//자동로그인
+				if ("true".equals(autoLogin)){
+					log.info("여기옴?");
+	                Cookie cookie =new Cookie("loginCookie", session.getId());
+	                cookie.setPath("/");
+	                int amount =60 *60 *24 *7;
+	                cookie.setMaxAge(amount); //7일
+	                // 쿠키를 적용해 준다.
+	                response.addCookie(cookie);
+	                
+	                Date sessionLimit =new Date(System.currentTimeMillis() + (1000*amount));
+					params.put("clientId", vo.getClientId());
+					params.put("sessionId", session.getId());
+					params.put("next", sessionLimit);
+					clientService.keepLogin(params);
+	            }
 			} else {
 				mv.addObject("message", "Password가 일치하지않습니다.");
 			}
@@ -442,18 +469,38 @@ public class ClientController {
 	// 로그아웃 (강광훈)
 	@RequestMapping(value = "/clientLogout")
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
-			RedirectAttributes rttr) throws ServletException, IOException {
+			RedirectAttributes rttr, ClientVO vo) throws ServletException, IOException {
 
 		// 1) request 처리
 		response.setContentType("text/html; charset=UTF-8");
 		HttpSession session = request.getSession(false);
-
+		
 		// ** session 인스턴스 정의 후 삭제하기
 		// => 매개변수: 없거나, true, false
 		// => false : session 이 없을때 null 을 return;
-
-		if (session != null)
+		Map<String, Object> params = new HashMap<String, Object>();
+		
+		if (session != null) {
+			vo.setClientId((String)session.getAttribute("clientLoginID"));
 			session.invalidate();
+			
+			Cookie loginCookie = WebUtils.getCookie(request,"loginCookie");
+            if ( loginCookie !=null ){
+                // null이 아니면 존재하면!
+                loginCookie.setPath("/");
+                // 쿠키는 없앨 때 유효시간을 0으로 설정하는 것 !!! invalidate같은거 없음.
+                loginCookie.setMaxAge(0);
+                // 쿠키 설정을 적용한다.
+                response.addCookie(loginCookie);
+                 
+                // 사용자 테이블에서도 유효기간을 현재시간으로 다시 세팅해줘야함.
+                Date date =new Date(System.currentTimeMillis());
+                params.put("clientId", vo.getClientId());
+				params.put("sessionId", session.getId());
+				params.put("next", date);
+                clientService.keepLogin(params);
+            }
+		}
 		String uri = "redirect:home";
 		rttr.addFlashAttribute("message", "로그아웃 완료");
 
@@ -513,7 +560,7 @@ public class ClientController {
 					System.out.println("인증번호 : " + numStr);
 					sendService.certifiedPhoneNumber(phoneNumber, numStr);
 					mv.addObject("numStr", numStr);
-					mv.addObject("clientVO", vo);
+					mv.addObject("clientId", vo.getClientId());
 				}
 			}else {
 				mv.addObject("message", "가입정보가 없습니다.");
@@ -560,8 +607,10 @@ public class ClientController {
 			return mv;
 		}
 		// 회원가입창 디테일 이동
-		@RequestMapping(value = "clientJoin2ndf")
+		@PostMapping(value = "clientJoin2ndf")
 		public ModelAndView clientJoinf2ndf(ModelAndView mv, ClientVO vo) {
+			
+			
 			mv.addObject("clientName", vo.getClientName());
 			mv.addObject("clientPhone", vo.getClientPhone());
 			mv.addObject("smsCheck", vo.getSmsCheck());
@@ -572,10 +621,10 @@ public class ClientController {
 			return mv;
 		}
 		
-		//selectOne
+		//아이디중복확인
 		@RequestMapping(value = "/clientSelectOne")
 		public ModelAndView clientSelectOne(ModelAndView mv, ClientVO vo) {
-			vo = clientService.selectOne(vo);
+			vo = clientService.selectDubCheck(vo);
 
 			if (vo != null)
 				mv.addObject("clientDetail", vo); // MyBatis 에선 null , size()>0 으로 확인
@@ -588,6 +637,8 @@ public class ClientController {
 		//회원가입
 		@RequestMapping(value = "clientJoin")
 		public ModelAndView clientJoin(ModelAndView mv, ClientVO vo , RedirectAttributes rttr, HttpSession session, CartVO cartVo) {
+			
+			
 			vo.setClientPassword(passwordEncoder.encode(vo.getClientPassword()));
 			if (clientService.insertClient(vo) > 0) {
 				rttr.addAttribute("message", "계정생성이 완료되었습니다.");
@@ -772,7 +823,6 @@ public class ClientController {
 		@RequestMapping(value = "cscenterf")
 		public ModelAndView cscenterf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
 			cri.setSnoEno();
-			
 			List<NoticeBoardVO> selectList = clientService.selectNoticeBoard();
 			List<NoticeBoardVO> searchList = clientService.searchNoticeBoard(cri);
 			if (searchList != null && searchList.size() > 0) {
@@ -808,9 +858,7 @@ public class ClientController {
 
 		//고객의소리 글등록
 		@RequestMapping(value ="/complainInsert")
-		public ModelAndView complainInsert (HttpServletRequest request, ModelAndView mv ,ComplainBoardVO vo) throws IllegalStateException, IOException {	
-			
-			
+		public ModelAndView complainInsert (HttpServletRequest request, ModelAndView mv ,ComplainBoardVO vo, @RequestParam("content") String content) {	
 			
 			if(clientService.complainInsert(vo)>0) {
 				mv.addObject("success", "성공");
@@ -878,7 +926,7 @@ public class ClientController {
 		    }
 		    System.out.println(temp);
 		    System.out.println(vo.getClientEmail());
-		    
+		    vo = clientService.selectOne(vo);
 		    vo.setClientPassword(passwordEncoder.encode(temp));
 		    
 		    if(clientService.updateClientPw(vo)>0) {
@@ -904,14 +952,166 @@ public class ClientController {
 		@RequestMapping(value = "sendEmailComplete")
 		public ModelAndView sendEmailComplete(ModelAndView mv) {
 			String uri = "client/sendEmailComplete";
-			
-			
-			
 			mv.setViewName(uri);
 			return mv;
 		}
 		
 		
+		
+		// 마이페이지 이동
+		@RequestMapping(value = "clientMyInfo")
+		public ModelAndView clientMyInfo(ModelAndView mv ,HttpSession session , SearchCriteria cri, PageMaker pageMaker,
+				 OrderListVO orderListVo, ClientVO vo) {
+			String uri ="";
+			if(session.getAttribute("clientLoginID")!=null) {
+				String loginID = (String) session.getAttribute("clientLoginID");
+				orderListVo.setClientId(loginID);
+				cri.setSnoEno();
+				
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("clientId", loginID);
+				params.put("cri", cri);
+				
+				
+				List<OrderListVO> list = orderService.searchClientIdOrderList(params);
+				pageMaker.setCri(cri);
+				pageMaker.setTotalRowCount(orderService.searchClientIdOrderRows(params));
+				mv.addObject("orderList", list);
+				
+				uri = "client/clientMyInfo";
+			}else {
+				uri="client/pizzaMain";
+			}
+			
+			mv.setViewName(uri);
+			return mv;
+		}
+		
+		// 주문상세조회
+		@RequestMapping(value = "orderDetail")
+		public ModelAndView orderDetail(ModelAndView mv	, OrderListVO ordervo ) {
+			ordervo = orderService.selectOneOrderList(ordervo);
+			
+			List<OrderDetailListVO> list = orderService.selectDetailbyOrderNumber(ordervo.getOrderNumber());
+			if (list != null) {
+				mv.addObject("orderInfo", ordervo);
+				mv.addObject("list", list);
+			} else {
+				mv.addObject("message", "주문내역이 없습니다.");
+			}
+			String uri = "client/orderDetail";
+			mv.setViewName(uri);
+			return mv;
+		}
+		
+		//비밀번호확인
+		@RequestMapping(value = "passwordCheck")
+		public ModelAndView passwordCheck(ModelAndView mv, HttpSession session,ClientVO vo) {
+			vo.setClientId((String)session.getAttribute("clientLoginID"));
+			String password = vo.getClientPassword();
+			
+			vo = clientService.selectOne(vo);
+			if(vo!=null) {
+				if(passwordEncoder.matches(password, vo.getClientPassword())) {
+					mv.addObject("success", "success");
+				}else {
+					mv.addObject("success", "fail");
+				}
+			}else {
+				mv.addObject("success", "fail");
+			}
+			mv.setViewName("jsonView");
+			return mv;
+		}
+		//비밀번호확인
+		@RequestMapping(value = "myinfoUp")
+		public ModelAndView myinfoUp(ModelAndView mv, HttpSession session,ClientVO vo) {
+			vo.setClientId((String)session.getAttribute("clientLoginID"));
+			
+			vo = clientService.selectOne(vo);
+			if(vo!=null) {
+				mv.addObject("clientVO", vo);
+			}else {
+				mv.addObject("message", "출력할 자료가 없습니다.");
+			}
+			mv.setViewName("client/myInfoUpdate");
+			return mv;
+		}
+		
+		//핸드폰번호 변경
+		@RequestMapping(value = "infoUpsendSms")
+		public ModelAndView infoUpsendSms(ModelAndView mv, ClientVO vo) {
+			
+			String phoneNumber = vo.getClientPhone();
+
+			Random rand = new Random();
+			String numStr = "";
+			for (int i = 0; i < 6; i++) {
+				String ran = Integer.toString(rand.nextInt(10));
+				numStr += ran;
+			}
+			System.out.println("수신자 번호 : " + phoneNumber);
+			System.out.println("인증번호 : " + numStr);
+			sendService.certifiedPhoneNumber(phoneNumber, numStr);
+			mv.addObject("numStr", numStr);
+
+			mv.setViewName("jsonView");
+			return mv;
+		}
+		
+		//비밀번호변경
+		@RequestMapping(value = "myPasswordUpdate")
+		public ModelAndView myPasswordUpdate(ModelAndView mv, HttpSession session,ClientVO vo) {
+			vo.setClientId((String)session.getAttribute("clientLoginID"));
+			log.info(vo.getClientPassword());
+			
+			vo.setClientPassword(passwordEncoder.encode(vo.getClientPassword()));
+			
+			if(clientService.updateClientPw(vo)>0) {
+				mv.addObject("success", "success");
+			}else {
+				mv.addObject("success", "fail");
+			}
+			mv.setViewName("jsonView");
+			return mv;
+		}
+		
+		
+		
+		// 내정보 변경
+		@RequestMapping(value = "myInfoUpdate")
+		public ModelAndView myInfoUpdate(ModelAndView mv, HttpSession session,ClientVO vo) {
+			vo.setClientId((String)session.getAttribute("clientLoginID"));
+			
+			if(clientService.updateMyInfo(vo)>0) {
+				mv.addObject("success", "success");
+			}else {
+				mv.addObject("success", "fail");
+			}
+			mv.setViewName("jsonView");
+			return mv;
+		}
+
+		// 회원삭제
+		@RequestMapping(value = "deleteClient")
+		public ModelAndView deleteClient(ModelAndView mv, HttpSession session, ClientVO vo) {
+			vo.setClientId((String) session.getAttribute("clientLoginID"));
+			String deleteReason = vo.getDeleteReason();
+			
+			
+			
+			vo = clientService.selectOne(vo);
+			vo.setDeletePhone(vo.getClientPhone());
+			vo.setDeleteReason(deleteReason);
+			
+			if (clientService.deleteClient(vo) > 0) {
+				mv.addObject("success", "success");
+			} else {
+				mv.addObject("success", "fail");
+			}
+			mv.setViewName("jsonView");
+			return mv;
+		}
 		
 		
 		

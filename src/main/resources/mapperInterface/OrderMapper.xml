@@ -65,7 +65,7 @@
 		FROM orderlist
 		 <include refid="completeOrderSearch"></include>
 		AND completeyn = 'Y' AND fcid = #{vo.fcId}
-		ORDER BY ordernumber desc
+		ORDER BY orderdate desc
 		OFFSET #{cri.sno}-1 ROWS FETCH NEXT #{cri.rowsPerPage} ROWS ONLY 
 	</select>
 	
@@ -91,6 +91,32 @@
 		WHERE CLIENTPHONE = #{clientPhone} AND COMPLETEYN = 'N'
 		ORDER BY orderdate DESC
 		FETCH FIRST 1 ROWS ONLY
+	</select>
+	
+	
+		<!-- 고객별 주문조회 rows -->
+	<select id="searchClientIdOrderRows"  parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) FROM orderlist 
+		WHERE clientId = #{clientId}
+	</select>  
+	
+	<!-- 고객별 주문조회 -->
+	<select id="searchClientIdOrderList"  parameterType="hashmap" resultType="vo.OrderListVO" >
+		SELECT o.ORDERNUMBER, o.CLIENTID, o.FCID ,o.CLIENTADDRESS,o.ORDERDATE  , SUM(o2.MENUQTY*m.MENUPRICE) AS price
+		FROM ORDERLIST o 
+		JOIN ORDERDETAILLIST o2 
+		ON o.ORDERNUMBER = o2.ORDERNUMBER 
+		JOIN MENUINFO m 
+		ON o2.MENUINDEX = m.MENUINDEX
+		WHERE o.CLIENTID = #{clientId}
+		GROUP BY o.ORDERNUMBER,o.CLIENTID,o.FCID ,o.CLIENTADDRESS ,o.ORDERDATE
+		ORDER BY ORDERDATE DESC
+		OFFSET #{cri.sno}-1 ROWS FETCH NEXT #{cri.rowsPerPage} ROWS ONLY 
+	</select>
+	
+	<select id="selectOneOrderList" resultType="vo.OrderListVO">
+		select*from orderList
+		where orderNumber= #{orderNumber}
 	</select>
 	
 

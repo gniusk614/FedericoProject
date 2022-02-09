@@ -110,11 +110,10 @@ $(function(){
 				<!-- 상단 좌측 -->
 				<div class="col-6 fs-5" align="center">
 					<div class="row m-1" style="height: 190px; border: 1px solid lightgray;">
-					
-						<div class="col-4">
+						<div class="col-4 p-0">
 							<br><span>전일 매출</span><br><b class="fs-2"><fmt:formatNumber value="${yesterdaySales}" pattern="#,###"/></b> 원
 						</div>
-						<div class="col-4">
+						<div class="col-4 p-0">
 							<br><span>당일 매출</span><br><b class="fs-2"><fmt:formatNumber value="${todaySales}" pattern="#,###"/></b> 원<br>
 						
 							<c:if test="${yesterdaySales != 0 && todaySales != 0}">
@@ -129,9 +128,8 @@ $(function(){
 							<c:if test="${yesterdaySales == 0 || todaySales == 0}">
 								<span style="color: red;">( - )</span>
 							</c:if>	
-								
 						</div>
-						<div class="col-4">
+						<div class="col-4 p-0">
 							<br><span>당월 매출</span><br><b class="fs-2"><fmt:formatNumber value="${thisMonthSales}" pattern="#,###"/></b> 원<br>
 							<c:if test="${lastMonthSales != 0 && thisMonthSales != 0}">
 								<fmt:parseNumber var="monthlySalesRatio" value="${thisMonthSales/lastMonthSales * 100}" integerOnly="true" />
@@ -145,8 +143,6 @@ $(function(){
 							<c:if test="${lastMonthSales == 0 || thisMonthSales == 0}">
 								<span style="color: red;">( - )</span>
 							</c:if>
-							
-							
 						</div>	
 					</div>
 					<div class="row m-1" style="height: 190px; border: 1px solid lightgray;">
