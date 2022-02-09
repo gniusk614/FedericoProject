@@ -52,10 +52,9 @@ public interface FranchiseMapper {
 	
 	int updateDeliveryTime(FranchiseVO vo); //배송소요시간 update
 	 
-	List<FranchiseVO> selectListbyArea(String area); //지역 가맹점 찾기. 
+	List<FranchiseVO> selectListbyArea(String area); //지역 가맹점 찾기. 	
 	
-	// 서울(major or area) 강남구(minor)
-	List<FranchiseVO> selectListbyMinorAddress(String minor); 
+	List<FranchiseVO> selectFcAddress(Map<String, Object> params); 
 	
 	List<FranchiseVO> selectFc(); //가맹점정보 모두 불러오기
 	
@@ -65,5 +64,7 @@ public interface FranchiseMapper {
 	int fcInsert(FranchiseVO vo); //프랜차이즈 계정생성
 	int fcClose(FranchiseVO vo); ////프랜차이즈 폐점,오픈처리
 	
+	List<FranchiseVO> selectFcLocation(String fcAddress_keyword); // 주소기준 검색
 	
+	List<FranchiseVO> selectFcAllAddress(FranchiseVO vo);
 }
