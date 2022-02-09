@@ -99,6 +99,8 @@
 		</mvc:interceptor>
 	</mvc:interceptors> 
 	
+	
+	
 	<!-- 고객페이지 로그인인터셉터 -->
  	<beans:bean id="clientLoginInterceptor" class="com.project.federico.ClientLoginIntercepter"/> 
 
