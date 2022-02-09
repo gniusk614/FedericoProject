@@ -1484,7 +1484,6 @@ function a1enter(){
 			}//a1enter
 
 	
-	
 
 // 주문상세조회
 function orderDetail(num){

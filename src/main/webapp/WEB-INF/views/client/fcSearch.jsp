@@ -320,6 +320,7 @@ align-self: center;
 					let fcLatLon = {};
 					var Lat = [36.4832761004619,36.5111682851043];
 					var Lon = [127.293255435494,127.251674854118];
+					
 					for(var i = 0 ; i < Lat.length ; i++){
 					fcLatLon.Lat = Lat[i];
 					fcLatLon.Lon = Lon[i];

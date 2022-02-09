@@ -14,5 +14,7 @@ public class FranchiseVO {
 	private String hoId;
 	private String fcClose;
 	private String deliveryTime;
+	private String lat;
+	private String lon;
 
 }

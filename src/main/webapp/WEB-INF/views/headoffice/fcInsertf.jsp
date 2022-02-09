@@ -24,6 +24,7 @@
 	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script
 	src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f956895faa75830c33aed1c2b4e71939&libraries=services,clusterer,drawing"></script>
 <style>
 a:visited {
 	text-decoration: none;

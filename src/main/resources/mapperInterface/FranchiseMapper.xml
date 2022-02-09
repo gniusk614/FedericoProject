@@ -360,8 +360,8 @@
 
 	<!-- HeadOffice 인서트 -->
 	<insert id="fcInsert">
-		INSERT INTO franchise(fcId, fcPassword, fcName, fcAddress, fcArea, fcPhone, hoId,fcClose, createddate) 
-		VALUES(#{fcId}, #{fcPassword}, #{fcName}, #{fcAddress},#{fcArea}, #{fcPhone}, #{hoId}, #{fcClose}, sysdate)
+		INSERT INTO franchise(fcId, fcPassword, fcName, fcAddress, fcArea, fcPhone, hoId,fcClose, createddate, lat, lon) 
+		VALUES(#{fcId}, #{fcPassword}, #{fcName}, #{fcAddress},#{fcArea}, #{fcPhone}, #{hoId}, #{fcClose}, sysdate, #{lat}, #{lon})
 	</insert>
 
 

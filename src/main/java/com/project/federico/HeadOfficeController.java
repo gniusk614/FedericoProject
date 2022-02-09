@@ -830,7 +830,7 @@ public class HeadOfficeController {
 	public ModelAndView fcInsert(ModelAndView mv, FranchiseVO vo) {
 		
 		
-		
+		log.info(vo.getFcPassword());
 		vo.setFcPassword(passwordEncoder.encode(vo.getFcPassword()));
 		if (fservice.fcInsert(vo) > 0) {
 			mv.addObject("message", "계정생성이 완료되었습니다.");
@@ -1117,11 +1117,6 @@ public class HeadOfficeController {
 		return "headoffice/headofficeMain";
 	} //headofficeMain
 	
-	//차트화면 보내기
-	@RequestMapping(value = "/chartf")
-	public String chartf(ModelAndView mv,MenuVO vo) {
-		return "headoffice/chart";
-	} //headofficeMain
 	
 	
 	// 차트화면 띄우기

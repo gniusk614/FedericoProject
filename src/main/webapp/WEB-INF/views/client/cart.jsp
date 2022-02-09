@@ -127,7 +127,7 @@
 								결제하기
 							</button>
 						</div>
-					</div>
+					</div><br>
 				</c:if>
 			</div>
 		</div><!-- 장바구니 메뉴 -->
