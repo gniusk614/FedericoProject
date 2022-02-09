@@ -1487,7 +1487,6 @@ function a1enter(){
 	
 		
 	
-=======
 // 주문상세조회
 function orderDetail(num){
 	$.ajax({

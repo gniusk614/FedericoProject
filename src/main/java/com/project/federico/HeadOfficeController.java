@@ -830,7 +830,7 @@ public class HeadOfficeController {
 	public ModelAndView fcInsert(ModelAndView mv, FranchiseVO vo) {
 		
 		
-		
+		log.info(vo.getFcPassword());
 		vo.setFcPassword(passwordEncoder.encode(vo.getFcPassword()));
 		if (fservice.fcInsert(vo) > 0) {
 			mv.addObject("message", "계정생성이 완료되었습니다.");
