@@ -1036,21 +1036,33 @@ public class ClientController {
 
 		// 이벤트 게시판 이동
 		@RequestMapping(value = "csEventf")
-		public ModelAndView csEventf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		public ModelAndView csEventf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker, @RequestParam("flag") String flag) {
+			
+			
 			cri.setSnoEno();
 			
-			
+			if(flag.equals("doing")) {
 			List<EventBoardVO> searchList = clientService.searchEventBoard(cri);			
 			if (searchList != null && searchList.size() > 0) {
 				mv.addObject("eventList", searchList);
+				mv.addObject("flag","doing");
 			} else {
 				mv.addObject("message", "출력할 자료가 없습니다.");
 			}
-			
-			
-			
 			pageMaker.setCri(cri);
 			pageMaker.setTotalRowCount(clientService.searchEventBoardRows(cri));
+			
+			}else {
+				List<EventBoardVO> searchList = clientService.searchEndEventBoard(cri);			
+				if (searchList != null && searchList.size() > 0) {
+					mv.addObject("eventList", searchList);
+					mv.addObject("flag","end");
+				} else {
+					mv.addObject("message", "출력할 자료가 없습니다.");
+				}
+				pageMaker.setCri(cri);
+				pageMaker.setTotalRowCount(clientService.searchEndEventBoardRows(cri));
+			}
 			
 			mv.setViewName("client/csEvent");
 			return mv;
