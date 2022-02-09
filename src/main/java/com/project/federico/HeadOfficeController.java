@@ -1486,8 +1486,9 @@ public class HeadOfficeController {
 		String id = (String) request.getSession().getAttribute("loginID");
 		vo.setHoId(id);
 		System.out.println(vo.getHoId());
-		
-		
+		vo.setStartDate(vo.getStartDate().replaceAll("/", ""));
+		vo.setEndDate(vo.getEndDate().replaceAll("/", ""));		
+		log.info("start date =>    "+vo.getStartDate());
 		if(service.eventInsert(vo)>0) {
 			mv.addObject("success", "성공");
 		}else {

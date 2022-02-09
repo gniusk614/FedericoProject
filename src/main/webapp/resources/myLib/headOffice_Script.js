@@ -1286,6 +1286,10 @@ function itemDelete() {
 
 $(function() {
 
+
+
+
+
 	// 자재상세조회 modal 닫힐 시 내용 clear
 	$('#fcOrderDetailModal').on('hidden.bs.modal', function() {
 		$('#fcOrderDeatilTableBody').html('');
@@ -1447,12 +1451,24 @@ function fcOrderFlagUpdate(flag) {
 	}//.click		
 
 // ==========================< 이벤트 게시판 글 등록/수정/삭제 >=================================
+$(function(){
+	 $('#startDate').datepicker({
+		dateFormat : 'yy/mm/dd'
+	}); 
+	 $('#endDate').datepicker({
+		dateFormat : 'yy/mm/dd'
+	});
+});
+
 
 // 이벤트 등록
 function eventUpload(){
-	console.log('안녕');
 	var title = $('#title').val();
 	var content = CKEDITOR.instances['content'].getData();
+	var startDate = $('#startDate').val(); // 이벤트 시작일
+	var endDate = $('#endDate').val(); // 이벤트 종료일
+	var today = new Date(); // 오늘 날짜	
+	console.log(endDate);
 	if(title.length<1){
 		alert('제목을 입력해주세요.');
 		return false;
@@ -1462,13 +1478,16 @@ function eventUpload(){
 		alert('글 내용을 입력해주세요.');
 		return false;
 	}
+	
 	if (confirm("이벤트를 등록하시겠습니까?") == true) {
 		$.ajax({
 			type : "post",
 			url : "eventInsert",
 			data : {
 				title : title,
-				content : content
+				content : content,
+				startDate : startDate,
+				endDate : endDate
 			},
 			success : function(data) {
 				if (data.success != null) {

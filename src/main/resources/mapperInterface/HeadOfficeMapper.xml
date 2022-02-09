@@ -432,8 +432,8 @@
 	<!-- ============================={ 이벤트 페이지 }================================ -->
 	 <!-- 이벤트 게시판 글 등록 -->
 	<insert id="eventInsert">
-	INSERT INTO EVENTBOARD(eventSeq, title, hoId, content) VALUES((select nvl(max(eventSeq),0)+1 from EVENTBOARD n),
-		#{title}, #{hoId}, #{content})
+	INSERT INTO EVENTBOARD(eventSeq, title, hoId, content, startDate, endDate) VALUES((select nvl(max(eventSeq),0)+1 from EVENTBOARD n),
+		#{title}, #{hoId}, #{content}, #{startDate}, #{endDate})
 	</insert>
 	
 	
