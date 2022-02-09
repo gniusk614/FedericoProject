@@ -1486,8 +1486,7 @@ function a1enter(){
 	
 	
 		
-	
-=======
+
 // 주문상세조회
 function orderDetail(num){
 	$.ajax({
@@ -1631,9 +1630,26 @@ function deleteClient(){
 		
 	})
 	}
-	
 }
 
+/*function showEvent(flag){
+	var flag = flag;
+	console.log(flag);
+	$.ajax({
+		type:"post",
+		url:"eventBoardf",
+		data:{
+			flag:flag
+		},success: function(data){
+			
+		},error:function(){
+			alert('서버장애');
+		}
+		
+		
+	})
+	
+}*/
 
 
 
