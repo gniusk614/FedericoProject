@@ -272,11 +272,26 @@ align-self: center;
 	function whereami(){
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(pos){
-				clat =pos.coords.latitude;//pos.coords.latitude; // 위도 , , 
-				clng =pos.coords.longitude;//pos.coords.longitude; // 경도
+				
+				clat = 36.48018405476181;
+				clng = 127.2893820088641;
+// 				clat = pos.coords.latitude;//pos.coords.latitude; // 위도 
+// 				clng = pos.coords.longitude;//pos.coords.longitude; // 경도
+				
 				console.log("latitude = " +clat);
 				console.log("longitude = " +clng);
+				
+				mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+				   mapOption = {
+				       center: new kakao.maps.LatLng(clat, clng), // 지도의 중심좌표
+				       level: 3 // 지도의 확대 레벨		
+				};
 				map = new kakao.maps.Map(mapContainer, mapOption); // 지도에 표시
+
+				var marker = new kakao.maps.Marker({
+				    map: map,
+				    position: new kakao.maps.LatLng(clat, clng)
+				});
 				
 				fcAllAddress();
 				
@@ -292,8 +307,6 @@ align-self: center;
 	//전체 매장 주소 가져오기.
 	function fcAllAddress(){
 		
-		
-		
 		$.ajax({
 				
 			url :'fcAllAddress',
@@ -303,101 +316,50 @@ align-self: center;
 				console.log("성공? "+data.list);
 				if(data.list != null){
 					
-					// 주소의 좌표를 담을 배열생성
-					var yLat = []; // y 좌표를 담을 배열
-					var xLng = []; // x 좌표를 담을 배열 
+					// test
+					let fcLatLon = {};
+					var Lat = [36.4832761004619,36.5111682851043];
+					var Lon = [127.293255435494,127.251674854118];
 					
-					// 주소를 담을 배열 생성
-					let fcAllAddresslist = []; 
+					for(var i = 0 ; i < Lat.length ; i++){
+					fcLatLon.Lat = Lat[i];
+					fcLatLon.Lon = Lon[i];
+					}
+					console.log("fcLatLon : ",fcLatLon);
+// 					var fcLatLonlist = [data.list]; // value 주입
+					var fcLatLonlist = [];
+					fcLatLonlist.push(fcLatLon);
+					console.log("fcLatLonlist : ",fcLatLonlist);
 					
-					fcAllAddresslist = data.list // value 주입
-					console.log(data.fcAllAddresslist);
+					var fcMap = [];
+					var total = fcLatLonlist.length;
 					
-					var total = fcAllAddresslist.length;
-					console.log("total : "+total);
+					console.log("total : ",total);
+					
 					var counter = 0;
 					
-					//주소를 좌표로 변환
-					var geocoder = new kakao.maps.services.Geocoder(); 
-					var addrs=[];
-					var count = 0;
+					for(var i=0; i<total; i++) {
 					
+						fcLatLon.fcYLat = fcLatLonlist[i].Lat;
+						fcLatLon.fcXLon = fcLatLonlist[i].Lon;
+						fcMap.push(fcLatLon);
+						
+						var distance = getDistance(clat, clng,fcMap[i].fcYLat,  fcMap[i].fcXLon, "K");
+						fcMap[i].distance = distance;
+						
+						}//for
 					
-						console.log("job1");
-							console.log("promise");
-							
-							for(var i = 0 ; i < total ; i++) {
-								var addr={};
-								address = fcAllAddresslist[i].fcAddress;
-								var fcId = fcAllAddresslist[i].fcId;
-								console.log("address :",address);
-								var	job1 = new Promise(function(resolve, reject) {
-									geocoder.addressSearch(address, function(result, status) {
-										console.log("address",address);
-
-									
-										if (status === kakao.maps.services.Status.OK) {
-																						
-											yLat = result[0].y;
-											xLng = result[0].x;
-											
-											addr.address = address;
-											console.log("addr.address",addr.address);
-											addr.fcId = fcId;
-											addr.xLng =	xLng;
-											addr.yLat = yLat;
-											addrs.push(addr);
-											count += 1;
-											var imsi = i;
-											
-											console.log('addrs');
-											console.log(addrs);
-											
-											} // if
-											else{
-												console.log('짤림-------------------------------------------------')
-											}
-										resolve(imsi);
-										}); //geocoder.addressSearch
+						let newfcMaps = fcMap.sort(function (a, b) {
+								  if (a.distance > b.distance) {
+									    return 1;
+								  }
+								  if (a.distance < b.distance) {
+								    return -1;
+								  }
+								  // a must be equal to b
+								  return 0;
 								});
-									}//for
-									
-									
-						
-							
-					job1.then(function(imsi){
-						console.log("setTimeout 제거 후");
-				
-							var distance = getDistance(clat,clng, addrs[imsi].yLat, addrs[imsi].xLng, "K");
-							
-							console.log("clat", clat);
-							console.log("clng", clng);
-							console.log("addrs",i,".yLat", addrs[i].yLat);
-							console.log("addrs",i,".yLat", addrs[i].xLng);
-							console.log('디스턴스');
-							console.log(distance);
-							addrs[i].distance = distance;
-							
-					})
-				
-					
-						
-					
-					
-					
-					
-// 						let newAddrs = addrs.sort(function (a, b) {
-// 								  if (a.distance > b.distance) {
-// 									    return 1;
-// 								  }
-// 								  if (a.distance < b.distance) {
-// 								    return -1;
-// 								  }
-// 								  // a must be equal to b
-// 								  return 0;
-// 								});
-// 						console.log('newAddrs');
-// 						console.log(newAddrs);
+						console.log('newfcMaps',newfcMaps);
 						//지도 위치이동
 						
 						
@@ -423,16 +385,19 @@ align-self: center;
 		var theta = lon1-lon2;
 		var radtheta = Math.PI * theta/180;
 		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-		console.log("1", dist);
+	
 		if (dist > 1) {
 			dist = 1;
 		}
-		console.log("2", dist);
+		
 		dist = Math.acos(dist);
-		console.log("3", dist);
 		dist = dist * 180/Math.PI;
-		console.log("4", dist);
 		dist = dist * 60 * 1.1515;
+		
+		console.log("1", dist);
+		console.log("2", dist);
+		console.log("3", dist);
+		console.log("4", dist);
 		console.log("5", dist);
 
 		if (unit=="K") { dist = dist * 1.609344 }

@@ -312,7 +312,7 @@
 	</select>
 	
 	<select id="selectFcAllAddress" resultType="vo.FranchiseVO">
-		SELECT fcaddress, fcid
+		SELECT fcaddress, fcid, lon, lat
 		FROM franchise 
 	</select>
 	

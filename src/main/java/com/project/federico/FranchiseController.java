@@ -556,7 +556,7 @@ public class FranchiseController {
 		}// loginf-> 폼으로 이동시켜줌
 		
 		// 로그인 및 프랜차이즈 홈 이동
-		@PostMapping(value ="/login")
+		@RequestMapping(value ="/login")
 		public ModelAndView login(HttpServletRequest request,HttpServletResponse response,ModelAndView mv,			
 				HeadOfficeVO hvo, FranchiseVO vo, HttpSession session, OrderListVO orderListVo, ChartVO cVo) {
 			String fcId;

@@ -446,7 +446,7 @@ public class HeadOfficeController {
 	}// loginf-> 폼으로 이동시켜줌
 
 	// 로그인(강광훈)
-	@PostMapping(value = "/login")
+	@RequestMapping(value = "/login")
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
 			HeadOfficeVO headOfficeVo, StaffVO staffVo, ChartVO cVo, HttpSession session) throws ServletException, IOException {
 		String uri = "/headoffice/loginForm";
@@ -1356,29 +1356,7 @@ public class HeadOfficeController {
 		}
 		mv.setViewName("jsonView");
 		return mv;
-	}
-	
-
-
-	
-	//고객공지사항 이동
-	@RequestMapping(value = "eventBoardf")
-	public ModelAndView eventBoardf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
-		cri.setSnoEno();
-		
-		List<EventBoardVO> searchList = cservice.searchEventBoard(cri);
-		if (searchList != null && searchList.size() > 0) {
-			
-			mv.addObject("eventList", searchList);
-		} else {
-			mv.addObject("message", "출력할 자료가 없습니다.");
-		}
-		pageMaker.setCri(cri);
-		pageMaker.setTotalRowCount(cservice.searchNoticeBoardRows(cri));
-		
-		mv.setViewName("headoffice/eventBoard");
-		return mv;
-	}
+	}	
 
 	//고객공지사항 이동
 	@RequestMapping(value = "complainBoardf")
@@ -1460,7 +1438,7 @@ public class HeadOfficeController {
 	}
 	
 	/* ============================={ 이벤트 페이지 }================================ */
-	// 이벤트 게시판 글등록
+	// 이벤트 게시판 글 등록
 	@RequestMapping(value ="/eventInsert")
 	public ModelAndView eventInsert (HttpServletRequest request, ModelAndView mv ,EventBoardVO vo) {	
 		String id = (String) request.getSession().getAttribute("loginID");
@@ -1478,6 +1456,34 @@ public class HeadOfficeController {
 		return mv;
 	}
 	
+	// 이벤트 게시판 글 등록 폼이동
+	@RequestMapping(value = "/eventInsertf")
+	public ModelAndView eventInsertf(ModelAndView mv, EventBoardVO vo) {
+	
+		mv.setViewName("headoffice/eventBoardInsert");
+		return mv;
+	}
+	
+	// 이벤트 게시판 이동
+	@RequestMapping(value = "eventBoardf")
+	public ModelAndView eventBoardf(ModelAndView mv, SearchCriteria cri, PageMaker pageMaker) {
+		cri.setSnoEno();
+		
+		
+		List<EventBoardVO> searchList = cservice.searchEventBoard(cri);
+		if (searchList != null && searchList.size() > 0) {
+
+			mv.addObject("eventList", searchList);
+		} else {
+			mv.addObject("message", "출력할 자료가 없습니다.");
+		}
+		pageMaker.setCri(cri);
+		pageMaker.setTotalRowCount(cservice.searchNoticeBoardRows(cri));
+
+		mv.setViewName("headoffice/eventBoard");
+		return mv;
+	}
+	
 	// 이벤트 게시판 디테일
 	@RequestMapping(value ="/eventBoardDetail")
 	public ModelAndView eventBoardDetail(ModelAndView mv, EventBoardVO vo) {					
@@ -1490,15 +1496,7 @@ public class HeadOfficeController {
 		}
 		mv.setViewName("headoffice/eventBoardDetail");
 		return mv;
-	}
-	
-	// 이벤트 게시판 폼이동
-	@RequestMapping(value = "/eventInsertf")
-	public ModelAndView eventInsertf(ModelAndView mv, EventBoardVO vo) {
-	
-		mv.setViewName("headoffice/eventBoardInsert");
-		return mv;
-	}
+	}	
 	
 	// 이벤트 게시판 글 수정 폼이동
 	@RequestMapping(value = "/eventUpdatef")
