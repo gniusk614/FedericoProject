@@ -446,7 +446,7 @@ public class HeadOfficeController {
 	}// loginf-> 폼으로 이동시켜줌
 
 	// 로그인(강광훈)
-	@PostMapping(value = "/login")
+	@RequestMapping(value = "/login")
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response, ModelAndView mv,
 			HeadOfficeVO headOfficeVo, StaffVO staffVo, ChartVO cVo, HttpSession session) throws ServletException, IOException {
 		String uri = "/headoffice/loginForm";
