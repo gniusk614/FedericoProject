@@ -410,6 +410,11 @@ align-self: center;
 						console.log('newfcMaps :',newfcMaps);
 						//지도 위치이동
 						
+						
+						
+						
+						
+						
 						//있다면 검색 시작.
 						
 					}//if(data.list != null)
