@@ -273,26 +273,41 @@ align-self: center;
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(pos){
 				
-				clat = 36.48018405476181;
-				clng = 127.2893820088641;
-// 				clat = pos.coords.latitude;//pos.coords.latitude; // 위도 
-// 				clng = pos.coords.longitude;//pos.coords.longitude; // 경도
+// 				clat = 36.48018405476181;
+// 				clng = 127.2893820088641;
+				clat = pos.coords.latitude; // 위도 
+				clng = pos.coords.longitude;// 경도
 				
-				console.log("latitude = " +clat);
-				console.log("longitude = " +clng);
+				console.log("User latitude = " +clat);
+				console.log("User longitude = " +clng);
 				
-				mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-				   mapOption = {
-				       center: new kakao.maps.LatLng(clat, clng), // 지도의 중심좌표
-				       level: 3 // 지도의 확대 레벨		
-				};
-				map = new kakao.maps.Map(mapContainer, mapOption); // 지도에 표시
+					mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+				   	   mapOption = {
+					       center: new kakao.maps.LatLng(clat, clng), // 지도의 중심좌표
+					};
+					map = new kakao.maps.Map(mapContainer, mapOption); // 지도에 표시
 
 				var marker = new kakao.maps.Marker({
 				    map: map,
 				    position: new kakao.maps.LatLng(clat, clng)
 				});
+					
+				// 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
+				var iwContent = '<div style="padding:5px;">여기에 계신가요?</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+			    iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다	
+					
+				// 인포윈도우를 생성합니다
+				var infowindow = new kakao.maps.InfoWindow({
+				    content : iwContent,
+				    removable : iwRemoveable
+				});	
+				// 마커에 클릭이벤트를 등록합니다
+				kakao.maps.event.addListener(marker, 'click', function() {
+				      // 마커 위에 인포윈도우를 표시합니다
+				      infowindow.open(map, marker);  
+				});
 				
+					
 				fcAllAddress();
 				
 			});
@@ -316,19 +331,29 @@ align-self: center;
 				console.log("성공? "+data.list);
 				if(data.list != null){
 					
-					// test
+					//프랜차이즈 위도(lat) 경도(lon) 객체변수 생성.
 					let fcLatLon = {};
-					var Lat = [36.4832761004619,36.5111682851043];
-					var Lon = [127.293255435494,127.251674854118];
+					
+					//프랜차이즈 DB에서 주입할 배열 생성.
+					var Lat = []; // 위도
+					var Lon = []; // 경도
+					var fcId = [];// 프랜차이즈 매장명
+					
+					Lat.push(data.list); // js배열 <- 컨트롤러 주입					
+					Lon.push(data.list); // js배열 <- 컨트롤러 주입
+					fcId.push(data.list);// js배열 <- 컨트롤러 주입
+					
+					// 각 위,경도 배열 변수에 담겨있는 자료들을 객체배열 형식으로 주입.
 					for(var i = 0 ; i < Lat.length ; i++){
-					fcLatLon.Lat = Lat[i];
-					fcLatLon.Lon = Lon[i];
+					
+					fcLatLon.Lat = Lat[i]; // js객체 Map <- js배열
+					fcLatLon.Lon = Lon[i]; // js객체 Map <- js배열
 					}
 					console.log("fcLatLon : ",fcLatLon);
-// 					var fcLatLonlist = [data.list]; // value 주입
-					var fcLatLonlist = [];
-					fcLatLonlist.push(fcLatLon);
-					console.log("fcLatLonlist : ",fcLatLonlist);
+
+					var fcLatLonlist = []; // 위경도 값을 차례대로 넣을 배열 생성 
+					fcLatLonlist.push(fcLatLon); // 차례대로 주입
+					console.log("fcLatLonlist : ",fcLatLonlist); // 
 					
 					var fcMap = [];
 					var total = fcLatLonlist.length;
@@ -346,7 +371,31 @@ align-self: center;
 						var distance = getDistance(clat, clng,fcMap[i].fcYLat,  fcMap[i].fcXLon, "K");
 						fcMap[i].distance = distance;
 						
-						}//for
+						var marker = new kakao.maps.Marker({
+						    map: map,
+						    position: new kakao.maps.LatLng(fcMap[i].fcYLat, fcMap[i].fcXLon)
+						});
+						
+						}//for 1
+						
+					for(var i=0; i<total; i++) {
+
+						// 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
+						var iwContent = '<div style="padding:5px;"></div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+						    iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+
+						// 인포윈도우를 생성합니다
+						var infowindow = new kakao.maps.InfoWindow({
+						    content : iwContent,
+						    removable : iwRemoveable
+						});
+
+						// 마커에 클릭이벤트를 등록합니다
+						kakao.maps.event.addListener(marker, 'click', function() {
+						      // 마커 위에 인포윈도우를 표시합니다
+						      infowindow.open(map, marker);  
+						});
+								}// for 2
 					
 						let newfcMaps = fcMap.sort(function (a, b) {
 								  if (a.distance > b.distance) {
@@ -358,9 +407,8 @@ align-self: center;
 								  // a must be equal to b
 								  return 0;
 								});
-						console.log('newfcMaps',newfcMaps);
+						console.log('newfcMaps :',newfcMaps);
 						//지도 위치이동
-						
 						
 						//있다면 검색 시작.
 						
@@ -373,35 +421,48 @@ align-self: center;
 	}//fcAllAddress() 
 	
 	function getDistance(lat1, lon1, lat2, lon2, unit) {
-		var radlat1 = Math.PI * lat1/180;
-		var radlat2 = Math.PI * lat2/180;
-		var radlon1 = Math.PI * lon1/180;
-		var radlon2 = Math.PI * lon2/180;
-		console.log("radlat1", radlat1);
-		console.log("radlat2", radlat2);
-		console.log("radlon1", radlon1);
-		console.log("radlon2", radlon2);
-		var theta = lon1-lon2;
-		var radtheta = Math.PI * theta/180;
-		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-	
-		if (dist > 1) {
-			dist = 1;
+		if ((lat1 == lat2) && (lon1 == lon2)) {
+			return 0;
 		}
-		
-		dist = Math.acos(dist);
-		dist = dist * 180/Math.PI;
-		dist = dist * 60 * 1.1515;
-		
-		console.log("1", dist);
-		console.log("2", dist);
-		console.log("3", dist);
-		console.log("4", dist);
-		console.log("5", dist);
-
-		if (unit=="K") { dist = dist * 1.609344 }
-		if (unit=="N") { dist = dist * 0.8684 }
-		return dist;
+		else {
+			var radlat1 = Math.PI * lat1/180;
+			console.log("radlat1 =", radlat1);
+			
+			var radlat2 = Math.PI * lat2/180;
+			console.log("radlat2 =", radlat2);
+			
+			var theta = lon1-lon2;
+			console.log("theta = lon1-lon2 =", theta = lon1-lon2);
+			
+			var radtheta = Math.PI * theta/180;
+			console.log("radtheta =", radtheta);
+			
+			var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+			console.log("dist =", dist);
+			
+			if (dist > 1) {
+				dist = 1;
+			}
+			dist = Math.acos(dist);
+			console.log("dist = Math.acos(dist) =", dist);
+			
+			dist = dist * 180/Math.PI;
+			console.log("dist * 180/Math.PI =", dist);
+			
+			dist = dist * 60 * 1.1515;
+			console.log("dist = dist * 60 * 1.1515 =", dist);
+			
+			if (unit=="K") { dist = dist * 1.609344 }
+			if (unit=="N") { dist = dist * 0.8684 }
+			return dist;
+			
+			
+			
+			
+			
+			
+			
+		}
 		
 	}//getDistance
 	
@@ -686,23 +747,21 @@ function depth2_change(e){
 	</div>
 	<!-- 지도표시종료 -->
 <!-- 가맹점 조회 카드 시작 -->
-		<div id="fcInfo">
-			<div class="container" >
-				<div class="row align-items-start" id="fcInfo_select">
-					<c:forEach var="vo" items="${list}" varStatus="vs">
-							<div class="col-6" style="margin-bottom: 40px;">
-								<div class="card">
-								  <div class="card-body ">
-									    <h5 class="card-title" id="fcId">매장명 : ${vo.fcId}</h5>
-								        <h5 class="card-title"id="fcPhone">T :${vo.fcPhone}</h5>
-									    <p class="card-text"id="fcAddress">주소: ${vo.fcAddress}</p>
-									    <button class='btn btn-danger' style="right: auto;"  onclick="fcDetail()">매장정보보기</button>
-								  </div>
-								</div>
+		<div class="container fcInfoClass" id="fcInfo">
+			<div class="row align-items-start" id="fcInfo_select">
+				<c:forEach var="vo" items="${list}" varStatus="vs">
+						<div class="col-6" style="margin-bottom: 40px;">
+							<div class="card">
+							  <div class="card-body ">
+								    <h5 class="card-title" id="fcId">매장명 : ${vo.fcId}</h5>
+							        <h5 class="card-title"id="fcPhone">T :${vo.fcPhone}</h5>
+								    <p class="card-text"id="fcAddress">주소: ${vo.fcAddress}</p>
+								    <button class='btn btn-danger' style="right: auto;"  onclick="fcDetail()">매장정보보기</button>
+							  </div>
 							</div>
-					 </c:forEach>
-				 </div>
-			 </div>	
+						</div>
+				 </c:forEach>
+			 </div>
 		 </div>	
 <!-- 가맹점 조회 카드 종료 -->
 	<div class="row" style="height: 100px"></div>
@@ -758,7 +817,7 @@ function clickEffect(id){
 
 function InputDataClear(){
 	$('#Sido').val('none');
-	$('#Gugun').val("NONE");
+	$('#Gugun').val("none");
 	$('#a1').val('');
 	$('#a2').val('');
 	$('#fcInfo_select').empty();

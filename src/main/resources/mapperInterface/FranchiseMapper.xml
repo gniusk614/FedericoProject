@@ -330,7 +330,7 @@
 	
 	
 	<select id="selectFcOne" resultType="vo.FranchiseVO">
-		SELECT fcid,fcpassword,fcname,fcaddress,fcarea,fcphone,hoid
+		SELECT fcid,fcpassword,fcname,fcaddress,fcarea,fcphone,hoid,lon,lat
 		FROM franchise 
 		WHERE fcid = #{fcId}
 	</select>
