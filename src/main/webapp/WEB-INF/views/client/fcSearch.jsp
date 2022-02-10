@@ -343,7 +343,10 @@ align-self: center;
 					Lon.push(data.list); // js배열 <- 컨트롤러 주입
 					fcId.push(data.list);// js배열 <- 컨트롤러 주입
 					
-					// 각 위,경도 배열 변수에 담겨있는 자료들을 객체배열 형식으로 주입.
+// 					// 각 위,경도 배열 변수에 담겨있는 자료들을 객체배열 형식으로 주입.
+// 					var Lat = [36.4832761004619,36.5111682851043];
+// 					var Lon = [127.293255435494,127.251674854118];
+					
 					for(var i = 0 ; i < Lat.length ; i++){
 					
 					fcLatLon.Lat = Lat[i]; // js객체 Map <- js배열

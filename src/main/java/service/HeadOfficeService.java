@@ -95,7 +95,8 @@ public interface HeadOfficeService {
 	int eventUpdate(EventBoardVO vo); // 이벤트 게시판 수정
 	int eventDelete(EventBoardVO vo); // 이벤트 게시판 삭제
 	EventBoardVO selectDetailEventBoard(EventBoardVO vo); // 이벤트 게시판 디테일
-	
+	List<EventBoardVO> searchEventBoard(SearchCriteria cri);// 이벤트 게시판 출력
+	int searchEventBoardRows(SearchCriteria cri); //이벤트 게시판 search 결과 rows 조회
 
 	
 	

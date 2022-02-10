@@ -287,39 +287,64 @@ $(function() {
 		}// if
 	})
 	
+	// 도로명주소 -> 좌표변환 api
+	var geocoder = new kakao.maps.services.Geocoder();
+	
 	// ** 계정 생성 확인버튼 클릭시
 	$('#fcSubmitBtn').click(function() {
 		if (fcincheck() == true) {
-			$.ajax({
-				type : "post",
-				url : "fcinsert",
-				data : {
-					fcId : $('#fcId').val(),
-					fcPassword : $('#fcPassword').val(),
-					fcName : $('#fcName').val(),
-					fcAddress : $('#address').val()+" "+$('#addressDetail').val(),
-					fcArea : $('#fcArea').val(),
-					fcPhone : $('#fcPhone').val(),
-					hoId : $('#hoId').val(),
-					fcClose : "N"
-				},
-				success : function(data) {
-					if (data.success == 'success') {
-						alert('계정생성에 성공했습니다.');
+			var address = $('#address').val();
+			var lat;
+			var lon;
+			geocoder.addressSearch(address, function(result, status) {
+		    if (status === kakao.maps.services.Status.OK) {
+				console.log('result', result);
+				lat = result[0].y;
+				lon = result[0].x;
+		 		console.log('lat', lat);
+		 		console.log('fcPassword', $('#fcPassword').val());
+				$.ajax({
+					type : "post",
+					url : "fcinsert",	
+					data : {
+						fcId : $('#fcId').val(),
+						fcPassword : $('#fcPassword').val(),
+						fcName : $('#fcName').val(),
+						fcAddress : $('#address').val()+" "+$('#addressDetail').val(),
+						fcArea : $('#fcArea').val(),
+						fcPhone : $('#fcPhone').val(),
+						hoId : $('#hoId').val(),
+						fcClose : "N",
+						lat : lat,
+						lon :lon
+					},
+					success : function(data) {
+						if (data.success == 'success') {
+							alert('계정생성에 성공했습니다.');
+							fcInputClear();
+							location.reload();
+						}
+						if (data.success == 'fail') {
+							alert('계정생성에 실패했습니다.');
+							fcInputClear();
+						}
+					},
+					error : function() {
+						alert("서버와 접속에 실패했습니다.");
 						fcInputClear();
-						location.reload();
 					}
-					if (data.success == 'fail') {
-						alert('계정생성에 실패했습니다.');
-						fcInputClear();
-					}
-				},
-				error : function() {
-					alert("서버와 접속에 실패했습니다.");
+				})// ajax
+	
+	 		 }// if geocoder 성공
+				else{
+					alert("서버와 접속이 실패했습니다.");
 					fcInputClear();
 				}
-			})// ajax
-		}
+		}) //geocoder
+	       
+
+			
+		}// if check
 	})
 })//ready
 // ** ID 중복 확인하기

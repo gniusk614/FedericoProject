@@ -1156,7 +1156,7 @@ public class ClientController {
 		// 이벤트 게시판 디테일
 		@RequestMapping(value ="/csEventDetail")
 		public ModelAndView csEventDetail (ModelAndView mv, EventBoardVO vo) {					
-			vo = clientService.selectDetailEventBoard(vo);
+			vo = headOfficeService.selectDetailEventBoard(vo);
 			if(vo!=null) {
 				mv.addObject("eventDetail", vo);
 			}else {
