@@ -16,12 +16,12 @@
 ### Server
 * Java 1.8
 * Spring 5.2.4
-<br/>
+
 
 ### DataBase
 * oracle 12c
 * mybatis 1.2.4
-<br/>
+
 
 ### deployment
 * aws EC2 ubuntu
