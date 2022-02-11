@@ -18,7 +18,7 @@
 		<!-- 리눅스 환경에서 maven build 시 필요 encoding -->
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
-	
+	 
 	</properties>
 	<dependencies>
 		<!-- Spring -->
