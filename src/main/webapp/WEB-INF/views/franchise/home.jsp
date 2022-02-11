@@ -283,6 +283,9 @@ $(function(){
 						</div>
 					</div>
 				</div>
+			<!-- footer inlcud -->
+			<div><%@ include file="footer.jsp" %></div>
+			
 			</div>
 			<!-- 주문상세정보 모달 -->
 		
@@ -336,12 +339,11 @@ $(function(){
 			<!-- 고객관리 조회/수정/삭제 모달 -->
 		
 		
-		
-		
+			
 		</div> <!-- 본문 끝 -->
 		
-		<!-- footer inlcud -->
-		<div><%@ include file="footer.jsp" %></div>
+		
+		
 
 
 
