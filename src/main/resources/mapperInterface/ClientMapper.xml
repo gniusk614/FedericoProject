@@ -169,7 +169,7 @@
 	
 	<!-- searchEndEventBoardRow -->
 	<select id="searchEndEventBoardRows" resultType="int">
-		SELECT COUNT(*) FROM EVENTBOARD <![CDATA[ WHERE enddate < sysdate ]]> <include refid="eventSearch"></include>
+		SELECT COUNT(*) FROM EVENTBOARD <![CDATA[ WHERE enddate+1 < sysdate ]]> <include refid="eventSearch"></include>
 	</select>
 
 		<!-- searchEndEventBoard 서치,페이징 -->
