@@ -31,8 +31,8 @@ $(function(){
 	
 }) //ready
 
-// 주문 데이터삽입 용 -----------------------------------------------------
-function testpay(){
+// 테스트결제용 -----------------------------------------------------
+/*function testpay(){
 	var today =  new Date();
 	var hour = today.getHours();
 	var minute = today.getMinutes();
@@ -43,7 +43,7 @@ function testpay(){
 	var itemQty = $('#save').attr('data-totalQty');
     $('#iamForm').submit();
 	
-}
+}*/
 
 
 
