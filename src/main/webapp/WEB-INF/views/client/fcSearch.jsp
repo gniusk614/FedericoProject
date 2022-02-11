@@ -175,6 +175,10 @@ align-self: center;
 	
 	<script>	
 			function a1enter(){
+				if($('#a1').val().length<1){
+					alert('매장명을 입력하세요');
+					return false;
+				}
 				$.ajax ({
 					
 					url :'fcSearchLocation',
@@ -200,10 +204,7 @@ align-self: center;
 										fc.fcPhone=list[i].fcPhone;
 										
 										addrs.push(fc);
-										
 									}
-
-
 									// 주소-좌표 변환 객체를 생성합니다				
 									var geocoder = new kakao.maps.services.Geocoder();
 									// 지도의 중심좌표를 표시 위치에 따라 재설정 하기위한 bounds 생성	
@@ -307,16 +308,12 @@ align-self: center;
 									else { // 가맹지역이 없을 때								
 										
 									alert('해당 지역에 가맹점이 없습니다.');
-									
 								}			
-									
 							}// success
 										, error : function(){
 										alert("통신 오류입니다. 다시 시도하세요.")
 						}
-							
 					})//ajax
-					
 				}// function
 	</script>
  <!-- 매장명 지도 종료 -->

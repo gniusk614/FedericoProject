@@ -44,7 +44,11 @@ a {
     font-weight: normal;
     font-style: normal;
 }
-
+  .divpop {
+      position: absolute; z-index:999; top:50px; left:50px;
+      width:400px; height:612px; border:1px solid black;background-color:white;display:none;
+  }
+  .title_area {font-weight:bold;text-align:center;width:100%}
 
 </style>
 </head>
@@ -113,17 +117,108 @@ a {
 	<!-- Footer-->
 	<%@include file="footer.jsp"%>
 	
-	<!-- Bootstrap core JS-->
-<!-- 	<script>
-	var mql = window.matchMedia("screen and (max-width: 768px)");
+	<div id="divpop1" class="divpop">    
+          <div class="title_area" style="background-color: lightgray;">페데리코 테스트페이지 안내 팝업</div>
+           <div class="row px-2 py-3 mt-2" style="font-size: small;">
+           			<p>안녕하세요.</p>
+           			<p>
+           			페데리코피자 프랜차이즈 통합관리 솔루션 구현팀입니다.<br>
+           			현재 보고 계신 이 페이지는 상업적인 용도가 아닌 팀 프로젝트 페이지이며 
+           			페데리코피자 브랜드는 실존하지 않는 가상의 브랜드임을 알려드립니다.<br><br>
+           			그러므로 내부에서 진행되는 결제는 매일밤 12시에 자동 환불처리 되며<br>
+           			실제로 주문한 메뉴를 받아보실 수 없습니다.<br>
+           			또한 매장의 위치는 임의로 지정해놓은 허구의 위치이며 메뉴정보는<br> 
+           			피자브랜드 'SPONTINI'의 메뉴이미지를 활용했습니다.
+           			</p>
+           			<p>
+           			사이트의 구성은 크게 현재 보고계신 '소비자공간'과 하단에 있는 <br>'가맹점공간', '본사공간'이 있습니다.<br>
+           			각각 공간의 역할과 기능이 다르니 천천히 둘러보시길 바랍니다. 
+           			</p>
+           			</div>
+           			<div class="row justify-content-md-center">
+           			<div class="col-7 bg-light">
+           				<table style="font-size: small;">
+           				<tr align="center">
+						<th colspan="2">소비자공간</th>
+           				</tr>
+           				<tr><th>ID</th> <td>exclient1</td></tr>
+           				<tr><th>PW</th> <td>123123123!</td></tr>
+           				<tr align="center">
+						<th colspan="2">가맹점공간</th>
+           				</tr>
+           				<tr><th>ID</th> <td>미금1호</td></tr>
+           				<tr><th>PW</th> <td>12345!</td></tr>
+           				<tr align="center">
+						<th colspan="2">본사공간</th>
+           				</tr>
+           				<tr><td colspan="2">본사공간의 아이디는 개별적으로 허가되신 분들께만 알려드렸습니다. 양해바랍니다.</td></tr>
+           				
+           				</table>
+           			</div>
+           			
+           		</div>
+           <div class="button_area" style="background-color: lightgray;">
+           	<div class="row mt-5 px-3">
+           		<div class="col-10">
+               <input type='checkbox' name='chkbox' id='todaycloseyn' value='Y'><label for="todaycloseyn">&nbsp;오늘 하루 이 창을 열지 않음 </label>
+               </div>
+               <div class="col-2" align="right">
+               <a href='#' onclick="javascript:closeWin(1);"><B>[닫기]</B></a>
+               </div>   
+           </div>
+           </div>
+      </div>
+	
+	
 
-	if (mql.matches) {
-		$('#navbar-brand').html();
-		console.log("화면의 너비가 768px 보다 작습니다.");
-	} else {
-	    console.log("화면의 너비가 768px 보다 큽니다.");
-	}
-	</script> -->
+<script>
+    //쿠키설정    
+    function setCookie( name, value, expiredays ) {
+    var todayDate = new Date();
+    todayDate.setDate( todayDate.getDate() + expiredays );
+    document.cookie = name + '=' + escape( value ) + '; path=/; expires=' + todayDate.toGMTString() + ';'
+    }
+
+    //쿠키 불러오기
+    function getCookie(name) 
+    { 
+        var obj = name + "="; 
+        var x = 0; 
+        while ( x <= document.cookie.length ) 
+        { 
+            var y = (x+obj.length); 
+            if ( document.cookie.substring( x, y ) == obj ) 
+            { 
+                if ((endOfCookie=document.cookie.indexOf( ";", y )) == -1 ) 
+                    endOfCookie = document.cookie.length;
+                return unescape( document.cookie.substring( y, endOfCookie ) ); 
+            } 
+            x = document.cookie.indexOf( " ", x ) + 1; 
+            
+            if ( x == 0 ) break; 
+        } 
+        return ""; 
+    }
+
+    //닫기 버튼 클릭시
+    function closeWin(key)
+    {
+        if($("#todaycloseyn").prop("checked"))
+        {
+            setCookie('divpop'+key, 'Y' , 1 );
+        }
+        $("#divpop"+key+"").hide();
+    }
+  
+    $(function(){    
+        if(getCookie("divpop1") !="Y"){
+            $("#divpop1").show();
+        }
+    });
+</script>
+
+
+
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 	<!-- Core theme JS-->
