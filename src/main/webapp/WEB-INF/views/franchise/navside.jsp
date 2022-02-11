@@ -106,8 +106,6 @@
 
 			<!-- 사이드네비 하단 -->
 			<div class="sb-sidenav-footer">
-				<div class="small">Logged in as:</div>
-				Start Bootstrap
 			</div>
 			<!-- 사이드네비 하단 -->
 		</nav>
