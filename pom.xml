@@ -8,7 +8,7 @@
 	<name>Pederico</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
-
+ 
 	<!-- 1. Spring , Java Version 수정 -->
 	<properties>
 		<java-version>1.8</java-version>
