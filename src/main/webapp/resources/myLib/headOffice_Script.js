@@ -1490,8 +1490,6 @@ function eventUpload(){
 	var content = CKEDITOR.instances['content'].getData();
 	var startDate = $('#startDate').val(); // 이벤트 시작일
 	var endDate = $('#endDate').val(); // 이벤트 종료일
-	var today = new Date(); // 오늘 날짜	
-	console.log(endDate);
 	if(title.length<1){
 		alert('제목을 입력해주세요.');
 		return false;

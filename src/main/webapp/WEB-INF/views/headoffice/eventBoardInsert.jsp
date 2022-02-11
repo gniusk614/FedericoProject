@@ -19,10 +19,6 @@
 	crossorigin="anonymous"></script>
 <script src="/federico/resources/myLib/inCheck.js"></script>
 <script src="/federico/resources/ckeditor/ckeditor.js"></script>
-<script
-	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<script
-	src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
