@@ -745,12 +745,11 @@ public class ClientController {
 		
 		@RequestMapping(value = "/fcSearchLocation")
 		public ModelAndView fcSearchLocation (ModelAndView mv, FranchiseVO vo, HeadOfficeVO hvo, HttpServletRequest request, HttpSession session) {
-			
 			List<FranchiseVO> list = fcService.selectFcLocation(request.getParameter("fcAddress_keyword"));
 			
 			log.info("fcSearchLocation list =>"+list);
 			
-			if(list!= null) {				
+			if(list!= null && list.size() >0) {				
 				mv.addObject("list",list);
 				mv.addObject("success","success");
 			}else {

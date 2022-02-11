@@ -288,11 +288,12 @@ $(function() {
 	})
 	
 	// 도로명주소 -> 좌표변환 api
-	var geocoder = new kakao.maps.services.Geocoder();
+	
 	
 	// ** 계정 생성 확인버튼 클릭시
 	$('#fcSubmitBtn').click(function() {
 		if (fcincheck() == true) {
+			var geocoder = new kakao.maps.services.Geocoder();
 			var address = $('#address').val();
 			var lat;
 			var lon;
