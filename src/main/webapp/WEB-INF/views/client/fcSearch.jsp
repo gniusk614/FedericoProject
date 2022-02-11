@@ -31,20 +31,26 @@ height: 100px;
 padding-bottom:100px;
 }
 
-.pos_input{
+.pos_span{
 position :relative;
 border: 0.5px solid;
 align-content:center;
-background-color: #00001;
+background-color: #84E0E0;
 width: 100%;
 height: 80px;
 font-size: 30px;
 }
 
 #pos_btn {
-    position: relative;
-    left: 85%;
-    bottom: 65px;
+position: relative;
+left: 85%;
+top: -15px;    
+}
+
+#pos_h3 {
+position : relative;
+left: 3%;
+top: 33px;
 }
 
 
@@ -142,7 +148,7 @@ align-self: center;
 	
 	<div class="row justify-content-md-center" style="height: 50px;">
 		<div id="franchiselocation" class="col-sm-3 checked" align="center"
-			style="font-size: large; color: black; border-bottom: 2px solid black; cursor: pointer;"
+			style="font-size: large; color: black; border-bottom: 2px solid #DC3545; cursor: pointer;"
 			onclick="clickEffect('franchiselocation'); showdiv('franchiselocation');">지역명
 		</div>
 		<div id="franchiseName" class="col-sm-3 checked" align="center"
@@ -154,11 +160,11 @@ align-self: center;
 			onclick="clickEffect('clientCurrnetLocation'); showdiv('clientCurrnetLocation');">현위치
 		</div>
 	</div>
-	<!-- 매장명 시작-->	
+	<!-- 주소명 시작-->	
 	<div class="row" id="outer_2" style="display:none; margin-top:50px;">
 		<div class="col " style=" height: 100px; ">
 			<div class="search">		
-				<input type="text" placeholder="   주소를 입력해주세요." id="a1" 
+				<input type="text" placeholder="   					지역명을 입력해주세요." id="a1" 
 				style="border:0;  align-content:center; background-color: #F7F7F7;  width: 100%; height: 80px; font-size: 30px;" 
 				onkeyup="if(window.event.keyCode==13){a1enter()}"/>	
 				<img src="/federico/resources/Image/search_black_48dp.svg" style="position: relative; left: 90%; bottom: 65px; cursor: pointer;"
@@ -166,15 +172,24 @@ align-self: center;
 			</div>	
 		</div>		
 	</div>
-	<!-- 매장명 종료-->
+	<!-- 주소명 종료-->
 	
-	<!-- 매장명 지도 시작 -->
-	
-	
-	
-	
+	<!--  지도 시작 -->
 	<script>	
 			function a1enter(){
+				// 입력 안했을 시.
+				if($('#a1').val().length < 1 ){
+					alert("지역명 또는 주소를 입력해주세요");
+					return false;
+				}
+				else {
+			            if($('#a1').val() == " ") // 공백 체크
+			            {              
+			                alert("해당 항목에는 공백을 사용할 수 없습니다.");
+			                return false;
+			            }
+				} // else
+					
 				$.ajax ({
 					
 					url :'fcSearchLocation',
@@ -192,18 +207,16 @@ align-self: center;
 									var list = data.list;
 									var addrs = [];
 
-									for(var i = 0 ; i<list.length;i++){
-										var fc = {};
-
-										fc.fcAddress=list[i].fcAddress;
-										fc.fcId=list[i].fcId;
-										fc.fcPhone=list[i].fcPhone;
-										
-										addrs.push(fc);
-										
-									}
-
-
+										for(var i = 0 ; i<list.length;i++){
+											var fc = {};
+	
+											fc.fcAddress=list[i].fcAddress;
+											fc.fcId=list[i].fcId;
+											fc.fcPhone=list[i].fcPhone;
+											
+											addrs.push(fc);
+											
+											}
 									// 주소-좌표 변환 객체를 생성합니다				
 									var geocoder = new kakao.maps.services.Geocoder();
 									// 지도의 중심좌표를 표시 위치에 따라 재설정 하기위한 bounds 생성	
@@ -212,17 +225,15 @@ align-self: center;
 									var total = (addrs.length);
 									var counter = 0;
 
-										// Version02 -> 주소를 좌표로 변환하여 배열에 넣고 처리
+									// Version02 -> 주소를 좌표로 변환하여 배열에 넣고 처리
 
-										var yLat = new Array(); // y 좌표를 담을 배열
-										var xLng = new Array(); // x 좌표를 담을 배열
+									var yLat = new Array(); // y 좌표를 담을 배열
+									var xLng = new Array(); // x 좌표를 담을 배열
 
 										for(var i=0; i<total; i++) {
 											var address=addrs[i].fcAddress;
-											console.log("address =>" + address);
+											
 											geocoder.addressSearch(address, function(result, status) {
-												console.log("status =>" + status);
-												console.log("result =>" + result);
 												
 												if(status == 'ZERO_RESULT'){
 													alert(address+'의 주소가 올바르지 않습니다.');
@@ -235,7 +246,7 @@ align-self: center;
 													xLng[counter] = result[0].x;
 													console.log("counter=>"+counter+'i='+i+'result[0].y='+result[0].y+'result[0].x='+result[0].x );
 													counter++;
-													if (total===counter) {
+												if (total===counter) {
 														console.log("** geocoder.addressSearch END **");
 														//모든 주소의 좌표가 배열로 옮겨졌으면 지도에 marking 한다. 
 														markingMap();
@@ -244,8 +255,8 @@ align-self: center;
 											}); // geocoder.addressSearch	
 										} // for	
 										
-										
 // ========================================== 프랜차이즈 마킹 시작 !! =================================================
+	
 										function markingMap() {
 											$('#fcInfo_all').empty();
 											
@@ -287,31 +298,25 @@ align-self: center;
 											    
 												$('#fcInfo_all').append(
 														'<div class="col-6" style="margin-bottom: 40px;">'+
-														'<div class="card">'+
+														'<div class="card" style="border : 1px solid #DC3545; ">'+
 														  '<div class="card-body ">'+
-															   ' <h5 class="card-title" id="fcId">매장명 :'+ addrs[i].fcId+'</h5>'+
+															   ' <h5 class="card-title" id="fcId">주소명 :'+ addrs[i].fcId+' 점 </h5>'+
 														        '<h5 class="card-title"id="fcPhone">T :'+addrs[i].fcPhone+'</h5>'+
 															    '<p class="card-text"id="fcAddress">주소:'+ addrs[i].fcAddress+'</p>'+
-															   ' <button class="btn btn-danger" style="right: auto;"  onclick="fcDetail()">매장정보보기</button>'+
+// 															   ' <button class="btn btn-danger" style="right: auto;"  onclick="fcDetail()">매장정보보기</button>'+
 														  "</div></div></div>")
 // ========================================== 카드 종료 !! =========================================================													
 												} // for 4 end
 											map.setBounds(bounds);
 										} // function markingMap
-//					 				card 밑에 띄우기
 // ========================================== 프랜차이즈 마킹 종료 !! =================================================
-
 
 									} //if(data.success=='success')
 										
-									else { // 가맹지역이 없을 때								
-										
-									alert('해당 지역에 가맹점이 없습니다.');
-									
-								}			
-									
-							}// success
-										, error : function(){
+									else alert('검색하신 지역에 가맹점이 없습니다.');
+																		
+							},// success
+									 error : function(){
 										alert("통신 오류입니다. 다시 시도하세요.")
 						}
 							
@@ -319,13 +324,13 @@ align-self: center;
 					
 				}// function
 	</script>
- <!-- 매장명 지도 종료 -->
+ <!-- 주소명 지도 종료 -->
 
 	
 	<!-- 현위치 시작-->
 	<div class="row" id="outer_3" style="display:none; margin-top:50px;">
-		<div class="col position">
-			<input class="pos_input"  id="a2" type="text" readonly="readonly" placeholder="페데리코가 가장 가까운 곳에서 고객님을 찾아갑니다.">
+		<div class="col position" style="background-color: #E8F3F7;">
+		<h3 id="pos_h3">가까운 페데리코를 찾아드립니다.</h3>
 		<span class="btn btn-danger btn-lg" id="pos_btn" onclick="whereami()">현재위치</span>
 		</div>		
 	</div>
@@ -340,13 +345,11 @@ align-self: center;
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(pos){
 				
-//  				clat = 36.48018405476181;
-// 				clng = 127.2893820088641;
 				clat = pos.coords.latitude; // 위도 
 				clng = pos.coords.longitude;// 경도
 				
-				console.log("User latitude = " +clat);
-				console.log("User longitude = " +clng);
+				console.log("현위치 위도 = ",clat);
+				console.log("현위치 경도 = " +clng);
 				
 					mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 				   	   mapOption = {
@@ -378,7 +381,12 @@ align-self: center;
 				fcAllAddress();
 				
 			});
-		} else {alert("어딨는지 모르겠습니다.");}	
+			
+			function error(err) {
+				alert("위치를 찾지 못했습니다.");
+				}
+			
+		} else {alert("위치를 찾지 못했습니다.");}	
 		
 	}//whereami()
 
@@ -391,16 +399,13 @@ align-self: center;
 			type:'post',
 			
 			success : function(data) {
-				console.log("성공? ",data.list);
+				console.log("성공!! ",data.list);
 				if(data.list != null){
-					
 					
 					var list = data.list;					
 					var fcIdList = [];
 					var LatLonList = [];					
 					var fcId = {};
-					
-					console.log("반복문 전 - LatLonList.length : ",LatLonList.length);
 					
 					for(var i = 0; i < list.length ; i++){ // for 1
 						
@@ -416,7 +421,6 @@ align-self: center;
 						LatLonList.push(LatLon);
 						
 					}// for 1
-					console.log("반복문 후 - LatLonList.length : ",LatLonList.length);
 					
 					var counter = 0;
 					
@@ -427,7 +431,6 @@ align-self: center;
 							LatLonList[i].distance = distance;
 							
 					}//for 2
-					console.log("LatLonList.distance :",LatLonList.distance);
 					
 					const searchDistance = 5; // 찾을거리 설정.(km)
 					var fcMap=[];
@@ -440,8 +443,6 @@ align-self: center;
 							}
 // 						fcMap.push(LatLonList)
 					}//for 3		
-						
-					console.log("LatLonList.length :",LatLonList.length);
 					
 							let newLatLonList = LatLonList.sort(function (a, b) {
 									  if (a.distance > b.distance) {
@@ -454,7 +455,6 @@ align-self: center;
 									  return 0;
 									});
 							
-					console.log('정렬 후 : newLatLonList :',newLatLonList.length);
 							//지도 위치이동
 							//있다면 검색 시작.
 							
@@ -462,7 +462,7 @@ align-self: center;
 // ========================================== 프랜차이즈 마킹 시작 !! =================================================
 	
 						for (var i = 0 ; i < newLatLonList.length;i++ ){ // for 4 start
-						
+								console.log("가장가까운 거리의 지점 : ",newLatLonList[i].fcId);
 							// 마커를 생성합니다
 						    var marker = new kakao.maps.Marker({
 						        map: map, // 마커를 표시할 지도
@@ -489,16 +489,15 @@ align-self: center;
 						    })(marker, infowindow);
  // ========================================== 프랜차이즈 마킹 종료 !! =================================================				
  // ========================================== 현위치 카드 시작 !! =================================================			
-						    console.log("현위치 카드 시작 확인")
 						    
 							$('#fcInfo_all').append(
 									'<div class="col-6" style="margin-bottom: 40px;">'+
-									'<div class="card">'+
+									'<div class="card" style="border : 1px solid #DC3545; ">'+
 									  '<div class="card-body ">'+
-										   ' <h5 class="card-title" id="fcId">매장명 :'+ newLatLonList[i].fcId+'</h5>'+
+										   ' <h5 class="card-title" id="fcId">주소명 :'+ newLatLonList[i].fcId+' 점 </h5>'+
 									        '<h5 class="card-title"id="fcPhone">T :'+newLatLonList[i].fcPhone+'</h5>'+
 										    '<p class="card-text"id="fcAddress">주소:'+ newLatLonList[i].fcAddress+'</p>'+
-										   ' <button class="btn btn-danger" style="right: auto;"  onclick="fcDetail()">매장정보보기</button>'+
+// 										   ' <button class="btn btn-danger" style="right: auto;"  onclick="fcDetail()">매장정보보기</button>'+
 									  "</div></div></div>"
  // ========================================== 현위치 카드 종료 !! =================================================	
 							);
@@ -548,7 +547,7 @@ align-self: center;
 			//console.log("dist * 180/Math.PI =", dist);
 			
 			dist = dist * 60 * 1.1515;
-			console.log("*** final dist = dist * 60 * 1.1515 =", dist);
+// 			console.log("*** final dist = dist * 60 * 1.1515 =", dist);
 			
 			if (unit=="K") { dist = dist * 1.609344 }
 			if (unit=="N") { dist = dist * 0.8684 }
@@ -600,7 +599,7 @@ align-self: center;
 	<div class="row" id="outer_1_map" style="display:block; margin-top:40px;" >
 		<div class="col" style="height: 600px; margin-bottom:50px;overflow: hidden;">
 		<!-- 지도본체시작 -->
-			<div id="map" style="width:100%; height:100%;"></div>	
+			<div id="map" style="width:100%; height:100%; border: 1px solid #DC3545;"></div>	
 		<!-- 지도본체종료 -->
 		</div>
 		<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=63fe094a0bad5ef07be77c4f00959da2&libraries=services"></script>
@@ -832,24 +831,25 @@ function depth2_change(e){
 		</script>	
 	</div>
 	<!-- 지도표시종료 -->
-<!-- 가맹점 조회 카드 시작 -->
+<!-- 카드조회 시작 -->
 		<div class="container fcInfoClass" id="fcInfo">
 			<div class="row align-items-start" id="fcInfo_all">
 				<c:forEach var="vo" items="${list}" varStatus="vs">
 						<div class="col-6" style="margin-bottom: 40px;">
-							<div class="card">
+							<div class="card"
+							style="border : 1px solid #DC3545; ">
 							  <div class="card-body ">
-								    <h5 class="card-title" id="fcId">매장명 : ${vo.fcId}</h5>
+								    <h5 class="card-title" id="fcId">매장명 : ${vo.fcId} 점</h5>
 							        <h5 class="card-title"id="fcPhone">T :${vo.fcPhone}</h5>
 								    <p class="card-text"id="fcAddress">주소: ${vo.fcAddress}</p>
-								    <button class='btn btn-danger' style="right: auto;"  onclick="fcDetail()">매장정보보기</button>
+<!-- 								    <button class='btn btn-danger' style="right: auto;"  onclick="alert('♡사랑합니다. 고객님♡ \n해당 페이지는 현재 준비중입니다.')">매장정보보기</button> -->
 							  </div>
 							</div>
 						</div>
 				 </c:forEach>
 			 </div>
 		 </div>	
-<!-- 가맹점 조회 카드 종료 -->
+<!-- 카드조회 종료 -->
 	<div class="row" style="height: 100px"></div>
 	</section>
 	<script type="text/javascript">
@@ -885,8 +885,8 @@ function clickEffect(id){
 	});
 
 	$('#'+id).css({
-		"color" : 'black',
-		"border-bottom" : "2px solid black"
+		"color" : '#DC3545',
+		"border-bottom" : "2px solid #DC3545"
 	});
 	
 		

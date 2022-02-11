@@ -759,30 +759,7 @@ public class ClientController {
 				mv.setViewName("jsonView");						 
 			return mv;
 			}// fcSearchLocation
-		/*
-		@RequestMapping(value = "/fcSearchCard")
-		public ModelAndView fcSearchCard (ModelAndView mv, FranchiseVO vo, HttpServletRequest request, HttpSession session) {
-			List<FranchiseVO> list;
-			
-			Map<String, Object> params = new HashMap<String, Object>();	
-			params.put("Depth1",request.getParameter("Depth1")); // ajax에서 요청 날리면 얘가 받는다.
-			params.put("Depth2",request.getParameter("Depth2"));			
-			
-			if(params != null) {
-				list = fcService.selectFcAddress(params);
-			}else {		
-				list = fcService.selectFcLocation(request.getParameter("fcAddress_keyword"));
-			}		
-			
-			if(list != null) {
-				mv.addObject("list",list);
-			}else {
-				mv.addObject("success","fail");
-			}			
-				mv.setViewName("/client/fcSearch");						 
-			return mv;
-			}// fcSearchLocation
-		*/
+	
 		
 		@RequestMapping(value = "/fcAllAddress")
 		public ModelAndView fcAllAddress (ModelAndView mv, FranchiseVO vo) {
