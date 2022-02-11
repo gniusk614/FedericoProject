@@ -767,8 +767,12 @@ function showIdPwDiv(id){
 }
 
 function showinfoDiv(id){
-	$('.myinfo').css('display','none');
-	$('#'+id).css('display','block');
+		$('#myOrderList').load('clientMyInfo #myOrderList')
+		$('.myinfo').css('display','none');
+		$('#'+id).css('display','block');
+	
+	
+	
 }
 
 
@@ -1429,7 +1433,7 @@ function orderDetail(num){
 		type: "Get",
 		url: "orderDetail?orderNumber="+num,
 		success:function(resultPage){
-			$('#content').html(resultPage);
+			$('#myOrderList').html(resultPage);
 		},error: function(){
 			alert('서버장애');
 		}
