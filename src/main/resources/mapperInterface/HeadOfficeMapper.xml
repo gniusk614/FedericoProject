@@ -433,7 +433,7 @@
 	 <!-- 이벤트 게시판 글 등록 -->
 	<insert id="eventInsert">
 	INSERT INTO EVENTBOARD(eventSeq, title, hoId, content, startDate, endDate) VALUES((select nvl(max(eventSeq),0)+1 from EVENTBOARD n),
-		#{title}, #{hoId}, #{content}, #{startDate}, #{endDate})
+		#{title}, #{hoId}, #{content}, to_Date(#{startDate},'yyyy/mm/dd'), to_Date((#{endDate} || ' 23:59:59'), 'yyyy/mm/dd hh24:mi:ss'))
 	</insert>
 	
 	

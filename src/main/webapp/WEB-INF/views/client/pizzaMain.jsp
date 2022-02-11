@@ -46,10 +46,10 @@ a {
 }
   .divpop {
       position: absolute; z-index:999; top:50px; left:50px;
-      width:400px; height:612px; border:1px solid black;background-color:white;display:none;
+      width:400px; min-height:612px; border:1px solid black;background-color:white;display:none;
   }
   .title_area {font-weight:bold;text-align:center;width:100%}
-
+  .button_area {position:absolute;bottom:0;} 
 </style>
 </head>
 <body class="bg-danger">
@@ -135,8 +135,8 @@ a {
            			각각 공간의 역할과 기능이 다르니 천천히 둘러보시길 바랍니다. 
            			</p>
            			</div>
-           			<div class="row justify-content-md-center">
-           			<div class="col-7 bg-light">
+           			<div align="center">
+           			<div style="background-color: 	#F5F5F5; width: 50%;">
            				<table style="font-size: small;">
            				<tr align="center">
 						<th colspan="2">소비자공간</th>
@@ -152,20 +152,14 @@ a {
 						<th colspan="2">본사공간</th>
            				</tr>
            				<tr><td colspan="2">본사공간의 아이디는 개별적으로 허가되신 분들께만 알려드렸습니다. 양해바랍니다.</td></tr>
-           				
            				</table>
            			</div>
-           			
-           		</div>
-           <div class="button_area" style="background-color: lightgray;">
-           	<div class="row mt-5 px-3">
-           		<div class="col-10">
-               <input type='checkbox' name='chkbox' id='todaycloseyn' value='Y'><label for="todaycloseyn">&nbsp;오늘 하루 이 창을 열지 않음 </label>
-               </div>
-               <div class="col-2" align="right">
-               <a href='#' onclick="javascript:closeWin(1);"><B>[닫기]</B></a>
-               </div>   
-           </div>
+           			</div>
+           			<br><br>
+           <div class="button_area" style="width:100%; background-color: lightgray;">
+               <input type='checkbox' name='chkbox' id='todaycloseyn' value='Y'>
+               <label for="todaycloseyn">&nbsp;오늘 하루 이 창을 열지 않음 </label>
+               <div style="float: right;"><a href='#' onclick="javascript:closeWin(1);"><B>[닫기]</B></a></div>
            </div>
       </div>
 	

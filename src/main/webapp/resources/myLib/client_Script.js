@@ -31,8 +31,8 @@ $(function(){
 	
 }) //ready
 
-// 주문 데이터삽입 용 -----------------------------------------------------
-function testpay(){
+// 테스트결제용 -----------------------------------------------------
+/*function testpay(){
 	var today =  new Date();
 	var hour = today.getHours();
 	var minute = today.getMinutes();
@@ -43,7 +43,7 @@ function testpay(){
 	var itemQty = $('#save').attr('data-totalQty');
     $('#iamForm').submit();
 	
-}
+}*/
 
 
 
@@ -767,11 +767,10 @@ function showIdPwDiv(id){
 }
 
 function showinfoDiv(id){
-	$('.myinfo').css('display','none');
-	$('#'+id).css('display','block');
+		$('#myOrderList').load('clientMyInfo #myOrderList')
+		$('.myinfo').css('display','none');
+		$('#'+id).css('display','block');
 }
-
-
 
 
 
@@ -1429,7 +1428,7 @@ function orderDetail(num){
 		type: "Get",
 		url: "orderDetail?orderNumber="+num,
 		success:function(resultPage){
-			$('#content').html(resultPage);
+			$('#myOrderList').html(resultPage);
 		},error: function(){
 			alert('서버장애');
 		}
