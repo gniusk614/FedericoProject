@@ -60,7 +60,7 @@ $(function() {
 											$('#fcAddress').html($('#addressUp').val());
 											$('#fcPhone').html($('#phoneUp').val());
 											$('#hoid').html($('#hoidUp').val());
-											click_check = 0;
+											click_fcCheck = 0;
 										}
 										if (data.success == 'fail') {
 											alert('정보수정에 실패했습니다.');
