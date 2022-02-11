@@ -1446,7 +1446,6 @@ public class HeadOfficeController {
 		System.out.println(vo.getHoId());
 		vo.setStartDate(vo.getStartDate().replaceAll("/", ""));
 		vo.setEndDate(vo.getEndDate().replaceAll("/", ""));		
-		log.info("start date =>    "+vo.getStartDate());
 		if(service.eventInsert(vo)>0) {
 			mv.addObject("success", "성공");
 		}else {

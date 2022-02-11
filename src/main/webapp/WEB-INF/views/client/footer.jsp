@@ -12,52 +12,50 @@
 <footer class="bg-dark" style="height: 168px; position: relative; transform: translateY(-100%);">
 		<div class="container-fluid">
 			<div class="row justify-content-md-center py-1" style="border-top: 1px solid gray; border-bottom: 1px solid gray; height: 60px; font-size: small;">
-				<div class="col-sm-1 py-3" align="center" style="color: gray; width: 120px; cursor: pointer;" onclick="JavaScript:$('#agreefModal').modal('show')">
+				<div class="col-sm-1 pt-3 px-0" align="center" style="color: gray; width: 120px; cursor: pointer;" onclick="JavaScript:$('#agreefModal').modal('show')">
 					개인정보처리방침
 				</div>
-				<div class="col-sm-1 py-3" align="center" style="color: gray; width: 120px; cursor: pointer;" onclick="JavaScript:$('#serviceAgreefModal').modal('show')">
+				<div class="col-sm-1 pt-3 px-0" align="center" style="color: gray; width: 120px; cursor: pointer;" onclick="JavaScript:$('#serviceAgreefModal').modal('show')">
 					제공서비스약관
 				</div>
-				<div class="col-sm-1 py-3" align="center" style="color: gray; width: 130px; cursor: pointer;" onclick="JavaScript:$('#emailAgreefModal').modal('show')">
+				<div class="col-sm-1 pt-3 px-0" align="center" style="color: gray; width: 130px; cursor: pointer;" onclick="JavaScript:$('#emailAgreefModal').modal('show')">
 					이메일 무단수집거부
 				</div>
-				<div class="col-sm-1 py-3" align="center" style="color: gray; border-right: 1px solid gray; cursor:pointer; width: 120px;" onclick="JavaScript:location.href='cscenterf'">
+				<div class="col-sm-1 pt-3 px-0" align="center" style="color: gray; border-right: 1px solid gray; cursor:pointer; width: 120px;" onclick="JavaScript:location.href='cscenterf'">
 					고객센터
 				</div>
-				<div class="col-sm-1 py-1" align="center" style="color: gray; border-right: 1px solid gray; width: 250px;">
+				<div class="col-sm-1 pt-1 px-0" align="center" style="color: gray; border-right: 1px solid gray; width: 250px;">
 					<i class="bi bi-telephone-fill"></i>&nbsp;주문전화 0000-0000<br>
 					온라인주문 문의/취소 070-0000-0000
 				</div>
-				<div class="col-sm-1 py-3" align="center"  style="color: gray; border-right: 1px solid gray; width: 180px;">
+				<div class="col-sm-1 pt-3 px-0" align="center"  style="color: gray; border-right: 1px solid gray; width: 180px;">
 					<i class="bi bi-telephone-fill"></i>&nbsp;가맹문의 0000-0000
 				</div>
 				<c:if test="${not empty fcId}">
-				<div class="col-sm-1 py-3" align="center" onclick="javaScript:location.href='/federico/franchise/login'"
-				style="color: gray; border-right: 1px solid gray; width: 100px; cursor: pointer;">
-					<i class="bi bi-shop"></i>&nbsp;가맹점공간
-				</div>
+					<div class="col-sm-1 pt-3 px-0" align="center" onclick="javaScript:location.href='/federico/franchise/login'"
+					style="color: gray; border-right: 1px solid gray; width: 100px; cursor: pointer;">
+						<i class="bi bi-shop"></i>&nbsp;가맹점공간
+					</div>
 				</c:if>
 				<c:if test="${empty fcId}">
-				<div class="col-sm-1 py-3" align="center" onclick="javaScript:location.href='/federico/franchise/loginf'"
-				style="color: gray; border-right: 1px solid gray; width: 100px; cursor: pointer;">
-					<i class="bi bi-shop"></i>&nbsp;가맹점공간
-				</div>
+					<div class="col-sm-1 pt-3 px-0" align="center" onclick="javaScript:location.href='/federico/franchise/loginf'"
+					style="color: gray; border-right: 1px solid gray; width: 100px; cursor: pointer;">
+						<i class="bi bi-shop"></i>&nbsp;가맹점공간
+					</div>
 				</c:if>
 				<c:if test="${not empty loginID}">
-				<div class="col-sm-1 py-3" align="center" onclick="javaScript:location.href='/federico/headoffice/login'"
-				style="color: gray; width: 100px; cursor: pointer;">
-					<i class="bi bi-building"></i>&nbsp;본사공간
-				</div>
+					<div class="col-sm-1 pt-3 px-0" align="center" onclick="javaScript:location.href='/federico/headoffice/login'"
+					style="color: gray; width: 100px; cursor: pointer;">
+						<i class="bi bi-building"></i>&nbsp;본사공간
+					</div>
 				</c:if>
 				<c:if test="${empty loginID}">
-				<div class="col-sm-1 py-3" align="center" onclick="javaScript:location.href='/federico/headoffice/loginf'"
-				style="color: gray; width: 100px; cursor: pointer;">
-					<i class="bi bi-building"></i>&nbsp;본사공간
-				</div>
+					<div class="col-sm-1 pt-3 px-0" align="center" onclick="javaScript:location.href='/federico/headoffice/loginf'"
+					style="color: gray; width: 100px; cursor: pointer;">
+						<i class="bi bi-building"></i>&nbsp;본사공간
+					</div>
 				</c:if>
-			
 			</div>
-
 		</div>
 		<div>
 			<p class="m-0 text-center mt-3" style="color: gray; font-size: small;" align="left">

@@ -20,7 +20,7 @@
 
 ### DataBase
 * oracle 12c
-* mybatis 1.2.4
+* mybatis 3.3.1
 
 
 ### deployment

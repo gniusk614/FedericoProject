@@ -22,17 +22,14 @@ a:visited {
 	text-decoration: none;
 	color: black;
 }
-
 a:hover {
 	text-decoration: none;
 	color: black;
 }
-
 a {
 	color: black;
 	text-decoration: none;
 }
-
 @media (min-width: 992px) {
   #carouselExampleIndicators {
    height: 500px;
@@ -46,7 +43,7 @@ a {
 }
   .divpop {
       position: absolute; z-index:999; top:50px; left:50px;
-      width:400px; height:612px; border:1px solid black;background-color:white;display:none;
+      width:400px; min-height:612px; border:1px solid black;background-color:white;display:none;
   }
   .title_area {font-weight:bold;text-align:center;width:100%}
   .button_area {position:absolute;bottom:0;} 
@@ -152,11 +149,10 @@ a {
 						<th colspan="2">본사공간</th>
            				</tr>
            				<tr><td colspan="2">본사공간의 아이디는 개별적으로 허가되신 분들께만 알려드렸습니다. 양해바랍니다.</td></tr>
-           				
            				</table>
            			</div>
            			</div>
-           			
+           			<br><br>
            <div class="button_area" style="width:100%; background-color: lightgray;">
                <input type='checkbox' name='chkbox' id='todaycloseyn' value='Y'>
                <label for="todaycloseyn">&nbsp;오늘 하루 이 창을 열지 않음 </label>
@@ -173,7 +169,6 @@ a {
     todayDate.setDate( todayDate.getDate() + expiredays );
     document.cookie = name + '=' + escape( value ) + '; path=/; expires=' + todayDate.toGMTString() + ';'
     }
-
     //쿠키 불러오기
     function getCookie(name) 
     { 
@@ -194,7 +189,6 @@ a {
         } 
         return ""; 
     }
-
     //닫기 버튼 클릭시
     function closeWin(key)
     {
@@ -220,4 +214,3 @@ a {
 	<script src="/federico/resources/js/scripts.js"></script>
 </body>
 </html>
-

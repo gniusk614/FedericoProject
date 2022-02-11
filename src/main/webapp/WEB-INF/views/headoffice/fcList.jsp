@@ -322,11 +322,11 @@ a {
 					<div class="modal-footer">
 						<div class="container-fluid">
 							<div class="row">
-								<div class="col-sm-3">
+								<div class="col-sm-4">
 									<button type="button" id="fcCloseBtn"
 										class="btn btn-danger pull-left">폐점처리</button>
 								</div>
-								<div class="col-sm-3"></div>
+								<div class="col-sm-2"></div>
 								<div class="col-sm-6" align="right">
 									<input class="btn btn-primary" type="button" id="fcinfoUp"
 										value="정보수정">
