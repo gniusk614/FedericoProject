@@ -33,7 +33,7 @@
 	<div>
 	</div>
 	<!-- Section--> 
-	<section class="container" style="height: auto; min-height: 100%; padding-bottom: 168px;">
+	<section class="container" style=" min-height: 900px; padding-bottom: 168px;">
 	<!-- 본문 시작 -->
 		<div class="container" style="width: 940px;">
 			<br><div class="text-center mt-5"><h1 class="display-6">주문이 완료되었습니다 : )</h1></div>

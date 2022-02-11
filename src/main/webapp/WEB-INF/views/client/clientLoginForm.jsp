@@ -48,7 +48,7 @@ table, tr, td, th {
 	<%@include file="nav.jsp"%>
 	<!-- 본문 시작 -->
 	<section class="container py-5"
-		style="height: auto; min-height: 100%; padding-bottom: 168px;">
+		style="height: auto; min-height: 1000px; padding-bottom: 168px;">
 		<div class="container-fluid">
 			<div class="row mb-5">
 				<div class="col-md-3"></div>
@@ -290,7 +290,7 @@ table, tr, td, th {
 													style="color: crimson;"></i> 
 													<i class="bi bi-check-circle-fill danger checkbox_yes"
 													style="color: crimson; display: none;"></i> <span
-													class="align-middle" style="font-size: medium;">개인정보
+													class="align-middle" style="font-size: small;">개인정보
 													수집/이용동의(필수)</span>
 											</div>
 											<div class="col-4" align="right">

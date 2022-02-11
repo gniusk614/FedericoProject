@@ -49,7 +49,7 @@ table, tr, td, th {
 	<%@include file="nav.jsp"%>
 	<!-- 본문 시작 -->
 	<section class="container py-5"
-		style="height: auto; min-height: 100%; padding-bottom: 168px;">
+		style=" min-height: 1100px; padding-bottom: 168px;">
 		<div class="container-fluid">
 			<div class="row mb-5">
 				<div class="col-md-3"></div>
@@ -153,10 +153,10 @@ table, tr, td, th {
 			</div>
 				</div>
 	</section>
-<%-- 	<!-- footer inlcud -->
+	<!-- footer inlcud -->
 	<%@ include file="footer.jsp"%>
 
- --%>
+
 
 
 	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>

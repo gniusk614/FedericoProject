@@ -45,7 +45,7 @@
 	<%@include file="nav.jsp"%>
 	<!-- 본문 시작 -->
 	<section class="container py-5"
-		style="height: auto; min-height: 100%; padding-bottom: 168px;">
+		style=" min-height: 1000px; padding-bottom: 168px;">
 		<div class="container-fluid">
 			<div class="row justify-content-md-center mb-2">
 				<div class="col-md-6" align="center">
