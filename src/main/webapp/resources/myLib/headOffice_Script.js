@@ -1406,14 +1406,6 @@ function fcOrderFlagUpdate(flag) {
 			},
 			success:function(data) {
 				
-				$('#upmenuIndex').val(data.menuvo.menuIndex);
-				$('#upmenuName').val(data.menuvo.menuName);				
-				$('#upmenuIntro').val(data.menuvo.menuIntro);
-				$('#upmenuPrice').val(data.menuvo.menuPrice);
-				$('#upbeforemenuImage').attr("src",data.menuvo.menuImage);
-				$('#menuImage').val(data.menuvo.menuImage);
-		
-			
 				// when 절로 update 할 것 
 				if(data.menuvo.menuFlag == 'pizza'){
 					$('#upmenuFlag option:eq(0)').prop('selected',true);
@@ -1472,6 +1464,36 @@ function fcOrderFlagUpdate(flag) {
 			})//ajax
 		}//confirm
 	}//.click		
+
+function preView(menuIndex){
+	$.ajax({
+			type:'get',
+			url:'menuDetail?menuIndex='+menuIndex,
+			data:{
+				menuIndex : menuIndex,
+			},
+			success:function(data) {
+				console.log("전송 성공");	 
+								
+				$('#menuPreView').modal('show');
+								
+			},error:function(){
+				console.log("전송 실패");
+				alert("전송에 실패하였습니다.");
+			}
+			
+		})//ajax
+	
+}
+
+
+
+
+
+
+
+
+
 
 // ==========================< 이벤트 게시판 글 등록/수정/삭제 >=================================
 $(function(){

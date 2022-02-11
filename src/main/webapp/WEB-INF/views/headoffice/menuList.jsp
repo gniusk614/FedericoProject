@@ -24,10 +24,6 @@
 
 .menu-card { height: 240px; width: 550px; display: inline-block; margin: 20px; z-index: 500; position: relative;} 
 
-.menu-hidden{ 
-			height: 100%; width: 100%; display: none; background-color: rgba(105, 105, 105, 0.5); 
-			position: absolute; left: 0; top: 0; z-index: 300;
-				}
 .menu-button{ margin: auto; display: none; position: absolute; right:20px; top:190px; z-index: 100;}
 
 input::-webkit-outer-spin-button,
@@ -216,7 +212,7 @@ $(function() {
 											<td>  
 											  <div class="d-grid gap-2 col-md-6">
 												<button type="button" class="btn btn-primary btn-sm" onclick="menuUpdateForm(${vo.menuIndex})">수정</button>
-												<button type="button" class="btn btn-outline-secondary btn-sm" onclick="">미리보기</button>
+												<button type="button" class="btn btn-outline-secondary btn-sm" onclick="preView(${vo.menuIndex})">미리보기</button>
 												<!-- 
 												<button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#menuPreviewModal" onclick="menuPreview(${vo.menuIndex})">
 												미리보기</button>
@@ -344,73 +340,73 @@ $(function() {
         <h5 class="modal-title" id="menuUpdateModalLable">메뉴 수정</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-		<!-- 입력, inputform -->
+	      <div class="modal-body">
+			<!-- 입력, inputform -->
+			
+			<!-- menuIndex -->
+			<input type="hidden" id="upmenuIndex" name="menuIndex"></input>
 		
-		<!-- menuIndex -->
-		<input type="hidden" id="upmenuIndex" name="menuIndex"></input>
-	
-		<div class="container" id="modalcontrol">
-		
-			<!-- menuFlag -->
-				<div class="input-group mb-3">
-				  <label class="input-group-text" for="inputGroupSelect01">분류</label>
-				  <select class="form-select menuselect" id="upmenuFlag" name="menuFlag">
-				    <option value="pizza">피자</option>
-				    <option value="sets" >세트메뉴</option>
-				    <option value="side" >사이드</option>
-				  </select>
-        		</div> 
-        			
-		 
-<!-- 				메뉴명		 -->
+			<div class="container" id="modalcontrol">
+			
+				<!-- menuFlag -->
 					<div class="input-group mb-3">
-					  <span class="input-group-text" id="basic-addon1">메뉴명</span>
-					  <input type="text" class="form-control "  id="upmenuName" name="menuName" value="${data.menuvo.menuName}">
-					</div>
-<!-- 				메뉴소개		 -->
-					<div class="input-group mb-3">
-					  <span class="input-group-text" id="basic-addon1">메뉴<br>소개</span>
-					  <textarea title="메뉴소개" class="form-control "  id="upmenuIntro" name="menuIntro" value="${data.menuvo.menuIntro}"></textarea>
-					</div>
-<!-- 				가격 -->
-					<div class="input-group mb-3">
-					  <span class="input-group-text" id="basic-addon1">가격</span>
-					  <input type="text" class="form-control "  id="upmenuPrice" name="menuPrice" value="${data.menuvo.menuPrice}">
-					</div>		
-<!--     			이미지수정 -->
-				 	<div class="container">
-						<div class="row" >
-							<div class="col">
-				    			<h5 class="card-title" align="center">기존이미지</h5>
-				    			<img class="card-img" id="upbeforemenuImage" width="120" height="200" >
-				   				</div>
-				   			
-				    		<div class="col">	 	 	
-				    			<h5 class="card-title" align="center">수정이미지</h5>
-				    			<div class="input-group mb-3" >
-				    			<input type="hidden" id="menuImage" name="menuImage">
-								<input type="file" class="form-control" id="menuUploadfilef" name="menuUploadfilef">
-								  <span id="m_menuinput"></span><br>
-								</div>
-								<script type="text/javascript">
-								$('#menuUploadfilef').change(function(){
-									if(this.files && this.files[0]) {
-										var reader = new FileReader;
-								 			reader.onload = function(e) {
-							 				$(".card-title").attr("src", e.target.result)
-							 					.width(100).height(100); 
-							 				} // onload_function
-							 				reader.readAsDataURL(this.files[0]);
-							 		} // if
-								}); // change	
-								</script>
-							</div>
+					  <label class="input-group-text" for="inputGroupSelect01">분류</label>
+					  <select class="form-select menuselect" id="upmenuFlag" name="menuFlag">
+					    <option value="pizza">피자</option>
+					    <option value="sets" >세트메뉴</option>
+					    <option value="side" >사이드</option>
+					  </select>
+	        		</div> 
+	        			
+			 
+	<!-- 				메뉴명		 -->
+						<div class="input-group mb-3">
+						  <span class="input-group-text" id="basic-addon1">메뉴명</span>
+						  <input type="text" class="form-control "  id="upmenuName" name="menuName" value="${data.menuvo.menuName}">
 						</div>
-					</div>			
-				</div>
-<!-- 		option : pizza -->
-    </div>
+	<!-- 				메뉴소개		 -->
+						<div class="input-group mb-3">
+						  <span class="input-group-text" id="basic-addon1">메뉴<br>소개</span>
+						  <textarea title="메뉴소개" class="form-control "  id="upmenuIntro" name="menuIntro" value="${data.menuvo.menuIntro}"></textarea>
+						</div>
+	<!-- 				가격 -->
+						<div class="input-group mb-3">
+						  <span class="input-group-text" id="basic-addon1">가격</span>
+						  <input type="text" class="form-control "  id="upmenuPrice" name="menuPrice" value="${data.menuvo.menuPrice}">
+						</div>		
+	<!--     			이미지수정 -->
+					 	<div class="container">
+							<div class="row" >
+								<div class="col">
+					    			<h5 class="card-title" align="center">기존이미지</h5>
+					    			<img class="card-img" id="upbeforemenuImage" width="120" height="200" >
+					   				</div>
+					   			
+					    		<div class="col">	 	 	
+					    			<h5 class="card-title" align="center">수정이미지</h5>
+					    			<div class="input-group mb-3" >
+					    			<input type="hidden" id="menuImage" name="menuImage">
+									<input type="file" class="form-control" id="menuUploadfilef" name="menuUploadfilef">
+									  <span id="m_menuinput"></span><br>
+									</div>
+									<script type="text/javascript">
+									$('#menuUploadfilef').change(function(){
+										if(this.files && this.files[0]) {
+											var reader = new FileReader;
+									 			reader.onload = function(e) {
+								 				$(".card-title").attr("src", e.target.result)
+								 					.width(100).height(100); 
+								 				} // onload_function
+								 				reader.readAsDataURL(this.files[0]);
+								 		} // if
+									}); // change	
+									</script>
+								</div>
+							</div>
+						</div>			
+					</div>
+	<!-- 		option : pizza -->
+	    	</div>
 		<div class="modal-footer">
         <button type="submit" class="btn btn-primary">수정</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -424,27 +420,11 @@ $(function() {
 <!-- 메뉴 미리보기 modal START-->
 <div class="container">
 	<!-- 메뉴조회 카드 시작 -->
-		<div class="card menu-card" id="card${vs.index}"
-			onmouseover="btnShow(${vs.index})"
-			onmouseleave="btnHide(${vs.index})">
-			<div class="row no-gutters">
-				<!-- 이미지 들어가는 부분 -->
-				<div class="col-5">
-					<img src="${data.menuvo.menuImage}" height="240px" />
-				</div>
-				<!-- 이미지 들어가는 부분 -->
-				<!-- 내용 들어가는 부분 -->
-				<div class="col-7">
-					<div class="card-body py-3 px-4">
-						<div class="fw-bold fs-4" style="text-align: left;">${data.menuvo.menuName}</div>
-						<p class="card-text menuIntro mt-1" style="color:gray; height: 100px;">${data.menuvo.menuIntro}</p>
-						<span class="mt-4 fw-bold fs-4"><fmt:formatNumber value="${data.menuvo.menuPrice}"/></span>
-					</div>
-				</div>
-					<!-- 내용 들어가는 부분 -->
-			</div>
-			
+	<div class="modal-dialog modal-lg" id="menuPreView">
+		<div class = "menu-card">
+		
 		</div>
+	</div>
 </div>
 <!-- 메뉴 미리보기 modal END-->
 

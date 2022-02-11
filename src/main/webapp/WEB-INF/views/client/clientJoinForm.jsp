@@ -11,6 +11,8 @@
 <meta name="description" content="" />
 <meta name="author" content="" />
 <title>페데리꼬 피자</title>
+<link rel="icon" type="image/x-icon"
+	href="/federico/resources/Image/LOGO.png" />
 <link href="/federico/resources/css/styles.css" rel="stylesheet" />
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script

@@ -14,7 +14,6 @@
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <link rel="icon" type="image/x-icon"
 	href="/federico/resources/Image/LOGO.png" />
-	
 <script src="/federico/resources/js/scripts.js"></script>
 <script src="/federico/resources/myLib/client_Script.js"></script>	
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
@@ -26,25 +25,42 @@
 
 <style>
 
+.info-title {
+    display: block;
+    background: #50627F;
+    color: #fff;
+    text-align: center;
+    height: 24px;
+    line-height:22px;
+    border-radius:4px;
+    padding:0px 10px;
+}
+
 .position {
 height: 100px; 
 padding-bottom:100px;
 }
 
-.pos_input{
+.pos_span{
 position :relative;
 border: 0.5px solid;
 align-content:center;
-background-color: #00001;
+background-color: #84E0E0;
 width: 100%;
 height: 80px;
 font-size: 30px;
 }
 
 #pos_btn {
-    position: relative;
-    left: 85%;
-    bottom: 65px;
+position: relative;
+left: 85%;
+top: -15px;    
+}
+
+#pos_h3 {
+position : relative;
+left: 3%;
+top: 33px;
 }
 
 
@@ -142,7 +158,7 @@ align-self: center;
 	
 	<div class="row justify-content-md-center" style="height: 50px;">
 		<div id="franchiselocation" class="col-sm-3 checked" align="center"
-			style="font-size: large; color: black; border-bottom: 2px solid black; cursor: pointer;"
+			style="font-size: large; color: black; border-bottom: 2px solid #DC3545; cursor: pointer;"
 			onclick="clickEffect('franchiselocation'); showdiv('franchiselocation');">지역명
 		</div>
 		<div id="franchiseName" class="col-sm-3 checked" align="center"
@@ -154,31 +170,51 @@ align-self: center;
 			onclick="clickEffect('clientCurrnetLocation'); showdiv('clientCurrnetLocation');">현위치
 		</div>
 	</div>
-	<!-- 매장명 시작-->	
+	<!-- 주소명 시작-->	
 	<div class="row" id="outer_2" style="display:none; margin-top:50px;">
 		<div class="col " style=" height: 100px; ">
 			<div class="search">		
-				<input type="text" placeholder="   주소를 입력해주세요." id="a1" 
+				<input type="text" placeholder="   					지역명을 입력해주세요." id="a1" 
 				style="border:0;  align-content:center; background-color: #F7F7F7;  width: 100%; height: 80px; font-size: 30px;" 
-				onkeyup="if(window.event.keyCode==13){a1enter()}"/>	
+				onkeyup="if(window.event.keyCode==13){a1enter()}; $('#fcInfo_all').empty();"/>	
 				<img src="/federico/resources/Image/search_black_48dp.svg" style="position: relative; left: 90%; bottom: 65px; cursor: pointer;"
-					onclick="a1enter()">
+					onclick="a1enter(); $('#fcInfo_all').empty();">
 			</div>	
 		</div>		
 	</div>
-	<!-- 매장명 종료-->
+	<!-- 주소명 종료-->
 	
-	<!-- 매장명 지도 시작 -->
-	
-	
-	
+	<!--  지도 시작 -->
 	
 	<script>	
+	
+	let markers= [];
+	
+	let icon = new kakao.maps.MarkerImage(
+		    '/federico/resources/Image/LOGO.png',
+		    new kakao.maps.Size(31, 35)// size
+		);
+	
+	let cicon = new kakao.maps.MarkerImage(
+		    '/federico/resources/Image/cicon.png',
+		    new kakao.maps.Size(35, 40)// size
+		);
+	
+	
 			function a1enter(){
-				if($('#a1').val().length<1){
-					alert('매장명을 입력하세요');
+				// 입력 안했을 시.
+				if($('#a1').val().length < 1 ){
+					alert("지역명 또는 주소를 입력해주세요");
 					return false;
 				}
+				else {
+			            if($('#a1').val() == " ") // 공백 체크
+			            {              
+			                alert("해당 항목에는 공백을 사용할 수 없습니다.");
+			                return false;
+			            }
+				} // else
+					
 				$.ajax ({
 					
 					url :'fcSearchLocation',
@@ -189,84 +225,55 @@ align-self: center;
 					success : function(data){
 							
 							console.log("주소 : "+data.list);
+							console.log("data.success : "+data.list);
 							
-									if(data.success != null){
+									if(data.success == 'success'){
 									//이 스크립트는 BODY 영역에 작성 한다	
-									
+									setMarkers();
 									var list = data.list;
 									var addrs = [];
 
-									for(var i = 0 ; i<list.length;i++){
-										var fc = {};
-
-										fc.fcAddress=list[i].fcAddress;
-										fc.fcId=list[i].fcId;
-										fc.fcPhone=list[i].fcPhone;
+										for(var i = 0 ; i<list.length;i++){
+											var fc = {};
+	
+											fc.fcAddress=list[i].fcAddress;
+											fc.fcId=list[i].fcId;
+											fc.fcPhone=list[i].fcPhone;
+											fc.ylat=list[i].lat;
+											fc.xlon=list[i].lon;
+											
+											addrs.push(fc);
+											console.log("addrs.length = ",addrs.length);
+											
+											}
 										
-										addrs.push(fc);
-									}
-									// 주소-좌표 변환 객체를 생성합니다				
-									var geocoder = new kakao.maps.services.Geocoder();
 									// 지도의 중심좌표를 표시 위치에 따라 재설정 하기위한 bounds 생성	
 									var bounds = new kakao.maps.LatLngBounds();	
-
 									var total = (addrs.length);
+									console.log("total",total);
 									var counter = 0;
-
-										// Version02 -> 주소를 좌표로 변환하여 배열에 넣고 처리
-
-										var yLat = new Array(); // y 좌표를 담을 배열
-										var xLng = new Array(); // x 좌표를 담을 배열
-
-										for(var i=0; i<total; i++) {
-											var address=addrs[i].fcAddress;
-											console.log("address =>" + address);
-											geocoder.addressSearch(address, function(result, status) {
-												console.log("status =>" + status);
-												console.log("result =>" + result);
-												
-												if(status == 'ZERO_RESULT'){
-													alert(address+'의 주소가 올바르지 않습니다.');
-													return;
-												}
-												
-												if (status === kakao.maps.services.Status.OK) {
-													
-													yLat[counter] = result[0].y;
-													xLng[counter] = result[0].x;
-													console.log("counter=>"+counter+'i='+i+'result[0].y='+result[0].y+'result[0].x='+result[0].x );
-													counter++;
-													if (total===counter) {
-														console.log("** geocoder.addressSearch END **");
-														//모든 주소의 좌표가 배열로 옮겨졌으면 지도에 marking 한다. 
-														markingMap();
-													} // if
-												} // if	
-											}); // geocoder.addressSearch	
-										} // for	
-										
-										
+									markingMap();
 // ========================================== 프랜차이즈 마킹 시작 !! =================================================
+										
 										function markingMap() {
-											$('#fcInfo_all').empty();
-											
+										
 											for(var i=0; i<total; i++) {
-
-												var coords = new kakao.maps.LatLng(yLat[i], xLng[i]);
-												console.log('i='+i+'yLat[i]='+yLat[i]+'xLng[i]='+xLng[i]);
-													
+												console.log("for_total",total);
+												var coords = new kakao.maps.LatLng(addrs[i].ylat, addrs[i].xlon);
+												console.log('i='+i+'yLat[i]='+addrs[i].ylat+' xLng[i]='+addrs[i].xlon+' fcId =',addrs[i].fcId);
 													// marking 좌표를 포함하도록 영역 정보를 확장한다.
 													bounds.extend(coords);
 													
 													// 마커를 생성합니다
-												    var marker = new kakao.maps.Marker({
+												    	marker = new kakao.maps.Marker({
 												        map: map, // 마커를 표시할 지도
-												        position: coords// 마커의 위치
+												        position: coords,// 마커의 위치
+												        image : icon
 												    });
-
+													
 												    // 마커에 표시할 인포윈도우를 생성합니다 
-												    var infowindow = new kakao.maps.InfoWindow({
-												        content: addrs[i].fcId // 인포윈도우에 표시할 내용
+												    	infowindow = new kakao.maps.InfoWindow({
+											    		content: addrs[i].fcId // 인포윈도우에 표시할 내용
 												    });
 
 												    // 마커에 이벤트를 등록하는 함수 만들고 즉시 호출하여 클로저를 만듭니다
@@ -283,47 +290,42 @@ align-self: center;
 												        });
 												    })(marker, infowindow);
 												    
+												    
 // ========================================== 카드 시작 !! =========================================================			
 											    console.log("현위치 카드 시작 확인")
 											    
 												$('#fcInfo_all').append(
 														'<div class="col-6" style="margin-bottom: 40px;">'+
-														'<div class="card">'+
+														'<div class="card" style="border : 1px solid #DC3545; ">'+
 														  '<div class="card-body ">'+
-															   ' <h5 class="card-title" id="fcId">매장명 :'+ addrs[i].fcId+'</h5>'+
+															   ' <h5 class="card-title" id="fcId">주소명 :'+ addrs[i].fcId+' 점 </h5>'+
 														        '<h5 class="card-title"id="fcPhone">T :'+addrs[i].fcPhone+'</h5>'+
 															    '<p class="card-text"id="fcAddress">주소:'+ addrs[i].fcAddress+'</p>'+
-															   ' <button class="btn btn-danger" style="right: auto;"  onclick="fcDetail()">매장정보보기</button>'+
+// 															   ' <button class="btn btn-danger" style="right: auto;"  onclick="fcDetail()">매장정보보기</button>'+
 														  "</div></div></div>")
 // ========================================== 카드 종료 !! =========================================================													
 												} // for 4 end
 											map.setBounds(bounds);
 										} // function markingMap
-//					 				card 밑에 띄우기
 // ========================================== 프랜차이즈 마킹 종료 !! =================================================
 
-
-									} //if(data.success=='success')
-										
-									else { // 가맹지역이 없을 때								
-										
-									alert('해당 지역에 가맹점이 없습니다.');
-								}			
-							}// success
-										, error : function(){
+									} else alert('검색하신 지역에 가맹점이 없습니다.');
+																		
+							},// success
+										 error : function(){
 										alert("통신 오류입니다. 다시 시도하세요.")
 						}
 					})//ajax
 				}// function
 	</script>
- <!-- 매장명 지도 종료 -->
+ <!-- 주소명 지도 종료 -->
 
 	
 	<!-- 현위치 시작-->
 	<div class="row" id="outer_3" style="display:none; margin-top:50px;">
-		<div class="col position">
-			<input class="pos_input"  id="a2" type="text" readonly="readonly" placeholder="페데리코가 가장 가까운 곳에서 고객님을 찾아갑니다.">
-		<span class="btn btn-danger btn-lg" id="pos_btn" onclick="whereami()">현재위치</span>
+		<div class="col position" style="background-color: #E8F3F7;">
+		<h3 id="pos_h3">가까운 페데리코를 찾아드립니다.</h3>
+		<span class="btn btn-danger btn-lg" id="pos_btn" onclick="whereami(); $('#fcInfo_all').empty(); setMarkers();">현재위치</span>
 		</div>		
 	</div>
 	<!-- 현위치 종료-->
@@ -337,13 +339,11 @@ align-self: center;
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(pos){
 				
-//  				clat = 36.48018405476181;
-// 				clng = 127.2893820088641;
 				clat = pos.coords.latitude; // 위도 
 				clng = pos.coords.longitude;// 경도
 				
-				console.log("User latitude = " +clat);
-				console.log("User longitude = " +clng);
+				console.log("현위치 위도 = ",clat);
+				console.log("현위치 경도 = " +clng);
 				
 					mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 				   	   mapOption = {
@@ -351,9 +351,10 @@ align-self: center;
 					};
 					map = new kakao.maps.Map(mapContainer, mapOption); // 지도에 표시
 
-				var marker = new kakao.maps.Marker({
+					marker = new kakao.maps.Marker({
 				    map: map,
-				    position: new kakao.maps.LatLng(clat, clng)
+				    position: new kakao.maps.LatLng(clat, clng),
+				    image:cicon
 				});
 					
 				// 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
@@ -361,7 +362,7 @@ align-self: center;
 			    iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다	
 					
 				// 인포윈도우를 생성합니다
-				var infowindow = new kakao.maps.InfoWindow({
+					infowindow = new kakao.maps.InfoWindow({
 				    content : iwContent,
 				    removable : iwRemoveable
 				});	
@@ -375,7 +376,12 @@ align-self: center;
 				fcAllAddress();
 				
 			});
-		} else {alert("어딨는지 모르겠습니다.");}	
+			
+			function error(err) {
+				alert("위치를 찾지 못했습니다.");
+				}
+			
+		} else {alert("위치를 찾지 못했습니다.");}	
 		
 	}//whereami()
 
@@ -388,16 +394,15 @@ align-self: center;
 			type:'post',
 			
 			success : function(data) {
-				console.log("성공? ",data.list);
+				console.log("성공!! ",data.list);
 				if(data.list != null){
+					
 					
 					
 					var list = data.list;					
 					var fcIdList = [];
 					var LatLonList = [];					
 					var fcId = {};
-					
-					console.log("반복문 전 - LatLonList.length : ",LatLonList.length);
 					
 					for(var i = 0; i < list.length ; i++){ // for 1
 						
@@ -413,32 +418,23 @@ align-self: center;
 						LatLonList.push(LatLon);
 						
 					}// for 1
-					console.log("반복문 후 - LatLonList.length : ",LatLonList.length);
 					
 					var counter = 0;
-					
+					const searchDistance = 5; // 찾을거리 설정.(km)
 					
 					for(var i=0; i<LatLonList.length; i++) { // for 2
-						
+							console.log("i",i);
+							console.log("lengh",LatLonList.length);
 							let distance = getDistance(clat, clng, LatLonList[i].Lat, LatLonList[i].Lon, "K");
-							LatLonList[i].distance = distance;
-							
-					}//for 2
-					console.log("LatLonList.distance :",LatLonList.distance);
-					
-					const searchDistance = 5; // 찾을거리 설정.(km)
-					var fcMap=[];
-					
-					for(var i=0; i<LatLonList.length; i++)	{ //for3
-							
-						if (LatLonList[i].distance > searchDistance ) {
+
+							if (distance > searchDistance ) {
 								LatLonList.splice(i,1);
 								i--;
+							} else{
+								LatLonList[i].distance = distance;
 							}
-// 						fcMap.push(LatLonList)
-					}//for 3		
-						
-					console.log("LatLonList.length :",LatLonList.length);
+							
+					}//for 2
 					
 							let newLatLonList = LatLonList.sort(function (a, b) {
 									  if (a.distance > b.distance) {
@@ -451,23 +447,21 @@ align-self: center;
 									  return 0;
 									});
 							
-					console.log('정렬 후 : newLatLonList :',newLatLonList.length);
 							//지도 위치이동
 							//있다면 검색 시작.
-							
-					$('#fcInfo_all').empty(); // 카드 어팬드 된 내용 비우기.
 // ========================================== 프랜차이즈 마킹 시작 !! =================================================
-	
-						for (var i = 0 ; i < newLatLonList.length;i++ ){ // for 4 start
 						
+						for (var i = 0 ; i < newLatLonList.length;i++ ){ // for 4 start
+							
+								console.log("가장가까운 거리의 지점 : ",newLatLonList[i].fcId);
 							// 마커를 생성합니다
-						    var marker = new kakao.maps.Marker({
+						    	marker = new kakao.maps.Marker({
 						        map: map, // 마커를 표시할 지도
-						        position: new kakao.maps.LatLng(newLatLonList[i].Lat, newLatLonList[i].Lon) // 마커의 위치
+						        position: new kakao.maps.LatLng(newLatLonList[i].Lat, newLatLonList[i].Lon), // 마커의 위치
+						    	image:icon
 						    });
-
 						    // 마커에 표시할 인포윈도우를 생성합니다 
-						    var infowindow = new kakao.maps.InfoWindow({
+						    	infowindow = new kakao.maps.InfoWindow({
 						        content: newLatLonList[i].fcId // 인포윈도우에 표시할 내용
 						    });
 
@@ -486,16 +480,15 @@ align-self: center;
 						    })(marker, infowindow);
  // ========================================== 프랜차이즈 마킹 종료 !! =================================================				
  // ========================================== 현위치 카드 시작 !! =================================================			
-						    console.log("현위치 카드 시작 확인")
 						    
 							$('#fcInfo_all').append(
 									'<div class="col-6" style="margin-bottom: 40px;">'+
-									'<div class="card">'+
+									'<div class="card" style="border : 1px solid #DC3545; ">'+
 									  '<div class="card-body ">'+
-										   ' <h5 class="card-title" id="fcId">매장명 :'+ newLatLonList[i].fcId+'</h5>'+
+										   ' <h5 class="card-title" id="fcId">주소명 :'+ newLatLonList[i].fcId+' 점 </h5>'+
 									        '<h5 class="card-title"id="fcPhone">T :'+newLatLonList[i].fcPhone+'</h5>'+
 										    '<p class="card-text"id="fcAddress">주소:'+ newLatLonList[i].fcAddress+'</p>'+
-										   ' <button class="btn btn-danger" style="right: auto;"  onclick="fcDetail()">매장정보보기</button>'+
+// 										   ' <button class="btn btn-danger" style="right: auto;"  onclick="fcDetail()">매장정보보기</button>'+
 									  "</div></div></div>"
  // ========================================== 현위치 카드 종료 !! =================================================	
 							);
@@ -545,7 +538,7 @@ align-self: center;
 			//console.log("dist * 180/Math.PI =", dist);
 			
 			dist = dist * 60 * 1.1515;
-			console.log("*** final dist = dist * 60 * 1.1515 =", dist);
+// 			console.log("*** final dist = dist * 60 * 1.1515 =", dist);
 			
 			if (unit=="K") { dist = dist * 1.609344 }
 			if (unit=="N") { dist = dist * 0.8684 }
@@ -562,7 +555,7 @@ align-self: center;
 	    <!-- 지역명 시도, -->	   
 		<div class="col" style="height: 64px;">
 			<select class="form-select form-select-lg" id="Sido" name="Sido" 
-			 aria-label="Default select example" onchange="depth1_change(value)" >
+			 aria-label="Default select example" onchange="depth1_change(value); $('#fcInfo_all').empty();" >
 		   	  <option value='none'>시/도 선택</option>
               <option value="강원">강원</option>
               <option value="경기">경기</option>
@@ -586,7 +579,8 @@ align-self: center;
 		</div>
 		<!-- 지역명 구군 -->
 		<div class="col" style="height: 64px;">
-			<select class="form-select form-select-lg" id="Gugun" name="Gugun" aria-label="Default select example" onchange="depth2_change(value)">
+			<select class="form-select form-select-lg" id="Gugun" name="Gugun" aria-label="Default select example" onchange="depth2_change(value); $('#fcInfo_all').empty();">
+					
 				<option value="none">지역을 선택하세요.</option>
 			</select>			
 		</div>	
@@ -597,7 +591,7 @@ align-self: center;
 	<div class="row" id="outer_1_map" style="display:block; margin-top:40px;" >
 		<div class="col" style="height: 600px; margin-bottom:50px;overflow: hidden;">
 		<!-- 지도본체시작 -->
-			<div id="map" style="width:100%; height:100%;"></div>	
+			<div id="map" style="width:100%; height:100%; border: 1px solid #DC3545;"></div>	
 		<!-- 지도본체종료 -->
 		</div>
 		<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=63fe094a0bad5ef07be77c4f00959da2&libraries=services"></script>
@@ -689,6 +683,7 @@ function depth1_change(e){
 		target.appendChild(option);
 	} // for
 	depth2_change($('#Gugun').val());
+	
 }// function
 
 
@@ -713,105 +708,89 @@ function depth2_change(e){
 			
 			if(data.success=='success'){				
 				console.log("data.list : "+ data.list+" <=controller");
+				$('#fcInfo_all').empty();
 				
 				if(data.list.length<1){
 					alert ("가맹점이 없습니다. \n다시 검색해주세요.")
 					return;
 				}	
-				
+				setMarkers();
 				var addrs = [];
 				var contents = [];
 				var fcPhone = [];
 							
 				var list = data.list;
 				
-				for(var i = 0 ; i <list.length ; i++){
-					addrs.push(list[i].fcAddress);
-					contents.push(list[i].fcId);
-				}
+				for(var i = 0 ; i<list.length;i++){
+					
+					var fc = {};
+
+					fc.fcAddress=list[i].fcAddress;
+					fc.fcId=list[i].fcId;
+					fc.fcPhone=list[i].fcPhone;
+					fc.ylat=list[i].lat;
+					fc.xlon=list[i].lon;
+					
+					addrs.push(fc);
+					console.log("addrs.length = ",addrs.length);
+					
+					}// for
 				
-				// 주소-좌표 변환 객체를 생성합니다				
-				var geocoder = new kakao.maps.services.Geocoder();
 				// 지도의 중심좌표를 표시 위치에 따라 재설정 하기위한 bounds 생성	
 				var bounds = new kakao.maps.LatLngBounds();	
-
 				var total = (addrs.length);
+				console.log("total",total);
 				var counter = 0;
-
-					// Version02 -> 주소를 좌표로 변환하여 배열에 넣고 처리
-
-					var yLat = new Array(); // y 좌표를 담을 배열
-					var xLng = new Array(); // x 좌표를 담을 배열
-					console.log("cheker");
-					for(var i=0; i<total; i++) {
-						var address=addrs[i];
-						console.log("address =>" + address);
-						geocoder.addressSearch(address, function(result, status) {
-													
-							if(status == 'ZERO_RESULT'){
-								alert(address+'의 주소가 올바르지 않습니다.');
-								return;
-							}
-							
-							if (status === kakao.maps.services.Status.OK) {
-								
-								yLat[counter] = result[0].y;
-								xLng[counter] = result[0].x;
-								console.log("counter=>"+counter+'i='+i+'result[0].y='+result[0].y+'result[0].x='+result[0].x );
-								counter++;
-								if (total===counter) {
-									console.log("** geocoder.addressSearch END **");
-									//모든 주소의 좌표가 배열로 옮겨졌으면 지도에 marking 한다. 
-									//지도에 marking
-									markingMap();
-								} 
-							} // if	
-						}); // geocoder.addressSearch	
-					} // for	
 					
-					
+				markingMap();
+				
+				
 // ========================================== 프랜차이즈 마킹 시작 !! =================================================
-					function markingMap() {
-						for(var i=0; i<total; i++) {
+										
+										function markingMap() {
+										
+											for(var i=0; i<total; i++) {
 
-							var coords = new kakao.maps.LatLng(yLat[i], xLng[i]);
-											console.log('i='+i+'yLat[i]='+yLat[i]+'xLng[i]='+xLng[i]);
-								
-								// marking 좌표를 포함하도록 영역 정보를 확장한다.
-								bounds.extend(coords);
-								
-								// 마커를 생성합니다
-							    var marker = new kakao.maps.Marker({
-							        map: map, // 마커를 표시할 지도
-							        position: coords// 마커의 위치
-							    });
+											var coords = new kakao.maps.LatLng(addrs[i].ylat, addrs[i].xlon);
+											console.log('i='+i+'yLat[i]='+addrs[i].ylat+' xLng[i]='+addrs[i].xlon+' fcId =',addrs[i].fcId);
+												// marking 좌표를 포함하도록 영역 정보를 확장한다.
+												bounds.extend(coords);
+												
+												// 마커를 생성합니다
+											    	marker = new kakao.maps.Marker({
+											        map: map, // 마커를 표시할 지도
+											        position: coords,// 마커의 위치
+											        image:icon
+											    }); 
+													markers.push(marker);
+											    
+											    // 마커에 표시할 인포윈도우를 생성합니다 
+											    	infowindow = new kakao.maps.InfoWindow({
+											        content: addrs[i].fcId // 인포윈도우에 표시할 내용
+											    });
+										    	
+											    // 마커에 이벤트를 등록하는 함수 만들고 즉시 호출하여 클로저를 만듭니다
+											    // 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+											    (function(marker, infowindow) {
+											        // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
+											        kakao.maps.event.addListener(marker, 'mouseover', function() {
+											            infowindow.open(map, marker);
+											        });
 
-							    // 마커에 표시할 인포윈도우를 생성합니다 
-							    var infowindow = new kakao.maps.InfoWindow({
-							    	
-							        content: contents[i] // 인포윈도우에 표시할 내용
-							    });
+											        // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
+											        kakao.maps.event.addListener(marker, 'mouseout', function() {
+											            infowindow.close();
+											        });
+											    })(marker, infowindow);		
 
-							    // 마커에 이벤트를 등록하는 함수 만들고 즉시 호출하여 클로저를 만듭니다
-							    // 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-							    (function(marker, infowindow) {
-							        // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
-							        kakao.maps.event.addListener(marker, 'mouseover', function() {
-							            infowindow.open(map, marker);
-							        });
-
-							        // 마커에 mouseout 이벤트를 등록하고 마우스 아웃 시 인포윈도우를 닫습니다
-							        kakao.maps.event.addListener(marker, 'mouseout', function() {
-							            infowindow.close();
-							        });
-							    })(marker, infowindow);
-								
-							} // for 4 end
-						map.setBounds(bounds);
-					} // function markingMap
+// ========================================== 프랜차이즈 마킹 종료 !! =================================================				
+											} //for
+												map.setBounds(bounds);
+											} // function markingMap
+					
+					
 // 				card 밑에 띄우기
-// ========================================== 프랜차이즈 마킹 종료 !! =================================================
-
+					
 					$('#fcInfo').load('fcSearch?card=card #fcInfo'); // 지역명 카드띄우기 시작.	
 					
 				} //if(data.success=='success')
@@ -829,24 +808,25 @@ function depth2_change(e){
 		</script>	
 	</div>
 	<!-- 지도표시종료 -->
-<!-- 가맹점 조회 카드 시작 -->
+<!-- 카드조회 시작 -->
 		<div class="container fcInfoClass" id="fcInfo">
 			<div class="row align-items-start" id="fcInfo_all">
 				<c:forEach var="vo" items="${list}" varStatus="vs">
 						<div class="col-6" style="margin-bottom: 40px;">
-							<div class="card">
+							<div class="card"
+							style="border : 1px solid #DC3545; ">
 							  <div class="card-body ">
-								    <h5 class="card-title" id="fcId">매장명 : ${vo.fcId}</h5>
+								    <h5 class="card-title" id="fcId">매장명 : ${vo.fcId} 점</h5>
 							        <h5 class="card-title"id="fcPhone">T :${vo.fcPhone}</h5>
 								    <p class="card-text"id="fcAddress">주소: ${vo.fcAddress}</p>
-								    <button class='btn btn-danger' style="right: auto;"  onclick="fcDetail()">매장정보보기</button>
+<!-- 								    <button class='btn btn-danger' style="right: auto;"  onclick="alert('♡사랑합니다. 고객님♡ \n해당 페이지는 현재 준비중입니다.')">매장정보보기</button> -->
 							  </div>
 							</div>
 						</div>
 				 </c:forEach>
 			 </div>
 		 </div>	
-<!-- 가맹점 조회 카드 종료 -->
+<!-- 카드조회 종료 -->
 	<div class="row" style="height: 100px"></div>
 	</section>
 	<script type="text/javascript">
@@ -882,8 +862,8 @@ function clickEffect(id){
 	});
 
 	$('#'+id).css({
-		"color" : 'black',
-		"border-bottom" : "2px solid black"
+		"color" : '#DC3545',
+		"border-bottom" : "2px solid #DC3545"
 	});
 	
 		
@@ -897,6 +877,13 @@ function InputDataClear(){
 	$('#fcInfo_all').empty();
     map = new kakao.maps.Map(mapContainer, mapOption); 
 }
+
+	function setMarkers() {
+	    for (var i = 0; i < markers.length; i++) {
+	        markers[i].setMap(null);
+	    }
+// 	    markers=[];
+	}
 
 
 </script>		
