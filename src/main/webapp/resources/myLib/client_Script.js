@@ -770,12 +770,7 @@ function showinfoDiv(id){
 		$('#myOrderList').load('clientMyInfo #myOrderList')
 		$('.myinfo').css('display','none');
 		$('#'+id).css('display','block');
-	
-	
-	
 }
-
-
 
 
 
