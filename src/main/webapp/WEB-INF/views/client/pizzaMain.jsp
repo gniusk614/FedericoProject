@@ -22,17 +22,14 @@ a:visited {
 	text-decoration: none;
 	color: black;
 }
-
 a:hover {
 	text-decoration: none;
 	color: black;
 }
-
 a {
 	color: black;
 	text-decoration: none;
 }
-
 @media (min-width: 992px) {
   #carouselExampleIndicators {
    height: 500px;
@@ -172,7 +169,6 @@ a {
     todayDate.setDate( todayDate.getDate() + expiredays );
     document.cookie = name + '=' + escape( value ) + '; path=/; expires=' + todayDate.toGMTString() + ';'
     }
-
     //쿠키 불러오기
     function getCookie(name) 
     { 
@@ -193,7 +189,6 @@ a {
         } 
         return ""; 
     }
-
     //닫기 버튼 클릭시
     function closeWin(key)
     {
@@ -219,4 +214,3 @@ a {
 	<script src="/federico/resources/js/scripts.js"></script>
 </body>
 </html>
-

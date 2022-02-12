@@ -33,7 +33,7 @@
 	<div>
 	</div>
 	<!-- Section--> 
-	<section class="container" style="height: auto; min-height: 100%; padding-bottom: 168px;">
+	<section class="container" style=" min-height: 900px; padding-bottom: 168px;">
 	<!-- 본문 시작 -->
 		<div class="container" style="width: 940px;">
 			<br><div class="text-center mt-5"><h1 class="display-6">주문이 완료되었습니다 : )</h1></div>
@@ -44,24 +44,12 @@
 		<img src="/federico/resources/Image/delievery2.png"
 					style="width: 400px; opacity: 0.4">
 		</div>				
-			
-		
-		
 		<div class="row justify-content-md-center mt-5">
 				<div class="col-sm" align="center">
 					<button class="btn btn-danger" type="button"
 						onclick="javaScript:location.href='home'">메인홈페이지 이동</button>
 				</div>
 		</div>
-		
-	
-	
-	
-	
-	
-	
-	
-	
 	</section>
 	
 	<!-- Footer-->

@@ -95,6 +95,10 @@ $(function(){
 	})//ajax
 })//ready
 </script>
+<style type="text/css">
+.vw-1{font-size: 1vw;}
+
+</style>
 </head>
 <body>
 <!-- navtop inlcud -->
@@ -108,13 +112,13 @@ $(function(){
 		<!-- 본사 메인화면 상단 -->
 		<div class="row m-1" style=" border: 1px solid lightgray; height: 400px; overflow: auto;">
 				<!-- 상단 좌측 -->
-				<div class="col-6 fs-5" align="center">
+				<div class="col-6 vw-1" align="center">
 					<div class="row m-1" style="height: 190px; border: 1px solid lightgray;">
 						<div class="col-4 p-0">
-							<br><span>전일 매출</span><br><b class="fs-2"><fmt:formatNumber value="${yesterdaySales}" pattern="#,###"/></b> 원
+							<br><span>전일 매출</span><br><b style="font-size: 1.7vw"><fmt:formatNumber value="${yesterdaySales}" pattern="#,###"/></b> 원
 						</div>
 						<div class="col-4 p-0">
-							<br><span>당일 매출</span><br><b class="fs-2"><fmt:formatNumber value="${todaySales}" pattern="#,###"/></b> 원<br>
+							<br><span>당일 매출</span><br><b style="font-size: 1.7vw"><fmt:formatNumber value="${todaySales}" pattern="#,###"/></b> 원<br>
 						
 							<c:if test="${yesterdaySales != 0 && todaySales != 0}">
 								<fmt:parseNumber var="dailySalesRatio" value="${todaySales/yesterdaySales * 100}" integerOnly="true" />
@@ -130,7 +134,7 @@ $(function(){
 							</c:if>	
 						</div>
 						<div class="col-4 p-0">
-							<br><span>당월 매출</span><br><b class="fs-2"><fmt:formatNumber value="${thisMonthSales}" pattern="#,###"/></b> 원<br>
+							<br><span>당월 매출</span><br><b style="font-size: 1.7vw"><fmt:formatNumber value="${thisMonthSales}" pattern="#,###"/></b> 원<br>
 							<c:if test="${lastMonthSales != 0 && thisMonthSales != 0}">
 								<fmt:parseNumber var="monthlySalesRatio" value="${thisMonthSales/lastMonthSales * 100}" integerOnly="true" />
 								<c:if test="${monthlySalesRatio>=100}">
@@ -147,10 +151,10 @@ $(function(){
 					</div>
 					<div class="row m-1" style="height: 190px; border: 1px solid lightgray;">
 						<div class="col-6">
-							<br><span>전체가맹점 현황</span><br><b class="fs-2">${numberOfAllFranchise}</b>
+							<br><span>전체가맹점 현황</span><br><b style="font-size: 1.7vw">${numberOfAllFranchise}</b>
 						</div>
 						<div class="col-6">
-							<br><span>당월 신규가맹점</span><br><b class="fs-2">${numberOfNewFranchise}</b>
+							<br><span>당월 신규가맹점</span><br><b style="font-size: 1.7vw">${numberOfNewFranchise}</b>
 						</div>
 						
 					</div>

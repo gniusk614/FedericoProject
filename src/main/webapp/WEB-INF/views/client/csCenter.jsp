@@ -8,7 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport"
+ <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <meta name="description" content="" />
 <meta name="author" content="" />
@@ -80,7 +80,7 @@ tbody tr {
 	<%@include file="nav.jsp"%>
 	<!-- 본문 시작 -->
 	<section class="container py-5"
-		style="height: auto; min-height: 100%; padding-bottom: 168px;">
+		style="min-height: 1650px; padding-bottom: 168px;">
 		<fmt:parseNumber value="${now.time/(1000*60*60*24)}" integerOnly="true" var="now"></fmt:parseNumber>
 		
 		<div class="container-fluid">
@@ -243,7 +243,7 @@ tbody tr {
 			</div>
 			<div class="row">
 				<div class="row justify-content-md-center mt-5 mb-5">
-					<div class="col-7" align="center">
+					<div class="col-10" align="center">
 						<form action="complainInsert" method="post">
 							<div class="row justify-content-md-center mt-2"
 								style="height: 1000px;">
@@ -341,7 +341,8 @@ tbody tr {
 									</div>
 								</div>
 							</div>
-							<div class="row" style="height: 100px;">
+							<div class="row" >
+							<div class="col">
 								<input type="text" id="clientEmail" name="clientEmail" hidden="hidden">
 								<div
 									class="d-flex align-items-center justify-content-between mb-0">
@@ -352,6 +353,7 @@ tbody tr {
 										style="width: 50%; height: 60px; font-size: large;">등록</button>
 										
 								</div>
+								</div>
 							</div>
 						</form>
 					</div>
@@ -360,7 +362,7 @@ tbody tr {
 		</div>
 	</section>
 	<!-- footer include -->
-	<%-- <%@ include file="footer.jsp"%> --%>
+	 <%@ include file="footer.jsp"%>
 
 	<!-- 개인정보처리방침 모달  -->
 	<div class="modal fade" id="agreeModal" role="dialog">

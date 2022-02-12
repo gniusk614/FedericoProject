@@ -1,5 +1,9 @@
 package com.project.federico;
 
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -9,13 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HomeController {
 	
-
 	@RequestMapping(value = {"/home","/"})
 	public String home() {
-			System.out.println("거기있니?");
-			System.out.println("Federico님이 입장하셨습니다.");
-			return "redirect:client/home";
+		
+		return "redirect:client/home";
 	}
 
+	//어플리케이션 첫 구동시 timezone 설정
+	@PostConstruct
+	public void setTIme() {
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+	}
 	
 }
+
