@@ -137,12 +137,12 @@ a {
 									</div>
 								</div>
 								<div class="form-group mb-2">
-									<label class="form-label">연락처</label> <input type="text"
+									<label class="form-label">연락처</label> <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"
 										id="fcPhone" class="form-control">
 								</div>
 								<label class="form-label">담당직원</label>
 								<div class="input-group mb-2 ">
-									<input type="text" id="hoId" class="form-control">
+									<input type="text" id="fchoId" readonly="readonly" onfocus="fcSearchStaff()" class="form-control">
 								</div>
 							</div>
 
@@ -161,6 +161,37 @@ a {
 		<!-- 본문 끝 -->
 	</div>
 	<!-- layoutSidenav 끝 -->
+
+
+
+<div class="modal fade" id="hoIdSearchModal" role="dialog">
+		<div class="modal-dialog"
+			style="width: 500px; ">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">직원명단</h5>
+					<button type="button" class="btn-close infoClose"
+						data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="card">
+						<div class="card-body">
+							<div id="resultArea"></div>
+						</div>
+						<div class="modal-footer">
+						<div class="container-fluid">
+							<div class="row">
+								<button type="button" class="btn btn-secondary infoClose"
+									data-bs-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+
 
 
 	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>

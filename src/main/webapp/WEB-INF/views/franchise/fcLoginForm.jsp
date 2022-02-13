@@ -16,7 +16,7 @@
 </head>
 <body class="bg-success">
 	<div id="layoutAuthentication">
-		<div id="layoutAuthentication_content">
+		<div id="layoutAuthentication_content" style="min-height: 800px;">
 			<main>
 				<div class="container">
 					<div class="row" style="height: 100px;"></div>
