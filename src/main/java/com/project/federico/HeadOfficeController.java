@@ -767,6 +767,24 @@ public class HeadOfficeController {
 
 //=========================< 가맹점 관리 >=========================
 
+	//** 가맹점 생성시 스태프 검색
+	@RequestMapping(value = "/fcSearchStaff")
+	public ModelAndView fcSearchStaff(ModelAndView mv, StaffVO vo) {
+		List<StaffVO> list = service.selectMList(vo);
+		
+		if(list!=null) {
+			mv.addObject("list", list);
+		}else {
+			mv.addObject("message", "출력할 자료가 없습니다.");
+		}
+		
+		mv.setViewName("jsonView");
+		
+		return mv;
+	}
+	
+	
+	
 	
 	// ** 가맹점 비번변경시 현재비번확인
 	@RequestMapping(value = "/fcloginPwCheck")

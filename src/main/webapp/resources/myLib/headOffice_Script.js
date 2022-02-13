@@ -314,7 +314,7 @@ $(function() {
 						fcAddress : $('#address').val()+" "+$('#addressDetail').val(),
 						fcArea : $('#fcArea').val(),
 						fcPhone : $('#fcPhone').val(),
-						hoId : $('#hoId').val(),
+						hoId : $('#fchoId').val(),
 						fcClose : "N",
 						lat : lat,
 						lon :lon
@@ -350,6 +350,31 @@ $(function() {
 })//ready
 // ** ID 중복 확인하기
 
+function fcSearchStaff(){
+	$.ajax({
+		type:"get",
+		url:"fcSearchStaff",
+		success: function(data){
+			if(data.list!=null){
+				$('#resultArea').html('<table class="table table-striped table-hover"><tbody id="tbody"><tr><th>사원번호</th><th>이름</th></tr>')
+				for(var i=0; i<data.list.length; i++){
+					$('#tbody').append('<tr style="cursor:point" onclick="selecthoId(\''+data.list[i].staffCode+'\')"><td>'+data.list[i].staffCode+'</td><td>'+data.list[i].staffName+'</td></tr>')
+				}
+				$('#resultArea').append('</tbody></table>')
+			}
+		},error: function(){
+			alert('서버장애')
+		}
+	})
+	$('#hoIdSearchModal').modal('show');
+}
+
+function selecthoId(hoid){
+	$('#fchoId').val(hoid);
+	$('#hoIdSearchModal').modal('hide');
+}
+
+
 // ** input창 클리어
 function fcInputClear() {
 
@@ -363,6 +388,10 @@ function fcInputClear() {
 }
 
 function fcincheck() {
+	
+	console.log($('#fchoId').val())
+	console.log($('#address').val())
+	
 	if (fcidCheck == false || fcdubCheck == false) {
 		$('#fcId').addClass('is-invalid');
 		$('#fcidMessage').html('가맹점ID를 확인하세요');
@@ -375,7 +404,13 @@ function fcincheck() {
 		$('#fcPasswordRepeat').addClass('is-invalid');
 		$('#fcprMessage').html('password를 확인하세요');
 	}
-	if (fcidCheck == true && fcpCheck == true && fcprCheck == true && fcdubCheck == true) {
+	if ($('#address').val()<1){
+		$('#address').addClass('is-invalid');
+	}
+	if ($('#fchoId').val()<1){
+		$('#fchoId').addClass('is-invalid');
+	}
+	if (fcidCheck == true && fcpCheck == true && fcprCheck == true && fcdubCheck == true && $('#address').val().length>0 && $('#fchoId').val().length>0) {
 		if (confirm('계정을 생성하시겠습니까?')==true) {
 			return true;
 		} else {
