@@ -829,19 +829,84 @@ public class HeadOfficeController {
 	@RequestMapping(value = "/fcinsert")
 	public ModelAndView fcInsert(ModelAndView mv, FranchiseVO vo) {
 		
+		try {
+			
+			log.info("가맹점 기입 비밀번호 : "+vo.getFcPassword());
+			vo.setFcPassword(passwordEncoder.encode(vo.getFcPassword()));
+			
 		
-		log.info(vo.getFcPassword());
-		vo.setFcPassword(passwordEncoder.encode(vo.getFcPassword()));
-		if (fservice.fcInsert(vo) > 0) {
-			mv.addObject("message", "계정생성이 완료되었습니다.");
-			mv.addObject("success", "success");
-		} else {
-			mv.addObject("message", " 계정생성이 실패하였습니다.");
-			mv.addObject("success", "fail");
+		} catch (IllegalArgumentException e) {
+				e.toString();	
 		}
+			finally {
+				if (fservice.fcInsert(vo) > 0) {
+					mv.addObject("message", "계정생성이 완료되었습니다.");
+					mv.addObject("success", "success");
+				} else {
+					mv.addObject("message", " 계정생성이 실패하였습니다.");
+					mv.addObject("success", "fail");
+				}
+			}
+		
+			mv.setViewName("jsonView");
+			return mv;	
+		
+	/*
+경과.
+1. 2022.02.12. 16시쯤 발생.
+2. 발생 환경 : 가맹점 insert 시 발생함.
+3. 해결 안됨. 
+4. 우회 방안 : 트라이캐치로 finally로 강제로 삽입함.
 
-		mv.setViewName("jsonView");
-		return mv;
+ 타입 예외 보고
+
+메시지 Request processing failed; nested exception is java.lang.IllegalArgumentException: rawPassword cannot be null
+
+설명 서버가, 해당 요청을 충족시키지 못하게 하는 예기치 않은 조건을 맞닥뜨렸습니다.
+
+예외
+
+org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.IllegalArgumentException: rawPassword cannot be null
+	org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:655)
+	org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:764)
+	org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+근본 원인 (root cause)
+
+java.lang.IllegalArgumentException: rawPassword cannot be null
+	org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.encode(BCryptPasswordEncoder.java:103)
+	com.project.federico.HeadOfficeController.fcInsert(HeadOfficeController.java:834)
+	sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	java.lang.reflect.Method.invoke(Unknown Source)
+	org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:190)
+	org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:138)
+	org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:106)
+	org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:879)
+	org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:793)
+	org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1040)
+	org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:943)
+	org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:655)
+	org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:764)
+	org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+비고 근본 원인(root cause)의 풀 스택 트레이스를, 서버 로그들에서 확인할 수 있습니다.
+*/		
+			
+			
+			
+			
+			
 	}// join
 
 	// ** 가맹점 detail
@@ -1083,12 +1148,17 @@ public class HeadOfficeController {
 	public ModelAndView menuDetail(ModelAndView mv, MenuVO vo) {
 		
 		vo = menuService.selectMenuOne(vo);
+		log.info(vo.getMenuIndex());
+		log.info(vo);
+		
 		
 		if(vo != null) { 
 			mv.addObject("menuvo",vo);
 			mv.addObject("success","success");
 		
-		}else mv.addObject("success","Fail");
+		}else { mv.addObject("success","Fail");}
+		
+		
 		mv.setViewName("jsonView");
 			
 		return mv;

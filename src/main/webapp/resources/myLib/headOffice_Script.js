@@ -335,18 +335,17 @@ $(function() {
 						fcInputClear();
 					}
 				})// ajax
+				
 	
 	 		 }// if geocoder 성공
 				else{
 					alert("서버와 접속이 실패했습니다.");
 					fcInputClear();
 				}
-		}) //geocoder
-	       
-
-			
+			}) //geocoder
 		}// if check
-	})
+	})// $('#fcSubmitBtn').click(function()
+	
 })//ready
 // ** ID 중복 확인하기
 
@@ -1394,8 +1393,7 @@ function fcOrderFlagUpdate(flag) {
 
 //====================< 메뉴CRUD(민석) !!시작!! >==============================
 
-	// menuUpdateFrom()
-	
+	// menuUpdateFrom()	
 	function menuUpdateForm(menuIndex){
 		
 		$.ajax({
@@ -1406,20 +1404,34 @@ function fcOrderFlagUpdate(flag) {
 			},
 			success:function(data) {
 				
-				// when 절로 update 할 것 
-				if(data.menuvo.menuFlag == 'pizza'){
-					$('#upmenuFlag option:eq(0)').prop('selected',true);
-				}else if (data.menuvo.menuFlag == 'sets'){
-					$('#upmenuFlag option:eq(1)').prop('selected',true);
-				}else {
-					$('#upmenuFlag option:eq(2)').prop('selected',true);
-				}
+				if(data.success == 'success'){
+					// when 절로 update 할 것 
+					if(data.menuvo.menuFlag == 'pizza'){
+						$('#upmenuFlag option:eq(0)').prop('selected',true);
+					}else if (data.menuvo.menuFlag == 'sets'){
+						$('#upmenuFlag option:eq(1)').prop('selected',true);
+					}else {
+						$('#upmenuFlag option:eq(2)').prop('selected',true);
+					}
 				//$('#menuUpdatef1').load('menuUpdatef.jsp #menuUpdatef');				
+				$('#upmenuName').val(data.menuvo.menuName);
+				$('#upmenuIntro').val(data.menuvo.menuIntro);
+				$('#upmenuPrice').val(data.menuvo.menuPrice);
+				$('#upbeforemenuImage').attr("src",data.menuvo.menuImage);	
+						
 				$('#menuUpdatef').modal('show');
-				console.log("전송 성공");				
+				console.log("menuDetail?menuIndex="+menuIndex+"수신 성공");			
+
+				}
+				
+				else {
+				console.log("Data 수신 실패");
+				alert("수신에 실패하였습니다.");
+				}
+					
 			},error:function(){
-				console.log("전송 실패");
-				alert("전송에 실패하였습니다.");
+				console.log("Data 통신 실패");
+				alert("수신에 실패하였습니다.");
 			}
 			
 		})//ajax
@@ -1465,26 +1477,39 @@ function fcOrderFlagUpdate(flag) {
 		}//confirm
 	}//.click		
 
-function preView(menuIndex){
-	$.ajax({
-			type:'get',
-			url:'menuDetail?menuIndex='+menuIndex,
-			data:{
-				menuIndex : menuIndex,
-			},
-			success:function(data) {
-				console.log("전송 성공");	 
-								
-				$('#menuPreView').modal('show');
-								
-			},error:function(){
-				console.log("전송 실패");
-				alert("전송에 실패하였습니다.");
-			}
-			
-		})//ajax
-	
-}
+	function preView(menuIndex){
+		
+		$.ajax({
+				type:'get',
+				url:'menuDetail?menuIndex='+menuIndex,
+				data:{
+					menuIndex : menuIndex,
+				},
+				success:function(data) {
+					
+					if(data.success == 'success')
+					{
+						console.log("seccess"+data.menuvo.menuIndex);
+						
+					$('#premenuName').html(data.menuvo.menuName);
+					$('#premenuIntro').html(data.menuvo.menuIntro);
+					$('#premenuPrice').val(data.menuvo.menuPrice);
+					$('#premenuImage').attr("src",data.menuvo.menuImage);		
+						
+					console.log("preView : 수신 성공");	 									
+					$('#menuPreView').modal('show');
+					
+				}else{
+					alert("수신에 실패하였습니다.");
+					console.log("수신 실패");
+				}
+									
+				},error:function(){
+					console.log("통신 실패");
+					alert("통신에 실패하였습니다.");
+				}
+			})//ajax
+		}// preView
 
 
 
